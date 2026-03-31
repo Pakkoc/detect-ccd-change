@@ -47,14 +47,35 @@ def run() -> dict:
         "summary": str,
     }
     """
+    from scripts.update_urls import update_urls
     from scripts.fetch_docs import main as fetch_main
     from scripts.diff_docs import get_git_diff, format_diff_summary
     from scripts.generate_email import generate_html_email, generate_no_changes_email
 
+    # Step 0: Auto-update URL list from sitemap
+    print("=" * 60)
+    print("Step 0: Checking sitemap for new/removed pages...")
+    print("=" * 60)
+    url_result = update_urls()
+    if url_result["changed"]:
+        for u in url_result["added"]:
+            print(f"  [NEW PAGE] {u}")
+        for u in url_result["removed"]:
+            print(f"  [REMOVED]  {u}")
+        print(f"  urls.json updated: {url_result['total']} pages")
+        # Commit updated urls.json
+        subprocess.run(["git", "add", "urls.json"], cwd=ROOT, check=True)
+        subprocess.run(
+            ["git", "commit", "-m", f"urls: +{len(url_result['added'])} -{len(url_result['removed'])} pages from sitemap"],
+            cwd=ROOT, capture_output=True, text=True, encoding="utf-8"
+        )
+    else:
+        print(f"  [OK] {url_result['total']} pages, no changes.")
+
     first_run = not has_previous_snapshots()
 
     # Step 1: Fetch all docs
-    print("=" * 60)
+    print("\n" + "=" * 60)
     print("Step 1: Fetching documentation...")
     print("=" * 60)
     docs = fetch_main()
