@@ -1,0 +1,102 @@
+Explore the context window - Claude Code Docs
+Skip to main content
+Claude Code Docs
+home page
+English
+Search...
+⌘
+K
+Ask AI
+Search...
+Navigation
+Core concepts
+Explore the context window
+Getting started
+Build with Claude Code
+Deployment
+Administration
+Configuration
+Reference
+Resources
+Getting started
+Overview
+Quickstart
+Changelog
+Core concepts
+How Claude Code works
+Extend Claude Code
+Explore the .claude directory
+Explore the context window
+Use Claude Code
+Store instructions and memories
+Permission modes
+Common workflows
+Best practices
+Platforms and integrations
+Overview
+Remote Control
+Claude Code on the web
+Claude Code on desktop
+Chrome extension (beta)
+Computer use (preview)
+Visual Studio Code
+JetBrains IDEs
+Code review & CI/CD
+Claude Code in Slack
+Claude Code’s context window holds everything Claude knows about your session: your instructions, the files it reads, its own responses, and content that never appears in your terminal. The timeline below walks through what loads and when. See
+the written breakdown
+for the same content as a list.
+​
+What the timeline shows
+The session walks through a realistic flow with representative token counts:
+Before you type anything
+: CLAUDE.md, auto memory, MCP tool names, and skill descriptions all load into context. Your own setup may add more here, like an
+output style
+or text from
+--append-system-prompt
+, which both go into the system prompt the same way.
+As Claude works
+: each file read adds to context,
+path-scoped rules
+load automatically alongside matching files, and a
+PostToolUse hook
+fires after each edit.
+The follow-up prompt
+: a
+subagent
+handles the research in its own separate context window, so the large file reads stay out of yours. Only the summary and a small metadata trailer come back.
+At the end
+:
+/compact
+replaces the conversation with a structured summary. Most startup content reloads automatically. The
+skill
+listing is the one exception.
+​
+Check your own session
+The visualization uses representative numbers. To see your actual context usage at any point, run
+/context
+for a live breakdown by category with optimization suggestions. Run
+/memory
+to check which CLAUDE.md and auto memory files loaded at startup.
+​
+Related resources
+For deeper coverage of the features shown in the timeline, see these pages:
+Extend Claude Code
+: when to use CLAUDE.md vs skills vs rules vs hooks vs MCP
+Store instructions and memories
+: CLAUDE.md hierarchy and auto memory
+Subagents
+: delegate research to a separate context window
+Best practices
+: managing context as your primary constraint
+Reduce token usage
+: strategies for keeping context usage low
+Was this page helpful?
+Yes
+No
+Explore the .claude directory
+Store instructions and memories
+⌘
+I
+Assistant
+Responses are generated using AI and may contain mistakes.
