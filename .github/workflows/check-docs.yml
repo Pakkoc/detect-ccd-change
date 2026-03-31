@@ -1,0 +1,44 @@
+name: Check Claude Code Docs Changes
+
+on:
+  schedule:
+    # 매일 오전 9시 KST (= 0시 UTC)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 수동 실행도 가능
+
+permissions:
+  contents: write
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install httpx beautifulsoup4 python-dotenv
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run docs change detector
+        env:
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python main.py --send-email
+
+      - name: Push snapshot updates
+        run: |
+          git push || echo "Nothing to push"
