@@ -105,6 +105,18 @@ def generate_html_email(changes: dict[str, dict]) -> str:
     {summary_text}
 </div>
 
+<div style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:16px;margin-bottom:24px;font-size:13px;color:#555">
+    <strong style="color:#24292f">Color Guide</strong>
+    <table style="width:100%;margin-top:8px;border-collapse:collapse">
+        <tr>
+            <td style="padding:4px 8px"><span style="display:inline-block;width:12px;height:12px;background:#e6ffec;border:1px solid #1a7f37;border-radius:2px;vertical-align:middle"></span> <code style="color:#1a7f37">+ Added</code></td>
+            <td style="padding:4px 8px"><span style="display:inline-block;width:12px;height:12px;background:#ffebe9;border:1px solid #cf222e;border-radius:2px;vertical-align:middle"></span> <code style="color:#cf222e">- Removed</code></td>
+            <td style="padding:4px 8px"><span style="display:inline-block;width:12px;height:12px;background:#e8e8ff;border:1px solid #336;border-radius:2px;vertical-align:middle"></span> <code style="color:#336">@@ Location</code></td>
+            <td style="padding:4px 8px"><span style="display:inline-block;width:12px;height:12px;background:#f0f0f0;border:1px solid #999;border-radius:2px;vertical-align:middle"></span> <code style="color:#666">File info</code></td>
+        </tr>
+    </table>
+</div>
+
 {body_sections}
 
 <hr style="border:none;border-top:1px solid #ddd;margin:32px 0 16px 0">
