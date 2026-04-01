@@ -291,6 +291,8 @@ allowRead
 entries are respected; user, project, and local
 allowRead
 entries are ignored.
+denyRead
+still merges from all sources.
 For example, to block reading from the entire home directory while still allowing reads from the current project, add this to your project’s
 .claude/settings.json
 :

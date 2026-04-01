@@ -599,6 +599,8 @@ When you first open a session, a grayed-out example command appears in the promp
 After Claude responds, suggestions continue to appear based on your conversation history, such as a follow-up step from a multi-part request or a natural continuation of your workflow.
 Press
 Tab
+or
+Right arrow
 to accept the suggestion, or press
 Enter
 to accept and submit

@@ -1232,15 +1232,15 @@ settings.json
 env
 field
 .
-You can also disable the MCPSearch tool specifically using the
-disallowedTools
-setting:
+You can also disable the
+ToolSearch
+tool specifically:
 {
 "permissions"
 : {
 "deny"
 : [
-"MCPSearch"
+"ToolSearch"
 ]
 }
 }

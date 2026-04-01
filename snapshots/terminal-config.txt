@@ -54,6 +54,8 @@ Quick escape
 : Type
 \
 followed by Enter to create a newline
+Ctrl+J
+: Sends a line feed character, which works as a newline in any terminal without configuration
 Shift+Enter
 : Works out of the box in iTerm2, WezTerm, Ghostty, and Kitty
 Keyboard shortcut

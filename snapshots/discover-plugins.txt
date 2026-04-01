@@ -527,18 +527,18 @@ environment variable. See
 Auto updates
 for details.
 To keep plugin auto-updates enabled while disabling Claude Code auto-updates, set
-FORCE_AUTOUPDATE_PLUGINS=true
+FORCE_AUTOUPDATE_PLUGINS=1
 along with
 DISABLE_AUTOUPDATER
 :
 export
 DISABLE_AUTOUPDATER
 =
-true
+1
 export
 FORCE_AUTOUPDATE_PLUGINS
 =
-true
+1
 This is useful when you want to manage Claude Code updates manually but still receive automatic plugin updates.
 ​
 Configure team marketplaces

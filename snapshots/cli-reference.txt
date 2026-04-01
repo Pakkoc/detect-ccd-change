@@ -119,13 +119,29 @@ Flag
 Description
 Example
 --add-dir
-Add additional working directories for Claude to access (validates each path exists as a directory)
+Add additional working directories for Claude to read and edit files. Grants file access; most
+.claude/
+configuration is
+not discovered
+from these directories. Validates each path exists as a directory
 claude --add-dir ../apps ../lib
 --agent
 Specify an agent for the current session (overrides the
 agent
 setting)
 claude --agent my-custom-agent
+--agent-teams
+Enable experimental
+agent teams
+. Makes the
+SendMessage
+,
+TeamCreate
+, and
+TeamDelete
+tools available. Equivalent to
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+claude --agent-teams
 --agents
 Define custom subagents dynamically via JSON. Uses the same field names as subagent
 frontmatter
@@ -207,6 +223,10 @@ or
 "!statsig,!file"
 )
 claude --debug "api,mcp"
+--debug-file <path>
+Write debug logs to a specific file path. Implicitly enables debug mode. Takes precedence over
+CLAUDE_CODE_DEBUG_LOGS_DIR
+claude --debug-file /tmp/claude-debug.log
 --disable-slash-commands
 Disable all skills and commands for this session
 claude --disable-slash-commands
@@ -250,12 +270,13 @@ claude --init
 Run initialization hooks and exit (no interactive session)
 claude --init-only
 --include-partial-messages
-Include partial streaming events in output (requires
+Include partial streaming events in output. Requires
 --print
-and
---output-format=stream-json
-)
-claude -p --output-format stream-json --include-partial-messages "query"
+,
+--output-format stream-json
+, and
+--verbose
+claude -p --output-format stream-json --verbose --include-partial-messages "query"
 --input-format
 Specify input format for print mode (options:
 text
@@ -367,6 +388,16 @@ Start an interactive session with
 Remote Control
 enabled so you can also control it from claude.ai or the Claude app. Optionally pass a name for the session
 claude --remote-control "My Project"
+--replay-user-messages
+Re-emit user messages from stdin back on stdout for acknowledgment. Requires
+--print
+,
+--input-format stream-json
+,
+--output-format stream-json
+, and
+--verbose
+claude -p --input-format stream-json --output-format stream-json --verbose --replay-user-messages
 --resume
 ,
 -r
@@ -415,6 +446,13 @@ tmux
 . See
 set up agent teams
 claude --teammate-mode in-process
+--tmux
+Create a tmux session for the worktree. Requires
+--worktree
+. Uses iTerm2 native panes when available; pass
+--tmux=classic
+for traditional tmux
+claude -w feature-auth --tmux
 --tools
 Restrict which built-in tools Claude can use. Use
 ""
@@ -440,13 +478,6 @@ at
 <repo>/.claude/worktrees/<name>
 . If no name is given, one is auto-generated
 claude -w feature-auth
---tmux
-Create a tmux session for the worktree. Requires
---worktree
-. Uses iTerm2 native panes when available; pass
---tmux=classic
-for traditional tmux
-claude -w feature-auth --tmux
 ​
 System prompt flags
 Claude Code provides four flags for customizing the system prompt. All four work in both interactive and non-interactive modes.

@@ -172,6 +172,8 @@ export
 ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION
 =
 us-west-2
+# Optional: Override the Bedrock endpoint URL for custom endpoints or gateways
+# export ANTHROPIC_BEDROCK_BASE_URL=https://bedrock-runtime.us-east-1.amazonaws.com
 When enabling Bedrock for Claude Code, keep the following in mind:
 AWS_REGION
 is a required environment variable. Claude Code does not read from the
