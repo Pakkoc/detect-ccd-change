@@ -14,3 +14,9 @@ wheels/
 
 # Generated reports
 last_report.html
+
+# Playwright MCP
+.playwright-mcp/
+
+# Temporary data
+live_overview.json
