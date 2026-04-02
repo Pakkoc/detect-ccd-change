@@ -1118,7 +1118,7 @@ Subagents provided by an enabled
 plugin
 appear in the typeahead as
 <plugin-name>:<agent-name>
-. You can also type the mention manually without using the picker:
+. Named background subagents currently running in the session also appear in the typeahead, showing their status next to the name. You can also type the mention manually without using the picker:
 @agent-<name>
 for local subagents, or
 @agent-<plugin-name>:<agent-name>

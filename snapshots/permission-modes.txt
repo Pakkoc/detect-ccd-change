@@ -358,7 +358,9 @@ for the full configuration guide.
 When auto mode falls back
 The fallback design keeps false positives from derailing a session: a mistaken block costs Claude a retry, not your progress. If the classifier blocks an action 3 times in a row or 20 times total in one session, auto mode pauses and Claude Code resumes prompting for each action. These thresholds are not configurable.
 CLI
-: you see a notification in the status area. Approving the prompted action resets the denial counters, so you can continue in auto mode
+: you see a notification in the status area, and the denied action appears in
+/permissions
+under the Recently denied tab. Approving the prompted action resets the denial counters, so you can continue in auto mode
 Non-interactive mode
 with the
 -p

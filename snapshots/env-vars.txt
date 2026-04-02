@@ -867,6 +867,14 @@ OAuth client secret for MCP servers that require
 pre-configured credentials
 . Avoids the interactive prompt when adding a server with
 --client-secret
+MCP_CONNECTION_NONBLOCKING
+Set to
+true
+in non-interactive mode (
+-p
+) to skip the MCP connection wait entirely. Useful for scripted pipelines where MCP tools are not needed. Without this variable, the first query waits up to 5 seconds for
+--mcp-config
+server connections
 MCP_OAUTH_CALLBACK_PORT
 Fixed port for the OAuth redirect callback, as an alternative to
 --callback-port

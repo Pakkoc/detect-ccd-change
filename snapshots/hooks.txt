@@ -65,6 +65,7 @@ UserPromptSubmit decision control
 PreToolUse
 PreToolUse input
 PreToolUse decision control
+Defer a tool call for later
 PermissionRequest
 PermissionRequest input
 PermissionRequest decision control
@@ -75,6 +76,9 @@ PostToolUse decision control
 PostToolUseFailure
 PostToolUseFailure input
 PostToolUseFailure decision control
+PermissionDenied
+PermissionDenied input
+PermissionDenied decision control
 Notification
 Notification input
 SubagentStart
@@ -161,6 +165,10 @@ PreToolUse
 Before a tool call executes. Can block it
 PermissionRequest
 When a permission dialog appears
+PermissionDenied
+When a tool call is denied by the auto mode classifier. Return
+{retry: true}
+to tell the model it may retry the denied tool call
 PostToolUse
 After a tool call succeeds
 PostToolUseFailure
@@ -466,6 +474,8 @@ PostToolUse
 PostToolUseFailure
 ,
 PermissionRequest
+,
+PermissionDenied
 tool name
 Bash
 ,
@@ -671,6 +681,8 @@ PostToolUse
 PostToolUseFailure
 ,
 PermissionRequest
+,
+PermissionDenied
 ), so you can match them the same way you match any other tool name.
 MCP tools follow the naming pattern
 mcp__<server>__<tool>
@@ -789,8 +801,10 @@ PreToolUse
 PostToolUse
 ,
 PostToolUseFailure
-, and
+,
 PermissionRequest
+, and
+PermissionDenied
 . On other events, a hook with
 if
 set never runs. Uses the same syntax as
@@ -1325,6 +1339,11 @@ Shows stderr to Claude (tool already ran)
 PostToolUseFailure
 No
 Shows stderr to Claude (tool already failed)
+PermissionDenied
+No
+Exit code and stderr are ignored (denial already occurred). Use JSON
+hookSpecificOutput.retry: true
+to tell the model it may retry
 Notification
 No
 Shows stderr to user only
@@ -1389,6 +1408,11 @@ You must choose one approach per hook, not both: either use exit codes alone for
 Your hook’s stdout must contain only the JSON object. If your shell profile prints text on startup, it can interfere with JSON parsing. See
 JSON validation failed
 in the troubleshooting guide.
+Hook output injected into context (
+additionalContext
+,
+systemMessage
+, or plain stdout) is capped at 10,000 characters. Output that exceeds this limit is saved to a file and replaced with a preview and file path, the same way large tool results are handled.
 The JSON object supports three kinds of fields:
 Universal fields
 like
@@ -1459,12 +1483,16 @@ hook behavior
 PreToolUse
 hookSpecificOutput
 permissionDecision
-(allow/deny/ask),
+(allow/deny/ask/defer),
 permissionDecisionReason
 PermissionRequest
 hookSpecificOutput
 decision.behavior
 (allow/deny)
+PermissionDenied
+hookSpecificOutput
+retry: true
+tells the model it may retry the denied tool call
 WorktreeCreate
 path return
 Command hook prints path on stdout; HTTP hook returns
@@ -1986,7 +2014,7 @@ MCP tool names
 .
 Use
 PreToolUse decision control
-to allow, deny, or ask for permission to use the tool.
+to allow, deny, ask, or defer the tool call.
 ​
 PreToolUse input
 In addition to the
@@ -2213,7 +2241,7 @@ hooks can control whether a tool call proceeds. Unlike other hooks that use a to
 decision
 field, PreToolUse returns its decision inside a
 hookSpecificOutput
-object. This gives it richer control: three outcomes (allow, deny, or ask) plus the ability to modify tool input before execution.
+object. This gives it richer control: four outcomes (allow, deny, ask, or defer) plus the ability to modify tool input before execution.
 Field
 Description
 permissionDecision
@@ -2223,6 +2251,8 @@ skips the permission prompt.
 prevents the tool call.
 "ask"
 prompts the user to confirm.
+"defer"
+exits gracefully so the tool can be resumed later.
 Deny and ask rules
 still apply when a hook returns
 "allow"
@@ -2233,15 +2263,30 @@ and
 "ask"
 , shown to the user but not Claude. For
 "deny"
-, shown to Claude
+, shown to Claude. For
+"defer"
+, ignored
 updatedInput
 Modifies the tool’s input parameters before execution. Replaces the entire input object, so include unchanged fields alongside modified ones. Combine with
 "allow"
 to auto-approve, or
 "ask"
-to show the modified input to the user
+to show the modified input to the user. For
+"defer"
+, ignored
 additionalContext
-String added to Claude’s context before the tool executes
+String added to Claude’s context before the tool executes. For
+"defer"
+, ignored
+When multiple PreToolUse hooks return different decisions, precedence is
+deny
+>
+defer
+>
+ask
+>
+allow
+.
 When a hook returns
 "ask"
 , the permission prompt displayed to the user includes a label identifying where the hook came from: for example,
@@ -2322,6 +2367,133 @@ decision
 and
 reason
 as their current format.
+​
+Defer a tool call for later
+"defer"
+is for integrations that run
+claude -p
+as a subprocess and read its JSON output, such as an Agent SDK app or a custom UI built on top of Claude Code. It lets that calling process pause Claude at a tool call, collect input through its own interface, and resume where it left off. Claude Code honors this value only in
+non-interactive mode
+with the
+-p
+flag. In interactive sessions it logs a warning and ignores the hook result.
+The
+defer
+value requires Claude Code v2.1.89 or later. Earlier versions do not recognize it and the tool proceeds through the normal permission flow.
+The
+AskUserQuestion
+tool is the typical case: Claude wants to ask the user something, but there is no terminal to answer in. The round trip works like this:
+Claude calls
+AskUserQuestion
+. The
+PreToolUse
+hook fires.
+The hook returns
+permissionDecision: "defer"
+. The tool does not execute. The process exits with
+stop_reason: "tool_deferred"
+and the pending tool call preserved in the transcript.
+The calling process reads
+deferred_tool_use
+from the SDK result, surfaces the question in its own UI, and waits for an answer.
+The calling process runs
+claude -p --resume <session-id>
+. The same tool call fires
+PreToolUse
+again.
+The hook returns
+permissionDecision: "allow"
+with the answer in
+updatedInput
+. The tool executes and Claude continues.
+The
+deferred_tool_use
+field carries the tool’s
+id
+,
+name
+, and
+input
+. The
+input
+is the parameters Claude generated for the tool call, captured before execution:
+{
+"type"
+:
+"result"
+,
+"subtype"
+:
+"success"
+,
+"stop_reason"
+:
+"tool_deferred"
+,
+"session_id"
+:
+"abc123"
+,
+"deferred_tool_use"
+: {
+"id"
+:
+"toolu_01abc"
+,
+"name"
+:
+"AskUserQuestion"
+,
+"input"
+: {
+"questions"
+: [{
+"question"
+:
+"Which framework?"
+,
+"header"
+:
+"Framework"
+,
+"options"
+: [{
+"label"
+:
+"React"
+}, {
+"label"
+:
+"Vue"
+}],
+"multiSelect"
+:
+false
+}] }
+}
+}
+There is no timeout or retry limit. The session remains on disk until you resume it. If the answer is not ready when you resume, the hook can return
+"defer"
+again and the process exits the same way. The calling process controls when to break the loop by eventually returning
+"allow"
+or
+"deny"
+from the hook.
+"defer"
+only works when Claude makes a single tool call in the turn. If Claude makes several tool calls at once,
+"defer"
+is ignored with a warning and the tool proceeds through the normal permission flow. The constraint exists because resume can only re-run one tool: there is no way to defer one call from a batch without leaving the others unresolved.
+If the deferred tool is no longer available when you resume, the process exits with
+stop_reason: "tool_deferred_unavailable"
+and
+is_error: true
+before the hook fires. This happens when an MCP server that provided the tool is not connected for the resumed session. The
+deferred_tool_use
+payload is still included so you can identify which tool went missing.
+--resume
+does not restore the permission mode from the prior session. Pass the same
+--permission-mode
+flag on resume that was active when the tool was deferred. Claude Code logs a warning if the modes differ.
 ​
 PermissionRequest
 Runs when the user is shown a permission dialog.
@@ -2749,6 +2921,102 @@ Additional context for Claude to consider alongside the error
 "Additional information about the failure for Claude"
 }
 }
+​
+PermissionDenied
+Runs when the
+auto mode
+classifier denies a tool call. This hook only fires in auto mode: it does not run when you manually deny a permission dialog, when a
+PreToolUse
+hook blocks a call, or when a
+deny
+rule matches. Use it to log classifier denials, adjust configuration, or tell the model it may retry the tool call.
+Matches on tool name, same values as PreToolUse.
+​
+PermissionDenied input
+In addition to the
+common input fields
+, PermissionDenied hooks receive
+tool_name
+,
+tool_input
+,
+tool_use_id
+, and
+reason
+.
+{
+"session_id"
+:
+"abc123"
+,
+"transcript_path"
+:
+"/Users/.../.claude/projects/.../00893aaf-19fa-41d2-8238-13269b9b3ca0.jsonl"
+,
+"cwd"
+:
+"/Users/..."
+,
+"permission_mode"
+:
+"auto"
+,
+"hook_event_name"
+:
+"PermissionDenied"
+,
+"tool_name"
+:
+"Bash"
+,
+"tool_input"
+: {
+"command"
+:
+"rm -rf /tmp/build"
+,
+"description"
+:
+"Clean build directory"
+},
+"tool_use_id"
+:
+"toolu_01ABC123..."
+,
+"reason"
+:
+"Auto mode denied: command targets a path outside the project"
+}
+Field
+Description
+reason
+The classifier’s explanation for why the tool call was denied
+​
+PermissionDenied decision control
+PermissionDenied hooks can tell the model it may retry the denied tool call. Return a JSON object with
+hookSpecificOutput.retry
+set to
+true
+:
+{
+"hookSpecificOutput"
+: {
+"hookEventName"
+:
+"PermissionDenied"
+,
+"retry"
+:
+true
+}
+}
+When
+retry
+is
+true
+, Claude Code adds a message to the conversation telling the model it may retry the tool call. The denial itself is not reversed. If your hook does not return JSON, or returns
+retry: false
+, the denial stands and the model receives the original rejection message.
 ​
 Notification
 Runs when Claude Code sends notifications. Matches on notification type:
@@ -4388,6 +4656,7 @@ ElicitationResult
 FileChanged
 InstructionsLoaded
 Notification
+PermissionDenied
 PostCompact
 PreCompact
 SessionEnd

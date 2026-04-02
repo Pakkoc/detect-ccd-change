@@ -440,16 +440,15 @@ blocks channel message delivery regardless of what users pass to
 --channels
 true
 cleanupPeriodDays
-Sessions inactive for longer than this period are deleted at startup (default: 30 days).
-Setting to
+Sessions inactive for longer than this period are deleted at startup (default: 30 days, minimum 1). Setting to
 0
-deletes all existing transcripts at startup and disables session persistence entirely. No new
-.jsonl
-files are written,
-/resume
-shows no conversations, and hooks receive an empty
-transcript_path
-.
+is rejected with a validation error. To disable transcript writes entirely in non-interactive mode (
+-p
+), use the
+--no-session-persistence
+flag or the
+persistSession: false
+SDK option; there is no interactive-mode equivalent.
 20
 companyAnnouncements
 Announcement to display to users at startup. If multiple announcements are provided, they will be cycled through at random.
@@ -568,10 +567,10 @@ console
 to restrict login to Claude Console (API usage billing) accounts
 claudeai
 forceLoginOrgUUID
-Specify the UUID of an organization to automatically select it during login, bypassing the organization selection step. Requires
-forceLoginMethod
-to be set
+Require login to belong to a specific organization. Accepts a single UUID string, which also pre-selects that organization during login, or an array of UUIDs where any listed organization is accepted without pre-selection. When set in managed settings, login fails if the authenticated account does not belong to a listed organization; an empty array fails closed and blocks login with a misconfiguration message
 "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+or
+["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"]
 hooks
 Configure custom commands to run at lifecycle events. See
 hooks documentation
@@ -659,6 +658,17 @@ false
 . Set to
 true
 to restore the option
+true
+showThinkingSummaries
+Show
+extended thinking
+summaries in interactive sessions. When unset or
+false
+(default in interactive mode), thinking blocks are redacted by the API and shown as a collapsed stub. Redaction only changes what you see, not what the model generates: to reduce thinking spend,
+lower the budget or disable thinking
+instead. Non-interactive mode (
+-p
+) and SDK callers always receive summaries regardless of this setting
 true
 spinnerTipsEnabled
 Show tips in the spinner while Claude is working. Set to

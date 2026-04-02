@@ -771,6 +771,10 @@ PreToolUse
 Before a tool call executes. Can block it
 PermissionRequest
 When a permission dialog appears
+PermissionDenied
+When a tool call is denied by the auto mode classifier. Return
+{retry: true}
+to tell the model it may retry the denied tool call
 PostToolUse
 After a tool call succeeds
 PostToolUseFailure
@@ -988,11 +992,13 @@ hook can deny a tool call and tell Claude why, or escalate it to the user for ap
 "Use rg instead of grep for better performance"
 }
 }
-Claude Code reads
-permissionDecision
-and cancels the tool call, then feeds
+With
+"deny"
+, Claude Code cancels the tool call and feeds
 permissionDecisionReason
-back to Claude as feedback. These three options are specific to
+back to Claude. These
+permissionDecision
+values are specific to
 PreToolUse
 :
 "allow"
@@ -1001,6 +1007,15 @@ PreToolUse
 : cancel the tool call and send the reason to Claude
 "ask"
 : show the permission prompt to the user as normal
+A fourth value,
+"defer"
+, is available in
+non-interactive mode
+with the
+-p
+flag. It exits the process with the tool call preserved so an Agent SDK wrapper can collect input and resume. See
+Defer a tool call for later
+in the reference.
 Returning
 "allow"
 skips the interactive prompt but does not override
@@ -1085,6 +1100,8 @@ PostToolUse
 PostToolUseFailure
 ,
 PermissionRequest
+,
+PermissionDenied
 tool name
 Bash
 ,
@@ -1406,8 +1423,10 @@ PreToolUse
 PostToolUse
 ,
 PostToolUseFailure
-, and
+,
 PermissionRequest
+, and
+PermissionDenied
 . Adding it to any other event prevents the hook from running.
 ​
 Configure hook location

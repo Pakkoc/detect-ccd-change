@@ -218,8 +218,8 @@ adjust effort level
 /passes
 Share a free week of Claude Code with friends. Only visible if your account is eligible
 /permissions
-View or update
-permissions
+Manage allow, ask, and deny rules for tool permissions. Opens an interactive dialog where you can view rules by scope, add or remove rules, manage working directories, and review
+recent auto mode denials
 . Alias:
 /allowed-tools
 /plan [description]

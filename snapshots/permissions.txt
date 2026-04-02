@@ -50,6 +50,7 @@ Additional directories grant file access, not configuration
 How permissions interact with sandboxing
 Managed settings
 Managed-only settings
+Review auto mode denials
 Configure the auto mode classifier
 Define trusted infrastructure
 Override the block and allow rules
@@ -630,6 +631,19 @@ and
 web sessions
 is not controlled by a managed settings key. On Team and Enterprise plans, an admin enables or disables these features in
 Claude Code admin settings
+.
+​
+Review auto mode denials
+When
+auto mode
+denies a tool call, a notification appears and the denied action is recorded in
+/permissions
+under the Recently denied tab. Press
+r
+on a denied action to mark it for retry: when you exit the dialog, Claude Code sends a message telling the model it may retry that tool call and resumes the conversation.
+To react to denials programmatically, use the
+PermissionDenied
+hook
 .
 ​
 Configure the auto mode classifier

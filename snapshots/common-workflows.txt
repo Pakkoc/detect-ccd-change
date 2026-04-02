@@ -476,7 +476,11 @@ CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
 reverts these models to the fixed budget. See
 environment variables
 .
-You’re charged for all thinking tokens used, even though Claude 4 models show summarized thinking
+You’re charged for all thinking tokens used even when thinking summaries are redacted. In interactive mode, thinking appears as a collapsed stub by default. Set
+showThinkingSummaries: true
+in
+settings.json
+to show full summaries.
 ​
 Resume previous conversations
 When starting Claude Code, you can resume a previous session:
@@ -910,7 +914,9 @@ output.txt
 Tips:
 Use pipes to integrate Claude into existing shell scripts
 Combine with other Unix tools for powerful workflows
-Consider using —output-format for structured output
+Consider using
+--output-format
+for structured output
 ​
 Control output format
 Suppose you need Claude’s output in a specific format, especially when integrating Claude Code into scripts or other tools.
