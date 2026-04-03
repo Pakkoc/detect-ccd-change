@@ -67,7 +67,7 @@ Computer use is a research preview on macOS that requires a Pro or Max plan. It 
 -p
 flag.
 Computer use lets Claude open apps, control your screen, and work on your machine the way you would. From the CLI, Claude can compile a Swift app, launch it, click through every button, and screenshot the result, all in the same conversation where it wrote the code.
-This page covers how computer use works in the CLI. For the Desktop app, see
+This page covers how computer use works in the CLI. For the Desktop app on macOS or Windows, see
 computer use in Desktop
 .
 ​
@@ -216,13 +216,19 @@ screens, and tell me if any screen takes more than a second to load.
 Claude controls the simulator the same way you would with a mouse.
 ​
 Differences from the Desktop app
-The CLI and Desktop surfaces share the same computer use engine. A few Desktop-specific controls aren’t yet in the CLI:
+The CLI and Desktop surfaces share the same computer use engine, with a few differences:
 Feature
 Desktop
 CLI
+Platforms
+macOS and Windows
+macOS only
 Enable
 Toggle in
-Settings > Desktop app > General
+Settings > General
+(under
+Desktop app
+)
 Enable
 computer-use
 in
@@ -251,7 +257,9 @@ computer-use
 doesn’t appear in
 /mcp
 The server only appears on eligible setups. Check that:
-You’re on macOS. Computer use is not available on Linux or Windows.
+You’re on macOS. Computer use in the CLI is not available on Linux or Windows. On Windows, use
+computer use in Desktop
+instead.
 You’re running Claude Code v2.1.85 or later. Run
 claude --version
 to check.

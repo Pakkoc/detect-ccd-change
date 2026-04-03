@@ -442,7 +442,9 @@ true
 cleanupPeriodDays
 Sessions inactive for longer than this period are deleted at startup (default: 30 days, minimum 1). Setting to
 0
-is rejected with a validation error. To disable transcript writes entirely in non-interactive mode (
+is rejected with a validation error. Also controls the age cutoff for automatic removal of
+orphaned subagent worktrees
+at startup. To disable transcript writes entirely in non-interactive mode (
 -p
 ), use the
 --no-session-persistence
@@ -501,7 +503,11 @@ to prevent Claude Code from registering the
 claude-cli://
 protocol handler with the operating system on startup. Deep links let external tools open a Claude Code session with a pre-filled prompt via
 claude-cli://open?q=...
-. Useful in environments where protocol handler registration is restricted or managed separately
+. The
+q
+parameter supports multi-line prompts using URL-encoded newlines (
+%0A
+). Useful in environments where protocol handler registration is restricted or managed separately
 "disable"
 disabledMcpjsonServers
 List of specific MCP servers from
@@ -928,7 +934,7 @@ Auto-approve bash commands when sandboxed. Default: true
 true
 excludedCommands
 Commands that should run outside of the sandbox
-["git", "docker"]
+["docker *"]
 allowUnsandboxedCommands
 Allow commands to run outside the sandbox via the
 dangerouslyDisableSandbox
@@ -1081,7 +1087,7 @@ true
 ,
 "excludedCommands"
 : [
-"docker"
+"docker *"
 ],
 "filesystem"
 : {

@@ -135,7 +135,7 @@ Main chat input area
 Autocomplete
 Autocomplete menu is open
 Settings
-Settings menu (escape-only dismiss)
+Settings menu
 Confirmation
 Permission and confirmation dialogs
 Tabs
@@ -187,6 +187,9 @@ Cancel current operation
 app:exit
 Ctrl+D
 Exit Claude Code
+app:redraw
+Ctrl+L
+Redraw the screen
 app:toggleTodos
 Ctrl+T
 Toggle task list visibility
@@ -241,7 +244,7 @@ chat:newline
 (unbound)
 Insert a newline without submitting
 chat:undo
-Ctrl+_
+Ctrl+_, Ctrl+Shift+-
 Undo last action
 chat:externalEditor
 Ctrl+G, Ctrl+X Ctrl+E
@@ -299,6 +302,9 @@ Next field
 confirm:previousField
 (unbound)
 Previous field
+confirm:toggle
+Space
+Toggle selection
 confirm:cycleMode
 Shift+Tab
 Cycle permission modes
@@ -328,7 +334,7 @@ transcript:toggleShowAll
 Ctrl+E
 Toggle show all content
 transcript:exit
-Ctrl+C, Escape
+q, Ctrl+C, Escape
 Exit transcript view
 ​
 History search actions
@@ -557,6 +563,9 @@ Enter search mode
 settings:retry
 R
 Retry loading usage data (on error)
+settings:close
+Enter
+Save changes and close the config panel. Escape discards changes and closes
 ​
 Voice actions
 Actions available in the

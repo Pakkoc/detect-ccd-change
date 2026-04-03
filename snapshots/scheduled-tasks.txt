@@ -42,7 +42,7 @@ Set a one-time reminder
 Manage scheduled tasks
 How scheduled tasks run
 Jitter
-Three-day expiry
+Seven-day expiry
 Cron expression reference
 Disable scheduled tasks
 Limitations
@@ -206,8 +206,8 @@ instead of
 0 9 * * *
 , and the one-shot jitter will not apply.
 ​
-Three-day expiry
-Recurring tasks automatically expire 3 days after creation. The task fires one final time, then deletes itself. This bounds how long a forgotten loop can run. If you need a recurring task to last longer, cancel and recreate it before it expires, or use
+Seven-day expiry
+Recurring tasks automatically expire 7 days after creation. The task fires one final time, then deletes itself. This bounds how long a forgotten loop can run. If you need a recurring task to last longer, cancel and recreate it before it expires, or use
 Cloud scheduled tasks
 or
 Desktop scheduled tasks

@@ -254,7 +254,7 @@ web
 or
 iOS app
 , then pull it into your terminal with
-/teleport
+claude --teleport
 Hand off a terminal session to the
 Desktop app
 with

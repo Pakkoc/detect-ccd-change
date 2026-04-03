@@ -131,9 +131,7 @@ teammate, or
 resumes a subagent
 by its agent ID. Stopped subagents auto-resume in the background. Only available when
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-or the
---agent-teams
-flag is set
+is set
 No
 Skill
 Executes a
@@ -165,16 +163,12 @@ Creates an
 agent team
 with multiple teammates. Only available when
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-or the
---agent-teams
-flag is set
+is set
 No
 TeamDelete
 Disbands an agent team and cleans up teammate processes. Only available when
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-or the
---agent-teams
-flag is set
+is set
 No
 TodoWrite
 Manages the session task checklist. Available in non-interactive mode and the

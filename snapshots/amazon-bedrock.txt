@@ -36,6 +36,7 @@ Advanced credential configuration
 4. Pin model versions
 Map each model version to an inference profile
 IAM configuration
+1M token context window
 AWS Guardrails
 Troubleshooting
 Authentication loop with SSO and corporate proxies
@@ -224,7 +225,7 @@ Claude Code uses these default models when no pinning variables are set:
 Model type
 Default value
 Primary model
-global.anthropic.claude-sonnet-4-6
+us.anthropic.claude-sonnet-4-5-20250929-v1:0
 Small/fast model
 us.anthropic.claude-haiku-4-5-20251001-v1:0
 To customize models further, use one of these methods:
@@ -357,6 +358,16 @@ Bedrock IAM documentation
 .
 Create a dedicated AWS account for Claude Code to simplify cost tracking and access control.
 ​
+1M token context window
+Claude Opus 4.6 and Sonnet 4.6 support the
+1M token context window
+on Amazon Bedrock. Claude Code automatically enables the extended context window when you select a 1M model variant.
+To enable the 1M context window for your pinned model, append
+[1m]
+to the model ID. See
+Pin models for third-party deployments
+for details.
+​
 AWS Guardrails
 Amazon Bedrock Guardrails
 let you implement content filtering for Claude Code. Create a Guardrail in the
@@ -412,7 +423,6 @@ Bedrock documentation
 Bedrock pricing
 Bedrock inference profiles
 Claude Code on Amazon Bedrock: Quick Setup Guide
--
 Claude Code Monitoring Implementation (Bedrock)
 Was this page helpful?
 Yes

@@ -68,7 +68,7 @@ Claude Desktop support articles
 Code
 tab.
 Claude Code requires a
-Pro, Max, Teams, or Enterprise subscription
+Pro, Max, Team, or Enterprise subscription
 .
 ​
 Install

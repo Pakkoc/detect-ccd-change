@@ -64,7 +64,7 @@ Full feature set,
 Agent SDK
 ,
 computer use
-on Pro and Max, third-party providers
+on macOS (Pro and Max), third-party providers
 Desktop
 Visual review, parallel sessions, managed setup
 Diff viewer, app preview,

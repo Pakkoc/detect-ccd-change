@@ -222,7 +222,7 @@ default
 Read files
 Getting started, sensitive work
 acceptEdits
-Read and edit files
+Read and edit files except in protected directories
 Iterating on code you’re reviewing
 plan
 Read files
@@ -231,11 +231,28 @@ auto
 All actions, with background safety checks
 Long-running tasks, reducing prompt fatigue
 bypassPermissions
-All actions, no checks
+All actions except writes to protected directories
 Isolated containers and VMs only
 dontAsk
 Only pre-approved tools
 Locked-down environments
+Regardless of mode, writes to
+.git
+,
+.vscode
+,
+.idea
+,
+.husky
+, and
+.claude
+are never auto-approved, except for
+.claude/commands
+,
+.claude/agents
+, and
+.claude/skills
+where Claude routinely creates skills, subagents, and commands. This protects repository state, editor configuration, git hooks, and Claude’s own settings from accidental corruption.
 ​
 Analyze before you edit with plan mode
 Plan mode tells Claude to research and propose changes without making them. Claude reads files, runs shell commands to explore, asks clarifying questions, and writes a plan file, but does not edit your source code. Permission prompts work the same as default mode: you still approve Bash commands, network requests, and other actions that would normally prompt.
@@ -287,7 +304,7 @@ but is not as thorough as manually reviewing each action. Use it for tasks where
 Model
 : the classifier runs on Claude Sonnet 4.6, even if your main session uses a different model.
 Cost
-: classifier calls count toward your token usage the same as main-session calls. Each checked action sends a portion of the conversation transcript plus the pending action to the classifier. The extra cost comes mainly from shell commands and network operations, since read-only actions and file edits in your working directory don’t trigger a classifier call.
+: classifier calls count toward your token usage the same as main-session calls. Each checked action sends a portion of the conversation transcript plus the pending action to the classifier. The extra cost comes mainly from shell commands and network operations, since read-only actions and file edits in your working directory outside protected directories don’t trigger a classifier call.
 Latency
 : each classifier check adds a round-trip before the action executes.
 ​
@@ -296,7 +313,7 @@ Each action goes through a fixed decision order. The first matching step wins:
 Actions matching your
 allow or deny rules
 resolve immediately
-Read-only actions and file edits in your working directory are auto-approved
+Read-only actions and file edits in your working directory are auto-approved, except writes to protected directories
 Everything else goes to the classifier
 If the classifier blocks, Claude receives the reason and attempts an alternative approach
 On entering auto mode, Claude Code drops any allow rule that is known to grant arbitrary code execution: blanket shell access like
@@ -390,9 +407,11 @@ mode disables permission prompts and safety checks. Tool calls execute immediate
 .git
 ,
 .vscode
-, and
+,
 .idea
-, which still prompt to prevent accidental corruption of repository state and local configuration. Writes to
+, and
+.husky
+, which still prompt to prevent accidental corruption of repository state, editor configuration, and git hooks. Writes to
 .claude
 also prompt, except for
 .claude/commands
@@ -435,16 +454,16 @@ dontAsk
 bypassPermissions
 Permission prompts
 File edits and commands
-Commands only
+Commands and protected directories
 None unless fallback triggers
 None, blocked unless pre-allowed
-None
+Protected directories only
 Safety checks
 You review each action
-You review commands
-Classifier reviews commands
+You review commands and protected-directory writes
+Classifier reviews commands and protected-directory writes
 Your pre-approved rules only
-None
+You review protected-directory writes
 Token usage
 Standard
 Standard
@@ -463,7 +482,7 @@ ask
 deny
 entries to your settings file to pre-approve safe commands, force a prompt for risky ones, or block specific tools entirely. Rules apply in every mode except
 bypassPermissions
-, which skips the permission layer entirely, and are matched by tool name and argument pattern. See
+, and are matched by tool name and argument pattern. See
 Manage permissions
 for syntax and examples.
 Hooks

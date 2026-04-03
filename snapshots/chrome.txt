@@ -97,7 +97,7 @@ Claude in Chrome extension
 version 1.0.36 or higher, available in the Chrome Web Store for both browsers
 Claude Code
 version 2.0.73 or higher
-A direct Anthropic plan (Pro, Max, Teams, or Enterprise)
+A direct Anthropic plan (Pro, Max, Team, or Enterprise)
 Chrome integration is not available through third-party providers like Amazon Bedrock, Google Cloud Vertex AI, or Microsoft Foundry. If you access Claude exclusively through a third-party provider, you need a separate claude.ai account to use this feature.
 ​
 Get started in the CLI

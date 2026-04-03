@@ -61,7 +61,7 @@ Tips for remote tasks
 From web to terminal
 Requirements for teleporting
 Sharing sessions
-Sharing from an Enterprise or Teams account
+Sharing from an Enterprise or Team account
 Sharing from a Max or Pro account
 Schedule recurring tasks
 Managing sessions
@@ -336,8 +336,8 @@ types below. After that, share the session link as-is. Recipients who open your
 shared session will see the latest state of the session upon load, but the
 recipient’s page will not update in real time.
 ​
-Sharing from an Enterprise or Teams account
-For Enterprise and Teams accounts, the two visibility options are
+Sharing from an Enterprise or Team account
+For Enterprise and Team accounts, the two visibility options are
 Private
 and
 Team
@@ -899,7 +899,7 @@ Repository authentication
 Platform restrictions
 : Claude Code on the web only works with code hosted in GitHub. Self-hosted
 GitHub Enterprise Server
-instances are supported for Teams and Enterprise plans. GitLab and other non-GitHub repositories cannot be used with cloud sessions
+instances are supported for Team and Enterprise plans. GitLab and other non-GitHub repositories cannot be used with cloud sessions
 ​
 Best practices
 Automate environment setup

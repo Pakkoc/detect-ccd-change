@@ -64,7 +64,7 @@ Retrigger a failed or timed-out review
 Find issues that aren’t showing as inline comments
 Related resources
 Code Review is in research preview, available for
-Teams and Enterprise
+Team and Enterprise
 subscriptions. It is not available for organizations with
 Zero Data Retention
 enabled.

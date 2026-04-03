@@ -67,7 +67,7 @@ terminal guide
 A code project to work with
 A
 Claude subscription
-(Pro, Max, Teams, or Enterprise),
+(Pro, Max, Team, or Enterprise),
 Claude Console
 account, or access through a
 supported cloud provider
@@ -146,7 +146,7 @@ claude
 /login
 # Follow the prompts to log in with your account
 You can log in using any of these account types:
-Claude Pro, Max, Teams, or Enterprise
+Claude Pro, Max, Team, or Enterprise
 (recommended)
 Claude Console
 (API access with pre-paid credits). On first login, a “Claude Code” workspace is automatically created in the Console for centralized cost tracking.
@@ -246,9 +246,6 @@ claude -c
 claude -r
 Resume a previous conversation
 claude -r
-claude commit
-Create a Git commit
-claude commit
 /clear
 Clear conversation history
 /clear
@@ -256,7 +253,7 @@ Clear conversation history
 Show available commands
 /help
 exit
-or Ctrl+C
+or Ctrl+D
 Exit Claude Code
 exit
 See the

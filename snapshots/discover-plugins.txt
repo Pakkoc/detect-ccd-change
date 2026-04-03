@@ -590,7 +590,7 @@ command doesn’t appear:
 Check your version
 : Run
 claude --version
-. Plugins require version 1.0.33 or later.
+to see what’s installed.
 Update Claude Code
 :
 Homebrew

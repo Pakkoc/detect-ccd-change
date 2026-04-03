@@ -110,9 +110,6 @@ flag.
 Prerequisites
 Claude Code
 installed and authenticated
-Claude Code version 1.0.33 or later (run
-claude --version
-to check)
 If you don’t see the
 /plugin
 command, update Claude Code to the latest version. See
@@ -324,6 +321,11 @@ MCP server configurations
 .lsp.json
 Plugin root
 LSP server configurations for code intelligence
+bin/
+Plugin root
+Executables added to the Bash tool’s
+PATH
+while the plugin is enabled
 settings.json
 Plugin root
 Default

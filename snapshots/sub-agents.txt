@@ -151,9 +151,6 @@ Claude Code includes additional helper agents for specific tasks. These are typi
 Agent
 Model
 When Claude uses it
-Bash
-Inherits
-Running terminal commands in a separate context
 statusline-setup
 Sonnet
 When you run
@@ -257,24 +254,29 @@ Location
 Scope
 Priority
 How to create
+Managed settings
+Organization-wide
+1 (highest)
+Deployed via
+managed settings
 --agents
 CLI flag
 Current session
-1 (highest)
+2
 Pass JSON when launching Claude Code
 .claude/agents/
 Current project
-2
+3
 Interactive or manual
 ~/.claude/agents/
 All your projects
-3
+4
 Interactive or manual
 Plugin’s
 agents/
 directory
 Where plugin is enabled
-4 (lowest)
+5 (lowest)
 Installed with
 plugins
 Project subagents
@@ -343,11 +345,19 @@ memory
 effort
 ,
 background
-, and
+,
 isolation
+, and
+color
 . Use
 prompt
 for the system prompt, equivalent to the markdown body in file-based subagents.
+Managed subagents
+are deployed by organization administrators. Place markdown files in
+.claude/agents/
+inside the
+managed settings directory
+, using the same frontmatter format as project and user subagents. Managed definitions take precedence over project and user subagents with the same name.
 Plugin subagents
 come from
 plugins
@@ -445,6 +455,8 @@ default
 ,
 acceptEdits
 ,
+auto
+,
 dontAsk
 ,
 bypassPermissions
@@ -505,6 +517,24 @@ worktree
 to run the subagent in a temporary
 git worktree
 , giving it an isolated copy of the repository. The worktree is automatically cleaned up if the subagent makes no changes
+color
+No
+Display color for the subagent in the task list and transcript. Accepts
+red
+,
+blue
+,
+green
+,
+yellow
+,
+purple
+,
+orange
+,
+pink
+, or
+cyan
 initialPrompt
 No
 Auto-submitted as the first user turn when this agent runs as the main session agent (via
@@ -709,7 +739,10 @@ Behavior
 default
 Standard permission checking with prompts
 acceptEdits
-Auto-accept file edits
+Auto-accept file edits except in protected directories
+auto
+Auto mode
+: a background classifier reviews commands and protected-directory writes
 dontAsk
 Auto-deny permission prompts (explicitly allowed tools still work)
 bypassPermissions
@@ -724,8 +757,10 @@ with caution. It skips permission prompts, allowing the subagent to execute oper
 .claude
 ,
 .vscode
-, and
+,
 .idea
+, and
+.husky
 directories still prompt for confirmation, except for
 .claude/commands
 ,
@@ -1235,9 +1270,7 @@ tool is only available when
 agent teams
 are enabled via
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-or the
---agent-teams
-flag.
+.
 To resume a subagent, ask Claude to continue the previous work:
 Use the code-reviewer subagent to review the authentication module
 [Agent completes]

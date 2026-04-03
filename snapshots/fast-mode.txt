@@ -144,10 +144,10 @@ Not available on third-party cloud providers
 Extra usage enabled
 : your account must have extra usage enabled, which allows billing beyond your plan’s included usage. For individual accounts, enable this in your
 Console billing settings
-. For Teams and Enterprise, an admin must enable extra usage for the organization.
+. For Team and Enterprise, an admin must enable extra usage for the organization.
 Fast mode usage is billed directly to extra usage, even if you have remaining usage on your plan. This means fast mode tokens do not count against your plan’s included usage and are charged at the fast mode rate from the first token.
-Admin enablement for Teams and Enterprise
-: fast mode is disabled by default for Teams and Enterprise organizations. An admin must explicitly
+Admin enablement for Team and Enterprise
+: fast mode is disabled by default for Team and Enterprise organizations. An admin must explicitly
 enable fast mode
 before users can access it.
 If your admin has not enabled fast mode for your organization, the
@@ -160,7 +160,7 @@ Console
 (API customers):
 Claude Code preferences
 Claude AI
-(Teams and Enterprise):
+(Team and Enterprise):
 Admin Settings > Claude Code
 Another option to disable fast mode entirely is to set
 CLAUDE_CODE_DISABLE_FAST_MODE=1
@@ -170,7 +170,7 @@ Environment variables
 ​
 Require per-session opt-in
 By default, fast mode persists across sessions: if a user enables fast mode, it stays on in future sessions. Administrators on
-Teams
+Team
 or
 Enterprise
 plans can prevent this by setting

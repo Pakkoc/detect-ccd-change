@@ -556,6 +556,13 @@ Override the plugins root directory. Despite the name, this sets the parent dire
 CLAUDE_CODE_PLUGIN_GIT_TIMEOUT_MS
 Timeout in milliseconds for git operations when installing or updating plugins (default: 120000). Increase this value for large repositories or slow network connections. See
 Git operations time out
+CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE
+Set to
+1
+to keep the existing marketplace cache when a
+git pull
+fails instead of wiping and re-cloning. Useful in offline or airgapped environments where re-cloning would fail the same way. See
+Marketplace updates fail in offline environments
 CLAUDE_CODE_PLUGIN_SEED_DIR
 Path to one or more read-only plugin seed directories, separated by
 :

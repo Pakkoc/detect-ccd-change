@@ -133,7 +133,7 @@ export
 VERTEX_REGION_CLAUDE_4_6_SONNET
 =
 europe-west1
-Each model version has its own
+Most model versions have a corresponding
 VERTEX_REGION_CLAUDE_*
 variable. See the
 Environment variables reference
@@ -181,7 +181,7 @@ Claude Code uses these default models when no pinning variables are set:
 Model type
 Default value
 Primary model
-claude-sonnet-4-6
+claude-sonnet-4-5@20250929
 Small/fast model
 claude-haiku-4-5@20251001
 To customize models further:

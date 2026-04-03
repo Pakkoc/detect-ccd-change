@@ -904,7 +904,11 @@ as this breaks the ability to call Windows executables from WSL. Similarly, avoi
 ​
 WSL2 sandbox setup
 Sandboxing
-is supported on WSL2 but requires installing additional packages. If you see an error like “Sandbox requires socat and bubblewrap” when running
+is supported on WSL2 but requires installing additional packages. If you see an error about missing
+bubblewrap
+or
+socat
+when running
 /sandbox
 , install the dependencies:
 Ubuntu/Debian
@@ -1234,7 +1238,7 @@ If you notice code blocks like this in generated markdown:
 function example() {
 return "hello";
 }
-```text
+```
 Instead of properly tagged blocks like:
 ```javascript
 function
@@ -1244,7 +1248,7 @@ return
 "hello"
 ;
 }
-```text
+```
 Solutions:
 Ask Claude to add language tags
 : request “Add appropriate language tags to all code blocks in this markdown file.”

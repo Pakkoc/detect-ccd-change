@@ -228,6 +228,8 @@ Enter plan mode directly from the prompt. Pass an optional description to enter 
 /plugin
 Manage Claude Code
 plugins
+/powerup
+Discover Claude Code features through quick interactive lessons with animated demos
 /pr-comments [PR]
 Fetch and display comments from a GitHub pull request. Automatically detects the PR for the current branch, or pass a PR URL or number. Requires the
 gh
@@ -289,7 +291,8 @@ status line
 /stickers
 Order Claude Code stickers
 /tasks
-List and manage background tasks
+List and manage background tasks. Also available as
+/bashes
 /terminal-setup
 Configure terminal keybindings for Shift+Enter and other shortcuts. Only visible in terminals that need it, like VS Code, Alacritty, or Warp
 /theme

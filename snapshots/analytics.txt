@@ -30,7 +30,7 @@ Costs
 Track team usage with analytics
 Create and distribute a plugin marketplace
 On this page
-Access analytics for Teams and Enterprise
+Access analytics for Team and Enterprise
 Enable contribution metrics
 Review summary metrics
 Explore the charts
@@ -66,11 +66,11 @@ platform.claude.com/claude-code
 Usage metrics, spend tracking, team insights
 Details
 ​
-Access analytics for Teams and Enterprise
+Access analytics for Team and Enterprise
 Navigate to
 claude.ai/analytics/claude-code
 . Admins and Owners can view the dashboard.
-The Teams and Enterprise dashboard includes:
+The Team and Enterprise dashboard includes:
 Usage metrics
 : lines of code accepted, suggestion accept rate, daily active users and sessions
 Contribution metrics

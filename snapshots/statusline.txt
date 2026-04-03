@@ -326,6 +326,12 @@ workspace.project_dir
 Directory where Claude Code was launched, which may differ from
 cwd
 if the working directory changes during a session
+workspace.added_dirs
+Additional directories added via
+/add-dir
+or
+--add-dir
+. Empty array if none have been added
 cost.total_cost_usd
 Total session cost in USD
 cost.total_duration_ms
@@ -361,6 +367,12 @@ rate_limits.seven_day.resets_at
 Unix epoch seconds when the 5-hour or 7-day rate limit window resets
 session_id
 Unique session identifier
+session_name
+Custom session name set with the
+--name
+flag or
+/rename
+. Absent if no custom name has been set
 transcript_path
 Path to conversation transcript file
 version
@@ -404,6 +416,10 @@ Your status line command receives this JSON structure via stdin:
 :
 "abc123..."
 ,
+"session_name"
+:
+"my-session"
+,
 "transcript_path"
 :
 "/path/to/transcript.jsonl"
@@ -427,10 +443,13 @@ Your status line command receives this JSON structure via stdin:
 "project_dir"
 :
 "/original/project/directory"
+,
+"added_dirs"
+: []
 },
 "version"
 :
-"1.0.80"
+"2.1.90"
 ,
 "output_style"
 : {
@@ -565,6 +584,11 @@ false
 }
 Fields that may be absent
 (not present in JSON):
+session_name
+: appears only when a custom name has been set with
+--name
+or
+/rename
 vim
 : appears only when vim mode is enabled
 agent

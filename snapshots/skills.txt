@@ -346,7 +346,7 @@ disable-model-invocation
 true
 allowed-tools
 :
-Read, Grep
+Read Grep
 ---
 Your skill instructions here...
 All fields are optional. Only
@@ -388,7 +388,7 @@ true
 .
 allowed-tools
 No
-Tools Claude can use without asking permission when this skill is active.
+Tools Claude can use without asking permission when this skill is active. Accepts a space-separated string or a YAML list.
 model
 No
 Model to use when this skill is active.
@@ -581,7 +581,7 @@ description
 Read files without making changes
 allowed-tools
 :
-Read, Grep, Glob
+Read Grep Glob
 ---
 ​
 Pass arguments to skills

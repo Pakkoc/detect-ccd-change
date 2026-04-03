@@ -69,13 +69,17 @@ Alt+Y
 Alt+M
 ,
 Alt+P
+,
+Alt+T
 ) require configuring Option as Meta in your terminal:
 iTerm2
 : settings → Profiles → Keys → set Left/Right Option key to “Esc+”
 Terminal.app
 : settings → Profiles → Keyboard → check “Use Option as Meta Key”
 VS Code
-: settings → Profiles → Keys → set Left/Right Option key to “Esc+”
+: set
+"terminal.integrated.macOptionIsMeta": true
+in VS Code settings
 See
 Terminal configuration
 for details.
@@ -101,8 +105,8 @@ Edit your prompt or custom response in your default text editor.
 Ctrl+X Ctrl+E
 is the readline-native binding
 Ctrl+L
-Clear terminal screen
-Keeps conversation history
+Redraw the screen
+Repaints the current UI without clearing conversation history
 Ctrl+O
 Toggle verbose output
 Shows detailed tool usage and execution. Also expands MCP read and search calls, which collapse to a single line like “Queried slack” by default
@@ -167,9 +171,7 @@ Option+T
 Alt+T
 (Windows/Linux)
 Toggle extended thinking
-Enable or disable extended thinking mode. Run
-/terminal-setup
-first to enable this shortcut
+Enable or disable extended thinking mode. On macOS, configure your terminal to send Option as Meta for this shortcut to work
 Option+O
 (macOS) or
 Alt+O
@@ -284,15 +286,8 @@ q
 Ctrl+C
 ,
 Esc
-Exit transcript view.
-Ctrl+C
-and
-Esc
-can be rebound via
+Exit transcript view. All three can be rebound via
 transcript:exit
-;
-q
-is not rebindable
 ​
 Voice input
 Shortcut

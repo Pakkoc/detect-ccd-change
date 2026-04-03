@@ -162,11 +162,15 @@ claude.ai
 platform.claude.com
 : authentication for Anthropic Console accounts
 Ensure these URLs are allowlisted in your proxy configuration and firewall rules. This is especially important when using Claude Code in containerized or restricted network environments.
-The native installer and update checks also require the following URLs. If you install Claude Code through npm or manage your own binary distribution, end users may not need access:
-downloads.claude.ai
-: CDN hosting the install script, version pointers, manifests, signing keys, and executables
+The native installer and update checks also require the following URLs. Allowlist both, since the installer and auto-updater fetch from
 storage.googleapis.com
-: legacy download bucket, deprecation in progress
+while plugin downloads use
+downloads.claude.ai
+. If you install Claude Code through npm or manage your own binary distribution, end users may not need access:
+storage.googleapis.com
+: download bucket for the Claude Code binary and auto-updater
+downloads.claude.ai
+: CDN hosting the install script, version pointers, manifests, signing keys, and plugin executables
 Claude Code on the web
 and
 Code Review

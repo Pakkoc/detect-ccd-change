@@ -114,7 +114,11 @@ Server mode flags
 claude remote-control --name "My Project"
 ​
 CLI flags
-Customize Claude Code’s behavior with these command-line flags:
+Customize Claude Code’s behavior with these command-line flags.
+claude --help
+does not list every flag, so a flag’s absence from
+--help
+does not mean it is unavailable.
 Flag
 Description
 Example
@@ -130,18 +134,6 @@ Specify an agent for the current session (overrides the
 agent
 setting)
 claude --agent my-custom-agent
---agent-teams
-Enable experimental
-agent teams
-. Makes the
-SendMessage
-,
-TeamCreate
-, and
-TeamDelete
-tools available. Equivalent to
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-claude --agent-teams
 --agents
 Define custom subagents dynamically via JSON. Uses the same field names as subagent
 frontmatter
@@ -269,14 +261,16 @@ claude --init
 --init-only
 Run initialization hooks and exit (no interactive session)
 claude --init-only
+--include-hook-events
+Include all hook lifecycle events in the output stream. Requires
+--output-format stream-json
+claude -p --output-format stream-json --include-hook-events "query"
 --include-partial-messages
 Include partial streaming events in output. Requires
 --print
-,
+and
 --output-format stream-json
-, and
---verbose
-claude -p --output-format stream-json --verbose --include-partial-messages "query"
+claude -p --output-format stream-json --include-partial-messages "query"
 --input-format
 Specify input format for print mode (options:
 text
@@ -290,7 +284,7 @@ structured outputs
 )
 claude -p --json-schema '{"type":"object","properties":{...}}' "query"
 --maintenance
-Run maintenance hooks and exit
+Run maintenance hooks and start interactive mode
 claude --maintenance
 --max-budget-usd
 Maximum dollar amount to spend on API calls before stopping (print mode only)
@@ -390,14 +384,10 @@ enabled so you can also control it from claude.ai or the Claude app. Optionally 
 claude --remote-control "My Project"
 --replay-user-messages
 Re-emit user messages from stdin back on stdout for acknowledgment. Requires
---print
-,
 --input-format stream-json
-,
+and
 --output-format stream-json
-, and
---verbose
-claude -p --input-format stream-json --output-format stream-json --verbose --replay-user-messages
+claude -p --input-format stream-json --output-format stream-json --replay-user-messages
 --resume
 ,
 -r
@@ -444,7 +434,7 @@ in-process
 , or
 tmux
 . See
-set up agent teams
+Choose a display mode
 claude --teammate-mode in-process
 --tmux
 Create a tmux session for the worktree. Requires

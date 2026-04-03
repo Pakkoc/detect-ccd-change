@@ -338,7 +338,7 @@ jest
 jest --no-watchman
 docker
 is incompatible with running in the sandbox. Consider specifying
-docker
+docker *
 in
 excludedCommands
 to force it to run outside of the sandbox.
@@ -536,7 +536,7 @@ Built-in file tools
 permissions
 .
 Computer use
-: when Claude opens apps and controls your screen on macOS, it runs on your actual desktop rather than in an isolated environment. Per-app permission prompts gate each application. See
+: when Claude opens apps and controls your screen, it runs on your actual desktop rather than in an isolated environment. Per-app permission prompts gate each application. See
 computer use in the CLI
 or
 computer use in Desktop
