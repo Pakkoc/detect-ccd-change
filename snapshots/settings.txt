@@ -160,7 +160,7 @@ CLAUDE.md
 CLAUDE.md
 or
 .claude/CLAUDE.md
-None
+CLAUDE.local.md
 ​
 Settings files
 The

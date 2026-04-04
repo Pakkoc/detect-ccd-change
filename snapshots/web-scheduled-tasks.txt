@@ -37,6 +37,7 @@ Overview
 Remote Control
 Claude Code on the web
 Claude Code on the web
+Plan in the cloud
 Schedule tasks on the web
 Claude Code on desktop
 Chrome extension (beta)
@@ -285,7 +286,7 @@ GitHub Actions
 Was this page helpful?
 Yes
 No
-Claude Code on the web
+Plan in the cloud
 Get started
 ⌘
 I

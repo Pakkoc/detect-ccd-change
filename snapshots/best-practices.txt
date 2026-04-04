@@ -266,6 +266,12 @@ Project root (
 ./CLAUDE.md
 )
 : check into git to share with your team
+Project root (
+./CLAUDE.local.md
+)
+: personal project-specific notes; add this file to your
+.gitignore
+so it isn’t shared with your team
 Parent directories
 : useful for monorepos where both
 root/CLAUDE.md

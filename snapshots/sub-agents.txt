@@ -385,7 +385,13 @@ settings.local.json
 , but these rules apply to the entire session, not just the plugin subagent.
 Subagent definitions from any of these scopes are also available to
 agent teams
-: when spawning a teammate, you can reference a subagent type and the teammate inherits its system prompt, tools, and model.
+: when spawning a teammate, you can reference a subagent type and the teammate uses its
+tools
+and
+model
+, with the definition’s body appended to the teammate’s system prompt as additional instructions. See
+agent teams
+for which frontmatter fields apply on that path.
 ​
 Write subagent files
 Subagent files use YAML frontmatter for configuration, followed by the system prompt in Markdown:

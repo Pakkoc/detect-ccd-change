@@ -39,6 +39,7 @@ Claude Code on the web
 Claude Code on desktop
 Get started
 Use Desktop
+Scheduled tasks
 Chrome extension (beta)
 Computer use (preview)
 Visual Studio Code
@@ -52,6 +53,17 @@ Now what?
 Coming from the CLI?
 What’s next
 The desktop app gives you Claude Code with a graphical interface: visual diff review, live app preview, GitHub PR monitoring with auto-merge, parallel sessions with Git worktree isolation, scheduled tasks, and the ability to run tasks remotely. No terminal required.
+Download Claude for your platform:
+macOS
+Universal build for Intel and Apple Silicon
+Windows
+For x64 processors
+For Windows ARM64, download the
+ARM64 installer
+. Linux is not currently supported.
+Claude Code requires a
+Pro, Max, Team, or Enterprise subscription
+.
 This page walks through installing the app and starting your first session. If you’re already set up, see
 Use Claude Code Desktop
 for the full reference.
@@ -67,26 +79,19 @@ Claude Desktop support articles
 . This page focuses on the
 Code
 tab.
-Claude Code requires a
-Pro, Max, Team, or Enterprise subscription
-.
 ​
 Install
 1
-Download the app
-Download Claude for your platform.
+Install and sign in
+Download Claude for your platform and run the installer:
 macOS
-Universal build for Intel and Apple Silicon
-Windows
-For x64 processors
-For Windows ARM64,
-download here
-.
-Linux is not currently supported.
-2
-Sign in
+: universal build for Intel and Apple Silicon
+Windows x64
+: for x64 processors
+Windows ARM64
+: for ARM processors
 Launch Claude from your Applications folder (macOS) or Start menu (Windows). Sign in with your Anthropic account.
-3
+2
 Open the Code tab
 Click the
 Code
