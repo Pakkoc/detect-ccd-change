@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Administration
 Advanced setup
@@ -232,8 +233,8 @@ CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1
 to disable.
 All environment variables can be checked into
 settings.json
-(
-read more
+(see
+settings reference
 ).
 Was this page helpful?
 Yes

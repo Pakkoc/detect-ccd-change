@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Getting started
 Overview
@@ -120,6 +121,12 @@ Flag
 Description
 --name "My Project"
 Set a custom session title visible in the session list at claude.ai/code.
+--remote-control-session-name-prefix <prefix>
+Prefix for auto-generated session names when no explicit name is set. Defaults to your machine’s hostname, producing names like
+myhost-graceful-unicorn
+. Set
+CLAUDE_REMOTE_CONTROL_SESSION_NAME_PREFIX
+for the same effect.
 --spawn <mode>
 How concurrent sessions are created. Press
 w
@@ -202,7 +209,13 @@ The name you passed to
 The title you set with
 /rename
 The last meaningful message in existing conversation history
-Your first prompt once you send one
+An auto-generated name like
+myhost-graceful-unicorn
+, where
+myhost
+is your machine’s hostname or the prefix you set with
+--remote-control-session-name-prefix
+If you didn’t set an explicit name, the title updates to reflect your prompt once you send one.
 If the environment already has an active session, you’ll be asked whether to continue it or start a new one.
 If you don’t have the Claude app yet, use the
 /mobile

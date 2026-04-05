@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Configuration
 Settings
@@ -514,6 +515,19 @@ List of specific MCP servers from
 .mcp.json
 files to reject
 ["filesystem"]
+disableSkillShellExecution
+Disable inline shell execution for
+!`...`
+and
+```!
+blocks in
+skills
+and custom commands from user, project, plugin, or additional-directory sources. Commands are replaced with
+[shell command execution disabled by policy]
+instead of being run. Bundled and managed skills are not affected. Most useful in
+managed settings
+where users cannot override it
+true
 effortLevel
 Persist the
 effort level
@@ -577,6 +591,10 @@ Require login to belong to a specific organization. Accepts a single UUID string
 "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 or
 ["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"]
+forceRemoteSettingsRefresh
+(Managed settings only) Block CLI startup until remote managed settings are freshly fetched from the server. If the fetch fails, the CLI exits rather than continuing with cached or no settings. When not set, startup continues without waiting for remote settings. See
+fail-closed enforcement
+true
 hooks
 Configure custom commands to run at lifecycle events. See
 hooks documentation
@@ -765,12 +783,10 @@ or
 "vim"
 . Default:
 "normal"
-. Written automatically when you run
-/vim
 . Appears in
 /config
 as
-Key binding mode
+Editor mode
 "vim"
 showTurnDuration
 Show turn duration messages after responses, e.g. “Cooked for 1m 6s”. Default:

@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Agents
 Create custom subagents

@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Administration
 Advanced setup
@@ -40,6 +41,7 @@ Current limitations
 Settings delivery
 Settings precedence
 Fetch and caching behavior
+Enforce fail-closed startup
 Security approval dialogs
 Platform availability
 Audit logging
@@ -233,6 +235,21 @@ Claude Code fetches fresh settings in the background
 Cached settings persist through network failures
 Claude Code applies settings updates automatically without a restart, except for advanced settings like OpenTelemetry configuration, which require a full restart to take effect.
 ​
+Enforce fail-closed startup
+By default, if the remote settings fetch fails at startup, the CLI continues without managed settings. For environments where this brief unenforced window is unacceptable, set
+forceRemoteSettingsRefresh: true
+in your managed settings.
+When this setting is active, the CLI blocks at startup until remote settings are freshly fetched. If the fetch fails, the CLI exits rather than proceeding without the policy. This setting self-perpetuates: once delivered from the server, it is also cached locally so that subsequent startups enforce the same behavior even before the first successful fetch of a new session.
+To enable this, add the key to your managed settings configuration:
+{
+"forceRemoteSettingsRefresh"
+:
+true
+}
+Before enabling this setting, ensure your network policies allow connectivity to
+api.anthropic.com
+. If that endpoint is unreachable, the CLI exits at startup and users cannot start Claude Code.
+​
 Security approval dialogs
 Certain settings that could pose security risks require explicit user approval before being applied:
 Shell command settings
@@ -271,7 +288,9 @@ Tampered file applies at startup, but correct settings restore on the next serve
 User deletes the cached settings file
 First-launch behavior occurs: settings fetch asynchronously with a brief unenforced window
 API is unavailable
-Cached settings apply if available, otherwise managed settings are not enforced until the next successful fetch
+Cached settings apply if available, otherwise managed settings are not enforced until the next successful fetch. With
+forceRemoteSettingsRefresh: true
+, the CLI exits instead of continuing
 User authenticates with a different organization
 Settings are not delivered for accounts outside the managed organization
 User sets a non-default

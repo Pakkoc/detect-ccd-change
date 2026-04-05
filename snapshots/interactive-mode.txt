@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Reference
 CLI reference
@@ -320,11 +321,9 @@ skills
 .
 ​
 Vim editor mode
-Enable vim-style editing with
-/vim
-command or configure permanently via
+Enable vim-style editing via
 /config
-.
+→ Editor mode.
 ​
 Mode switching
 Command

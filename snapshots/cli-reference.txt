@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Reference
 CLI reference
@@ -382,6 +383,15 @@ Start an interactive session with
 Remote Control
 enabled so you can also control it from claude.ai or the Claude app. Optionally pass a name for the session
 claude --remote-control "My Project"
+--remote-control-session-name-prefix <prefix>
+Prefix for auto-generated
+Remote Control
+session names when no explicit name is set. Defaults to your machine’s hostname, producing names like
+myhost-graceful-unicorn
+. Set
+CLAUDE_REMOTE_CONTROL_SESSION_NAME_PREFIX
+for the same effect
+claude remote-control --remote-control-session-name-prefix dev-box
 --replay-user-messages
 Re-emit user messages from stdin back on stdout for acknowledgment. Requires
 --input-format stream-json

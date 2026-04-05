@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Configuration
 Settings
@@ -611,6 +612,11 @@ for Team and Enterprise users. Unset or
 false
 blocks channel message delivery regardless of what users pass to
 --channels
+forceRemoteSettingsRefresh
+When
+true
+, blocks CLI startup until remote managed settings are freshly fetched and exits if the fetch fails. See
+fail-closed enforcement
 pluginTrustMessage
 Custom message appended to the plugin trust warning shown before installation
 sandbox.filesystem.allowManagedReadPathsOnly

@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Configuration
 Settings
@@ -121,11 +122,9 @@ Be aware of VS Code limitations
 : The VS Code terminal is particularly prone to truncating long pastes
 ​
 Vim Mode
-Claude Code supports a subset of Vim keybindings that can be enabled with
-/vim
-or configured via
+Claude Code supports a subset of Vim keybindings that can be enabled via
 /config
-. To set the mode directly in your config file, set the
+→ Editor mode. To set the mode directly in your config file, set the
 editorMode
 global config key to
 "vim"

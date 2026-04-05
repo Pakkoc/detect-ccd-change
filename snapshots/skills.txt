@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Agents
 Create custom subagents
@@ -428,6 +429,8 @@ shell
 No
 Shell to use for
 !`command`
+and
+```!
 blocks in this skill. Accepts
 bash
 (default) or
@@ -710,6 +713,26 @@ executes immediately (before Claude sees anything)
 The output replaces the placeholder in the skill content
 Claude receives the fully-rendered prompt with actual PR data
 This is preprocessing, not something Claude executes. Claude only sees the final result.
+For multi-line commands, use a fenced code block opened with
+```!
+instead of the inline form:
+## Environment
+```!
+node --version
+npm --version
+git status --short
+```
+To disable this behavior for skills and custom commands from user, project, plugin, or
+additional-directory
+sources, set
+"disableSkillShellExecution": true
+in
+settings
+. Each command is replaced with
+[shell command execution disabled by policy]
+instead of being run. Bundled and managed skills are not affected. This setting is most useful in
+managed settings
+, where users cannot override it.
 To enable
 extended thinking
 in a skill, include the word “ultrathink” anywhere in your skill content.

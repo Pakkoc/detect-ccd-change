@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+What's New
 Resources
 Reference
 CLI reference
@@ -231,13 +232,13 @@ plugins
 /powerup
 Discover Claude Code features through quick interactive lessons with animated demos
 /pr-comments [PR]
-Fetch and display comments from a GitHub pull request. Automatically detects the PR for the current branch, or pass a PR URL or number. Requires the
+Removed in v2.1.91. Ask Claude directly to view pull request comments instead. On earlier versions, fetches and displays comments from a GitHub pull request; automatically detects the PR for the current branch, or pass a PR URL or number. Requires the
 gh
 CLI
 /privacy-settings
 View and update your privacy settings. Only available for Pro and Max plan subscribers
 /release-notes
-View the full changelog, with the most recent version closest to your prompt
+View the changelog in an interactive version picker. Select a specific version to see its release notes, or choose to show all versions
 /reload-plugins
 Reload all active
 plugins
@@ -277,6 +278,12 @@ Cloud scheduled tasks
 . Claude walks you through the setup conversationally
 /security-review
 Analyze pending changes on the current branch for security vulnerabilities. Reviews the git diff and identifies risks like injection, auth issues, and data exposure
+/setup-bedrock
+Configure
+Amazon Bedrock
+authentication, region, and model pins through an interactive wizard. Only visible when
+CLAUDE_CODE_USE_BEDROCK=1
+is set. First-time Bedrock users can also access this wizard from the login screen
 /skills
 List available
 skills
@@ -306,7 +313,9 @@ Open the upgrade page to switch to a higher plan tier
 /usage
 Show plan usage limits and rate limit status
 /vim
-Toggle between Vim and Normal editing modes
+Removed in v2.1.92. To toggle between Vim and Normal editing modes, use
+/config
+→ Editor mode
 /voice
 Toggle push-to-talk
 voice dictation
