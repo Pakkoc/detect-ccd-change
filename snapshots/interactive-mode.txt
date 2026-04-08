@@ -106,8 +106,8 @@ Edit your prompt or custom response in your default text editor.
 Ctrl+X Ctrl+E
 is the readline-native binding
 Ctrl+L
-Redraw the screen
-Repaints the current UI without clearing conversation history
+Clear prompt input
+Clears typed text, keeps conversation history
 Ctrl+O
 Toggle verbose output
 Shows detailed tool usage and execution. Also expands MCP read and search calls, which collapse to a single line like “Queried slack” by default

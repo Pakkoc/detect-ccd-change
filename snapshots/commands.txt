@@ -160,7 +160,7 @@ Exit the CLI. Alias:
 /export [filename]
 Export the current conversation as plain text. With a filename, writes directly to that file. Without, opens a dialog to copy to clipboard or save to a file
 /extra-usage
-Configure extra usage to keep working when rate limits are hit
+Configure usage credits to keep working when rate limits are hit
 /fast [on|off]
 Toggle
 fast mode

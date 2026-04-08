@@ -1245,9 +1245,7 @@ The exit code from your hook command tells Claude Code whether the action should
 Exit 0
 means success. Claude Code parses stdout for
 JSON output fields
-. JSON output is only processed on exit 0. For most events, stdout is only shown in verbose mode (
-Ctrl+O
-). The exceptions are
+. JSON output is only processed on exit 0. For most events, stdout is written to the debug log but not shown in the transcript. The exceptions are
 UserPromptSubmit
 and
 SessionStart
@@ -1261,9 +1259,9 @@ rejects the prompt, and so on. See
 exit code 2 behavior
 for the full list.
 Any other exit code
-is a non-blocking error. stderr is shown in verbose mode (
-Ctrl+O
-) and execution continues.
+is a non-blocking error for most hook events. The transcript shows a one-line
+<hook name> hook error
+notice and execution continues. The full stderr is written to the debug log.
 For example, a hook command script that blocks dangerous Bash commands:
 #!/bin/bash
 # Reads JSON input from stdin, checks the command
@@ -1296,6 +1294,11 @@ fi
 exit
 0
 # Success: tool call proceeds
+For most hook events, only exit code 2 blocks the action. Claude Code treats exit code 1 as a non-blocking error and proceeds with the action, even though 1 is the conventional Unix failure code. If your hook is meant to enforce a policy, use
+exit 2
+. The exception is
+WorktreeCreate
+, where any non-zero exit code aborts worktree creation.
 ​
 Exit code 2 behavior per event
 Exit code 2 is the way a hook signals “stop, don’t do this.” The effect depends on the event, because some events represent actions that can be blocked (like a tool call that hasn’t happened yet) and others represent things that already happened or can’t be prevented.
@@ -1447,7 +1450,7 @@ suppressOutput
 false
 If
 true
-, hides stdout from verbose mode output
+, omits stdout from the debug log
 systemMessage
 none
 Warning message shown to the user
@@ -1964,6 +1967,10 @@ is
 . Not added to context
 additionalContext
 String added to Claude’s context
+sessionTitle
+Sets the session title, same effect as
+/rename
+. Use to name sessions automatically based on the prompt content
 {
 "decision"
 :
@@ -1982,6 +1989,10 @@ String added to Claude’s context
 "additionalContext"
 :
 "My additional context here"
+,
+"sessionTitle"
+:
+"My session title"
 }
 }
 The JSON format isn’t required for simple use cases. To add context, you can print plain text to stdout with exit code 0. Use JSON when you need to
@@ -5195,9 +5206,15 @@ powershell.exe
 }
 ​
 Debug hooks
-Run
+Hook execution details, including which hooks matched, their exit codes, and full stdout and stderr, are written to the debug log file. Start Claude Code with
+claude --debug-file <path>
+to write the log to a known location, or run
 claude --debug
-to see hook execution details, including which hooks matched, their exit codes, and output.
+and read the log at
+~/.claude/debug/<session-id>.txt
+. The
+--debug
+flag does not print to the terminal.
 [DEBUG] Executing hooks for PostToolUse:Write
 [DEBUG] Found 1 hook commands to execute
 [DEBUG] Executing hook command: <Your command> with timeout 600000ms

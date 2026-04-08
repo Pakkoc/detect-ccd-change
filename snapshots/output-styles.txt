@@ -128,6 +128,11 @@ You can save these files at the user level (
 project level (
 .claude/output-styles
 ).
+Plugins
+can
+also ship output styles in an
+output-styles/
+directory.
 ​
 Frontmatter
 Output style files support frontmatter for specifying metadata:

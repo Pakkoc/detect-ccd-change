@@ -967,9 +967,9 @@ hooks, anything you write to stdout is added to Claude’s context.
 Exit 2
 : the action is blocked. Write a reason to stderr, and Claude receives it as feedback so it can adjust.
 Any other exit code
-: the action proceeds. Stderr is logged but not shown to Claude. Toggle verbose mode with
-Ctrl+O
-to see these messages in the transcript.
+: the action proceeds. The transcript shows a one-line error notice; the full stderr goes to the
+debug log
+.
 ​
 Structured JSON output
 Exit codes give you two options: allow or block. For more control, exit 0 and print a JSON object to stdout instead.
@@ -1284,9 +1284,9 @@ Match MCP tools
 in the reference for the full list of examples.
 The command below extracts the tool name from the hook’s JSON input with
 jq
-and writes it to stderr, where it shows up in verbose mode (
-Ctrl+O
-):
+and writes it to stderr. Writing to stderr keeps stdout clean for JSON output and sends the message to the
+debug log
+:
 {
 "hooks"
 : {
@@ -1776,11 +1776,16 @@ i
 means interactive. Hooks run in non-interactive shells, so the echo is skipped.
 ​
 Debug techniques
-Toggle verbose mode with
+The transcript view, toggled with
 Ctrl+O
-to see hook output in the transcript, or run
-claude --debug
-for full execution details including which hooks matched and their exit codes.
+, shows a one-line summary for each hook that fired: success is silent, blocking errors show stderr, and non-blocking errors show only the hook name.
+For full execution details including which hooks matched, their exit codes, stdout, and stderr, read the debug log. Start Claude Code with
+claude --debug-file /tmp/claude.log
+to write to a known path, then
+tail -f /tmp/claude.log
+in another terminal. If you started without that flag, run
+/debug
+mid-session to enable logging and find the log path.
 ​
 Learn more
 Hooks reference

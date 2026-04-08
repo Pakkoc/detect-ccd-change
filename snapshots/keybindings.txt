@@ -189,8 +189,8 @@ app:exit
 Ctrl+D
 Exit Claude Code
 app:redraw
-Ctrl+L
-Redraw the screen
+(unbound)
+Force terminal redraw
 app:toggleTodos
 Ctrl+T
 Toggle task list visibility
@@ -223,6 +223,9 @@ Description
 chat:cancel
 Escape
 Cancel current input
+chat:clearInput
+Ctrl+L
+Clear prompt input
 chat:killAgents
 Ctrl+X Ctrl+K
 Kill all background agents

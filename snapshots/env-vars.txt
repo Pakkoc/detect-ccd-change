@@ -66,6 +66,9 @@ Override the Bedrock endpoint URL. Use for custom Bedrock endpoints or when rout
 LLM gateway
 . See
 Amazon Bedrock
+ANTHROPIC_BEDROCK_MANTLE_BASE_URL
+Override the Bedrock Mantle endpoint URL. See
+Mantle endpoint
 ANTHROPIC_BETAS
 Comma-separated list of additional
 anthropic-beta
@@ -168,17 +171,17 @@ ANTHROPIC_VERTEX_PROJECT_ID
 GCP project ID for Vertex AI. Required when using
 Google Vertex AI
 API_TIMEOUT_MS
-Timeout for API requests in milliseconds (default: 600000, or 10 minutes). Increase this when requests time out on slow networks or when routing through a proxy
+Timeout for API requests in milliseconds (default: 600000, or 10 minutes; maximum: 2147483647). Increase this when requests time out on slow networks or when routing through a proxy. Values above the maximum overflow the underlying timer and cause requests to fail immediately
 AWS_BEARER_TOKEN_BEDROCK
 Bedrock API key for authentication (see
 Bedrock API keys
 )
 BASH_DEFAULT_TIMEOUT_MS
-Default timeout for long-running bash commands
+Default timeout for long-running bash commands (default: 120000, or 2 minutes)
 BASH_MAX_OUTPUT_LENGTH
 Maximum number of characters in bash outputs before they are middle-truncated
 BASH_MAX_TIMEOUT_MS
-Maximum timeout the model can set for long-running bash commands
+Maximum timeout the model can set for long-running bash commands (default: 600000, or 10 minutes)
 CLAUDECODE
 Set to
 1
@@ -622,6 +625,8 @@ CLAUDE_CODE_SKIP_BEDROCK_AUTH
 Skip AWS authentication for Bedrock (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_FOUNDRY_AUTH
 Skip Azure authentication for Microsoft Foundry (for example, when using an LLM gateway)
+CLAUDE_CODE_SKIP_MANTLE_AUTH
+Skip AWS authentication for Bedrock Mantle (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_VERTEX_AUTH
 Skip Google authentication for Vertex (for example, when using an LLM gateway)
 CLAUDE_CODE_SUBAGENT_MODEL
@@ -672,6 +677,9 @@ Bedrock
 CLAUDE_CODE_USE_FOUNDRY
 Use
 Microsoft Foundry
+CLAUDE_CODE_USE_MANTLE
+Use the Bedrock
+Mantle endpoint
 CLAUDE_CODE_USE_POWERSHELL_TOOL
 Set to
 1
@@ -897,9 +905,9 @@ Maximum number of remote MCP servers (HTTP/SSE) to connect in parallel during st
 MCP_SERVER_CONNECTION_BATCH_SIZE
 Maximum number of local MCP servers (stdio) to connect in parallel during startup (default: 3)
 MCP_TIMEOUT
-Timeout in milliseconds for MCP server startup
+Timeout in milliseconds for MCP server startup (default: 30000, or 30 seconds)
 MCP_TOOL_TIMEOUT
-Timeout in milliseconds for MCP tool execution
+Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hours)
 NO_PROXY
 List of domains and IPs to which requests will be directly issued, bypassing proxy
 OTEL_LOG_TOOL_CONTENT

@@ -54,7 +54,7 @@ Choose where to execute
 Execute on the web
 Send the plan back to your terminal
 Related resources
-Ultraplan is in research preview. Behavior and capabilities may change based on feedback.
+Ultraplan is in research preview and requires Claude Code v2.1.91 or later. Behavior and capabilities may change based on feedback.
 Ultraplan hands a planning task from your local CLI to a
 Claude Code on the web
 session running in
@@ -69,7 +69,7 @@ Flexible execution
 : approve the plan to run on the web and open a pull request, or send it back to your terminal
 Ultraplan requires a
 Claude Code on the web
-account and a GitHub repository. The cloud session runs in your account’s default
+account and a GitHub repository. Because it runs on Anthropic’s cloud infrastructure, it is not available when using Amazon Bedrock, Google Cloud Vertex AI, or Microsoft Foundry. The cloud session runs in your account’s default
 cloud environment
 .
 ​
