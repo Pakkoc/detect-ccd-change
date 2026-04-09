@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -39,7 +40,7 @@ Remote Control
 Claude Code on the web
 Claude Code on desktop
 Get started
-Use Desktop
+Reference
 Scheduled tasks
 Chrome extension (beta)
 Computer use (preview)
@@ -232,7 +233,7 @@ Use Claude Code Desktop
 Was this page helpful?
 Yes
 No
-Use Desktop
+Reference
 Chrome extension (beta)
 ⌘
 I

@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -92,7 +93,7 @@ Before using Claude Code in Slack, ensure you have the following:
 Requirement
 Details
 Claude Plan
-Pro, Max, Team, or Enterprise with Claude Code access (premium seats)
+Pro, Max, Team, or Enterprise with Claude Code access (premium seats or Chat + Claude Code seats)
 Claude Code on the web
 Access to
 Claude Code on the web

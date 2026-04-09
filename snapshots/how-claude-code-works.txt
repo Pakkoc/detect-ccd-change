@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -278,6 +279,9 @@ To control what’s preserved during compaction, add a “Compact Instructions�
 with a focus (like
 /compact focus on the API changes
 ).
+If a single file or tool output is so large that context refills immediately after each summary, Claude Code stops auto-compacting after a few attempts and shows an error instead of looping. See
+Auto-compaction stops with a thrashing error
+for recovery steps.
 Run
 /context
 to see what’s using space. MCP tool definitions are deferred by default and loaded on demand via

@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Configuration
@@ -1519,15 +1520,15 @@ git status
 or
 git diff
 can be slow, especially in large repositories. This example caches git information to a temp file and only refreshes it every 5 seconds.
-Use a stable, fixed filename for the cache file like
-/tmp/statusline-git-cache
-. Each status line invocation runs as a new process, so process-based identifiers like
+The cache filename needs to be stable across status line invocations within a session, but unique across sessions so concurrent sessions in different repositories don’t read each other’s cached git state. Process-based identifiers like
 $$
 ,
 os.getpid()
 , or
 process.pid
-produce a different value every time and the cache is never reused.
+change on every invocation and defeat the cache. Use the
+session_id
+from the JSON input instead: it’s stable for the lifetime of a session and unique per session.
 Each script checks if the cache file is missing or older than 5 seconds before running git commands:
 Bash
 Python
@@ -1562,9 +1563,23 @@ jq
 -r
 '.workspace.current_dir'
 )
+SESSION_ID
+=
+$(
+echo
+"
+$input
+"
+|
+jq
+-r
+'.session_id'
+)
 CACHE_FILE
 =
-"/tmp/statusline-git-cache"
+"/tmp/statusline-git-cache-
+$SESSION_ID
+"
 CACHE_MAX_AGE
 =
 5
@@ -1764,7 +1779,7 @@ statusline.sh
 Tips
 Test with mock input
 :
-echo '{"model":{"display_name":"Opus"},"context_window":{"used_percentage":25}}' | ./statusline.sh
+echo '{"model":{"display_name":"Opus"},"workspace":{"current_dir":"/home/user/project"},"context_window":{"used_percentage":25},"session_id":"test-session-abc"}' | ./statusline.sh
 Keep output short
 : the status bar has limited width, so long output may get truncated or wrap awkwardly
 Cache slow operations
@@ -1823,6 +1838,20 @@ output due to when each is calculated
 OSC 8 links not clickable
 Verify your terminal supports OSC 8 hyperlinks (iTerm2, Kitty, WezTerm)
 Terminal.app does not support clickable links
+If link text appears but isn’t clickable, Claude Code may not have detected hyperlink support in your terminal. This commonly affects Windows Terminal and other emulators not in the auto-detection list. Set the
+FORCE_HYPERLINK
+environment variable to override detection before launching Claude Code:
+FORCE_HYPERLINK
+=
+1
+claude
+In PowerShell, set the variable in the current session first:
+$
+env:
+FORCE_HYPERLINK
+=
+"1"
+; claude
 SSH and tmux sessions may strip OSC sequences depending on configuration
 If escape sequences appear as literal text like
 \e]8;;

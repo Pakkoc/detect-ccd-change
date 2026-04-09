@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -49,6 +50,11 @@ Claude Code reads instructions, settings, skills, subagents, and memory from you
 in your home directory. Commit project files to git to share them with your team; files in
 ~/.claude
 are personal configuration that applies across all your projects.
+If you set
+CLAUDE_CONFIG_DIR
+, every
+~/.claude
+path on this page lives under that directory instead.
 Most users only edit
 CLAUDE.md
 and
@@ -59,7 +65,7 @@ file reference table
 below.
 ​
 What’s not shown
-The explorer covers files you author and edit. A few authored files live elsewhere:
+The explorer covers files you author and edit. A few related files live elsewhere:
 File
 Location
 Purpose
@@ -215,12 +221,12 @@ first for the overview, then the specific command for the area you want to inves
 Application data
 Beyond the config you author,
 ~/.claude
-holds data Claude Code writes during sessions. These files are plaintext. Anything that passes through a tool (file contents, command output, pasted text) lands in a transcript on disk.
+holds data Claude Code writes during sessions. These files are plaintext. Anything that passes through a tool lands in a transcript on disk: file contents, command output, pasted text.
 ​
-Swept automatically
-Files older than
+Cleaned up automatically
+Files in the paths below are deleted on startup once they’re older than
 cleanupPeriodDays
-(default 30) are deleted on the next startup.
+. The default is 30 days.
 Path under
 ~/.claude/
 Contents
@@ -235,7 +241,10 @@ plans/
 Plan files written during
 plan mode
 debug/
-Per-session debug logs
+Per-session debug logs, written only when you start with
+--debug
+or run
+/debug
 paste-cache/
 ,
 image-cache/
@@ -243,15 +252,13 @@ Contents of large pastes and attached images
 session-env/
 Per-session environment metadata
 ​
-Not swept
-These persist until you delete them.
+Kept until you delete them
+The following paths are not covered by automatic cleanup and persist indefinitely.
 Path under
 ~/.claude/
 Contents
 history.jsonl
 Every prompt you’ve typed, with timestamp and project path. Used for up-arrow recall.
-statsig/
-Feature-flag cache and a stable anonymous device ID
 stats-cache.json
 Aggregated token and cost counts shown by
 /cost
@@ -259,17 +266,13 @@ backups/
 Timestamped copies of
 ~/.claude.json
 taken before config migrations
-downloads/
-Native binary downloads staged by the auto-updater
 todos/
 Legacy per-session task lists. No longer written by current versions; safe to delete.
 shell-snapshots/
-and
-sockets/
-are runtime files removed when the session exits cleanly.
+holds runtime files removed when the session exits cleanly. Other small cache and lock files appear depending on which features you use and are safe to delete.
 ​
 Plaintext storage
-Transcripts and history are not encrypted at rest; OS file permissions are the only protection. If a tool reads a
+Transcripts and history are not encrypted at rest. OS file permissions are the only protection. If a tool reads a
 .env
 file or a command prints a credential, that value is written to
 projects/<project>/<session>.jsonl
@@ -277,19 +280,19 @@ projects/<project>/<session>.jsonl
 Lower
 cleanupPeriodDays
 to shorten how long transcripts are kept
-For headless runs, pass
+In non-interactive mode, pass
 --no-session-persistence
-with
+alongside
 -p
-, or set
+to skip writing transcripts entirely. In the Agent SDK, set
 persistSession: false
-in the SDK, to skip writing transcripts entirely. There is no interactive-mode equivalent.
+. There is no interactive-mode equivalent.
 Use
 permission rules
 to deny reads of credential files
 ​
 Clear local data
-You can delete these at any time. You lose the listed capability for past sessions; new sessions are unaffected.
+You can delete any of the application-data paths above at any time. New sessions are unaffected. The table below shows what you lose for past sessions.
 Delete
 You lose
 ~/.claude/projects/
@@ -298,20 +301,31 @@ Resume, continue, and rewind for past sessions
 Up-arrow prompt recall
 ~/.claude/file-history/
 Checkpoint restore for past sessions
+~/.claude/stats-cache.json
+Historical totals shown by
+/cost
+~/.claude/backups/
+Rollback copies of
+~/.claude.json
+from past config migrations
 ~/.claude/debug/
 ,
-paste-cache/
+~/.claude/plans/
 ,
-image-cache/
+~/.claude/paste-cache/
 ,
-todos/
+~/.claude/image-cache/
+,
+~/.claude/session-env/
 Nothing user-facing
+~/.claude/todos/
+Nothing. Legacy directory not written by current versions.
 Don’t delete
 ~/.claude.json
 ,
-settings.json
+~/.claude/settings.json
 , or
-plugins/
+~/.claude/plugins/
 : those hold your auth, preferences, and installed plugins.
 ​
 Related resources

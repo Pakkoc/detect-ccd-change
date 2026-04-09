@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -37,7 +38,8 @@ Platforms and integrations
 Overview
 Remote Control
 Claude Code on the web
-Claude Code on the web
+Get started
+Reference
 Plan in the cloud
 Schedule tasks on the web
 Claude Code on desktop
@@ -156,7 +158,7 @@ Remote Control
 Was this page helpful?
 Yes
 No
-Claude Code on the web
+Reference
 Schedule tasks on the web
 ⌘
 I

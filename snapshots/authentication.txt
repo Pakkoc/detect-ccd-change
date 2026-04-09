@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Administration
@@ -49,6 +50,9 @@ in your terminal. On first launch, Claude Code opens a browser window for you to
 If the browser doesn’t open automatically, press
 c
 to copy the login URL to your clipboard, then paste it into your browser.
+If your browser shows a login code instead of redirecting back after you sign in, paste it into the terminal at the
+Paste code here if prompted
+prompt.
 You can authenticate with any of these account types:
 Claude Pro or Max subscription
 : log in with your Claude.ai account. Subscribe at

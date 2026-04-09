@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Reference
@@ -182,6 +183,12 @@ BASH_MAX_OUTPUT_LENGTH
 Maximum number of characters in bash outputs before they are middle-truncated
 BASH_MAX_TIMEOUT_MS
 Maximum timeout the model can set for long-running bash commands (default: 600000, or 10 minutes)
+CCR_FORCE_BUNDLE
+Set to
+1
+to force
+claude --remote
+to bundle and upload your local repository even when GitHub access is available
 CLAUDECODE
 Set to
 1

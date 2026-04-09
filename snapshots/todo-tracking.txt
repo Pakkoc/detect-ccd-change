@@ -1,0 +1,517 @@
+Todo Lists - Claude Code Docs
+Skip to main content
+Claude Code Docs
+home page
+English
+Search...
+⌘
+K
+Ask AI
+Search...
+Navigation
+Control and observability
+Todo Lists
+Getting started
+Build with Claude Code
+Deployment
+Administration
+Configuration
+Reference
+Agent SDK
+What's New
+Resources
+Agent SDK
+Overview
+Quickstart
+Core concepts
+How the agent loop works
+Use Claude Code features
+Work with sessions
+Input and output
+Streaming Input
+Handle approvals and user input
+Stream responses in real-time
+Get structured output from agents
+Extend with tools
+Give Claude custom tools
+Connect to external tools with MCP
+Scale to many tools with tool search
+Subagents in the SDK
+Customize behavior
+Modifying system prompts
+Slash Commands in the SDK
+Agent Skills in the SDK
+Plugins in the SDK
+Control and observability
+Configure permissions
+Intercept and control agent behavior with hooks
+Rewind file changes with checkpointing
+Track cost and usage
+Observability with OpenTelemetry
+Todo Lists
+Deployment
+Hosting the Agent SDK
+Securely deploying AI agents
+SDK references
+TypeScript SDK
+TypeScript V2 (preview)
+Python SDK
+Migration Guide
+On this page
+Todo Lifecycle
+When Todos Are Used
+Examples
+Monitoring Todo Changes
+Real-time Progress Display
+Related Documentation
+Todo tracking provides a structured way to manage tasks and display progress to users. The Claude Agent SDK includes built-in todo functionality that helps organize complex workflows and keep users informed about task progression.
+​
+Todo Lifecycle
+Todos follow a predictable lifecycle:
+Created
+as
+pending
+when tasks are identified
+Activated
+to
+in_progress
+when work begins
+Completed
+when the task finishes successfully
+Removed
+when all tasks in a group are completed
+​
+When Todos Are Used
+The SDK automatically creates todos for:
+Complex multi-step tasks
+requiring 3 or more distinct actions
+User-provided task lists
+when multiple items are mentioned
+Non-trivial operations
+that benefit from progress tracking
+Explicit requests
+when users ask for todo organization
+​
+Examples
+​
+Monitoring Todo Changes
+TypeScript
+Python
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+for
+await
+(
+const
+message
+of
+query
+({
+prompt:
+"Optimize my React app performance and track progress with todos"
+,
+options:
+{
+maxTurns:
+15
+}
+})) {
+// Todo updates are reflected in the message stream
+if
+(
+message
+.
+type
+===
+"assistant"
+) {
+for
+(
+const
+block
+of
+message
+.
+message
+.
+content
+) {
+if
+(
+block
+.
+type
+===
+"tool_use"
+&&
+block
+.
+name
+===
+"TodoWrite"
+) {
+const
+todos
+=
+block
+.
+input
+.
+todos
+;
+console
+.
+log
+(
+"Todo Status Update:"
+);
+todos
+.
+forEach
+((
+todo
+,
+index
+)
+=>
+{
+const
+status
+=
+todo
+.
+status
+===
+"completed"
+?
+"✅"
+:
+todo
+.
+status
+===
+"in_progress"
+?
+"🔧"
+:
+"❌"
+;
+console
+.
+log
+(
+`
+${
+index
++
+1
+}
+.
+${
+status
+}
+${
+todo
+.
+content
+}
+`
+);
+});
+}
+}
+}
+}
+​
+Real-time Progress Display
+TypeScript
+Python
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+class
+TodoTracker
+{
+private
+todos
+:
+any
+[]
+=
+[];
+displayProgress
+() {
+if
+(
+this
+.
+todos
+.
+length
+===
+0
+)
+return
+;
+const
+completed
+=
+this
+.
+todos
+.
+filter
+((
+t
+)
+=>
+t
+.
+status
+===
+"completed"
+).
+length
+;
+const
+inProgress
+=
+this
+.
+todos
+.
+filter
+((
+t
+)
+=>
+t
+.
+status
+===
+"in_progress"
+).
+length
+;
+const
+total
+=
+this
+.
+todos
+.
+length
+;
+console
+.
+log
+(
+`
+\n
+Progress:
+${
+completed
+}
+/
+${
+total
+}
+completed`
+);
+console
+.
+log
+(
+`Currently working on:
+${
+inProgress
+}
+task(s)
+\n
+`
+);
+this
+.
+todos
+.
+forEach
+((
+todo
+,
+index
+)
+=>
+{
+const
+icon
+=
+todo
+.
+status
+===
+"completed"
+?
+"✅"
+:
+todo
+.
+status
+===
+"in_progress"
+?
+"🔧"
+:
+"❌"
+;
+const
+text
+=
+todo
+.
+status
+===
+"in_progress"
+?
+todo
+.
+activeForm
+:
+todo
+.
+content
+;
+console
+.
+log
+(
+`
+${
+index
++
+1
+}
+.
+${
+icon
+}
+${
+text
+}
+`
+);
+});
+}
+async
+trackQuery
+(
+prompt
+:
+string
+) {
+for
+await
+(
+const
+message
+of
+query
+({
+prompt
+,
+options:
+{
+maxTurns:
+20
+}
+})) {
+if
+(
+message
+.
+type
+===
+"assistant"
+) {
+for
+(
+const
+block
+of
+message
+.
+message
+.
+content
+) {
+if
+(
+block
+.
+type
+===
+"tool_use"
+&&
+block
+.
+name
+===
+"TodoWrite"
+) {
+this
+.
+todos
+=
+block
+.
+input
+.
+todos
+;
+this
+.
+displayProgress
+();
+}
+}
+}
+}
+}
+}
+// Usage
+const
+tracker
+=
+new
+TodoTracker
+();
+await
+tracker
+.
+trackQuery
+(
+"Build a complete authentication system with todos"
+);
+​
+Related Documentation
+TypeScript SDK Reference
+Python SDK Reference
+Streaming vs Single Mode
+Custom Tools
+Was this page helpful?
+Yes
+No
+Observability with OpenTelemetry
+Hosting the Agent SDK
+⌘
+I
+Assistant
+Responses are generated using AI and may contain mistakes.

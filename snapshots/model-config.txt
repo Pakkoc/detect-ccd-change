@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Configuration
@@ -380,12 +381,12 @@ Sonnet 4.6 with 1M context
 Max, Team, and Enterprise
 Included with subscription
 Requires
-usage credits
+extra usage
 Pro
 Requires
-usage credits
+extra usage
 Requires
-usage credits
+extra usage
 API and pay-as-you-go
 Full access
 Full access
@@ -394,7 +395,7 @@ CLAUDE_CODE_DISABLE_1M_CONTEXT=1
 . This removes 1M model variants from the model picker. See
 environment variables
 .
-The 1M context window uses standard model pricing with no premium for tokens beyond 200K. For plans where extended context is included with your subscription, usage remains covered by your subscription. For plans that access extended context through usage credits, tokens are billed to usage credits.
+The 1M context window uses standard model pricing with no premium for tokens beyond 200K. For plans where extended context is included with your subscription, usage remains covered by your subscription. For plans that access extended context through extra usage, tokens are billed to extra usage.
 If your account supports 1M context, the option appears in the model picker (
 /model
 ) in the latest versions of Claude Code. If you don’t see it, try restarting your session.

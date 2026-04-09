@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -425,7 +426,7 @@ Was this page helpful?
 Yes
 No
 Overview
-Claude Code on the web
+Get started
 ⌘
 I
 Assistant

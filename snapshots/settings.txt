@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Configuration
@@ -441,7 +442,7 @@ blocks channel message delivery regardless of what users pass to
 --channels
 true
 cleanupPeriodDays
-Sessions inactive for longer than this period are deleted at startup (default: 30 days, minimum 1). Setting to
+Session files older than this period are deleted at startup (default: 30 days, minimum 1). Setting to
 0
 is rejected with a validation error. Also controls the age cutoff for automatic removal of
 orphaned subagent worktrees

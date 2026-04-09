@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Administration
@@ -73,7 +74,7 @@ Ubuntu 20.04+
 Debian 10+
 Alpine Linux 3.19+
 Hardware
-: 4 GB+ RAM
+: 4 GB+ RAM, x64 or ARM64 processor
 Network
 : internet connection required. See
 network configuration

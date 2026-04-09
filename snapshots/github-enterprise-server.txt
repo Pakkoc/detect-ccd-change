@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -93,7 +94,7 @@ Same automated PR reviews as github.com
 Teleport sessions
 ✅ Supported
 Move sessions between web and terminal with
-/teleport
+--teleport
 Plugin marketplaces
 ✅ Supported
 Use full git URLs instead of
@@ -222,8 +223,6 @@ for the full remote session workflow including diff review, auto-fix, and schedu
 ​
 Teleport sessions to your terminal
 Pull a web session into your local terminal with
-/teleport
-or
 claude --teleport
 . Teleport verifies you’re in a checkout of the same GHES repository before fetching the branch and loading the session history. See
 teleport requirements

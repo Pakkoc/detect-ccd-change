@@ -17,6 +17,7 @@ Deployment
 Administration
 Configuration
 Reference
+Agent SDK
 What's New
 Resources
 Getting started
@@ -82,7 +83,14 @@ Diff viewer, selection sharing, terminal session
 Web
 Long-running tasks that don’t need much steering, or work that should continue when you’re offline
 Anthropic-managed cloud, continues after you disconnect
-The CLI is the most complete surface for terminal-native work: scripting, third-party providers, and the Agent SDK are CLI-only. Desktop and the IDE extensions trade some CLI-only features for visual review and tighter editor integration. The web runs in Anthropic’s cloud, so tasks keep going after you disconnect.
+Mobile
+Starting and monitoring tasks while away from your computer
+Cloud sessions from the Claude app for iOS and Android,
+Remote Control
+for local sessions,
+Dispatch
+to Desktop on Pro and Max
+The CLI is the most complete surface for terminal-native work: scripting, third-party providers, and the Agent SDK are CLI-only. Desktop and the IDE extensions trade some CLI-only features for visual review and tighter editor integration. The web runs in Anthropic’s cloud, so tasks keep going after you disconnect. Mobile is a thin client into those same cloud sessions or into a local session via Remote Control, and can send tasks to Desktop with Dispatch.
 You can mix surfaces on the same project. Configuration, project memory, and MCP servers are shared across the local surfaces.
 ​
 Connect your tools
@@ -177,6 +185,11 @@ JetBrains
 : the extension for IntelliJ, PyCharm, and other JetBrains IDEs
 Claude Code on the web
 : cloud sessions that keep running when you disconnect
+Mobile: the Claude app for
+iOS
+and
+Android
+for starting and monitoring tasks while away from your computer
 ​
 Integrations
 Chrome
