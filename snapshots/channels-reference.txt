@@ -22,7 +22,7 @@ What's New
 Resources
 Reference
 CLI reference
-Built-in commands
+Commands
 Environment variables
 Tools reference
 Interactive mode

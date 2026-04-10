@@ -66,7 +66,7 @@ Import MCP servers from Claude Desktop
 Use MCP servers from Claude.ai
 Use Claude Code as an MCP server
 MCP output limits and warnings
-Override result size per tool
+Raise the limit for a specific tool
 Respond to MCP elicitation requests
 Use MCP resources
 Reference MCP resources
@@ -89,6 +89,7 @@ Important notes
 Claude Code can connect to hundreds of external tools and data sources through the
 Model Context Protocol (MCP)
 , an open source standard for AI-tool integrations. MCP servers give Claude Code access to your tools, databases, and APIs.
+Connect a server when you find yourself copying data into chat from another tool, like an issue tracker or a monitoring dashboard. Once connected, Claude can read and act on that system directly instead of working from what you paste.
 ​
 What you can do with MCP
 With MCP servers connected, you can ask Claude Code to:
@@ -1124,11 +1125,18 @@ When MCP tools produce large outputs, Claude Code helps manage the token usage t
 Output warning threshold
 : Claude Code displays a warning when any MCP tool output exceeds 10,000 tokens
 Configurable limit
-: You can adjust the maximum allowed MCP output tokens using the
+: you can adjust the maximum allowed MCP output tokens using the
 MAX_MCP_OUTPUT_TOKENS
 environment variable
 Default limit
-: The default maximum is 25,000 tokens
+: the default maximum is 25,000 tokens
+Scope
+: the environment variable applies to tools that don’t declare their own limit. Tools that set
+anthropic/maxResultSizeChars
+use that value instead for text content, regardless of what
+MAX_MCP_OUTPUT_TOKENS
+is set to. Tools that return image data are still subject to
+MAX_MCP_OUTPUT_TOKENS
 To increase the limit for tools that produce large outputs:
 export
 MAX_MCP_OUTPUT_TOKENS
@@ -1140,7 +1148,7 @@ Query large datasets or databases
 Generate detailed reports or documentation
 Process extensive log files or debugging information
 ​
-Override result size per tool
+Raise the limit for a specific tool
 If you’re building an MCP server, you can allow individual tools to return results larger than the default persist-to-disk threshold by setting
 _meta["anthropic/maxResultSizeChars"]
 in the tool’s
@@ -1160,19 +1168,19 @@ This is useful for tools that return inherently large but necessary outputs, suc
 : {
 "anthropic/maxResultSizeChars"
 :
-500000
+200000
 }
 }
-The annotation raises the per-tool persist threshold but does not bypass the global
+The annotation applies independently of
 MAX_MCP_OUTPUT_TOKENS
-limit, which defaults to 25,000 tokens or roughly 100,000 characters. To return results larger than that, users must also raise
-MAX_MCP_OUTPUT_TOKENS
-.
+for text content, so users don’t need to raise the environment variable for tools that declare it. Tools that return image data are still subject to the token limit.
 If you frequently encounter output warnings with specific MCP servers you don’t control, consider increasing the
 MAX_MCP_OUTPUT_TOKENS
 limit. You can also ask the server author to add the
 anthropic/maxResultSizeChars
-annotation or to paginate their responses.
+annotation or to paginate their responses. The annotation has no effect on tools that return image content; for those, raising
+MAX_MCP_OUTPUT_TOKENS
+is the only option.
 ​
 Respond to MCP elicitation requests
 MCP servers can request structured input from you mid-task using elicitation. When a server needs information it can’t get on its own, Claude Code displays an interactive dialog and passes your response back to the server. No configuration is required on your side: elicitation dialogs appear automatically when a server requests them.

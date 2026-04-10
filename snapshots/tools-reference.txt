@@ -22,7 +22,7 @@ What's New
 Resources
 Reference
 CLI reference
-Built-in commands
+Commands
 Environment variables
 Tools reference
 Interactive mode
@@ -33,6 +33,7 @@ Channels reference
 On this page
 Bash tool behavior
 LSP tool behavior
+Monitor tool
 PowerShell tool
 Enable the PowerShell tool
 Shell selection in settings, hooks, and skills
@@ -113,6 +114,10 @@ LSP
 Code intelligence via language servers: jump to definitions, find references, report type errors and warnings. See
 LSP tool behavior
 No
+Monitor
+Runs a command in the background and feeds each output line back to Claude, so it can react to log entries, file changes, or polled status mid-conversation. See
+Monitor tool
+Yes
 NotebookEdit
 Modifies Jupyter notebook cells
 Yes
@@ -224,6 +229,22 @@ Trace call hierarchies
 The tool is inactive until you install a
 code intelligence plugin
 for your language. The plugin bundles the language server configuration, and you install the server binary separately.
+​
+Monitor tool
+The Monitor tool requires Claude Code v2.1.98 or later.
+The Monitor tool lets Claude watch something in the background and react when it changes, without pausing the conversation. Ask Claude to:
+Tail a log file and flag errors as they appear
+Poll a PR or CI job and report when its status changes
+Watch a directory for file changes
+Track output from any long-running script you point it at
+Claude writes a small script for the watch, runs it in the background, and receives each output line as it arrives. You keep working in the same session and Claude interjects when an event lands. Stop a monitor by asking Claude to cancel it or by ending the session.
+Monitor uses the same
+permission rules as Bash
+, so
+allow
+and
+deny
+patterns you have set for Bash apply here too. It is not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry.
 ​
 PowerShell tool
 On Windows, Claude Code can run PowerShell commands natively instead of routing through Git Bash. This is an opt-in preview.

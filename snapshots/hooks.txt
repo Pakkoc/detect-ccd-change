@@ -22,7 +22,7 @@ What's New
 Resources
 Reference
 CLI reference
-Built-in commands
+Commands
 Environment variables
 Tools reference
 Interactive mode
@@ -153,7 +153,21 @@ guide
 instead.
 ​
 Hook lifecycle
-Hooks fire at specific points during a Claude Code session. When an event fires and a matcher matches, Claude Code passes JSON context about the event to your hook handler. For command hooks, input arrives on stdin. For HTTP hooks, it arrives as the POST request body. Your handler can then inspect the input, take action, and optionally return a decision. Some events fire once per session, while others fire repeatedly inside the agentic loop:
+Hooks fire at specific points during a Claude Code session. When an event fires and a matcher matches, Claude Code passes JSON context about the event to your hook handler. For command hooks, input arrives on stdin. For HTTP hooks, it arrives as the POST request body. Your handler can then inspect the input, take action, and optionally return a decision. Events fall into three cadences: once per session (
+SessionStart
+,
+SessionEnd
+), once per turn (
+UserPromptSubmit
+,
+Stop
+,
+StopFailure
+), and on every tool call inside the agentic loop (
+PreToolUse
+,
+PostToolUse
+):
 The table below summarizes when each event fires. The
 Hook events
 section documents the full input schema and decision control options for each one.
@@ -459,13 +473,41 @@ Hook configuration
 Matcher patterns
 The
 matcher
-field is a regex string that filters when hooks fire. Use
+field filters when hooks fire. How a matcher is evaluated depends on the characters it contains:
+Matcher value
+Evaluated as
+Example
 "*"
 ,
 ""
-, or omit
-matcher
-entirely to match all occurrences. Each event type matches on a different field:
+, or omitted
+Match all
+fires on every occurrence of the event
+Only letters, digits,
+_
+, and
+|
+Exact string, or
+|
+-separated list of exact strings
+Bash
+matches only the Bash tool;
+Edit|Write
+matches either tool exactly
+Contains any other character
+JavaScript regular expression
+^Notebook
+matches any tool starting with Notebook;
+mcp__memory__.*
+matches every tool from the
+memory
+server
+The
+FileChanged
+event does not follow these rules when building its watch list. See
+FileChanged
+.
+Each event type matches on a different field:
 Event
 What the matcher filters
 Example matcher values
@@ -549,11 +591,10 @@ CwdChanged
 no matcher support
 always fires on every directory change
 FileChanged
-filename (basename of the changed file)
-.envrc
-,
-.env
-, any filename you want to watch
+literal filenames to watch (see
+FileChanged
+)
+.envrc|.env
 StopFailure
 error type
 rate_limit
@@ -602,11 +643,7 @@ WorktreeCreate
 WorktreeRemove
 no matcher support
 always fires on every occurrence
-The matcher is a regex, so
-Edit|Write
-matches either tool and
-Notebook.*
-matches any tool starting with Notebook. The matcher runs against a field from the
+The matcher runs against a field from the
 JSON input
 that Claude Code sends to your hook on stdin. For tool events, that field is
 tool_name
@@ -695,13 +732,21 @@ mcp__filesystem__read_file
 : Filesystem server’s read file tool
 mcp__github__search_repositories
 : GitHub server’s search tool
-Use regex patterns to target specific MCP tools or groups of tools:
+To match every tool from a server, append
+.*
+to the server prefix. The
+.*
+is required: a matcher like
+mcp__memory
+contains only letters and underscores, so it is compared as an exact string and matches no tool.
 mcp__memory__.*
 matches all tools from the
 memory
 server
 mcp__.*__write.*
-matches any tool containing “write” from any server
+matches any tool whose name starts with
+write
+from any server
 This example logs all memory server operations and validates write operations from any MCP server:
 {
 "hooks"
@@ -1260,9 +1305,11 @@ rejects the prompt, and so on. See
 exit code 2 behavior
 for the full list.
 Any other exit code
-is a non-blocking error for most hook events. The transcript shows a one-line
+is a non-blocking error for most hook events. The transcript shows a
 <hook name> hook error
-notice and execution continues. The full stderr is written to the debug log.
+notice followed by the first line of stderr, so you can identify the cause without
+--debug
+. Execution continues and the full stderr is written to the debug log.
 For example, a hook command script that blocks dangerous Bash commands:
 #!/bin/bash
 # Reads JSON input from stdin, checks the command
@@ -3959,13 +4006,24 @@ configuration are always watched). Returning an empty array clears the dynamic l
 CwdChanged hooks have no decision control. They cannot block the directory change.
 ​
 FileChanged
-Runs when a watched file changes on disk. The
+Runs when a watched file changes on disk. Useful for reloading environment variables when project configuration files are modified.
+The
 matcher
-field in your hook configuration controls which filenames to watch: it is a pipe-separated list of basenames (filenames without directory paths, for example
+for this event serves two roles:
+Build the watch list
+: the value is split on
+|
+and each segment is registered as a literal filename in the working directory, so
 ".envrc|.env"
-). The same
-matcher
-value is also used to filter which hooks run when a file changes, matching against the basename of the changed file. Useful for reloading environment variables when project configuration files are modified.
+watches exactly those two files. Regex patterns are not useful here: a value like
+^\.env
+would watch a file literally named
+^\.env
+.
+Filter which hooks run
+: when a watched file changes, the same value filters which hook groups run using the standard
+matcher rules
+against the changed file’s basename.
 FileChanged hooks have access to
 CLAUDE_ENV_FILE
 . Variables written to that file persist into subsequent Bash commands for the session, just as in

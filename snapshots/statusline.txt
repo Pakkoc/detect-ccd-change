@@ -151,6 +151,13 @@ padding
 field adds extra horizontal spacing (in characters) to the status line content. Defaults to
 0
 . This padding is in addition to the interface’s built-in spacing, so it controls relative indentation rather than absolute distance from the terminal edge.
+The optional
+refreshInterval
+field re-runs your command every N seconds in addition to the
+event-driven updates
+. The minimum is
+1
+. Set this when your status line shows time-based data such as a clock, or when background subagents change git state while the main session is idle. Leave it unset to run only on events.
 ​
 Disable the status line
 Run
@@ -283,6 +290,9 @@ JSON session data
 to it via stdin. Your script reads the JSON, extracts what it needs, and prints text to stdout. Claude Code displays whatever your script prints.
 When it updates
 Your script runs after each new assistant message, when the permission mode changes, or when vim mode toggles. Updates are debounced at 300ms, meaning rapid changes batch together and your script runs once things settle. If a new update triggers while your script is still running, the in-flight execution is cancelled. If you edit your script, the changes won’t appear until your next interaction with Claude Code triggers an update.
+These triggers can go quiet when the main session is idle, for example while a coordinator waits on background subagents. To keep time-based or externally-sourced segments current during idle periods, set
+refreshInterval
+to also re-run the command on a fixed timer.
 What your script can output
 Multiple lines
 : each
@@ -334,6 +344,14 @@ Additional directories added via
 or
 --add-dir
 . Empty array if none have been added
+workspace.git_worktree
+Git worktree name when the current directory is inside a linked worktree created with
+git worktree add
+. Absent in the main working tree. Populated for any git worktree, unlike
+worktree.*
+which applies only to
+--worktree
+sessions
 cost.total_cost_usd
 Total session cost in USD
 cost.total_duration_ms
@@ -447,7 +465,10 @@ Your status line command receives this JSON structure via stdin:
 "/original/project/directory"
 ,
 "added_dirs"
-: []
+: [],
+"git_worktree"
+:
+"feature-xyz"
 },
 "version"
 :
@@ -591,6 +612,8 @@ session_name
 --name
 or
 /rename
+workspace.git_worktree
+: appears only when the current directory is inside a linked git worktree
 vim
 : appears only when vim mode is enabled
 agent

@@ -22,7 +22,7 @@ What's New
 Resources
 Reference
 CLI reference
-Built-in commands
+Commands
 Environment variables
 Tools reference
 Interactive mode
@@ -126,7 +126,7 @@ Think of checkpoints as “local undo” and Git as “permanent history”
 See also
 Interactive mode
 - Keyboard shortcuts and session controls
-Built-in commands
+Commands
 - Accessing checkpoints using
 /rewind
 CLI reference

@@ -504,7 +504,15 @@ Behavior
 "default"
 Tools not covered by allow rules trigger your approval callback; no callback means deny
 "acceptEdits"
-Auto-approves file edits, other tools follow default rules
+Auto-approves file edits and common filesystem commands (
+mkdir
+,
+touch
+,
+mv
+,
+cp
+, etc.); other Bash commands follow default rules
 "plan"
 No tool execution; Claude produces a plan for review
 "dontAsk"
@@ -522,9 +530,17 @@ For interactive applications, use
 "default"
 with a tool approval callback to surface approval prompts. For autonomous agents on a dev machine,
 "acceptEdits"
-auto-approves file edits while still gating
+auto-approves file edits and common filesystem commands (
+mkdir
+,
+touch
+,
+mv
+,
+cp
+, etc.) while still gating other
 Bash
-behind allow rules. Reserve
+commands behind allow rules. Reserve
 "bypassPermissions"
 for CI, containers, or other isolated environments. See
 Permissions

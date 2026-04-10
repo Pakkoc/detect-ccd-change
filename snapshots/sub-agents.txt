@@ -74,7 +74,8 @@ Debugger
 Data scientist
 Database query validator
 Next steps
-Subagents are specialized AI assistants that handle specific types of tasks. Each subagent runs in its own context window with a custom system prompt, specific tool access, and independent permissions. When Claude encounters a task that matches a subagent’s description, it delegates to that subagent, which works independently and returns results. To see the context savings in practice, the
+Subagents are specialized AI assistants that handle specific types of tasks. Use one when a side task would flood your main conversation with search results, logs, or file contents you won’t reference again: the subagent does that work in its own context and returns only the summary. Define a custom subagent when you keep spawning the same kind of worker with the same instructions.
+Each subagent runs in its own context window with a custom system prompt, specific tool access, and independent permissions. When Claude encounters a task that matches a subagent’s description, it delegates to that subagent, which works independently and returns results. To see the context savings in practice, the
 context window visualization
 walks through a session where a subagent handles research in its own separate window.
 If you need multiple agents working in parallel and communicating with each other, see
@@ -178,7 +179,9 @@ In Claude Code, run:
 /agents
 2
 Choose a location
-Select
+Switch to the
+Library
+tab, select
 Create new agent
 , then choose
 Personal
@@ -237,9 +240,11 @@ Configure subagents
 Use the /agents command
 The
 /agents
-command provides an interactive interface for managing subagents. Run
-/agents
-to:
+command opens a tabbed interface for managing subagents. The
+Running
+tab shows live subagents and lets you open or stop them. The
+Library
+tab lets you:
 View all available subagents (built-in, user, project, and plugin)
 Create new subagents with guided setup or Claude generation
 Edit existing subagent configuration and tool access
@@ -747,7 +752,8 @@ Behavior
 default
 Standard permission checking with prompts
 acceptEdits
-Auto-accept file edits except in protected directories
+Auto-accept file edits and common filesystem commands for paths in the working directory or
+additionalDirectories
 auto
 Auto mode
 : a background classifier reviews commands and protected-directory writes

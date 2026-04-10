@@ -148,7 +148,7 @@ claude
 ,
 /usr/local/bin/claude
 , or
-npx @anthropic/claude
+npx @anthropic-ai/claude-code
 )
 Suppress notification for Claude command not found
 : Skip notifications about not finding the Claude command

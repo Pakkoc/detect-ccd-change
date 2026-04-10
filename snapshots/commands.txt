@@ -1,4 +1,4 @@
-Built-in commands - Claude Code Docs
+Commands - Claude Code Docs
 Skip to main content
 Claude Code Docs
 home page
@@ -10,7 +10,7 @@ Ask AI
 Search...
 Navigation
 Reference
-Built-in commands
+Commands
 Getting started
 Build with Claude Code
 Deployment
@@ -22,7 +22,7 @@ What's New
 Resources
 Reference
 CLI reference
-Built-in commands
+Commands
 Environment variables
 Tools reference
 Interactive mode
@@ -33,34 +33,22 @@ Channels reference
 On this page
 MCP prompts
 See also
+Commands control Claude Code from inside a session. They provide a quick way to switch models, manage permissions, clear context, run a workflow, and more.
 Type
 /
-in Claude Code to see all available commands, or type
+to see every command available to you, or type
 /
-followed by any letters to filter. Not all commands are visible to every user. Some depend on your platform, plan, or environment. For example,
-/desktop
-only appears on macOS and Windows,
-/upgrade
-and
-/privacy-settings
-are only available on Pro and Max plans, and
-/terminal-setup
-is hidden when your terminal natively supports its keybindings.
-Claude Code also includes
-bundled skills
-like
-/simplify
-,
-/batch
-,
-/debug
-, and
-/loop
-that appear alongside built-in commands when you type
-/
-. To create your own commands, see
+followed by letters to filter.
+The table below lists all the commands included in Claude Code. Entries marked
+Skill
+are bundled skills. They use the same mechanism as skills you write yourself: a prompt handed to Claude, which Claude can also invoke automatically when relevant. Everything else is a built-in command whose behavior is coded into the CLI. To add your own commands, see
 skills
 .
+Not every command appears for every user. Availability depends on your platform, plan, and environment. For example,
+/desktop
+only shows on macOS and Windows, and
+/upgrade
+only shows on Pro and Max plans.
 In the table below,
 <arg>
 indicates a required argument and
@@ -89,6 +77,13 @@ gh pr view
 gh
 CLI and access to
 Claude Code on the web
+/batch <instruction>
+Skill
+.
+Orchestrate large-scale changes across a codebase in parallel. Researches the codebase, decomposes the work into 5 to 30 independent units, and presents a plan. Once approved, spawns one background agent per unit in an isolated
+git worktree
+. Each agent implements its unit, runs tests, and opens a pull request. Requires a git repository. Example:
+/batch migrate src/ from Solid to React
 /btw <question>
 Ask a quick
 side question
@@ -97,6 +92,13 @@ without adding to the conversation
 Configure
 Claude in Chrome
 settings
+/claude-api
+Skill
+.
+Load Claude API reference material for your project’s language (Python, TypeScript, Java, Go, Ruby, C#, PHP, or cURL). Covers tool use, streaming, batches, structured outputs, Managed Agents, and common pitfalls. Also activates automatically when your code imports
+anthropic
+or
+@anthropic-ai/sdk
 /clear
 Clear conversation history and free up context. Aliases:
 /reset
@@ -145,6 +147,14 @@ in the picker to write the selection to a file instead of the clipboard, which i
 Show token usage statistics. See
 cost tracking guide
 for subscription-specific details
+/debug [description]
+Skill
+.
+Enable debug logging for the current session and troubleshoot issues by reading the session debug log. Debug logging is off by default unless you started with
+claude --debug
+, so running
+/debug
+mid-session starts capturing logs from that point forward. Optionally describe the issue to focus the analysis
 /desktop
 Continue the current session in the Claude Code Desktop app. macOS and Windows only. Alias:
 /app
@@ -211,6 +221,13 @@ Open or create your keybindings configuration file
 Sign in to your Anthropic account
 /logout
 Sign out from your Anthropic account
+/loop [interval] <prompt>
+Skill
+.
+Run a prompt repeatedly on an interval while the session stays open. Useful for polling a deployment, babysitting a PR, or periodically re-running another skill. Example:
+/loop 5m check if the deploy finished
+. See
+Run prompts on a schedule
 /mcp
 Manage MCP server connections and OAuth authentication
 /memory
@@ -296,6 +313,17 @@ Amazon Bedrock
 authentication, region, and model pins through an interactive wizard. Only visible when
 CLAUDE_CODE_USE_BEDROCK=1
 is set. First-time Bedrock users can also access this wizard from the login screen
+/setup-vertex
+Configure
+Google Vertex AI
+authentication, project, region, and model pins through an interactive wizard. Only visible when
+CLAUDE_CODE_USE_VERTEX=1
+is set. First-time Vertex AI users can also access this wizard from the login screen
+/simplify [focus]
+Skill
+.
+Review your recently changed files for code reuse, quality, and efficiency issues, then fix them. Spawns three review agents in parallel, aggregates their findings, and applies fixes. Pass text to focus on specific concerns:
+/simplify focus on memory efficiency
 /skills
 List available
 skills

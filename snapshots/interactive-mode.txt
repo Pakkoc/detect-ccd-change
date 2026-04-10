@@ -22,7 +22,7 @@ What's New
 Resources
 Reference
 CLI reference
-Built-in commands
+Commands
 Environment variables
 Tools reference
 Interactive mode
@@ -39,7 +39,7 @@ Multiline input
 Quick commands
 Transcript viewer
 Voice input
-Built-in commands
+Commands
 Vim editor mode
 Mode switching
 Navigation (NORMAL mode)
@@ -110,8 +110,10 @@ Ctrl+L
 Clear prompt input
 Clears typed text, keeps conversation history
 Ctrl+O
-Toggle verbose output
-Shows detailed tool usage and execution. Also expands MCP read and search calls, which collapse to a single line like “Queried slack” by default
+Toggle transcript viewer
+Shows detailed tool usage and execution. Also expands MCP read and search calls, which collapse to a single line like “Queried slack” by default. In
+fullscreen rendering
+, cycles through three states: normal prompt, transcript mode, and focus view (last prompt + tool summary + response)
 Ctrl+R
 Reverse search command history
 Search through previous commands interactively
@@ -260,7 +262,7 @@ Notes
 at start
 Command or skill
 See
-built-in commands
+commands
 and
 skills
 !
@@ -303,23 +305,23 @@ voice dictation
 to be enabled. Transcript inserts at cursor.
 Rebindable
 ​
-Built-in commands
+Commands
 Type
 /
 in Claude Code to see all available commands, or type
 /
 followed by any letters to filter. The
 /
-menu shows both built-in commands and
-bundled skills
-like
-/simplify
-. Not all commands are visible to every user since some depend on your platform or plan.
+menu shows everything you can invoke: built-in commands, bundled and user-authored
+skills
+, and commands contributed by
+plugins
+and
+MCP servers
+. Not all built-in commands are visible to every user since some depend on your platform or plan.
 See the
 commands reference
-for the full list of built-in commands. To create your own commands, see
-skills
-.
+for the full list of commands included in Claude Code.
 ​
 Vim editor mode
 Enable vim-style editing via
@@ -391,7 +393,11 @@ Jump to just after previous occurrence of character
 Repeat last f/F/t/T motion
 ,
 Repeat last f/F/t/T motion in reverse
-In vim normal mode, if the cursor is at the beginning or end of input and cannot move further, the arrow keys navigate command history instead.
+In vim normal mode, if the cursor is at the beginning or end of input and cannot move further,
+j
+/
+k
+and the arrow keys navigate command history instead.
 ​
 Editing (NORMAL mode)
 Command

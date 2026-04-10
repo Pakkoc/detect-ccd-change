@@ -145,7 +145,6 @@ macOS
 Windows
 (x64)
 Windows ARM64
-(remote sessions only)
 After installing, launch Claude, sign in, and click the
 Code
 tab to start coding. A

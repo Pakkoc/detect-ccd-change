@@ -84,15 +84,13 @@ Details
 Cmd+f
 or tmux search to find text
 Ctrl+o
-then
+once for transcript mode (then
 /
-to search, or
-Ctrl+o
-then
+to search or
 [
-to write the conversation to native scrollback so
-Cmd+f
-works again
+to write to scrollback), or
+Ctrl+o
+twice for focus view (last prompt + tool summary + response)
 Search and review the conversation
 Terminal’s native click-and-drag to select and copy
 In-app selection, copies automatically on mouse release
@@ -179,10 +177,15 @@ sends
 End
 . That makes
 Ctrl+Fn+→
-the jump-to-bottom shortcut. If that feels awkward, scroll to the bottom with the mouse wheel to resume following.
+the jump-to-bottom shortcut. If that feels awkward, scroll to the bottom with the mouse wheel to resume following, or rebind
+scroll:bottom
+to something reachable.
 Scrolling up pauses auto-follow so new output does not pull you back to the bottom. Press
 Ctrl+End
 or scroll to the bottom to resume following.
+These actions are rebindable. See
+Scroll actions
+for the full list of action names, including half-page and full-page variants that have no default binding.
 Mouse wheel scrolling requires your terminal to forward mouse events to Claude Code. Most terminals do this whenever an application requests it. iTerm2 makes it a per-profile setting: if the wheel does nothing but
 PgUp
 and
@@ -205,9 +208,10 @@ vim
 and similar applications. The setting accepts values from 1 to 20.
 ​
 Search and review the conversation
-Press
+In fullscreen rendering,
 Ctrl+o
-to enter transcript mode. With fullscreen rendering active, transcript mode gains
+cycles through three states: normal prompt, transcript mode, and focus view. Press it once to enter transcript mode, press it again to return to a focus view showing just your last prompt, a one-line summary of tool calls with edit diffstats, and the final response. Press it a third time to return to the normal prompt screen.
+Transcript mode gains
 less
 -style navigation and search:
 Key
@@ -250,12 +254,12 @@ Space
 /
 b
 Scroll a full page
-Esc
-,
-q
-, or
 Ctrl+o
-Exit transcript mode
+Advance to focus view
+Esc
+or
+q
+Exit transcript mode and return to the prompt
 Your terminal’s
 Cmd+f
 and tmux search don’t see the conversation because it lives in the alternate screen buffer, not the native scrollback. To hand the content back to your terminal, press
@@ -279,10 +283,8 @@ $EDITOR
 .
 Press
 Esc
-,
+or
 q
-, or
-Ctrl+o
 to return to the prompt.
 ​
 Use with tmux

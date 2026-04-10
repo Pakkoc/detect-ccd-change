@@ -68,7 +68,15 @@ default
 Reads only
 Getting started, sensitive work
 acceptEdits
-Reads and file edits
+Reads, file edits, and common filesystem commands (
+mkdir
+,
+touch
+,
+mv
+,
+cp
+, etc.)
 Iterating on code you’re reviewing
 plan
 Reads only
@@ -226,11 +234,40 @@ acceptEdits
 ​
 Auto-approve file edits with acceptEdits mode
 acceptEdits
-mode lets Claude create and edit files in your working directory without prompting. Writes to
-protected paths
-and all non-edit actions still prompt the same as default mode. The status bar shows
+mode lets Claude create and edit files in your working directory without prompting. The status bar shows
 ⏵⏵ accept edits on
 while this mode is active.
+In addition to file edits,
+acceptEdits
+mode auto-approves common filesystem Bash commands:
+mkdir
+,
+touch
+,
+rm
+,
+rmdir
+,
+mv
+,
+cp
+, and
+sed
+. These commands are also auto-approved when prefixed with safe environment variables such as
+LANG=C
+or
+NO_COLOR=1
+, or process wrappers such as
+timeout
+,
+nice
+, or
+nohup
+. Like file edits, auto-approval applies only to paths inside your working directory or
+additionalDirectories
+. Paths outside that scope, writes to
+protected paths
+, and all other Bash commands still prompt.
 Use
 acceptEdits
 when you want to review changes in your editor or via
@@ -320,6 +357,7 @@ Reading
 and sending credentials to their matching API
 Read-only HTTP requests
 Pushing to the branch you started on or one Claude created
+Sandbox network access requests
 Run
 claude auto-mode defaults
 to see the full rule lists. If routine actions get blocked, an administrator can add trusted repos, buckets, and services via the
