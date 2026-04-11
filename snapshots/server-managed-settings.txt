@@ -1,4 +1,4 @@
-Configure server-managed settings (public beta) - Claude Code Docs
+Configure server-managed settings - Claude Code Docs
 Skip to main content
 Claude Code Docs
 home page
@@ -10,7 +10,7 @@ Ask AI
 Search...
 Navigation
 Administration
-Configure server-managed settings (public beta)
+Configure server-managed settings
 Getting started
 Build with Claude Code
 Deployment
@@ -24,7 +24,7 @@ Administration
 Advanced setup
 Authentication
 Security
-Server-managed settings (beta)
+Server-managed settings
 Data usage
 Zero data retention
 Monitoring
@@ -50,11 +50,11 @@ Security considerations
 See also
 Server-managed settings allow administrators to centrally configure Claude Code through a web-based interface on Claude.ai. Claude Code clients automatically receive these settings when users authenticate with their organization credentials.
 This approach is designed for organizations that do not have device management infrastructure in place, or need to manage settings for users on unmanaged devices.
-Server-managed settings are in public beta and available for
+Server-managed settings are available for
 Claude for Teams
 and
 Claude for Enterprise
-customers. Features may evolve before general availability.
+customers.
 ​
 Requirements
 To use server-managed settings, you need:
@@ -204,7 +204,7 @@ managed-only settings
 for the full list. Any setting not on that list can still be placed in managed settings and takes the highest precedence.
 ​
 Current limitations
-Server-managed settings have the following limitations during the beta period:
+Server-managed settings have the following limitations:
 Settings apply uniformly to all users in the organization. Per-group configurations are not yet supported.
 MCP server configurations
 cannot be distributed through server-managed settings.

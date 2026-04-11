@@ -24,7 +24,7 @@ Administration
 Advanced setup
 Authentication
 Security
-Server-managed settings (beta)
+Server-managed settings
 Data usage
 Zero data retention
 Monitoring
@@ -51,8 +51,8 @@ Write specific prompts
 Work efficiently on complex tasks
 Background token usage
 Understanding changes in Claude Code behavior
-Claude Code consumes tokens for each interaction. Costs vary based on codebase size, query complexity, and conversation length. The average cost is $6 per developer per day, with daily costs remaining below $12 for 90% of users.
-For team usage, Claude Code charges by API token consumption. On average, Claude Code costs ~$100-200/developer per month with Sonnet 4.6 though there is large variance depending on how many instances users are running and whether they’re using it in automation.
+Claude Code charges by API token consumption. Per-developer costs vary widely based on model selection, codebase size, and usage patterns such as running multiple instances or automation.
+Across enterprise deployments, the average cost is around $13 per developer per active day and $150-250 per developer per month, with costs remaining below $30 per active day for 90% of users. To estimate spend for your own team, start with a small pilot group and use the tracking tools below to establish a baseline before wider rollout.
 This page covers how to
 track your costs
 ,
@@ -388,7 +388,7 @@ Claude Code regularly receives updates that may change how features work, includ
 claude --version
 to check your current version. For specific billing questions, contact Anthropic support through your
 Console account
-. For team deployments, start with a small pilot group to establish usage patterns before wider rollout.
+.
 Was this page helpful?
 Yes
 No

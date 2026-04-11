@@ -466,7 +466,9 @@ For details on settings file resolution, see
 settings
 . Enterprise administrators can use
 allowManagedHooksOnly
-to block user, project, and plugin hooks. See
+to block user, project, and plugin hooks. Hooks from plugins force-enabled in managed settings
+enabledPlugins
+are exempt, so administrators can distribute vetted hooks through an organization marketplace. See
 Hook configuration
 .
 ​

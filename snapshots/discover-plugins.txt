@@ -598,6 +598,9 @@ Update Claude Code
 Homebrew
 :
 brew upgrade claude-code
+(or
+brew upgrade claude-code@latest
+if you installed that cask)
 npm
 :
 npm update -g @anthropic-ai/claude-code

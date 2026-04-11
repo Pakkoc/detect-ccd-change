@@ -634,8 +634,6 @@ Skills
 : package repeatable workflows that load on demand
 Settings
 : configure Claude Code behavior with settings files
-Manage sessions
-: manage context, resume conversations, and run parallel sessions
 Subagent memory
 : let subagents maintain their own auto memory
 Was this page helpful?

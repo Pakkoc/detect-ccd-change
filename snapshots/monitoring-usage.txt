@@ -24,7 +24,7 @@ Administration
 Advanced setup
 Authentication
 Security
-Server-managed settings (beta)
+Server-managed settings
 Data usage
 Zero data retention
 Monitoring
@@ -347,7 +347,7 @@ OTEL_LOG_USER_PROMPTS=1
 and
 OTEL_LOG_TOOL_CONTENT=1
 to include them.
-When tracing is active, Bash subprocesses automatically inherit a
+When tracing is active, Bash and PowerShell subprocesses automatically inherit a
 TRACEPARENT
 environment variable containing the W3C trace context of the active tool execution span. This lets any subprocess that reads
 TRACEPARENT

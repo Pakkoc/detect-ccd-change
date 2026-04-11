@@ -24,7 +24,7 @@ Administration
 Advanced setup
 Authentication
 Security
-Server-managed settings (beta)
+Server-managed settings
 Data usage
 Zero data retention
 Monitoring
@@ -246,7 +246,7 @@ settings reference
 Was this page helpful?
 Yes
 No
-Server-managed settings (beta)
+Server-managed settings
 Zero data retention
 ⌘
 I

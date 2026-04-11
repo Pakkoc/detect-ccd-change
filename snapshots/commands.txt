@@ -95,7 +95,7 @@ settings
 /claude-api
 Skill
 .
-Load Claude API reference material for your project’s language (Python, TypeScript, Java, Go, Ruby, C#, PHP, or cURL). Covers tool use, streaming, batches, structured outputs, Managed Agents, and common pitfalls. Also activates automatically when your code imports
+Load Claude API reference material for your project’s language (Python, TypeScript, Java, Go, Ruby, C#, PHP, or cURL) and Managed Agents reference. Covers tool use, streaming, batches, structured outputs, and common pitfalls. Also activates automatically when your code imports
 anthropic
 or
 @anthropic-ai/sdk
@@ -221,10 +221,12 @@ Open or create your keybindings configuration file
 Sign in to your Anthropic account
 /logout
 Sign out from your Anthropic account
-/loop [interval] <prompt>
+/loop [interval] [prompt]
 Skill
 .
-Run a prompt repeatedly on an interval while the session stays open. Useful for polling a deployment, babysitting a PR, or periodically re-running another skill. Example:
+Run a prompt repeatedly while the session stays open. Omit the interval and Claude self-paces between iterations. Omit the prompt and Claude runs an autonomous maintenance check, or the prompt in
+.claude/loop.md
+if present. Example:
 /loop 5m check if the deploy finished
 . See
 Run prompts on a schedule

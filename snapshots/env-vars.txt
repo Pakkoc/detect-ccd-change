@@ -162,7 +162,7 @@ ANTHROPIC_SMALL_FAST_MODEL
 [DEPRECATED] Name of
 Haiku-class model for background tasks
 ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION
-Override AWS region for the Haiku-class model when using Bedrock
+Override AWS region for the Haiku-class model when using Bedrock or Bedrock Mantle
 ANTHROPIC_VERTEX_BASE_URL
 Override the Vertex AI endpoint URL. Use for custom Vertex endpoints or when routing through an
 LLM gateway
@@ -223,7 +223,7 @@ Set to
 1
 to force-enable automatic backgrounding of long-running agent tasks. When enabled, subagents are moved to the background after running for approximately two minutes
 CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR
-Return to the original working directory after each Bash command
+Return to the original working directory after each Bash or PowerShell command in the main session
 CLAUDE_CODE_ACCESSIBILITY
 Set to
 1
@@ -256,6 +256,14 @@ false
 to prevent this. Set to
 true
 to force a connection attempt when auto-detection fails, such as when tmux obscures the parent terminal
+CLAUDE_CODE_CERT_STORE
+Comma-separated list of CA certificate sources for TLS connections.
+bundled
+is the Mozilla CA set shipped with Claude Code.
+system
+is the operating system trust store. Default is
+bundled,system
+. The native binary distribution is required for system store integration. On the Node.js runtime, only the bundled set is used regardless of this value
 CLAUDE_CODE_CLIENT_CERT
 Path to client certificate file for mTLS authentication
 CLAUDE_CODE_CLIENT_KEY

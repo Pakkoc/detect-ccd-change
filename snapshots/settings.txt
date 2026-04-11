@@ -340,7 +340,9 @@ When set in managed-settings.json, allowlist of MCP servers users can configure.
 Managed MCP configuration
 [{ "serverName": "github" }]
 allowManagedHooksOnly
-(Managed settings only) Prevent loading of user, project, and plugin hooks. Only allows managed hooks and SDK hooks. See
+(Managed settings only) Only managed hooks, SDK hooks, and hooks from plugins force-enabled in managed settings
+enabledPlugins
+are loaded. User, project, and all other plugin hooks are blocked. See
 Hook configuration
 true
 allowManagedMcpServersOnly
@@ -1279,7 +1281,12 @@ is
 true
 :
 Managed hooks and SDK hooks are loaded
-User hooks, project hooks, and plugin hooks are blocked
+Hooks from plugins force-enabled in managed settings
+enabledPlugins
+are loaded. This lets administrators distribute vetted hooks through an organization marketplace while blocking everything else. Trust is granted by full
+plugin@marketplace
+ID, so a plugin with the same name from a different marketplace stays blocked
+User hooks, project hooks, and all other plugin hooks are blocked
 Restrict HTTP hook URLs:
 Limit which URLs HTTP hooks can target. Supports
 *

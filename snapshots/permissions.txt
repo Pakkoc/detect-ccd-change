@@ -241,11 +241,13 @@ but not
 lsof
 , while
 Bash(ls*)
-matches both. The legacy
+matches both. The
 :*
-suffix syntax is equivalent to
-*
-but is deprecated.
+suffix is an equivalent way to write a trailing wildcard.
+Bash(ls:*)
+matches the same commands as
+Bash(ls *)
+.
 ​
 Tool-specific permission rules
 ​
@@ -592,7 +594,9 @@ Restrict which channel plugins can run
 allowManagedHooksOnly
 When
 true
-, prevents loading of user, project, and plugin hooks. Only managed hooks and SDK hooks are allowed
+, only managed hooks, SDK hooks, and hooks from plugins force-enabled in managed settings
+enabledPlugins
+are loaded. User, project, and all other plugin hooks are blocked
 allowManagedMcpServersOnly
 When
 true
