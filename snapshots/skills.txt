@@ -40,6 +40,7 @@ Bundled skills
 Getting started
 Create your first skill
 Where skills live
+Live change detection
 Automatic discovery from nested directories
 Skills from additional directories
 Configure skills
@@ -208,6 +209,17 @@ namespace, so they cannot conflict with other levels. If you have files in
 .claude/commands/
 , those work the same way, but if a skill and a command share the same name, the skill takes precedence.
 ​
+Live change detection
+Claude Code watches skill directories for file changes. Adding, editing, or removing a skill under
+~/.claude/skills/
+, the project
+.claude/skills/
+, or a
+.claude/skills/
+inside an
+--add-dir
+directory takes effect within the current session without restarting. Creating a top-level skills directory that did not exist when the session started requires restarting Claude Code so the new directory can be watched.
+​
 Automatic discovery from nested directories
 When you work with files in subdirectories, Claude Code automatically discovers skills from nested
 .claude/skills/
@@ -246,7 +258,9 @@ flag
 grants file access
 rather than configuration discovery, but skills are an exception:
 .claude/skills/
-within an added directory is loaded automatically and picked up by live change detection, so you can edit those skills during a session without restarting.
+within an added directory is loaded automatically. See
+Live change detection
+for how edits are picked up during a session.
 Other
 .claude/
 configuration such as subagents, commands, and output styles is not loaded from additional directories. See the
@@ -348,7 +362,16 @@ No
 Display name for the skill. If omitted, uses the directory name. Lowercase letters, numbers, and hyphens only (max 64 characters).
 description
 Recommended
-What the skill does and when to use it. Claude uses this to decide when to apply the skill. If omitted, uses the first paragraph of markdown content. Front-load the key use case: descriptions longer than 250 characters are truncated in the skill listing to reduce context usage.
+What the skill does and when to use it. Claude uses this to decide when to apply the skill. If omitted, uses the first paragraph of markdown content. Front-load the key use case: the combined
+description
+and
+when_to_use
+text is truncated at 1,536 characters in the skill listing to reduce context usage.
+when_to_use
+No
+Additional context for when Claude should invoke the skill, such as trigger phrases or example requests. Appended to
+description
+in the skill listing and counts toward the 1,536-character cap.
 argument-hint
 No
 Hint shown during autocomplete to indicate expected arguments. Example:
@@ -1577,7 +1600,11 @@ Skill descriptions are cut short
 Skill descriptions are loaded into context so Claude knows what’s available. All skill names are always included, but if you have many skills, descriptions are shortened to fit the character budget, which can strip the keywords Claude needs to match your request. The budget scales dynamically at 1% of the context window, with a fallback of 8,000 characters.
 To raise the limit, set the
 SLASH_COMMAND_TOOL_CHAR_BUDGET
-environment variable. Or trim descriptions at the source: front-load the key use case, since each entry is capped at 250 characters regardless of budget.
+environment variable. Or trim the
+description
+and
+when_to_use
+text at the source: front-load the key use case, since each entry’s combined text is capped at 1,536 characters regardless of budget.
 ​
 Related resources
 Subagents

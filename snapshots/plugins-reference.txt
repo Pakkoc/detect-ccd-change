@@ -607,6 +607,10 @@ Complete schema
 "lspServers"
 :
 "./.lsp.json"
+,
+"monitors"
+:
+"./monitors.json"
 }
 ​
 Required fields
@@ -718,6 +722,12 @@ string|array|object
 Language Server Protocol
 configs for code intelligence (go to definition, find references, etc.)
 "./.lsp.json"
+monitors
+string|array|object
+Background
+Monitor
+configurations that auto-arm when the plugin is enabled at session start or when a skill in this plugin is invoked
+"./monitors.json"
 userConfig
 object
 User-configurable values prompted at enable time. See
@@ -826,13 +836,19 @@ skills
 commands
 ,
 agents
-, and
+,
 outputStyles
-, custom paths replace the default directory. If the manifest specifies
+, and
+monitors
+, a custom path replaces the default. If the manifest specifies
 skills
 , the default
 skills/
-directory is not scanned.
+directory is not scanned; if it specifies
+monitors
+, the default
+monitors/monitors.json
+is not loaded.
 Hooks
 ,
 MCP servers
@@ -1067,6 +1083,8 @@ enterprise-plugin/
 │   └── compliance-checker.md
 ├── output-styles/            # Output style definitions
 │   └── terse.md
+├── monitors/                 # Background monitor configurations
+│   └── monitors.json
 ├── hooks/                    # Hook configurations
 │   ├── hooks.json           # Main hook config
 │   └── security-hooks.json  # Additional hooks
@@ -1085,7 +1103,7 @@ The
 .claude-plugin/
 directory contains the
 plugin.json
-file. All other directories (commands/, agents/, skills/, output-styles/, hooks/) must be at the plugin root, not inside
+file. All other directories (commands/, agents/, skills/, output-styles/, monitors/, hooks/) must be at the plugin root, not inside
 .claude-plugin/
 .
 ​
@@ -1121,6 +1139,9 @@ MCP server definitions
 LSP servers
 .lsp.json
 Language server configurations
+Monitors
+monitors/monitors.json
+Background monitor configurations
 Executables
 bin/
 Executables added to the Bash tool’s
@@ -1128,9 +1149,11 @@ PATH
 . Files here are invokable as bare commands in any Bash tool call while the plugin is enabled
 Settings
 settings.json
-Default configuration applied when the plugin is enabled. Only
+Default configuration applied when the plugin is enabled. Only the
 agent
-settings are currently supported
+and
+subagentStatusLine
+keys are currently supported
 ​
 CLI commands reference
 Claude Code provides CLI commands for non-interactive plugin management, useful for scripting and automation.

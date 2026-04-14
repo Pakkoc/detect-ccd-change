@@ -98,6 +98,9 @@ ANTHROPIC_CUSTOM_MODEL_OPTION_NAME
 Display name for the custom model entry in the
 /model
 picker. Defaults to the model ID when not set
+ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES
+See
+Model configuration
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 See
 Model configuration
@@ -231,8 +234,16 @@ to keep the native terminal cursor visible and disable the inverted-text cursor 
 CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD
 Set to
 1
-to load CLAUDE.md files from directories specified with
+to load memory files from directories specified with
 --add-dir
+. Loads
+CLAUDE.md
+,
+.claude/CLAUDE.md
+,
+.claude/rules/*.md
+, and
+CLAUDE.local.md
 . By default, additional directories do not load memory files
 CLAUDE_CODE_API_KEY_HELPER_TTL_MS
 Interval in milliseconds at which credentials should be refreshed (when using
@@ -629,17 +640,15 @@ to match
 vim
 if your terminal sends one wheel event per notch without amplification
 CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS
-Maximum time in milliseconds for
+Override the time budget in milliseconds for
 SessionEnd
-hooks to complete (default:
-1500
-). Applies to session exit,
+hooks. Applies to session exit,
 /clear
 , and switching sessions via interactive
 /resume
-. Per-hook
+. By default the budget is 1.5 seconds, automatically raised to the highest per-hook
 timeout
-values are also capped by this budget
+configured in settings files, up to 60 seconds. Timeouts on plugin-provided hooks do not raise the budget
 CLAUDE_CODE_SHELL
 Override automatic shell detection. Useful when your login shell differs from your preferred working shell (for example,
 bash
@@ -739,10 +748,18 @@ Override the configuration directory (default:
 ~/.claude
 ). All settings, credentials, session history, and plugins are stored under this path. Useful for running multiple accounts side by side: for example,
 alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'
+CLAUDE_ENABLE_BYTE_WATCHDOG
+Set to
+1
+to force-enable the byte-level streaming idle watchdog, or set to
+0
+to force-disable it. When unset, the watchdog is enabled by default for Anthropic API connections. The byte watchdog aborts a connection when no bytes arrive on the wire for the duration set by
+CLAUDE_STREAM_IDLE_TIMEOUT_MS
+, with a minimum of 5 minutes, independent of the event-level watchdog
 CLAUDE_ENABLE_STREAM_WATCHDOG
 Set to
 1
-to abort API response streams that stall with no data for 90 seconds. Useful in automated environments where a hung session would go unnoticed, or behind proxies that drop connections silently. Without this, a stalled stream can hang the session indefinitely since the request timeout only covers the initial connection. Configure the timeout with
+to enable the event-level streaming idle watchdog. Off by default. For Bedrock, Vertex, and Foundry, this is the only idle watchdog available. Configure the timeout with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 CLAUDE_ENV_FILE
 Path to a shell script that Claude Code sources before each Bash command. Use to persist virtualenv or conda activation across commands. Also populated dynamically by
@@ -761,11 +778,12 @@ myhost-graceful-unicorn
 --remote-control-session-name-prefix
 CLI flag sets the same value for a single invocation
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
-Timeout in milliseconds before the streaming idle watchdog closes a stalled connection. Default:
+Timeout in milliseconds before the streaming idle watchdog closes a stalled connection. For the byte-level watchdog on the Anthropic API: default and minimum
+300000
+(5 minutes); lower values are silently clamped to absorb extended thinking pauses and proxy buffering. For the event-level watchdog: default
 90000
-(90 seconds). Requires
+(90 seconds), no minimum. For third-party providers, requires
 CLAUDE_ENABLE_STREAM_WATCHDOG=1
-. Increase this value if long-running tools or slow networks cause premature timeout errors
 DISABLE_AUTOUPDATER
 Set to
 1
@@ -966,7 +984,7 @@ Monitoring
 OTEL_LOG_TOOL_DETAILS
 Set to
 1
-to include MCP server names and tool details in telemetry. Disabled by default to protect PII. See
+to include tool input arguments, MCP server names, and tool details in OpenTelemetry traces and logs. Disabled by default to protect PII. See
 Monitoring
 OTEL_LOG_USER_PROMPTS
 Set to
@@ -1016,8 +1034,12 @@ VERTEX_REGION_CLAUDE_4_0_SONNET
 Override region for Claude 4.0 Sonnet when using Vertex AI
 VERTEX_REGION_CLAUDE_4_1_OPUS
 Override region for Claude 4.1 Opus when using Vertex AI
+VERTEX_REGION_CLAUDE_4_5_OPUS
+Override region for Claude Opus 4.5 when using Vertex AI
 VERTEX_REGION_CLAUDE_4_5_SONNET
 Override region for Claude Sonnet 4.5 when using Vertex AI
+VERTEX_REGION_CLAUDE_4_6_OPUS
+Override region for Claude Opus 4.6 when using Vertex AI
 VERTEX_REGION_CLAUDE_4_6_SONNET
 Override region for Claude Sonnet 4.6 when using Vertex AI
 VERTEX_REGION_CLAUDE_HAIKU_4_5

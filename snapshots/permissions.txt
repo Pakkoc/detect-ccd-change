@@ -42,6 +42,8 @@ Use specifiers for fine-grained control
 Wildcard patterns
 Tool-specific permission rules
 Bash
+Compound commands
+Process wrappers
 Read and Edit
 WebFetch
 MCP
@@ -243,11 +245,16 @@ lsof
 Bash(ls*)
 matches both. The
 :*
-suffix is an equivalent way to write a trailing wildcard.
+suffix is an equivalent way to write a trailing wildcard, so
 Bash(ls:*)
 matches the same commands as
 Bash(ls *)
 .
+The permission dialog writes the
+:*
+form when you select “Yes, don’t ask again” for a command prefix. This form is only recognized at the end of a pattern. In a pattern like
+Bash(git:* push)
+, the colon is treated as a literal character and won’t match git commands.
 ​
 Tool-specific permission rules
 ​
@@ -270,8 +277,21 @@ install
 Bash(git * main)
 matches commands like
 git checkout main
-,
+and
+git log --oneline main
+A single
+*
+matches any sequence of characters including spaces, so one wildcard can span multiple arguments.
+Bash(git:*)
+matches
+git log --oneline --all
+, and
+Bash(git * main)
+matches
+git push origin main
+as well as
 git merge main
+.
 When
 *
 appears at the end with a space before it (like
@@ -289,13 +309,25 @@ ls -la
 and
 lsof
 because there’s no word boundary constraint.
-Claude Code is aware of shell operators (like
-&&
-) so a prefix match rule like
+​
+Compound commands
+Claude Code is aware of shell operators, so a rule like
 Bash(safe-cmd *)
 won’t give it permission to run the command
 safe-cmd && other-cmd
-.
+. The recognized command separators are
+&&
+,
+||
+,
+;
+,
+|
+,
+|&
+,
+&
+, and newlines. A rule must match each subcommand independently.
 When you approve a compound command with “Yes, don’t ask again”, Claude Code saves a separate rule for each subcommand that requires approval, rather than a single rule for the full compound string. For example, approving
 git status && npm test
 saves a rule for
@@ -307,6 +339,55 @@ invocations are recognized regardless of what precedes the
 . Subcommands like
 cd
 into a subdirectory generate their own Read rule for that path. Up to 5 rules may be saved for a single compound command.
+​
+Process wrappers
+Before matching Bash rules, Claude Code strips a fixed set of process wrappers so a rule like
+Bash(npm test *)
+also matches
+timeout 30 npm test
+. The recognized wrappers are
+timeout
+,
+time
+,
+nice
+,
+nohup
+, and
+stdbuf
+.
+Bare
+xargs
+is also stripped, so
+Bash(grep *)
+matches
+xargs grep pattern
+. Stripping applies only when
+xargs
+has no flags: an invocation like
+xargs -n1 grep pattern
+is matched as an
+xargs
+command, so rules written for the inner command do not cover it.
+This wrapper list is built in and is not configurable. Development environment runners such as
+direnv exec
+,
+devbox run
+,
+mise exec
+,
+npx
+, and
+docker exec
+are not in the list. Because these tools execute their arguments as a command, a rule like
+Bash(devbox run *)
+matches whatever comes after
+run
+, including
+devbox run rm -rf .
+. To approve work inside an environment runner, write a specific rule that includes both the runner and the inner command, such as
+Bash(devbox run npm test)
+. Add one rule per inner command you want to allow.
 Bash permission patterns that try to constrain command arguments are fragile. For example,
 Bash(curl http://github.com/ *)
 intends to restrict curl to GitHub URLs, but won’t match variations like:
@@ -478,9 +559,11 @@ CLI flag to disable specific agents. To disable the Explore agent:
 Extend permissions with hooks
 Claude Code hooks
 provide a way to register custom shell commands to perform permission evaluation at runtime. When Claude Code makes a tool call, PreToolUse hooks run before the permission prompt. The hook output can deny the tool call, force a prompt, or skip the prompt to let the call proceed.
-Skipping the prompt does not bypass permission rules. Deny and ask rules are still evaluated after a hook returns
+Hook decisions do not bypass permission rules. Deny and ask rules are evaluated regardless of what a PreToolUse hook returns, so a matching deny rule blocks the call and a matching ask rule still prompts even when the hook returned
 "allow"
-, so a matching deny rule still blocks the call. This preserves the deny-first precedence described in
+or
+"ask"
+. This preserves the deny-first precedence described in
 Manage permissions
 , including deny rules set in managed settings.
 A blocking hook also takes precedence over allow rules. A hook that exits with code 2 stops the tool call before permission rules are evaluated, so the block applies even when an allow rule would otherwise let the call proceed. To run all Bash commands without prompts except for a few you want blocked, add
@@ -527,11 +610,17 @@ and
 extraKnownMarketplaces
 only
 CLAUDE.md
-files and
+files,
 .claude/rules/
+, and
+CLAUDE.local.md
 Only when
 CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
-is set
+is set.
+CLAUDE.local.md
+additionally requires the
+local
+setting source, which is enabled by default
 Everything else, including subagents, commands, output styles, hooks, and other settings, is discovered only from the current working directory and its parents, your user directory at
 ~/.claude/
 , and managed settings. To share that configuration across projects, use one of these approaches:

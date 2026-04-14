@@ -80,9 +80,9 @@ Network
 network configuration
 .
 Shell
-: Bash, Zsh, PowerShell, or CMD. On Windows,
+: Bash, Zsh, PowerShell, or CMD. Native Windows setups require
 Git for Windows
-is required.
+. WSL setups do not.
 Location
 :
 Anthropic supported countries
@@ -134,10 +134,10 @@ The token '&&' is not a valid statement separator
 , you’re in PowerShell, not CMD. Use the PowerShell command above instead. Your prompt shows
 PS C:\
 when you’re in PowerShell.
-Windows requires
+Native Windows setups require
 Git for Windows
 .
-Install it first if you don’t have it.
+Install it first if you don’t have it. WSL setups do not need it.
 Native installations automatically update in the background to keep you on the latest version.
 brew
 install
@@ -164,16 +164,39 @@ troubleshooting guide
 .
 ​
 Set up on Windows
-Claude Code on Windows requires
+You can run Claude Code natively on Windows or inside WSL. Pick based on where your projects are located and which features you need:
+Option
+Requires
+Sandboxing
+When to use
+Native Windows
 Git for Windows
-or WSL. You can launch
-claude
-from PowerShell, CMD, or Git Bash. Claude Code uses Git Bash internally to run commands. You do not need to run PowerShell as Administrator.
+Not supported
+Windows-native projects and tools
+WSL 2
+WSL 2 enabled
+Supported
+Linux toolchains or sandboxed command execution
+WSL 1
+WSL 1 enabled
+Not supported
+If WSL 2 is unavailable
 Option 1: Native Windows with Git Bash
 Install
 Git for Windows
-, then run the install command from PowerShell or CMD.
-If Claude Code can’t find your Git Bash installation, set the path in your
+, then run the install command from PowerShell or CMD. You do not need to run as Administrator.
+Whether you install from PowerShell or CMD only affects which install command you run. Your prompt shows
+PS C:\Users\YourName>
+in PowerShell and
+C:\Users\YourName>
+without the
+PS
+in CMD. If you’re new to the terminal, the
+terminal guide
+walks through each step.
+After installation, launch
+claude
+from PowerShell, CMD, or Git Bash. Claude Code uses Git Bash internally to execute commands regardless of where you launched it. If Claude Code can’t find your Git Bash installation, set the path in your
 settings.json file
 :
 {
@@ -196,9 +219,11 @@ Claude Code can also run PowerShell natively on Windows as an opt-in preview. Se
 PowerShell tool
 for setup and limitations.
 Option 2: WSL
-Both WSL 1 and WSL 2 are supported. WSL 2 supports
-sandboxing
-for enhanced security. WSL 1 does not support sandboxing.
+Open your WSL distribution and run the Linux installer from the
+install instructions
+above. You install and launch
+claude
+inside the WSL terminal, not from PowerShell or CMD.
 ​
 Alpine Linux and musl-based distributions
 The native installer on Alpine and other musl/uClibc-based distributions requires

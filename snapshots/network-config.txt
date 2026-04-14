@@ -206,6 +206,11 @@ storage.googleapis.com
 : download bucket for the Claude Code binary and auto-updater
 downloads.claude.ai
 : CDN hosting the install script, version pointers, manifests, signing keys, and plugin executables
+The
+Chrome integration
+connects to the browser extension over a WebSocket bridge. If you use Claude in Chrome, allowlist
+bridge.claudeusercontent.com
+for outbound WebSocket connections.
 Claude Code on the web
 and
 Code Review

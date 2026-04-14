@@ -35,6 +35,9 @@ Customize keyboard shortcuts
 On this page
 Themes and appearance
 Line breaks
+Set up Shift+Enter with /terminal-setup
+Set up Shift+Enter in tmux
+Set up Option+Enter on macOS
 Notification setup
 Terminal notifications
 Notification hooks
@@ -62,21 +65,42 @@ Shift+Enter
 : Works out of the box in iTerm2, WezTerm, Ghostty, and Kitty
 Keyboard shortcut
 : Set up a keybinding to insert a newline in other terminals
-Set up Shift+Enter for other terminals
+​
+Set up Shift+Enter with /terminal-setup
 Run
 /terminal-setup
 within Claude Code to automatically configure Shift+Enter for VS Code, Alacritty, Zed, and Warp.
 The
 /terminal-setup
 command is only visible in terminals that require manual configuration. If you’re using iTerm2, WezTerm, Ghostty, or Kitty, you won’t see this command because Shift+Enter already works natively.
-Set up Option+Enter (VS Code, iTerm2 or macOS Terminal.app)
-For Mac Terminal.app:
+​
+Set up Shift+Enter in tmux
+Inside tmux,
+Shift+Enter
+submits instead of inserting a newline unless extended key reporting is enabled. Add these lines to
+~/.tmux.conf
+, then run
+tmux source-file ~/.tmux.conf
+to reload your configuration:
+set -s extended-keys on
+set -as terminal-features 'xterm*:extkeys'
+Claude Code requests extended keys at startup, but tmux ignores the request unless
+extended-keys
+is set to
+on
+. The
+terminal-features
+line tells tmux that your outer terminal can send these sequences.
+​
+Set up Option+Enter on macOS
+On macOS, you can use Option+Enter as the newline keybinding in Terminal.app, iTerm2, and the VS Code terminal after enabling the Option-as-Meta setting.
+Terminal.app
+iTerm2
+VS Code
 Open Settings → Profiles → Keyboard
 Check “Use Option as Meta Key”
-For iTerm2:
 Open Settings → Profiles → Keys
 Under General, set Left/Right Option key to “Esc+”
-For VS Code terminal:
 Set
 "terminal.integrated.macOptionIsMeta": true
 in VS Code settings.

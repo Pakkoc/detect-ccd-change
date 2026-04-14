@@ -49,11 +49,12 @@ command not found: claude after installation
 curl: (56) Failure writing output to destination
 TLS or SSL connection errors
 Failed to fetch version from storage.googleapis.com
-Windows: irm or && not recognized
+Windows: wrong install command
 Install killed on low-memory Linux servers
 Install hangs in Docker
 Windows: Claude Desktop overrides claude CLI command
 Windows: “Claude Code on Windows requires git-bash”
+Windows: “Claude Code does not support 32-bit Windows”
 Linux: wrong binary variant installed (musl/glibc mismatch)
 Illegal instruction on Linux
 dyld: cannot load on macOS
@@ -121,15 +122,21 @@ irm is not recognized
 or
 && is not valid
 Use the right command for your shell
+'bash' is not recognized as the name of a cmdlet
+Use the Windows installer command
 Claude Code on Windows requires git-bash
 Install or configure Git Bash
+Claude Code does not support 32-bit Windows
+Open Windows PowerShell, not the x86 entry
 Error loading shared library
 Wrong binary variant for your system
 Illegal instruction
 on Linux
 Architecture mismatch
 dyld: cannot load
-or
+,
+dyld: Symbol not found
+, or
 Abort trap
 on macOS
 Binary incompatibility
@@ -597,16 +604,14 @@ claude-code
 On Windows:
 winget install Anthropic.ClaudeCode
 ​
-Windows:
-irm
-or
-&&
-not recognized
+Windows: wrong install command
 If you see
 'irm' is not recognized
-or
+,
 The token '&&' is not valid
-, you’re running the wrong command for your shell.
+, or
+'bash' is not recognized as the name of a cmdlet
+, you copied the install command for a different shell or operating system.
 irm
 not recognized
 : you’re in CMD, not PowerShell. You have two options:
@@ -628,6 +633,16 @@ install.cmd
 &&
 not valid
 : you’re in PowerShell but ran the CMD installer command. Use the PowerShell installer:
+irm https:
+//
+claude.ai
+/
+install.ps1
+|
+iex
+bash
+not recognized
+: you ran the macOS/Linux installer on Windows. Use the PowerShell installer instead:
 irm https:
 //
 claude.ai
@@ -742,6 +757,26 @@ in PowerShell and use the
 bin\bash.exe
 path from that directory.
 ​
+Windows: “Claude Code does not support 32-bit Windows”
+Windows includes two PowerShell entries in the Start menu:
+Windows PowerShell
+and
+Windows PowerShell (x86)
+. The x86 entry runs as a 32-bit process and triggers this error even on a 64-bit machine. To check which case you’re in, run this in the same window that produced the error:
+[
+Environment
+]::Is64BitOperatingSystem
+If this prints
+True
+, your operating system is fine. Close the window, open
+Windows PowerShell
+without the x86 suffix, and run the install command again.
+If this prints
+False
+, you are on a 32-bit edition of Windows. Claude Code requires a 64-bit operating system. See the
+system requirements
+.
+​
 Linux: wrong binary variant installed (musl/glibc mismatch)
 If you see errors about missing shared libraries like
 libstdc++.so.6
@@ -813,11 +848,21 @@ dyld: cannot load
 on macOS
 If you see
 dyld: cannot load
-or
+,
+dyld: Symbol not found
+, or
 Abort trap: 6
 during installation, the binary is incompatible with your macOS version or hardware.
 dyld: cannot load 'claude-2.1.42-darwin-x64' (load command 0x80000034 is unknown)
 Abort trap: 6
+A
+Symbol not found
+error that references
+libicucore
+also indicates your macOS version is older than the binary supports:
+dyld: Symbol not found: _ubrk_clone
+Referenced from: claude-darwin-x64 (which was built for Mac OS X 13.0)
+Expected in: /usr/lib/libicucore.A.dylib
 Solutions:
 Check your macOS version
 : Claude Code requires macOS 13.0 or later. Open the Apple menu and select About This Mac to check your version.

@@ -56,6 +56,7 @@ Model picker actions
 Select actions
 Plugin actions
 Settings actions
+Doctor actions
 Voice actions
 Scroll actions
 Keystroke syntax
@@ -169,6 +170,9 @@ Plugin
 Plugin dialog (browse, discover, manage)
 Scroll
 Conversation scrolling and text selection in fullscreen mode
+Doctor
+/doctor
+diagnostics screen
 ​
 Available actions
 Actions follow a
@@ -249,7 +253,7 @@ chat:submit
 Enter
 Submit message
 chat:newline
-(unbound)
+Ctrl+J
 Insert a newline without submitting
 chat:undo
 Ctrl+_, Ctrl+Shift+-
@@ -574,6 +578,17 @@ Retry loading usage data (on error)
 settings:close
 Enter
 Save changes and close the config panel. Escape discards changes and closes
+​
+Doctor actions
+Actions available in the
+Doctor
+context:
+Action
+Default
+Description
+doctor:fix
+F
+Send the diagnostics report to Claude to fix the reported issues. Only active when issues are found
 ​
 Voice actions
 Actions available in the

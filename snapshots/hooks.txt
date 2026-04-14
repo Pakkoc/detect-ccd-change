@@ -887,6 +887,13 @@ If
 true
 , runs in the background without blocking. See
 Run hooks in the background
+asyncRewake
+no
+If
+true
+, runs in the background and wakes Claude on exit code 2. Implies
+async
+. The hook’s stderr, or stdout if stderr is empty, is shown to Claude as a system reminder so it can react to a long-running background failure
 shell
 no
 Shell to use for this hook. Accepts
@@ -1417,8 +1424,8 @@ FileChanged
 No
 Shows stderr to user only
 PreCompact
-No
-Shows stderr to user only
+Yes
+Blocks compaction
 PostCompact
 No
 Shows stderr to user only
@@ -1520,7 +1527,7 @@ Not every event supports blocking or controlling behavior through JSON. The even
 Events
 Decision pattern
 Key fields
-UserPromptSubmit, PostToolUse, PostToolUseFailure, Stop, SubagentStop, ConfigChange
+UserPromptSubmit, PostToolUse, PostToolUseFailure, Stop, SubagentStop, ConfigChange, PreCompact
 Top-level
 decision
 decision: "block"
@@ -1564,7 +1571,7 @@ action
 (accept/decline/cancel),
 content
 (form field values override)
-WorktreeRemove, Notification, SessionEnd, PreCompact, PostCompact, InstructionsLoaded, StopFailure, CwdChanged, FileChanged
+WorktreeRemove, Notification, SessionEnd, PostCompact, InstructionsLoaded, StopFailure, CwdChanged, FileChanged
 None
 No decision control. Used for side effects like logging or cleanup
 Here are examples of each pattern in action:
@@ -1581,8 +1588,10 @@ PostToolUseFailure
 Stop
 ,
 SubagentStop
-, and
+,
 ConfigChange
+, and
+PreCompact
 . The only value is
 "block"
 . To allow the action to proceed, omit
@@ -2316,8 +2325,7 @@ prompts the user to confirm.
 "defer"
 exits gracefully so the tool can be resumed later.
 Deny and ask rules
-still apply when a hook returns
-"allow"
+are still evaluated regardless of what the hook returns
 permissionDecisionReason
 For
 "allow"
@@ -4270,6 +4278,12 @@ manual
 /compact
 auto
 Auto-compact when the context window is full
+Exit with code 2 to block compaction. For a manual
+/compact
+, the stderr message is shown to the user. You can also block by returning JSON with
+"decision": "block"
+.
+Blocking automatic compaction has different effects depending on when it fires. If compaction was triggered proactively before the context limit, Claude Code skips it and the conversation continues uncompacted. If compaction was triggered to recover from a context-limit error already returned by the API, the underlying error surfaces and the current request fails.
 ​
 PreCompact input
 In addition to the
@@ -4423,11 +4437,11 @@ SessionEnd hooks have a default timeout of 1.5 seconds. This applies to session 
 /clear
 , and switching sessions via interactive
 /resume
-. If your hooks need more time, set the
-CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS
-environment variable to a higher value in milliseconds. Any per-hook
+. If a hook needs more time, set a per-hook
 timeout
-setting is also capped by this value.
+in the hook configuration. The overall budget is automatically raised to the highest per-hook timeout configured in settings files, up to 60 seconds. Timeouts set on plugin-provided hooks do not raise the budget. To override the budget explicitly, set the
+CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS
+environment variable in milliseconds.
 CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS
 =
 5000
@@ -5192,7 +5206,9 @@ hooks support
 async
 . Prompt-based hooks cannot run asynchronously.
 Async hooks cannot block tool calls or return decisions. By the time the hook completes, the triggering action has already proceeded.
-Hook output is delivered on the next conversation turn. If the session is idle, the response waits until the next user interaction.
+Hook output is delivered on the next conversation turn. If the session is idle, the response waits until the next user interaction. Exception: an
+asyncRewake
+hook that exits with code 2 wakes Claude immediately even when the session is idle.
 Each execution creates a separate background process. There is no deduplication across multiple firings of the same async hook.
 ​
 Security considerations

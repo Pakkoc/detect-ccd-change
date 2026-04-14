@@ -111,7 +111,7 @@ Clear prompt input
 Clears typed text, keeps conversation history
 Ctrl+O
 Toggle transcript viewer
-Shows detailed tool usage and execution. Also expands MCP read and search calls, which collapse to a single line like “Queried slack” by default. In
+Shows detailed tool usage and execution. Also expands MCP calls, which collapse to a single line like “Called slack 3 times” by default. In
 fullscreen rendering
 , cycles through three states: normal prompt, transcript mode, and focus view (last prompt + tool summary + response)
 Ctrl+R

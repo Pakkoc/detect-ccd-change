@@ -92,7 +92,9 @@ No
 EnterWorktree
 Creates an isolated
 git worktree
-and switches into it
+and switches into it. Pass a
+path
+to switch into an existing worktree of the current repository instead of creating a new one
 No
 ExitPlanMode
 Presents a plan for approval and exits plan mode
@@ -260,7 +262,11 @@ permission rules as Bash
 allow
 and
 deny
-patterns you have set for Bash apply here too. It is not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry.
+patterns you have set for Bash apply here too. It is not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry. It is also not available when
+DISABLE_TELEMETRY
+or
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+is set.
 ​
 PowerShell tool
 On Windows, Claude Code can run PowerShell commands natively instead of routing through Git Bash. This is an opt-in preview.

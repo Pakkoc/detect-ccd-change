@@ -61,7 +61,7 @@ No repositories appear after connecting GitHub
 The page only shows a GitHub login button
 ”Not available for the selected organization”
 /web-setup returns “Unknown command”
-”No cloud environment available” when using --remote
+”Could not create a cloud environment” or “No cloud environment available” when using --remote or ultraplan
 Setup script failed
 Session keeps running after closing the tab
 Next steps
@@ -325,11 +325,13 @@ claude update
 /login
 to sign in with your claude.ai account.
 ​
-”No cloud environment available” when using
+”Could not create a cloud environment” or “No cloud environment available” when using
 --remote
-You haven’t created a cloud environment yet. Run
+or ultraplan
+Remote-session features create a default cloud environment automatically if you don’t have one. If you see “Could not create a cloud environment”, automatic creation failed.
+If you see “No cloud environment available”, your CLI predates automatic creation. In either case, run
 /web-setup
-in the Claude Code CLI to create one, or visit
+in the Claude Code CLI to create one manually, or visit
 claude.ai/code
 and follow the
 Create your environment

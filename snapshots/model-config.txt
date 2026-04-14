@@ -574,8 +574,10 @@ _DESCRIPTION
 _SUPPORTED_CAPABILITIES
 suffixes are available for
 ANTHROPIC_DEFAULT_SONNET_MODEL
-and
+,
 ANTHROPIC_DEFAULT_HAIKU_MODEL
+, and
+ANTHROPIC_CUSTOM_MODEL_OPTION
 .
 Claude Code enables features like
 effort levels
