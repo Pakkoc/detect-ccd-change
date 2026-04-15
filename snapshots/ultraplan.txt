@@ -40,8 +40,8 @@ Remote Control
 Claude Code on the web
 Get started
 Reference
+Routines
 Plan in the cloud
-Schedule tasks on the web
 Claude Code on desktop
 Chrome extension (beta)
 Computer use (preview)
@@ -158,8 +158,8 @@ Remote Control
 Was this page helpful?
 Yes
 No
-Reference
-Schedule tasks on the web
+Routines
+Get started
 ⌘
 I
 Assistant

@@ -989,10 +989,10 @@ Pick a scheduling option based on where you want the task to run:
 Option
 Where it runs
 Best for
-Cloud scheduled tasks
+Routines
 Anthropic-managed infrastructure
-Tasks that should run even when your computer is off. Configure at
-claude.ai/code
+Tasks that should run even when your computer is off. Can also trigger on API calls or GitHub events in addition to a schedule. Configure at
+claude.ai/code/routines
 .
 Desktop scheduled tasks
 Your machine, via the desktop app

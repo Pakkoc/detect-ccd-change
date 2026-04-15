@@ -118,7 +118,7 @@ Remote tasks
 Both kinds appear in the same task grid. Click
 New task
 to pick which kind to create. The rest of this page covers local tasks; for remote tasks, see
-Cloud scheduled tasks
+Routines
 .
 See
 How scheduled tasks run
@@ -174,8 +174,8 @@ Tasks only run while the desktop app is running and your computer is awake. If y
 Keep computer awake
 in Settings under
 Desktop app → General
-. Closing the laptop lid still puts it to sleep. For tasks that need to run even when your computer is off, use a
-remote task
+. Closing the laptop lid still puts it to sleep. For tasks that need to run even when your computer is off, or that should trigger automatically on an API call or GitHub event, use a
+routine
 instead.
 ​
 Missed runs
@@ -220,8 +220,8 @@ description
 , with the prompt as the body. Changes take effect on the next run. Schedule, folder, model, and enabled state are not in this file: change them through the Edit form or ask Claude.
 ​
 Related resources
-Cloud scheduled tasks
-: schedule tasks that run on Anthropic-managed infrastructure even when your computer is off
+Routines
+: run tasks on Anthropic-managed infrastructure on a schedule, via API call, or in response to GitHub events, even when your computer is off
 Run prompts on a schedule
 : session-scoped scheduling with
 /loop

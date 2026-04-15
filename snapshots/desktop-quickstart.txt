@@ -54,7 +54,7 @@ Start your first session
 Now what?
 Coming from the CLI?
 What’s next
-The desktop app gives you Claude Code with a graphical interface: visual diff review, live app preview, GitHub PR monitoring with auto-merge, parallel sessions with Git worktree isolation, scheduled tasks, and the ability to run tasks remotely. No terminal required.
+The desktop app gives you Claude Code with a graphical interface built for running multiple sessions side by side: a sidebar for managing parallel work, a drag-and-drop layout with an integrated terminal and file editor, visual diff review, live app preview, GitHub PR monitoring with auto-merge, and scheduled tasks. No terminal required.
 Download Claude for your platform:
 macOS
 Universal build for Intel and Apple Silicon
@@ -131,7 +131,7 @@ SSH
 Choose a model
 Select a model from the dropdown next to the send button. See
 models
-for a comparison of Opus, Sonnet, and Haiku. You cannot change the model after the session starts.
+for a comparison of Opus, Sonnet, and Haiku. You can change the model later from the same dropdown.
 3
 Tell Claude what to do
 Type what you want Claude to do:
@@ -199,6 +199,12 @@ Plugins
 to browse and install
 plugins
 that add skills, agents, MCP servers, and more.
+Arrange your workspace.
+Drag the chat, diff, terminal, file, and preview panes into whatever layout you want. Open the terminal with
+Ctrl+`
+to run commands alongside your session, or click a file path to open it in the file pane. See
+Arrange your workspace
+.
 Preview your app.
 Click the
 Preview
@@ -216,7 +222,11 @@ to run Claude automatically on a recurring basis: a daily code review every morn
 Scale up when you’re ready.
 Open
 parallel sessions
-from the sidebar to work on multiple tasks at once, each in its own Git worktree. Send
+from the sidebar to work on multiple tasks at once, each in its own Git worktree, and open the
+tasks pane
+to watch the subagents and background commands a session has running. Open a
+side chat
+to ask a question without derailing the main thread. Send
 long-running work to the cloud
 so it continues even if you close the app, or
 continue a session on the web or in your IDE
@@ -241,7 +251,7 @@ Common workflows
 Was this page helpful?
 Yes
 No
-Schedule tasks on the web
+Plan in the cloud
 Reference
 ⌘
 I

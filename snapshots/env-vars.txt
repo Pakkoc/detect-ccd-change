@@ -441,6 +441,12 @@ to force-disable
 extended thinking
 regardless of model support or other settings. More direct than
 MAX_THINKING_TOKENS=0
+CLAUDE_CODE_DISABLE_VIRTUAL_SCROLL
+Set to
+1
+to disable virtual scrolling in
+fullscreen rendering
+and render every message in the transcript. Use this if scrolling in fullscreen mode shows blank regions where messages should appear
 CLAUDE_CODE_EFFORT_LEVEL
 Set the effort level for supported models. Values:
 low
@@ -531,6 +537,12 @@ CLAUDE_CODE_IDE_SKIP_VALID_CHECK
 Set to
 1
 to skip validation of IDE lockfile entries during connection. Use when auto-connect fails to find your IDE despite it running
+CLAUDE_CODE_MAX_CONTEXT_TOKENS
+Override the context window size Claude Code assumes for the active model. Only takes effect when
+DISABLE_COMPACT
+is also set. Use this when routing to a model through
+ANTHROPIC_BASE_URL
+whose context window does not match the built-in size for its name
 CLAUDE_CODE_MAX_OUTPUT_TOKENS
 Set the maximum number of output tokens for most requests. Defaults and caps vary by model; see
 max output tokens
@@ -674,6 +686,14 @@ CLAUDE_CODE_SKIP_FOUNDRY_AUTH
 Skip Azure authentication for Microsoft Foundry (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_MANTLE_AUTH
 Skip AWS authentication for Bedrock Mantle (for example, when using an LLM gateway)
+CLAUDE_CODE_SKIP_PROMPT_HISTORY
+Set to
+1
+to skip writing prompt history and session transcripts to disk. Sessions started with this variable set do not appear in
+--resume
+,
+--continue
+, or up-arrow history. Useful for ephemeral scripted sessions
 CLAUDE_CODE_SKIP_VERTEX_AUTH
 Skip Google authentication for Vertex (for example, when using an LLM gateway)
 CLAUDE_CODE_SUBAGENT_MODEL

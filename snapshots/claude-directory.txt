@@ -280,13 +280,15 @@ projects/<project>/<session>.jsonl
 Lower
 cleanupPeriodDays
 to shorten how long transcripts are kept
-In non-interactive mode, pass
+Set the
+CLAUDE_CODE_SKIP_PROMPT_HISTORY
+environment variable to skip writing transcripts and prompt history in any mode. In non-interactive mode, you can instead pass
 --no-session-persistence
 alongside
 -p
-to skip writing transcripts entirely. In the Agent SDK, set
+, or set
 persistSession: false
-. There is no interactive-mode equivalent.
+in the Agent SDK.
 Use
 permission rules
 to deny reads of credential files

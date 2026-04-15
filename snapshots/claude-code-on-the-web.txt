@@ -40,8 +40,8 @@ Remote Control
 Claude Code on the web
 Get started
 Reference
+Routines
 Plan in the cloud
-Schedule tasks on the web
 Claude Code on desktop
 Chrome extension (beta)
 Computer use (preview)
@@ -1088,8 +1088,8 @@ local bundle
 , but the session can’t push results back to the remote
 ​
 Related resources
-Schedule tasks on the web
-: automate recurring work like daily PR reviews and dependency audits
+Routines
+: automate work on a schedule, via API call, or in response to GitHub events
 Hooks configuration
 : run scripts at session lifecycle events
 Settings reference
@@ -1102,7 +1102,7 @@ Was this page helpful?
 Yes
 No
 Get started
-Plan in the cloud
+Routines
 ⌘
 I
 Assistant

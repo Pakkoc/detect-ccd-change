@@ -53,8 +53,8 @@ Windows: wrong install command
 Install killed on low-memory Linux servers
 Install hangs in Docker
 Windows: Claude Desktop overrides claude CLI command
-Windows: “Claude Code on Windows requires git-bash”
-Windows: “Claude Code does not support 32-bit Windows”
+Windows: Claude Code on Windows requires git-bash
+Windows: Claude Code does not support 32-bit Windows
 Linux: wrong binary variant installed (musl/glibc mismatch)
 Illegal instruction on Linux
 dyld: cannot load on macOS
@@ -67,9 +67,9 @@ Authentication issues
 OAuth error: Invalid code
 403 Forbidden after login
 Model not found or not accessible
-”This organization has been disabled” with an active subscription
+This organization has been disabled with an active subscription
 OAuth login fails in WSL2
-”Not logged in” or token expired
+Not logged in or token expired
 Configuration file locations
 Resetting configuration
 Performance and stability
@@ -723,7 +723,7 @@ claude
 opens the Desktop app instead of the CLI.
 Update Claude Desktop to the latest version to fix this issue.
 ​
-Windows: “Claude Code on Windows requires git-bash”
+Windows: Claude Code on Windows requires git-bash
 Claude Code on native Windows needs
 Git for Windows
 , which includes Git Bash.
@@ -757,7 +757,7 @@ in PowerShell and use the
 bin\bash.exe
 path from that directory.
 ​
-Windows: “Claude Code does not support 32-bit Windows”
+Windows: Claude Code does not support 32-bit Windows
 Windows includes two PowerShell entries in the Start menu:
 Windows PowerShell
 and
@@ -1105,7 +1105,7 @@ to open the picker. For Vertex AI deployments, see
 the Vertex AI troubleshooting section
 .
 ​
-”This organization has been disabled” with an active subscription
+This organization has been disabled with an active subscription
 If you see
 API Error: 400 ... "This organization has been disabled"
 despite having an active Claude subscription, an
@@ -1147,7 +1147,7 @@ Or copy the URL manually: when the login prompt appears, press
 c
 to copy the OAuth URL, then paste it into your Windows browser.
 ​
-”Not logged in” or token expired
+Not logged in or token expired
 If Claude Code prompts you to log in again after a session, your OAuth token may have expired.
 Run
 /login

@@ -84,6 +84,11 @@ Orchestrate large-scale changes across a codebase in parallel. Researches the co
 git worktree
 . Each agent implements its unit, runs tests, and opens a pull request. Requires a git repository. Example:
 /batch migrate src/ from Solid to React
+/branch [name]
+Create a branch of the current conversation at this point. Switches you into the branch and preserves the original, which you can return to with
+/resume
+. Alias:
+/fork
 /btw <question>
 Ask a quick
 side question
@@ -192,9 +197,6 @@ on or off
 /feedback [report]
 Submit feedback about Claude Code. Alias:
 /bug
-/branch [name]
-Create a branch of the current conversation at this point. Alias:
-/fork
 /help
 Show help and available commands
 /hooks
@@ -309,7 +311,7 @@ sandbox mode
 . Available on supported platforms only
 /schedule [description]
 Create, update, list, or run
-Cloud scheduled tasks
+routines
 . Claude walks you through the setup conversationally
 /security-review
 Analyze pending changes on the current branch for security vulnerabilities. Reviews the git diff and identifies risks like injection, auth issues, and data exposure

@@ -451,13 +451,15 @@ Session files older than this period are deleted at startup (default: 30 days, m
 0
 is rejected with a validation error. Also controls the age cutoff for automatic removal of
 orphaned subagent worktrees
-at startup. To disable transcript writes entirely in non-interactive mode (
+at startup. To disable transcript writes entirely, set the
+CLAUDE_CODE_SKIP_PROMPT_HISTORY
+environment variable, or in non-interactive mode (
 -p
-), use the
+) use the
 --no-session-persistence
 flag or the
 persistSession: false
-SDK option; there is no interactive-mode equivalent.
+SDK option.
 20
 companyAnnouncements
 Announcement to display to users at startup. If multiple announcements are provided, they will be cycled through at random.
@@ -643,6 +645,10 @@ Configure Claude’s preferred response language (e.g.,
 voice dictation
 language
 "japanese"
+minimumVersion
+Prevent the auto-updater from downgrading below a specific version. Automatically set when switching to the stable channel and choosing to stay on the current version until stable catches up. Used with
+autoUpdatesChannel
+"2.1.85"
 model
 Override the default model to use for Claude Code
 "claude-sonnet-4-6"
