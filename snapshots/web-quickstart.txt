@@ -55,6 +55,7 @@ Compare ways to run Claude Code
 Connect GitHub and create an environment
 Connect from your terminal
 Start a task
+Pre-fill sessions
 Review and iterate
 Troubleshoot setup
 No repositories appear after connecting GitHub
@@ -268,6 +269,33 @@ tests/test_auth.py
 Paste error output if you have it
 Describe the expected behavior, not just the symptom
 Claude clones the repositories, runs your setup script if configured, and starts working. Each task gets its own session and its own branch, so you don’t need to wait for one to finish before starting another.
+​
+Pre-fill sessions
+You can prefill the prompt, repositories, and environment for a new session by adding query parameters to the
+claude.ai/code
+URL. Use this to build integrations such as a button in your issue tracker that opens Claude Code with the issue description as the prompt.
+Parameter
+Description
+prompt
+Prompt text to prefill in the input box. The alias
+q
+is also accepted.
+prompt_url
+URL to fetch the prompt text from, for prompts too long to embed in a query string. The URL must allow cross-origin requests. Ignored when
+prompt
+is also set.
+repositories
+Comma-separated list of
+owner/repo
+slugs to preselect. The alias
+repo
+is also accepted.
+environment
+Name or ID of the
+environment
+to preselect.
+URL-encode each value. The example below opens the form with a prompt and a repository already selected:
+https://claude.ai/code?prompt=Fix%20the%20login%20bug&repositories=acme/webapp
 ​
 Review and iterate
 When Claude finishes, review the changes, leave feedback on specific lines, and keep going until the diff looks right.

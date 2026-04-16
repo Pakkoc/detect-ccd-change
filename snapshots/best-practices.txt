@@ -102,9 +102,9 @@ After
 Provide verification criteria
 ”implement a function that validates email addresses"
 "write a validateEmail function. example test cases:
-[email protected]
+user@example.com
 is true, invalid is false,
-[email protected]
+user@.com
 is false. run the tests after implementing”
 Verify UI changes visually
 ”make the dashboard look better"

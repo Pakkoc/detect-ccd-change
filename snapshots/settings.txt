@@ -1015,10 +1015,14 @@ denyRead
 still merges from all sources. Default: false
 true
 network.allowUnixSockets
-Unix socket paths accessible in sandbox (for SSH agents, etc.)
+(macOS only) Unix socket paths accessible in sandbox. Ignored on Linux and WSL2, where the seccomp filter cannot inspect socket paths; use
+allowAllUnixSockets
+instead.
 ["~/.ssh/agent-socket"]
 network.allowAllUnixSockets
-Allow all Unix socket connections in sandbox. Default: false
+Allow all Unix socket connections in sandbox. On Linux and WSL2 this is the only way to permit Unix sockets, since it skips the seccomp filter that otherwise blocks
+socket(AF_UNIX, ...)
+calls. Default: false
 true
 network.allowLocalBinding
 Allow binding to localhost ports (macOS only). Default: false
@@ -1200,9 +1204,7 @@ pr
 Attribution for pull request descriptions. Empty string hides pull request attribution
 Default commit attribution:
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
-Co-Authored-By: Claude Sonnet 4.6 <
-[email protected]
->
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 Default pull request attribution:
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 Example:
@@ -1213,9 +1215,7 @@ Example:
 :
 "Generated with AI
 \n\n
-Co-Authored-By: AI <
-[email protected]
->"
+Co-Authored-By: AI <ai@example.com>"
 ,
 "pr"
 :
@@ -1774,9 +1774,7 @@ Git repositories
 ,
 "url"
 :
-"ssh://
-[email protected]
-/plugins.git"
+"ssh://git@git.example.com/plugins.git"
 ,
 "ref"
 :

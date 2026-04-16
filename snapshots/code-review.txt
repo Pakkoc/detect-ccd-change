@@ -60,10 +60,14 @@ Manually trigger reviews
 Customize reviews
 CLAUDE.md
 REVIEW.md
+What you can tune
+Example
+Keep it focused
 View usage
 Pricing
 Troubleshooting
 Retrigger a failed or timed-out review
+Review didn’t run and the PR shows a spend-cap message
 Find issues that aren’t showing as inline comments
 Related resources
 Code Review is in research preview, available for
@@ -108,7 +112,7 @@ for your organization, reviews trigger when a PR opens, on every push, or when m
 @claude review
 starts reviews on a PR
 in any mode.
-When a review runs, multiple agents analyze the diff and surrounding code in parallel on Anthropic infrastructure. Each agent looks for a different class of issue, then a verification step checks candidates against actual code behavior to filter out false positives. The results are deduplicated, ranked by severity, and posted as inline comments on the specific lines where issues were found. If no issues are found, Claude posts a short confirmation comment on the PR.
+When a review runs, multiple agents analyze the diff and surrounding code in parallel on Anthropic infrastructure. Each agent looks for a different class of issue, then a verification step checks candidates against actual code behavior to filter out false positives. The results are deduplicated, ranked by severity, and posted as inline comments on the specific lines where issues were found, with a summary in the review body. If no issues are found, Claude posts a short confirmation comment on the PR.
 Reviews scale in cost with PR size and complexity, completing in 20 minutes on average. Admins can monitor review activity and spend via the
 analytics dashboard
 .
@@ -252,18 +256,18 @@ Unlike automatic triggers, manual triggers run on draft PRs, since an explicit r
 If a review is already running on that PR, the request is queued until the in-progress review completes. You can monitor progress via the check run on the PR.
 ​
 Customize reviews
-Code Review reads two files from your repository to guide what it flags. Both are additive on top of the default correctness checks:
+Code Review reads two files from your repository to guide what it flags. They differ in how strongly they influence the review:
 CLAUDE.md
-: shared project instructions that Claude Code uses for all tasks, not just reviews. Use it when guidance also applies to interactive Claude Code sessions.
+: shared project instructions that Claude Code uses for all tasks, not just reviews. Code Review reads it as project context and flags newly introduced violations as nits.
 REVIEW.md
-: review-only guidance, read exclusively during code reviews. Use it for rules that are strictly about what to flag or skip during review and would clutter your general
-CLAUDE.md
-.
+: review-only instructions, injected directly into every agent in the review pipeline as highest priority. Use it to change what gets flagged, at what severity, and how findings are reported.
 ​
 CLAUDE.md
 Code Review reads your repository’s
 CLAUDE.md
-files and treats newly-introduced violations as nit-level findings. This works bidirectionally: if your PR changes code in a way that makes a
+files and treats newly introduced violations as
+nit-level
+findings. This works bidirectionally: if your PR changes code in a way that makes a
 CLAUDE.md
 statement outdated, Claude flags that the docs need updating too.
 Claude reads
@@ -280,46 +284,86 @@ REVIEW.md
 instead.
 ​
 REVIEW.md
-Add a
 REVIEW.md
-file to your repository root for review-specific rules. Use it to encode:
-Company or team style guidelines: “prefer early returns over nested conditionals”
-Language- or framework-specific conventions not covered by linters
-Things Claude should always flag: “any new API route must have an integration test”
-Things Claude should skip: “don’t comment on formatting in generated code under
-/gen/
-”
+is a file at your repository root that overrides how Code Review behaves on your repo. Its contents are injected into the system prompt of every agent in the review pipeline as the highest-priority instruction block, taking precedence over the default review guidance.
+Because it’s pasted verbatim,
+REVIEW.md
+is plain instructions:
+@
+import syntax
+is not expanded, and referenced files are not read into the prompt. Put the rules you want enforced directly in the file.
+​
+What you can tune
+REVIEW.md
+is freeform markdown, so anything you can express as a review instruction is in scope. The patterns below have the most impact in practice.
+Severity
+: redefine what 🔴 Important means for your repo. The default calibration targets production code; a docs repo, a config repo, or a prototype might want a much narrower definition. State explicitly which classes of finding are Important and which are Nit at most. You can also escalate in the other direction, for example treating any
+CLAUDE.md
+violation as Important rather than the default nit.
+Nit volume
+: cap how many 🟡 Nit comments a single review posts. Prose and config files can be polished forever. A cap like “report at most five nits, mention the rest as a count in the summary” keeps reviews actionable.
+Skip rules
+: list paths, branch patterns, and finding categories where Claude should post no findings. Common candidates are generated code, lockfiles, vendored dependencies, and machine-authored branches, along with anything your CI already enforces like linting or spellcheck. For paths that warrant some review but not full scrutiny, set a higher bar instead of skipping entirely: “in
+scripts/
+, only report if near-certain and severe.”
+Repo-specific checks
+: add rules you want flagged on every PR, like “new API routes must have an integration test.” Because
+REVIEW.md
+is injected as highest priority, these land more reliably than the same rules in a long
+CLAUDE.md
+.
+Verification bar
+: require evidence before a class of finding is posted. For example, “behavior claims need a
+file:line
+citation in the source, not an inference from naming” cuts false positives that would otherwise cost the author a round trip.
+Re-review convergence
+: tell Claude how to behave when a PR has already been reviewed. A rule like “after the first review, suppress new nits and post Important findings only” stops a one-line fix from reaching round seven on style alone.
+Summary shape
+: ask for the review body to open with a one-line tally such as
+2 factual, 4 style
+, and to lead with “no factual issues” when that’s the case. The author wants to know the shape of the work before the details.
+​
 Example
+This
 REVIEW.md
-:
-# Code Review Guidelines
-## Always check
+recalibrates severity for a backend service, caps nits, skips generated files, and adds repo-specific checks.
+# Review instructions
+## What Important means here
+Reserve Important for findings that would break behavior, leak data,
+or block a rollback: incorrect logic, unscoped database queries, PII
+in logs or error messages, and migrations that aren't backward
+compatible. Style, naming, and refactoring suggestions are Nit at
+most.
+## Cap the nits
+Report at most five Nits per review. If you found more, say "plus N
+similar items" in the summary instead of posting them inline. If
+everything you found is a Nit, lead the summary with "No blocking
+issues."
+## Do not report
 -
-New API endpoints have corresponding integration tests
--
-Database migrations are backward-compatible
--
-Error messages don't leak internal details to users
-## Style
--
-Prefer
-`match`
-statements over chained
-`isinstance`
-checks
--
-Use structured logging, not f-string interpolation in log calls
-## Skip
+Anything CI already enforces: lint, formatting, type errors
 -
 Generated files under
 `src/gen/`
--
-Formatting-only changes in
+and any
 `*.lock`
-files
-Claude auto-discovers
+file
+-
+Test-only code that intentionally violates production rules
+## Always check
+-
+New API routes have an integration test
+-
+Log lines don't include email addresses, user IDs, or request bodies
+-
+Database queries are scoped to the caller's tenant
+​
+Keep it focused
+Length has a cost: a long
 REVIEW.md
-at the repository root. No configuration needed.
+dilutes the rules that matter most. Keep it to instructions that change review behavior, and leave general project context in
+CLAUDE.md
+.
 ​
 View usage
 Go to
@@ -335,7 +379,7 @@ Feedback
 Count of review comments that were auto-resolved because a developer addressed the issue
 Repository breakdown
 Per-repo counts of PRs reviewed and comments resolved
-The repositories table in admin settings also shows average cost per review for each repo.
+The repositories table in admin settings also shows average cost per review for each repo. Dashboard cost figures are estimates for monitoring activity; for invoice-accurate spend, refer to your Anthropic bill.
 ​
 Pricing
 Code Review is billed based on token usage. Each review averages $15-25 in cost, scaling with PR size, codebase complexity, and how many issues require verification. Code Review usage is billed separately through
@@ -378,6 +422,11 @@ on the PR. This starts a fresh review without subscribing the PR to future pushe
 The
 Re-run
 button in GitHub’s Checks tab does not retrigger Code Review. Use the comment command or a new push instead.
+​
+Review didn’t run and the PR shows a spend-cap message
+When your organization’s monthly spend cap is reached, Code Review posts a single comment on the PR explaining that the review was skipped. Reviews resume automatically at the start of the next billing period, or immediately when an admin raises the cap at
+claude.ai/admin-settings/usage
+.
 ​
 Find issues that aren’t showing as inline comments
 If the check run title says issues were found but you don’t see inline review comments on the diff, look in these other locations where findings are surfaced:

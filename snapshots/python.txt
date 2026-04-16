@@ -2711,6 +2711,9 @@ preset: Literal[
 append: NotRequired[
 str
 ]
+exclude_dynamic_sections: NotRequired[
+bool
+]
 Field
 Required
 Description
@@ -2727,6 +2730,10 @@ to use Claude Code’s system prompt
 append
 No
 Additional instructions to append to the preset system prompt
+exclude_dynamic_sections
+No
+Move per-session context such as working directory, git status, and memory paths from the system prompt into the first user message. Improves prompt-cache reuse across users and machines. See
+Modify system prompts
 ​
 SettingSource
 Controls which filesystem-based configuration sources the SDK loads settings from.
@@ -3966,7 +3973,9 @@ int
 Web search requests made by this model.
 costUSD
 float
-Cost in USD for this model.
+Estimated cost in USD for this model, computed client-side. See
+Track cost and usage
+for billing caveats.
 contextWindow
 int
 Context window size for this model.
@@ -5526,7 +5535,7 @@ float
 |
 None
 ,
-# Total cost in USD
+# Estimated total cost in USD
 "duration_ms"
 :
 int

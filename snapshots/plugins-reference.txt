@@ -554,9 +554,7 @@ Complete schema
 ,
 "email"
 :
-"
-[email protected]
-"
+"author@example.com"
 ,
 "url"
 :
@@ -652,9 +650,7 @@ Brief explanation of plugin purpose
 author
 object
 Author information
-{"name": "Dev Team", "email": "
-[email protected]
-"}
+{"name": "Dev Team", "email": "dev@company.com"}
 homepage
 string
 Documentation URL

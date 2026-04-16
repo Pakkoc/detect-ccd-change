@@ -254,9 +254,7 @@ below for all available fields.
 ,
 "email"
 :
-"
-[email protected]
-"
+"devtools@example.com"
 },
 "plugins"
 : [
@@ -790,8 +788,7 @@ url
 field also accepts a GitHub shorthand (
 owner/repo
 ) or SSH URLs (
-[email protected]
-:owner/repo.git
+git@github.com:owner/repo.git
 ).
 Field
 Type
@@ -937,9 +934,7 @@ This example shows a plugin entry using many of the optional fields, including c
 ,
 "email"
 :
-"
-[email protected]
-"
+"enterprise@example.com"
 },
 "homepage"
 :
@@ -1602,8 +1597,7 @@ claude
 plugin
 marketplace
 add
-acme-corp/
-[email protected]
+acme-corp/claude-plugins@v2.0
 Add from a git URL on a non-GitHub host:
 claude
 plugin

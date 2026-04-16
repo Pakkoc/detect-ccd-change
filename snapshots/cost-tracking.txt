@@ -69,12 +69,25 @@ Resolve output token discrepancies
 Track costs on failed conversations
 Track cache tokens
 Related documentation
-The Claude Agent SDK provides detailed token usage information for each interaction with Claude. This guide explains how to properly track costs and understand usage reporting, especially when dealing with parallel tool uses and multi-step conversations.
+The Claude Agent SDK provides detailed token usage information for each interaction with Claude. This guide explains how to properly track usage and understand cost reporting, especially when dealing with parallel tool uses and multi-step conversations.
 For complete API documentation, see the
 TypeScript SDK reference
 and
 Python SDK reference
 .
+The
+total_cost_usd
+and
+costUSD
+fields are client-side estimates, not authoritative billing data. The SDK computes them locally from a price table bundled at build time, so they can drift from what you are actually billed when:
+pricing changes
+the installed SDK version does not recognize a model
+billing rules apply that the client cannot model
+Use these fields for development insight and approximate budgeting. For authoritative billing, use the
+Usage and Cost API
+or the Usage page in the
+Claude Console
+. Do not bill end users or trigger financial decisions from these fields.
 ​
 Understand token usage
 The TypeScript and Python SDKs expose the same usage data with different field names:
@@ -121,7 +134,7 @@ query()
 call within a session reports its own cost independently.
 The following diagram shows the message stream from a single
 query()
-call, with token usage reported at each step and the authoritative total at the end:
+call, with token usage reported at each step and the cumulative estimate at the end:
 1
 Each step produces assistant messages
 When Claude responds, it sends one or more assistant messages. In TypeScript, each assistant message contains a nested
@@ -144,7 +157,7 @@ and
 message.message_id
 . When Claude uses multiple tools in one turn, all messages in that turn share the same ID, so deduplicate by ID to avoid double-counting.
 2
-The result message provides the authoritative total
+The result message provides the cumulative estimate
 When the
 query()
 call completes, the SDK emits a result message with
@@ -157,7 +170,7 @@ SDKResultMessage
 ResultMessage
 ). If you make multiple
 query()
-calls (for example, in a multi-turn session), each result only reflects the cost of that individual call. If you only need the total cost, you can ignore the per-step usage and read this single value.
+calls (for example, in a multi-turn session), each result only reflects the cost of that individual call. If you only need the estimated total, you can ignore the per-step usage and read this single value.
 ​
 Get the total cost of a query
 The result message (
@@ -600,10 +613,10 @@ output_tokens
 values for messages with the same ID. When this occurs:
 Use the highest value:
 the final message in a group typically contains the accurate total.
-Verify against total cost:
+Prefer the result message:
 the
 total_cost_usd
-in the result message is authoritative.
+in the result message reflects the SDK’s accumulated estimate across all steps, so it is more reliable than summing per-step values yourself. It is still an estimate and may differ from your actual bill.
 Report inconsistencies:
 file issues at the
 Claude Code GitHub repository

@@ -510,7 +510,7 @@ gpg
 Display the fingerprint of the imported key.
 gpg
 --fingerprint
-[email protected]
+security@anthropic.com
 Confirm the output includes this fingerprint:
 31DD DE24 DDFA B679 F42D  7BD2 BAA9 29FF 1A7E CACE
 2
@@ -546,9 +546,7 @@ gpg
 manifest.json.sig
 manifest.json
 A valid result reports
-Good signature from "Anthropic Claude Code Release Signing <
-[email protected]
->"
+Good signature from "Anthropic Claude Code Release Signing <security@anthropic.com>"
 .
 gpg
 also prints

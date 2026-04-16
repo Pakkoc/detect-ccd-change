@@ -364,8 +364,7 @@ Using SSH:
 /plugin
 marketplace
 add
-[email protected]
-:company/plugins.git
+git@gitlab.com:company/plugins.git
 To add a specific branch or tag, append
 #
 followed by the ref:

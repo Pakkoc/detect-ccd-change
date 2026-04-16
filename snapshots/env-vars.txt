@@ -625,6 +625,17 @@ CLAUDE_CODE_PROXY_RESOLVES_HOSTS
 Set to
 1
 to allow the proxy to perform DNS resolution instead of the caller. Opt-in for environments where the proxy should handle hostname resolution
+CLAUDE_CODE_REMOTE
+Set automatically to
+true
+when Claude Code is running as a
+cloud session
+. Read this from a hook or setup script to detect whether you are in a cloud environment
+CLAUDE_CODE_REMOTE_SESSION_ID
+Set automatically in
+cloud sessions
+to the current session’s ID. Read this to construct a link back to the session transcript. See
+Link artifacts back to the session
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN
 Set to
 1
@@ -746,6 +757,18 @@ Override the temp directory used for internal temp files. Claude Code appends
 on macOS,
 os.tmpdir()
 on Linux/Windows
+CLAUDE_CODE_TMUX_TRUECOLOR
+Set to
+1
+to allow 24-bit truecolor output inside tmux. By default, Claude Code clamps to 256 colors when
+$TMUX
+is set because tmux does not pass through truecolor escape sequences unless configured to. Set this after adding
+set -ga terminal-overrides ',*:Tc'
+to your
+~/.tmux.conf
+. See
+Terminal configuration
+for other tmux settings
 CLAUDE_CODE_USE_BEDROCK
 Use
 Bedrock

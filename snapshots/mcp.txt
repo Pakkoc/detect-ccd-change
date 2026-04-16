@@ -684,9 +684,7 @@ npx
 @bytebase/dbhub
 \
 --dsn
-"postgresql://readonly:
-[email protected]
-:5432/analytics"
+"postgresql://readonly:pass@prod.db.com:5432/analytics"
 Then query your database naturally:
 What's our total revenue this month?
 Show me the schema for the orders table

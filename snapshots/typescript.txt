@@ -1147,14 +1147,17 @@ boolean
 false
 Enforce strict MCP validation
 systemPrompt
-string | { type: 'preset'; preset: 'claude_code'; append?: string }
+string | { type: 'preset'; preset: 'claude_code'; append?: string; excludeDynamicSections?: boolean }
 undefined
 (minimal prompt)
 System prompt configuration. Pass a string for custom prompt, or
 { type: 'preset', preset: 'claude_code' }
 to use Claude Code’s system prompt. When using the preset object form, add
 append
-to extend the system prompt with additional instructions
+to extend it with additional instructions, and set
+excludeDynamicSections: true
+to move per-session context into the first user message for
+better prompt-cache reuse across machines
 thinking
 ThinkingConfig
 { type: 'adaptive' }
@@ -5637,7 +5640,11 @@ string
 };
 ​
 ModelUsage
-Per-model usage statistics returned in result messages.
+Per-model usage statistics returned in result messages. The
+costUSD
+value is a client-side estimate. See
+Track cost and usage
+for billing caveats.
 type
 ModelUsage
 =

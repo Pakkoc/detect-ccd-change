@@ -354,7 +354,7 @@ which applies only to
 --worktree
 sessions
 cost.total_cost_usd
-Total session cost in USD
+Estimated session cost in USD, computed client-side. May differ from your actual bill
 cost.total_duration_ms
 Total wall-clock time since the session started, in milliseconds
 cost.total_api_duration_ms
@@ -996,7 +996,7 @@ fi
 Cost and duration tracking
 Track your session’s API costs and elapsed time. The
 cost.total_cost_usd
-field accumulates the cost of all API calls in the current session. The
+field accumulates the estimated cost of all API calls in the current session. The
 cost.total_duration_ms
 field measures total elapsed time since the session started, while
 cost.total_api_duration_ms
@@ -1386,9 +1386,7 @@ origin
 /dev/null
 |
 sed
-'s/
-[email protected]
-:/https:\/\/github.com\//'
+'s/git@github.com:/https:\/\/github.com\//'
 |
 sed
 's/\.git$//'

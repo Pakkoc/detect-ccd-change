@@ -245,7 +245,7 @@ By default, only your own messages pass through. To let another contact reach Cl
 Handles are phone numbers in
 +country
 format or Apple ID emails like
-[email protected]
+user@example.com
 .
 You can also
 build your own channel
