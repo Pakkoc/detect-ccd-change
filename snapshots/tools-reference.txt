@@ -74,7 +74,11 @@ Executes shell commands in your environment. See
 Bash tool behavior
 Yes
 CronCreate
-Schedules a recurring or one-shot prompt within the current session (gone when Claude exits). See
+Schedules a recurring or one-shot prompt within the current session. Tasks are session-scoped and restored on
+--resume
+or
+--continue
+if unexpired. See
 scheduled tasks
 No
 CronDelete
@@ -94,13 +98,13 @@ Creates an isolated
 git worktree
 and switches into it. Pass a
 path
-to switch into an existing worktree of the current repository instead of creating a new one
+to switch into an existing worktree of the current repository instead of creating a new one. Not available to subagents
 No
 ExitPlanMode
 Presents a plan for approval and exits plan mode
 Yes
 ExitWorktree
-Exits a worktree session and returns to the original directory
+Exits a worktree session and returns to the original directory. Not available to subagents
 No
 Glob
 Finds files based on pattern matching
@@ -124,8 +128,9 @@ NotebookEdit
 Modifies Jupyter notebook cells
 Yes
 PowerShell
-Executes PowerShell commands on Windows. Opt-in preview. See
+Executes PowerShell commands natively. See
 PowerShell tool
+for availability
 Yes
 Read
 Reads the contents of files
@@ -267,9 +272,12 @@ DISABLE_TELEMETRY
 or
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 is set.
+Plugins can declare monitors that start automatically when the plugin is active, instead of asking Claude to start them. See
+plugin monitors
+.
 ​
 PowerShell tool
-On Windows, Claude Code can run PowerShell commands natively instead of routing through Git Bash. This is an opt-in preview.
+The PowerShell tool lets Claude run PowerShell commands natively. On Windows, this means commands run in PowerShell instead of routing through Git Bash. The tool is rolling out progressively on Windows and is opt-in on Linux, macOS, and WSL.
 ​
 Enable the PowerShell tool
 Set
@@ -285,11 +293,18 @@ settings.json
 "1"
 }
 }
-Claude Code auto-detects
+On Windows, set the variable to
+0
+to opt out of the rollout. On Linux, macOS, and WSL, the tool requires PowerShell 7 or later: install
+pwsh
+and ensure it is on your
+PATH
+.
+On Windows, Claude Code auto-detects
 pwsh.exe
-(PowerShell 7+) with a fallback to
+for PowerShell 7+ with a fallback to
 powershell.exe
-(PowerShell 5.1). The Bash tool remains registered alongside the PowerShell tool, so you may need to ask Claude to use PowerShell.
+for PowerShell 5.1. The Bash tool remains registered alongside the PowerShell tool, so you may need to ask Claude to use PowerShell.
 ​
 Shell selection in settings, hooks, and skills
 Three additional settings control where PowerShell is used:
@@ -319,9 +334,8 @@ Preview limitations
 The PowerShell tool has the following known limitations during the preview:
 Auto mode does not work with the PowerShell tool yet
 PowerShell profiles are not loaded
-Sandboxing is not supported
-Only supported on native Windows, not WSL
-Git Bash is still required to start Claude Code
+On Windows, sandboxing is not supported
+On Windows, Git Bash is still required to start Claude Code
 ​
 Check which tools are available
 Your exact tool set depends on your provider, platform, and settings. To check what’s loaded in a running session, ask Claude directly:

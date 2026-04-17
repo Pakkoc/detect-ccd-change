@@ -317,8 +317,10 @@ Set to
 1
 to disable
 adaptive reasoning
-for Opus 4.6 and Sonnet 4.6. When disabled, these models fall back to the fixed thinking budget controlled by
+on Opus 4.6 and Sonnet 4.6 and fall back to the fixed thinking budget controlled by
 MAX_THINKING_TOKENS
+.
+Has no effect on Opus 4.7, which always uses adaptive reasoning
 CLAUDE_CODE_DISABLE_ATTACHMENTS
 Set to
 1
@@ -455,15 +457,41 @@ medium
 ,
 high
 ,
+xhigh
+,
 max
-(Opus 4.6 only), or
+, or
 auto
-to use the model default. Takes precedence over
+to use the model default. Available levels depend on the model. Takes precedence over
 /effort
 and the
 effortLevel
 setting. See
 Adjust effort level
+CLAUDE_CODE_ENABLE_AWAY_SUMMARY
+Override
+session recap
+availability. Set to
+0
+to force recaps off regardless of the
+/config
+toggle. Set to
+1
+to force recaps on when
+awaySummaryEnabled
+is
+false
+. Takes precedence over the setting and
+/config
+toggle
+CLAUDE_CODE_ENABLE_BACKGROUND_PLUGIN_REFRESH
+Set to
+1
+to refresh plugin state at turn boundaries in
+non-interactive mode
+after a background install completes. Off by default because the refresh changes the system prompt mid-session, which invalidates
+prompt caching
+for that turn
 CLAUDE_CODE_ENABLE_FINE_GRAINED_TOOL_STREAMING
 Set to
 1
@@ -566,7 +594,10 @@ Set to
 1
 to enable
 fullscreen rendering
-, a research preview that reduces flicker and keeps memory flat in long conversations
+, a research preview that reduces flicker and keeps memory flat in long conversations. Equivalent to the
+tui
+setting; you can also switch with
+/tui fullscreen
 CLAUDE_CODE_OAUTH_REFRESH_TOKEN
 OAuth refresh token for Claude.ai authentication. When set,
 claude auth login
@@ -779,9 +810,17 @@ CLAUDE_CODE_USE_MANTLE
 Use the Bedrock
 Mantle endpoint
 CLAUDE_CODE_USE_POWERSHELL_TOOL
-Set to
+Controls the PowerShell tool. On Windows, the tool is rolling out progressively: set to
 1
-to enable the PowerShell tool on Windows (opt-in preview). When enabled, Claude can run PowerShell commands natively instead of routing through Git Bash. Only supported on native Windows, not WSL. See
+to opt in or
+0
+to opt out. On Linux, macOS, and WSL, set to
+1
+to enable it, which requires
+pwsh
+on your
+PATH
+. When enabled on Windows, Claude can run PowerShell commands natively instead of routing through Git Bash. See
 PowerShell tool
 CLAUDE_CODE_USE_VERTEX
 Use
@@ -931,12 +970,20 @@ false
 to disable
 claude.ai MCP servers
 in Claude Code. Enabled by default for logged-in users
-ENABLE_PROMPT_CACHING_1H_BEDROCK
+ENABLE_PROMPT_CACHING_1H
 Set to
 1
-when using
+to request a 1-hour prompt cache TTL instead of the default 5 minutes. Intended for API key,
 Bedrock
-to request a 1-hour prompt cache TTL instead of the default 5 minutes. Bedrock only
+,
+Vertex
+, and
+Foundry
+users. Subscription users receive 1-hour TTL automatically. 1-hour cache writes are billed at a higher rate
+ENABLE_PROMPT_CACHING_1H_BEDROCK
+Deprecated. Use
+ENABLE_PROMPT_CACHING_1H
+instead
 ENABLE_TOOL_SEARCH
 Controls
 MCP tool search
@@ -962,6 +1009,11 @@ Set to
 1
 to force plugin auto-updates even when the main auto-updater is disabled via
 DISABLE_AUTOUPDATER
+FORCE_PROMPT_CACHING_5M
+Set to
+1
+to force the 5-minute prompt cache TTL even when 1-hour TTL would otherwise apply. Overrides
+ENABLE_PROMPT_CACHING_1H
 HTTP_PROXY
 Specify HTTP proxy server for network connections
 HTTPS_PROXY
@@ -989,7 +1041,9 @@ token budget. The ceiling is the model’s
 max output tokens
 minus one. Set to
 0
-to disable thinking entirely. On models with adaptive reasoning (Opus 4.6, Sonnet 4.6), the budget is ignored unless adaptive reasoning is disabled via
+to disable thinking entirely. On models with
+adaptive reasoning
+, the budget is ignored unless adaptive reasoning is disabled via
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 MCP_CLIENT_SECRET
 OAuth client secret for MCP servers that require
@@ -1019,6 +1073,15 @@ MCP_TOOL_TIMEOUT
 Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hours)
 NO_PROXY
 List of domains and IPs to which requests will be directly issued, bypassing proxy
+OTEL_LOG_RAW_API_BODIES
+Set to
+1
+to emit the full Anthropic Messages API request and response JSON as OpenTelemetry log events (
+api_request_body
+,
+api_response_body
+). Disabled by default; bodies include the entire conversation history. See
+Monitoring
 OTEL_LOG_TOOL_CONTENT
 Set to
 1
@@ -1085,6 +1148,8 @@ VERTEX_REGION_CLAUDE_4_6_OPUS
 Override region for Claude Opus 4.6 when using Vertex AI
 VERTEX_REGION_CLAUDE_4_6_SONNET
 Override region for Claude Sonnet 4.6 when using Vertex AI
+VERTEX_REGION_CLAUDE_4_7_OPUS
+Override region for Claude Opus 4.7 when using Vertex AI
 VERTEX_REGION_CLAUDE_HAIKU_4_5
 Override region for Claude Haiku 4.5 when using Vertex AI
 Standard OpenTelemetry exporter variables (

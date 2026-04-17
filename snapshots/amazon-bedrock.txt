@@ -257,11 +257,16 @@ opus
 resolve to the latest version, which may not yet be available in your Bedrock account when Anthropic releases an update. Claude Code
 falls back
 to the previous version at startup when the latest is unavailable, but pinning lets you control when your users move to a new model.
-Set these environment variables to specific Bedrock model IDs:
+Set these environment variables to specific Bedrock model IDs.
+Without
+ANTHROPIC_DEFAULT_OPUS_MODEL
+, the
+opus
+alias on Bedrock resolves to Opus 4.6. Set it to the Opus 4.7 ID to use the latest model:
 export
 ANTHROPIC_DEFAULT_OPUS_MODEL
 =
-'us.anthropic.claude-opus-4-6-v1'
+'us.anthropic.claude-opus-4-7'
 export
 ANTHROPIC_DEFAULT_SONNET_MODEL
 =
@@ -317,10 +322,14 @@ modelOverrides
 setting in your
 settings file
 instead.
-This example maps three Opus versions to distinct ARNs so users can switch between them without bypassing your organization’s inference profiles:
+This example maps four Opus versions to distinct ARNs so users can switch between them without bypassing your organization’s inference profiles:
 {
 "modelOverrides"
 : {
+"claude-opus-4-7"
+:
+"arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-47-prod"
+,
 "claude-opus-4-6"
 :
 "arn:aws:bedrock:us-east-2:123456789012:application-inference-profile/opus-46-prod"
@@ -426,10 +435,12 @@ Bedrock IAM documentation
 Create a dedicated AWS account for Claude Code to simplify cost tracking and access control.
 ​
 1M token context window
-Claude Opus 4.6 and Sonnet 4.6 support the
+Claude Opus 4.7, Opus 4.6, and Sonnet 4.6 support the
 1M token context window
 on Amazon Bedrock. Claude Code automatically enables the extended context window when you select a 1M model variant.
-To enable the 1M context window for your pinned model, append
+The
+setup wizard
+offers a 1M context option when it pins models. To enable it for a manually pinned model instead, append
 [1m]
 to the model ID. See
 Pin models for third-party deployments

@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Error reference
 On this page
 Troubleshoot installation issues
 Debug installation problems
@@ -152,6 +153,14 @@ OAuth error
 or
 403 Forbidden
 Fix authentication
+API Error: 500
+,
+529 Overloaded
+,
+429
+, or other 4xx and 5xx errors not listed above
+See the
+Error reference
 If your issue isn’t listed, work through these diagnostic steps.
 ​
 Debug installation problems
@@ -1218,6 +1227,15 @@ Close and restart Claude Code between major tasks
 Consider adding large build directories to your
 .gitignore
 file
+If memory usage stays high after these steps, run
+/heapdump
+to write a JavaScript heap snapshot and a memory breakdown to
+~/Desktop
+. The breakdown shows resident set size, JS heap, array buffers, and unaccounted native memory, which helps identify whether the growth is in JavaScript objects or in native code. Open the
+.heapsnapshot
+file in Chrome DevTools under Memory → Load to inspect retainers. Attach both files when reporting a memory issue on
+GitHub
+.
 ​
 Auto-compaction stops with a thrashing error
 If you see
@@ -1429,6 +1447,15 @@ Set up validation hooks
 ​
 Get more help
 If you’re experiencing issues not covered here:
+See the
+Error reference
+for
+API Error: 5xx
+,
+529 Overloaded
+,
+429
+, and request validation errors that appear during a session
 Use the
 /feedback
 command within Claude Code to report problems directly to Anthropic
@@ -1441,7 +1468,7 @@ to diagnose issues. It checks:
 Installation type, version, and search functionality
 Auto-update status and available versions
 Invalid settings files (malformed JSON, incorrect types)
-MCP server configuration errors
+MCP server configuration errors, including the same server name defined in multiple scopes with different endpoints
 Keybinding configuration problems
 Context usage warnings (large CLAUDE.md files, high MCP token usage, unreachable permission rules)
 Plugin and agent loading errors
@@ -1450,6 +1477,7 @@ Was this page helpful?
 Yes
 No
 Programmatic usage
+Error reference
 ⌘
 I
 Assistant

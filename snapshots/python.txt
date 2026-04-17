@@ -2448,6 +2448,8 @@ effort: Literal[
 ,
 "high"
 ,
+"xhigh"
+,
 "max"
 ]
 |
@@ -2510,7 +2512,11 @@ Maximum agentic turns (tool-use round trips)
 max_budget_usd
 float | None
 None
-Maximum budget in USD for the session
+Stop the query when the client-side cost estimate reaches this USD value. Compared against the same estimate as
+total_cost_usd
+; see
+Track cost and usage
+for accuracy caveats
 disallowed_tools
 list[str]
 []
@@ -2638,12 +2644,11 @@ for details
 setting_sources
 list[SettingSource] | None
 None
-(no settings)
-Control which filesystem settings to load. When omitted, no settings are loaded.
-Note:
-Must include
-"project"
-to load CLAUDE.md files
+(CLI defaults: all sources)
+Control which filesystem settings to load. Pass
+[]
+to disable user, project, and local settings. Managed policy settings load regardless. See
+Use Claude Code features
 max_thinking_tokens
 int | None
 None
@@ -2658,7 +2663,7 @@ None
 Controls extended thinking behavior. Takes precedence over
 max_thinking_tokens
 effort
-Literal["low", "medium", "high", "max"] | None
+Literal["low", "medium", "high", "xhigh", "max"] | None
 None
 Effort level for thinking depth
 ​
@@ -2762,17 +2767,44 @@ Local project settings (gitignored)
 Default behavior
 When
 setting_sources
-is
-omitted
-or
+is omitted or
 None
-, the SDK does
-not
-load any filesystem settings. This provides isolation for SDK applications.
+,
+query()
+loads the same filesystem settings as the Claude Code CLI: user, project, and local. Managed policy settings are loaded in all cases. See
+What settingSources does not control
+for inputs that are read regardless of this option, and how to disable them.
 ​
 Why use setting_sources
-Load all filesystem settings (legacy behavior):
-# Load all settings like SDK v0.0.x did
+Disable filesystem settings:
+# Do not load user, project, or local settings from disk
+from
+claude_agent_sdk
+import
+query, ClaudeAgentOptions
+async
+for
+message
+in
+query(
+prompt
+=
+"Analyze this code"
+,
+options
+=
+ClaudeAgentOptions(
+setting_sources
+=
+[]
+),
+):
+print
+(message)
+In Python SDK 0.1.59 and earlier, an empty list was treated the same as omitting the option, so
+setting_sources=[]
+did not disable filesystem settings. Upgrade to a newer release if you need an empty list to take effect. The TypeScript SDK is not affected.
+Load all filesystem settings explicitly:
 from
 claude_agent_sdk
 import
@@ -2798,7 +2830,6 @@ setting_sources
 ,
 "local"
 ]
-# Load all settings
 ),
 ):
 print
@@ -2856,8 +2887,8 @@ permission_mode
 print
 (message)
 SDK-only applications:
-# Define everything programmatically (default behavior)
-# No filesystem dependencies - setting_sources defaults to None
+# Define everything programmatically.
+# Pass [] to opt out of filesystem setting sources.
 async
 for
 message
@@ -2870,7 +2901,9 @@ prompt
 options
 =
 ClaudeAgentOptions(
-# setting_sources=None is the default, no need to specify
+setting_sources
+=
+[],
 agents
 =
 {
@@ -2926,7 +2959,7 @@ setting_sources
 [
 "project"
 ],
-# Required to load CLAUDE.md from project
+# Loads CLAUDE.md from project
 allowed_tools
 =
 [
@@ -2952,11 +2985,11 @@ Project settings (
 User settings (
 ~/.claude/settings.json
 )
-Programmatic options (like
+Programmatic options such as
 agents
-,
+and
 allowed_tools
-) always override filesystem settings.
+override user, project, and local filesystem settings. Managed policy settings take precedence over programmatic options.
 ​
 AgentDefinition
 Configuration for a subagent defined programmatically.
@@ -3441,7 +3474,7 @@ to enable beta features.
 The
 context-1m-2025-08-07
 beta is retired as of April 30, 2026. Passing this header with Claude Sonnet 4.5 or Sonnet 4 has no effect, and requests that exceed the standard 200k-token context window return an error. To use a 1M-token context window, migrate to
-Claude Sonnet 4.6 or Claude Opus 4.6
+Claude Sonnet 4.6, Claude Opus 4.6, or Claude Opus 4.7
 , which include 1M context at standard pricing with no beta header required.
 ​
 McpSdkServerConfig

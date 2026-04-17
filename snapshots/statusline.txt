@@ -449,7 +449,7 @@ Your status line command receives this JSON structure via stdin:
 : {
 "id"
 :
-"claude-opus-4-6"
+"claude-opus-4-7"
 ,
 "display_name"
 :

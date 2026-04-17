@@ -105,7 +105,11 @@ anthropic
 or
 @anthropic-ai/sdk
 /clear
-Clear conversation history and free up context. Aliases:
+Start a new conversation with empty context. The previous conversation stays available in
+/resume
+. To free up context while continuing the same conversation, use
+/compact
+instead. Aliases:
 /reset
 ,
 /new
@@ -169,20 +173,26 @@ Open an interactive diff viewer showing uncommitted changes and per-turn diffs. 
 Diagnose and verify your Claude Code installation and settings. Results show with status icons. Press
 f
 to have Claude fix any reported issues
-/effort [low|medium|high|max|auto]
+/effort [level|auto]
 Set the model
 effort level
-.
+. Accepts
 low
 ,
 medium
-, and
+,
 high
-persist across sessions.
+,
+xhigh
+, or
 max
-applies to the current session only and requires Opus 4.6.
+; available levels depend on the model and
+max
+is session-only.
 auto
-resets to the model default. Without an argument, shows the current level. Takes effect immediately without waiting for the current response to finish
+resets to the model default. Without an argument, opens an interactive slider; use left and right arrows to pick a level and
+Enter
+to apply. Takes effect immediately without waiting for the current response to finish
 /exit
 Exit the CLI. Alias:
 /quit
@@ -197,6 +207,14 @@ on or off
 /feedback [report]
 Submit feedback about Claude Code. Alias:
 /bug
+/focus
+Toggle the focus view, which shows only your last prompt, a one-line tool-call summary with edit diffstats, and the final response. The selection persists across sessions. Only available in
+fullscreen rendering
+/heapdump
+Write a JavaScript heap snapshot and a memory breakdown to
+~/Desktop
+for diagnosing high memory usage. See
+troubleshooting
 /help
 Show help and available commands
 /hooks
@@ -221,6 +239,12 @@ app for a repository. Walks you through selecting a repo and configuring the int
 Install the Claude Slack app. Opens a browser to complete the OAuth flow
 /keybindings
 Open or create your keybindings configuration file
+/less-permission-prompts
+Skill
+.
+Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project
+.claude/settings.json
+to reduce permission prompts
 /login
 Sign in to your Anthropic account
 /logout
@@ -252,7 +276,7 @@ Show QR code to download the Claude mobile app. Aliases:
 /model [model]
 Select or change the AI model. For models that support it, use left/right arrows to
 adjust effort level
-. The change takes effect immediately without waiting for the current response to finish
+. With no argument, opens a picker that asks for confirmation when the conversation has prior output, since the next response re-reads the full history without cached context. Once confirmed, the change applies without waiting for the current response to finish
 /passes
 Share a free week of Claude Code with friends. Only visible if your account is eligible
 /permissions
@@ -274,6 +298,10 @@ gh
 CLI
 /privacy-settings
 View and update your privacy settings. Only available for Pro and Max plan subscribers
+/recap
+Generate a one-line summary of the current session on demand. See
+Session recap
+for the automatic recap that appears after you’ve been away
 /release-notes
 View the changelog in an interactive version picker. Select a specific version to see its release notes, or choose to show all versions
 /reload-plugins
@@ -294,17 +322,16 @@ Rename the current session and show the name on the prompt bar. Without a name, 
 /resume [session]
 Resume a conversation by ID or name, or open the session picker. Alias:
 /continue
-/review
-Deprecated. Install the
-code-review
-plugin
-instead:
-claude plugin install code-review@claude-plugins-official
+/review [PR]
+Review a pull request locally in your current session. For a deeper cloud-based review, see
+/ultrareview
 /rewind
 Rewind the conversation and/or code to a previous point, or summarize from a selected message. See
 checkpointing
-. Alias:
+. Aliases:
 /checkpoint
+,
+/undo
 /sandbox
 Toggle
 sandbox mode
@@ -312,7 +339,8 @@ sandbox mode
 /schedule [description]
 Create, update, list, or run
 routines
-. Claude walks you through the setup conversationally
+. Claude walks you through the setup conversationally. Alias:
+/routines
 /security-review
 Analyze pending changes on the current branch for security vulnerabilities. Reviews the git diff and identifies risks like injection, auth issues, and data exposure
 /setup-bedrock
@@ -335,6 +363,9 @@ Review your recently changed files for code reuse, quality, and efficiency issue
 /skills
 List available
 skills
+. Press
+t
+to sort by token count
 /stats
 Visualize daily usage, session history, streaks, and model preferences
 /status
@@ -359,11 +390,24 @@ session into this terminal: opens a picker, then fetches the branch and conversa
 /terminal-setup
 Configure terminal keybindings for Shift+Enter and other shortcuts. Only visible in terminals that need it, like VS Code, Alacritty, or Warp
 /theme
-Change the color theme. Includes light and dark variants, colorblind-accessible (daltonized) themes, and ANSI themes that use your terminal’s color palette
+Change the color theme. Includes an
+auto
+option that follows your terminal’s dark or light mode, light and dark variants, colorblind-accessible (daltonized) themes, and ANSI themes that use your terminal’s color palette
+/tui [default|fullscreen]
+Set the terminal UI renderer and relaunch into it with your conversation intact.
+fullscreen
+enables the
+flicker-free alt-screen renderer
+. With no argument, prints the active renderer
 /ultraplan <prompt>
 Draft a plan in an
 ultraplan
 session, review it in your browser, then execute remotely or send it back to your terminal
+/ultrareview [PR]
+Run a deep, multi-agent code review in a cloud sandbox with
+ultrareview
+. Includes 3 free runs on Pro and Max, then requires
+extra usage
 /upgrade
 Open the upgrade page to switch to a higher plan tier
 /usage

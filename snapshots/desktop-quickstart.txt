@@ -55,14 +55,13 @@ Now what?
 Coming from the CLI?
 What’s next
 The desktop app gives you Claude Code with a graphical interface built for running multiple sessions side by side: a sidebar for managing parallel work, a drag-and-drop layout with an integrated terminal and file editor, visual diff review, live app preview, GitHub PR monitoring with auto-merge, and scheduled tasks. No terminal required.
-Download Claude for your platform:
-macOS
+Download for macOS
 Universal build for Intel and Apple Silicon
-Windows
+Download for Windows
 For x64 processors
 For Windows ARM64, download the
 ARM64 installer
-. Linux is not currently supported.
+. Linux is not supported.
 Claude Code requires a
 Pro, Max, Team, or Enterprise subscription
 .
@@ -85,14 +84,7 @@ tab.
 Install
 1
 Install and sign in
-Download Claude for your platform and run the installer:
-macOS
-: universal build for Intel and Apple Silicon
-Windows x64
-: for x64 processors
-Windows ARM64
-: for ARM processors
-Launch Claude from your Applications folder (macOS) or Start menu (Windows). Sign in with your Anthropic account.
+Download the installer for your platform from the links above and run it. Launch Claude from your Applications folder on macOS or the Start menu on Windows, then sign in with your Anthropic account.
 2
 Open the Code tab
 Click the
@@ -251,7 +243,7 @@ Common workflows
 Was this page helpful?
 Yes
 No
-Plan in the cloud
+Ultrareview
 Reference
 ⌘
 I

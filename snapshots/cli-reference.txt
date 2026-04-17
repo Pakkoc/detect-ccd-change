@@ -118,6 +118,11 @@ claude setup-token
 Generate a long-lived OAuth token for CI and scripts. Prints the token to the terminal without saving it. Requires a Claude subscription. See
 Generate a long-lived token
 claude setup-token
+If you mistype a subcommand, Claude Code suggests the closest match and exits without starting a session. For example,
+claude udpate
+prints
+Did you mean claude update?
+.
 ​
 CLI flags
 Customize Claude Code’s behavior with these command-line flags.
@@ -241,9 +246,18 @@ medium
 ,
 high
 ,
+xhigh
+,
 max
-(Opus 4.6 only). Session-scoped and does not persist to settings
+; available levels depend on the model. Session-scoped and does not persist to settings
 claude --effort high
+--enable-auto-mode
+Removed in v2.1.111. Auto mode is now in the
+Shift+Tab
+cycle by default; use
+--permission-mode auto
+to start in it
+claude --permission-mode auto
 --exclude-dynamic-system-prompt-sections
 Move per-machine sections from the system prompt (working directory, environment info, memory paths, git status) into the first user message. Improves prompt-cache reuse across different users and machines running the same task. Only applies with the default system prompt; ignored when
 --system-prompt
@@ -345,13 +359,6 @@ json
 stream-json
 )
 claude -p "query" --output-format json
---enable-auto-mode
-Unlock
-auto mode
-in the
-Shift+Tab
-cycle. Requires a Team, Enterprise, or API plan and Claude Sonnet 4.6 or Opus 4.6
-claude --enable-auto-mode
 --permission-mode
 Begin in a specified
 permission mode

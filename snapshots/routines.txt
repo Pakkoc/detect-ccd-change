@@ -42,6 +42,7 @@ Get started
 Reference
 Routines
 Plan in the cloud
+Ultrareview
 Claude Code on desktop
 Chrome extension (beta)
 Computer use (preview)
@@ -162,7 +163,9 @@ Network access
 Environment variables
 : provide API keys, tokens, or other secrets Claude can use
 Setup script
-: run install commands before each session starts, like installing dependencies or configuring tools
+: install dependencies and tools the routine needs. The result is
+cached
+, so the script doesn’t re-run on every session
 A
 Default
 environment is provided. To use a custom environment,

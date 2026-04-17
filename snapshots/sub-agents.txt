@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Error reference
 On this page
 Built-in subagents
 Quickstart: create your first subagent
@@ -460,7 +461,7 @@ opus
 ,
 haiku
 , a full model ID (for example,
-claude-opus-4-6
+claude-opus-4-7
 ), or
 inherit
 . Defaults to
@@ -526,8 +527,10 @@ medium
 ,
 high
 ,
+xhigh
+,
 max
-(Opus 4.6 only)
+; available levels depend on the model
 isolation
 No
 Set to
@@ -580,7 +583,7 @@ opus
 haiku
 Full model ID
 : Use a full model ID such as
-claude-opus-4-6
+claude-opus-4-7
 or
 claude-sonnet-4-6
 . Accepts the same values as the
@@ -791,6 +794,8 @@ permission modes
 for details.
 If the parent uses
 bypassPermissions
+or
+acceptEdits
 , this takes precedence and cannot be overridden. If the parent uses
 auto mode
 , the subagent inherits auto mode and any

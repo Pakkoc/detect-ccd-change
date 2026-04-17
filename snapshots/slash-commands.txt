@@ -62,7 +62,7 @@ Discovering Available Slash Commands
 Sending Slash Commands
 Common Slash Commands
 /compact - Compact Conversation History
-/clear - Clear Conversation
+Clearing the conversation
 Creating Custom Slash Commands
 File Locations
 File Format
@@ -80,7 +80,9 @@ Test Runner Command
 See Also
 Slash commands provide a way to control Claude Code sessions with special commands that start with
 /
-. These commands can be sent through the SDK to perform actions like clearing conversation history, compacting messages, or getting help.
+. These commands can be sent through the SDK to perform actions like compacting context, listing context usage, or invoking custom commands. Only commands that work without an interactive terminal are dispatchable through the SDK; the
+system/init
+message lists the ones available in your session.
 ​
 Discovering Available Slash Commands
 The Claude Agent SDK provides information about available slash commands in the system initialization message. Access this information when your session starts:
@@ -134,7 +136,7 @@ message
 .
 slash_commands
 );
-// Example output: ["/compact", "/clear", "/help"]
+// Example output: ["/compact", "/context", "/cost"]
 }
 }
 ​
@@ -268,70 +270,17 @@ trigger
 }
 }
 ​
+Clearing the conversation
+The interactive
 /clear
-- Clear Conversation
-The
-/clear
-command starts a fresh conversation by clearing all previous history:
-TypeScript
-Python
-import
-{
-query
-}
-from
-"@anthropic-ai/claude-agent-sdk"
-;
-// Clear conversation and start fresh
-for
-await
-(
-const
-message
-of
-query
-({
-prompt:
-"/clear"
-,
-options:
-{
-maxTurns:
-1
-}
-})) {
-if
-(
-message
+command is not available in the SDK. Each
+query()
+call already starts a fresh conversation, so to clear context, end the current
+query()
+and start a new one. The previous conversation stays on disk and can be returned to by passing its session ID to the
+resume
+option
 .
-type
-===
-"system"
-&&
-message
-.
-subtype
-===
-"init"
-) {
-console
-.
-log
-(
-"Conversation cleared, new session started"
-);
-console
-.
-log
-(
-"Session ID:"
-,
-message
-.
-session_id
-);
-}
-}
 ​
 Creating Custom Slash Commands
 In addition to using built-in slash commands, you can create your own custom commands that are available through the SDK. Custom commands are defined as markdown files in specific directories, similar to how subagents are configured.
@@ -393,7 +342,7 @@ description
 Run security vulnerability scan
 model
 :
-claude-opus-4-6
+claude-opus-4-7
 ---
 Analyze the codebase for security vulnerabilities including:
 -
@@ -497,7 +446,7 @@ message
 .
 slash_commands
 );
-// Example: ["/compact", "/clear", "/help", "/refactor", "/security-check"]
+// Example: ["/compact", "/context", "/cost", "/refactor", "/security-check"]
 }
 }
 ​
@@ -579,7 +528,7 @@ Create
 ---
 allowed-tools
 :
-Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+Bash(git add *), Bash(git status *), Bash(git commit *)
 description
 :
 Create a git commit
@@ -652,7 +601,7 @@ Create
 ---
 allowed-tools
 :
-Read, Grep, Glob, Bash(git diff:*)
+Read, Grep, Glob, Bash(git diff *)
 description
 :
 Comprehensive code review

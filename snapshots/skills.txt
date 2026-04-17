@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Error reference
 On this page
 Bundled skills
 Getting started
@@ -114,7 +115,7 @@ Claude Code includes a set of bundled skills that are available in every session
 /loop
 , and
 /claude-api
-. Unlike built-in commands, which execute fixed logic directly, bundled skills are prompt-based: they give Claude a detailed playbook and let it orchestrate the work using its tools. You invoke them the same way as any other skill, by typing
+. Unlike most built-in commands, which execute fixed logic directly, bundled skills are prompt-based: they give Claude a detailed playbook and let it orchestrate the work using its tools. You invoke them the same way as any other skill, by typing
 /
 followed by the skill name.
 Bundled skills are listed alongside built-in commands in the
@@ -413,8 +414,10 @@ medium
 ,
 high
 ,
+xhigh
+,
 max
-(Opus 4.6 only).
+; available levels depend on the model.
 context
 No
 Set to
@@ -864,11 +867,15 @@ set. Skills that define
 allowed-tools
 grant Claude access to those tools without per-use approval when the skill is active. Your
 permission settings
-still govern baseline approval behavior for all other tools. Built-in commands like
-/compact
-and
+still govern baseline approval behavior for all other tools. A few built-in commands are also available through the Skill tool, including
 /init
-are not available through the Skill tool.
+,
+/review
+, and
+/security-review
+. Other built-in commands such as
+/compact
+are not.
 Three ways to control which skills Claude can invoke:
 Disable all skills
 by denying the Skill tool in

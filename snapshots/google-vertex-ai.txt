@@ -203,11 +203,16 @@ opus
 resolve to the latest version, which may not yet be enabled in your Vertex AI project when Anthropic releases an update. Claude Code
 falls back
 to the previous version at startup when the latest is unavailable, but pinning lets you control when your users move to a new model.
-Set these environment variables to specific Vertex AI model IDs:
+Set these environment variables to specific Vertex AI model IDs.
+Without
+ANTHROPIC_DEFAULT_OPUS_MODEL
+, the
+opus
+alias on Vertex resolves to Opus 4.6. Set it to the Opus 4.7 ID to use the latest model:
 export
 ANTHROPIC_DEFAULT_OPUS_MODEL
 =
-'claude-opus-4-6'
+'claude-opus-4-7'
 export
 ANTHROPIC_DEFAULT_SONNET_MODEL
 =
@@ -232,7 +237,7 @@ To customize models further:
 export
 ANTHROPIC_MODEL
 =
-'claude-opus-4-6'
+'claude-opus-4-7'
 export
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 =
@@ -263,10 +268,12 @@ Vertex IAM documentation
 Create a dedicated GCP project for Claude Code to simplify cost tracking and access control.
 ​
 1M token context window
-Claude Opus 4.6, Sonnet 4.6, Sonnet 4.5, and Sonnet 4 support the
+Claude Opus 4.7, Opus 4.6, and Sonnet 4.6 support the
 1M token context window
 on Vertex AI. Claude Code automatically enables the extended context window when you select a 1M model variant.
-To enable the 1M context window for your pinned model, append
+The
+setup wizard
+offers a 1M context option when it pins models. To enable it for a manually pinned model instead, append
 [1m]
 to the model ID. See
 Pin models for third-party deployments

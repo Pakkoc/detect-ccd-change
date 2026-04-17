@@ -31,6 +31,7 @@ Monitoring
 Costs
 Track team usage with analytics
 Create and distribute a plugin marketplace
+Plugin dependency versions
 On this page
 Requirements
 Choose between server-managed and endpoint-managed settings

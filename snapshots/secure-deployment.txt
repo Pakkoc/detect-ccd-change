@@ -87,9 +87,9 @@ The good news is that securing an agent deployment doesn’t require exotic infr
 Not every deployment needs maximum security. A developer running Claude Code on their laptop has different requirements than a company processing customer data in a multi-tenant environment. This guide presents options ranging from Claude Code’s built-in security features to hardened production architectures, so you can choose what fits your situation.
 ​
 Threat model
-Agents can take unintended actions due to prompt injection (instructions embedded in content they process) or model error. Claude models are designed to resist this, and as analyzed in the
-model card
-, Claude Opus 4.6 is the most robust frontier model available.
+Agents can take unintended actions due to prompt injection (instructions embedded in content they process) or model error. Claude models are designed to resist this; see the
+model overview
+and the system card for the model you deploy for evaluation details.
 Defense in depth is still good practice though. For example, if an agent processes a malicious file that instructs it to send customer data to an external server, network controls can block that request entirely.
 ​
 Built-in security features
@@ -100,8 +100,10 @@ Permissions system
 : Every tool and bash command can be configured to allow, block, or prompt the user for approval. Use glob patterns to create rules like “allow all npm commands” or “block any command with sudo”. Organizations can set policies that apply across all users. See
 permissions
 .
-Static analysis
-: Before executing bash commands, Claude Code runs static analysis to identify potentially risky operations. Commands that modify system files or access sensitive directories are flagged and require explicit user approval.
+Command parsing for permissions
+: Before executing bash commands, Claude Code parses them into an AST and matches the result against your permission rules. Commands that cannot be parsed cleanly, or that do not match an allow rule, require explicit approval. A small set of constructs such as
+eval
+always require approval regardless of allow rules. This is a permission gate, not a sandbox; it does not infer whether a command is dangerous from its target path or effects.
 Web search summarization
 : Search results are summarized rather than passing raw content directly into the context, reducing the risk of prompt injection from malicious web content.
 Sandbox mode

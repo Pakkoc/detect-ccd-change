@@ -177,11 +177,11 @@ The result message (
 TypeScript
 ,
 Python
-) is the last message in every
+) marks the end of the agent loop for a
 query()
 call. It includes
 total_cost_usd
-, the cumulative cost across all steps in that call. This works for both success and error results. If you use sessions to make multiple
+, the cumulative estimated cost across all steps in that call. This works for both success and error results. If you use sessions to make multiple
 query()
 calls, each result only reflects the cost of that individual call.
 The following examples iterate over the message stream from a

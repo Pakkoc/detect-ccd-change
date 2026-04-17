@@ -169,7 +169,7 @@ Alt+K
 Here’s an example of asking about a particular line in a file:
 4
 Review changes
-When Claude wants to edit a file, it shows a side-by-side comparison of the original and proposed changes, then asks for permission. You can accept, reject, or tell Claude what to do instead.
+When Claude wants to edit a file, it shows a side-by-side comparison of the original and proposed changes, then asks for permission. You can accept, reject, or tell Claude what to do instead. If you edit the proposed content directly in the diff view before accepting, Claude is told that you modified it so it does not assume the file matches its original proposal.
 For more ideas on what you can do with Claude Code, see
 Common workflows
 .
@@ -227,7 +227,9 @@ Shift
 while dragging files into the prompt box to add them as attachments. Click the X on any attachment to remove it from context.
 ​
 Resume past conversations
-Click the dropdown at the top of the Claude Code panel to access your conversation history. You can search by keyword or browse by time (Today, Yesterday, Last 7 days, etc.). Click any conversation to resume it with the full message history. New sessions receive AI-generated titles based on your first message. Hover over a session to reveal rename and remove actions: rename to give it a descriptive title, or remove to delete it from the list. For more on resuming sessions, see
+Click the
+Session history
+button at the top of the Claude Code panel to access your conversation history. You can search by keyword or browse by time (Today, Yesterday, Last 7 days, etc.). Click any conversation to resume it with the full message history. New sessions receive AI-generated titles based on your first message. Hover over a session to reveal rename and remove actions: rename to give it a descriptive title, or remove to delete it from the list. For more on resuming sessions, see
 Common workflows
 .
 ​
@@ -238,10 +240,10 @@ Claude Code on the web
 Claude.ai Subscription
 , not Anthropic Console.
 1
-Open Past Conversations
+Open session history
 Click the
-Past Conversations
-dropdown at the top of the Claude Code panel.
+Session history
+button at the top of the Claude Code panel.
 2
 Select the Remote tab
 The dialog shows two tabs: Local and Remote. Click

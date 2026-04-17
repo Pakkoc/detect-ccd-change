@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Error reference
 On this page
 Set up your first hook
 What you can automate
@@ -776,6 +777,20 @@ bypassPermissions
 , and
 destination: "session"
 applies it for the current session only.
+bypassPermissions
+only applies if the session was launched with bypass mode already available:
+--dangerously-skip-permissions
+,
+--permission-mode bypassPermissions
+,
+--allow-dangerously-skip-permissions
+, or
+permissions.defaultMode: "bypassPermissions"
+in settings, and not disabled by
+permissions.disableBypassPermissionsMode
+. It is never persisted as
+defaultMode
+.
 To switch the session to
 acceptEdits
 , your hook writes this JSON to stdout:

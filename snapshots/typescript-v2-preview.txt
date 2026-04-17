@@ -120,7 +120,7 @@ unstable_v2_prompt
 "What is 2 + 2?"
 , {
 model:
-"claude-opus-4-6"
+"claude-opus-4-7"
 });
 if
 (
@@ -165,7 +165,7 @@ session
 unstable_v2_createSession
 ({
 model:
-"claude-opus-4-6"
+"claude-opus-4-7"
 });
 await
 session
@@ -255,7 +255,7 @@ session
 unstable_v2_createSession
 ({
 model:
-"claude-opus-4-6"
+"claude-opus-4-7"
 });
 // Turn 1
 await
@@ -477,7 +477,7 @@ session
 unstable_v2_createSession
 ({
 model:
-"claude-opus-4-6"
+"claude-opus-4-7"
 });
 await
 session
@@ -552,7 +552,7 @@ sessionId
 !
 , {
 model:
-"claude-opus-4-6"
+"claude-opus-4-7"
 });
 await
 resumedSession
@@ -610,7 +610,7 @@ session
 unstable_v2_createSession
 ({
 model:
-"claude-opus-4-6"
+"claude-opus-4-7"
 });
 // Session closes automatically when the block exits
 Manual cleanup:
@@ -627,7 +627,7 @@ session
 unstable_v2_createSession
 ({
 model:
-"claude-opus-4-6"
+"claude-opus-4-7"
 });
 // ... use the session ...
 session

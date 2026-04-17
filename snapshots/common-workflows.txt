@@ -397,9 +397,9 @@ Extended thinking
 is enabled by default, giving Claude space to reason through complex problems step-by-step before responding. This reasoning is visible in verbose mode, which you can toggle on with
 Ctrl+O
 . During extended thinking, progress hints appear below the indicator to show that Claude is actively working.
-Additionally, Opus 4.6 and Sonnet 4.6 support adaptive reasoning: instead of a fixed thinking token budget, the model dynamically allocates thinking based on your
-effort level
-setting. Extended thinking and adaptive reasoning work together to give you control over how deeply Claude reasons before responding.
+Additionally,
+models that support effort
+use adaptive reasoning: instead of a fixed thinking token budget, the model dynamically decides whether and how much to think based on your effort level setting and the task at hand. Adaptive reasoning lets Claude respond faster to routine prompts and reserve deeper thinking for steps that benefit from it.
 Extended thinking is particularly valuable for complex architectural decisions, challenging bugs, multi-step implementation planning, and evaluating tradeoffs between different approaches.
 Phrases like “think”, “think hard”, and “think more” are interpreted as regular prompt instructions and don’t allocate thinking tokens.
 ​
@@ -415,12 +415,14 @@ Run
 /model
 , or set
 CLAUDE_CODE_EFFORT_LEVEL
-Control thinking depth for Opus 4.6 and Sonnet 4.6. See
-Adjust effort level
+Control thinking depth on
+supported models
 ultrathink
 keyword
 Include “ultrathink” anywhere in your prompt
-Sets effort to high for that turn on Opus 4.6 and Sonnet 4.6. Useful for one-off tasks requiring deep reasoning without permanently changing your effort setting
+Adds an in-context instruction telling the model to reason more on that turn. Does not change the effort level itself; see
+Adjust effort level
+for that
 Toggle shortcut
 Press
 Option+T
@@ -443,7 +445,7 @@ Limit token budget
 Set
 MAX_THINKING_TOKENS
 environment variable
-Limit the thinking budget to a specific number of tokens. On Opus 4.6 and Sonnet 4.6, only
+Limit the thinking budget to a specific number of tokens. On models with adaptive reasoning, only
 0
 applies unless adaptive reasoning is disabled. Example:
 export MAX_THINKING_TOKENS=10000
@@ -453,12 +455,12 @@ to toggle verbose mode and see the internal reasoning displayed as gray italic t
 ​
 How extended thinking works
 Extended thinking controls how much internal reasoning Claude performs before responding. More thinking provides more space to explore solutions, analyze edge cases, and self-correct mistakes.
-With Opus 4.6 and Sonnet 4.6
-, thinking uses adaptive reasoning: the model dynamically allocates thinking tokens based on the
-effort level
-you select. This is the recommended way to tune the tradeoff between speed and reasoning depth.
-With older models
-, thinking uses a fixed token budget drawn from your output allocation. The budget varies by model; see
+On
+models that support effort
+, thinking uses adaptive reasoning: the model dynamically allocates thinking tokens based on the effort level you select. This is the recommended way to tune the tradeoff between speed and reasoning depth. If you want Claude to think more or less often than your effort level would otherwise produce, you can also say so directly in your prompt or in
+CLAUDE.md
+.
+With older models, thinking uses a fixed token budget drawn from your output allocation. The budget varies by model; see
 MAX_THINKING_TOKENS
 for per-model ceilings. You can limit the budget with that environment variable, or disable thinking entirely via
 /config
@@ -467,15 +469,15 @@ Option+T
 /
 Alt+T
 toggle.
-On Opus 4.6 and Sonnet 4.6,
-adaptive reasoning
-controls thinking depth, so
+On models with adaptive reasoning,
 MAX_THINKING_TOKENS
 only applies when set to
 0
 to disable thinking, or when
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
-reverts these models to the fixed budget. See
+reverts the model to the fixed budget.
+CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
+applies to Opus 4.6 and Sonnet 4.6 only. Opus 4.7 always uses adaptive reasoning and does not support a fixed thinking budget. See
 environment variables
 .
 You’re charged for all thinking tokens used even when thinking summaries are redacted. In interactive mode, thinking appears as a collapsed stub by default. Set
@@ -495,17 +497,31 @@ resumes sessions linked to a specific pull request
 From inside an active session, use
 /resume
 to switch to a different conversation.
-Sessions are stored per project directory. The
+Sessions are stored per project directory. By default, the
 /resume
-picker shows interactive sessions from the same git repository, including worktrees. When you select a session from another worktree of the same repository, Claude Code resumes it directly without requiring you to switch directories first. Sessions created by
+picker shows interactive sessions from the current worktree, with keyboard shortcuts to widen the list to other worktrees or projects, search, preview, and rename. See
+Use the session picker
+below for the full shortcut reference.
+When you select a session from another worktree of the same repository, Claude Code resumes it directly without requiring you to switch directories first. Selecting a session from an unrelated project copies a
+cd
+and resume command to your clipboard instead.
+Resuming by name resolves across the current repository and its worktrees. Both
+claude --resume <name>
+and
+/resume <name>
+look for an exact match and resume it directly, even if the session lives in a different worktree.
+When the name is ambiguous,
+claude --resume <name>
+opens the picker with the name pre-filled as a search term.
+/resume <name>
+from inside a session reports an error instead, so run
+/resume
+with no argument to open the picker and choose.
+Sessions created by
 claude -p
-or SDK invocations do not appear in the picker, but you can still resume one by passing its session ID or custom name to
-claude --resume <session-id-or-name>
-. Custom names set with
---name
-or
-/rename
-are accepted in addition to session IDs.
+or SDK invocations do not appear in the picker, but you can still resume one by passing its session ID directly to
+claude --resume <session-id>
+.
 ​
 Name your sessions
 Give sessions descriptive names to find them later. This is a best practice when working on multiple tasks or features.
@@ -524,7 +540,7 @@ during a session, which also shows the name on the prompt bar:
 You can also rename any session from the picker: run
 /resume
 , navigate to a session, and press
-R
+Ctrl+R
 .
 2
 Resume by name later
@@ -554,24 +570,32 @@ Navigate between sessions
 Expand or collapse grouped sessions
 Enter
 Select and resume the highlighted session
-P
-Preview the session content
-R
+Space
+Preview the session content.
+Ctrl+V
+also works on terminals that do not capture it as paste
+Ctrl+R
 Rename the highlighted session
 /
-Search to filter sessions
-A
-Toggle between current directory and all projects
-B
-Filter to sessions from your current git branch
+or any printable character other than
+Space
+Enter search mode and filter sessions
+Ctrl+A
+Show sessions from all projects on this machine. Press again to restore the current repository
+Ctrl+W
+Show sessions from all worktrees of the current repository. Press again to restore the current worktree. Only shown in multi-worktree repositories
+Ctrl+B
+Filter to sessions from your current git branch. Press again to show sessions from all branches
 Esc
 Exit the picker or search mode
 Session organization:
 The picker displays sessions with helpful metadata:
-Session name or initial prompt
+Session name if set, otherwise the conversation summary or first user prompt
 Time elapsed since last activity
 Message count
 Git branch (if applicable)
+Project path, shown after widening to all projects with
+Ctrl+A
 Forked sessions (created with
 /branch
 ,
@@ -597,7 +621,7 @@ For scripts, use
 claude --continue --print "prompt"
 to resume in non-interactive mode
 Press
-P
+Space
 in the picker to preview a session before resuming it
 The resumed conversation starts with the same model and configuration as the original
 How it works:
@@ -1002,7 +1026,11 @@ Your CI pipeline
 Tasks tied to repo events like opened PRs, or cron schedules that should live alongside your workflow config.
 /loop
 The current CLI session
-Quick polling while a session is open. Tasks are cancelled when you exit.
+Quick polling while a session is open. Tasks stop when you start a new conversation;
+--resume
+and
+--continue
+restore unexpired ones.
 When writing prompts for scheduled tasks, be explicit about what success looks like and what to do with results. The task runs autonomously, so it can’t ask clarifying questions. For example: “Review open PRs labeled
 needs-review
 , leave inline comments on any issues, and post a summary in the

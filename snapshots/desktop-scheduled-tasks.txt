@@ -79,7 +79,9 @@ Yes
 Persistent across restarts
 Yes
 Yes
-No (session-scoped)
+Restored on
+--resume
+if unexpired
 Access to local files
 No (fresh clone)
 Yes

@@ -114,23 +114,21 @@ in your working directory
 User-level:
 ~/.claude/CLAUDE.md
 for global instructions across all projects
-IMPORTANT:
-The SDK only reads CLAUDE.md files when you explicitly configure
+CLAUDE.md files are read when the corresponding setting source is enabled:
+'project'
+for project-level CLAUDE.md and
+'user'
+for
+~/.claude/CLAUDE.md
+. With default
+query()
+options both sources are enabled, so CLAUDE.md loads automatically. If you set
 settingSources
 (TypeScript) or
 setting_sources
-(Python):
-Include
-'project'
-to load project-level CLAUDE.md
-Include
-'user'
-to load user-level CLAUDE.md (
-~/.claude/CLAUDE.md
-)
-The
+(Python) explicitly, include the sources you need. CLAUDE.md loading is controlled by setting sources, not by the
 claude_code
-system prompt preset does NOT automatically load CLAUDE.md - you must also specify setting sources.
+preset.
 Content format:
 CLAUDE.md files use plain markdown and can contain:
 Coding guidelines and standards
@@ -178,8 +176,6 @@ query
 from
 "@anthropic-ai/claude-agent-sdk"
 ;
-// IMPORTANT: You must specify settingSources to load CLAUDE.md
-// The claude_code preset alone does NOT load CLAUDE.md files
 const
 messages
 =
@@ -210,7 +206,7 @@ settingSources:
 [
 "project"
 ]
-// Required to load CLAUDE.md from project
+// Loads CLAUDE.md from project
 }
 })) {
 messages
@@ -238,8 +234,8 @@ Key characteristics:
 ✅ Persistent across all sessions in a project
 ✅ Shared with team via git
 ✅ Automatic discovery (no code changes needed)
-⚠️ Requires loading settings via
-settingSources
+⚠️ Not loaded if you pass
+settingSources: []
 ​
 Method 2: Output styles (persistent configurations)
 Output styles are saved configurations that modify Claude’s system prompt. They’re stored as markdown files and can be reused across sessions and projects.
@@ -694,14 +690,17 @@ before committing”
 “Database migrations are in the
 migrations/
 directory”
-Important:
-To load CLAUDE.md files, you must explicitly set
-settingSources: ['project']
+CLAUDE.md files load when the
+project
+setting source is enabled, which it is for default
+query()
+options. If you set
+settingSources
 (TypeScript) or
-setting_sources=["project"]
-(Python). The
-claude_code
-system prompt preset does NOT automatically load CLAUDE.md without this setting.
+setting_sources
+(Python) explicitly, include
+'project'
+to keep loading project-level CLAUDE.md.
 ​
 When to use output styles
 Best for:

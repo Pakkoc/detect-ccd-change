@@ -31,6 +31,7 @@ Monitoring
 Costs
 Track team usage with analytics
 Create and distribute a plugin marketplace
+Plugin dependency versions
 On this page
 System requirements
 Additional dependencies
@@ -42,6 +43,7 @@ Authenticate
 Update Claude Code
 Auto-updates
 Configure release channel
+Pin a minimum version
 Disable auto-updates
 Update manually
 Advanced installation options
@@ -221,7 +223,11 @@ bin
 bash.exe"
 }
 }
-Claude Code can also run PowerShell natively on Windows as an opt-in preview. See
+Claude Code can also run PowerShell natively on Windows. The PowerShell tool is rolling out progressively; set
+CLAUDE_CODE_USE_POWERSHELL_TOOL=1
+to opt in or
+0
+to opt out. See
 PowerShell tool
 for setup and limitations.
 Option 2: WSL
@@ -339,6 +345,43 @@ claude-code
 tracks stable and
 claude-code@latest
 tracks latest.
+​
+Pin a minimum version
+The
+minimumVersion
+setting establishes a floor. Background auto-updates and
+claude update
+refuse to install any version below this value, so moving to the
+"stable"
+channel does not downgrade you if you are already on a newer
+"latest"
+build.
+Switching from
+"latest"
+to
+"stable"
+via
+/config
+prompts you to either stay on the current version or allow the downgrade. Choosing to stay sets
+minimumVersion
+to that version. Switching back to
+"latest"
+clears it.
+Add it to your
+settings.json file
+to pin a floor explicitly:
+{
+"autoUpdatesChannel"
+:
+"stable"
+,
+"minimumVersion"
+:
+"2.1.100"
+}
+In
+managed settings
+, this enforces an organization-wide minimum that user and project settings cannot override.
 ​
 Disable auto-updates
 Set
@@ -655,6 +698,11 @@ uninstall
 ​
 Remove configuration files
 Removing configuration files will delete all your settings, allowed tools, MCP server configurations, and session history.
+The VS Code extension, the JetBrains plugin, and the Desktop app also write to
+~/.claude/
+. If any of them is still installed, the directory is recreated the next time it runs. To remove Claude Code completely, uninstall the
+VS Code extension
+, the JetBrains plugin, and the Desktop app before deleting these files.
 To remove Claude Code settings and cached data:
 macOS, Linux, WSL
 Windows PowerShell

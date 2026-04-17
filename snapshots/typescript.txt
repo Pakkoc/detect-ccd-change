@@ -63,6 +63,10 @@ Functions
 query()
 Parameters
 Returns
+startup()
+Parameters
+Returns
+Example
 tool()
 Parameters
 ToolAnnotations
@@ -85,6 +89,8 @@ Parameters
 Types
 Options
 Query object
+Methods
+WarmQuery
 Methods
 SDKControlInitializeResponse
 AgentDefinition
@@ -113,6 +119,7 @@ SDKResultMessage
 SDKSystemMessage
 SDKPartialAssistantMessage
 SDKCompactBoundaryMessage
+SDKPluginInstallMessage
 SDKPermissionDenial
 Hook Types
 HookEvent
@@ -294,6 +301,102 @@ AsyncGenerator<
 SDKMessage
 , void>
 with additional methods.
+​
+startup()
+Pre-warms the CLI subprocess by spawning it and completing the initialize handshake before a prompt is available. The returned
+WarmQuery
+handle accepts a prompt later and writes it to an already-ready process, so the first
+query()
+call resolves without paying subprocess spawn and initialization cost inline.
+function
+startup
+(
+params
+?:
+{
+options
+?:
+Options
+;
+initializeTimeoutMs
+?:
+number
+;
+})
+:
+Promise
+<
+WarmQuery
+>;
+​
+Parameters
+Parameter
+Type
+Description
+options
+Options
+Optional configuration object. Same as the
+options
+parameter to
+query()
+initializeTimeoutMs
+number
+Maximum time in milliseconds to wait for subprocess initialization. Defaults to
+60000
+. If initialization does not complete in time, the promise rejects with a timeout error
+​
+Returns
+Returns a
+Promise<
+WarmQuery
+>
+that resolves once the subprocess has spawned and completed its initialize handshake.
+​
+Example
+Call
+startup()
+early, for example on application boot, then call
+.query()
+on the returned handle once a prompt is ready. This moves subprocess spawn and initialization out of the critical path.
+import
+{
+startup
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+// Pay startup cost upfront
+const
+warm
+=
+await
+startup
+({
+options:
+{
+maxTurns:
+3
+} });
+// Later, when a prompt is ready, this is immediate
+for
+await
+(
+const
+message
+of
+warm
+.
+query
+(
+"What files are here?"
+)) {
+console
+.
+log
+(
+message
+);
+}
 ​
 tool()
 Creates a type-safe MCP tool definition for use with SDK MCP servers.
@@ -996,7 +1099,7 @@ permissionMode
 bypassPermissions
 )
 effort
-'low' | 'medium' | 'high' | 'max'
+'low' | 'medium' | 'high' | 'xhigh' | 'max'
 'high'
 Controls how much effort Claude puts into its response. Works with adaptive thinking to guide thinking depth
 enableFileCheckpointing
@@ -1047,7 +1150,11 @@ Include partial message events
 maxBudgetUsd
 number
 undefined
-Maximum budget in USD for the query
+Stop the query when the client-side cost estimate reaches this USD value. Compared against the same estimate as
+total_cost_usd
+; see
+Track cost and usage
+for accuracy caveats
 maxThinkingTokens
 number
 undefined
@@ -1127,13 +1234,11 @@ Use a specific UUID for the session instead of auto-generating one
 settingSources
 SettingSource
 []
+CLI defaults (all sources)
+Control which filesystem settings to load. Pass
 []
-(no settings)
-Control which filesystem settings to load. When omitted, no settings are loaded.
-Note:
-Must include
-'project'
-to load CLAUDE.md files
+to disable user, project, and local settings. Managed policy settings load regardless. See
+Use Claude Code features
 spawnClaudeCodeProcess
 (options: SpawnOptions) => SpawnedProcess
 undefined
@@ -1413,6 +1518,54 @@ Stop a running background task by ID
 close()
 Close the query and terminate the underlying process. Forcefully ends the query and cleans up all resources
 ​
+WarmQuery
+Handle returned by
+startup()
+. The subprocess is already spawned and initialized, so calling
+query()
+on this handle writes the prompt directly to a ready process with no startup latency.
+interface
+WarmQuery
+extends
+AsyncDisposable
+{
+query
+(
+prompt
+:
+string
+|
+AsyncIterable
+<
+SDKUserMessage
+>)
+:
+Query
+;
+close
+()
+:
+void
+;
+}
+​
+Methods
+Method
+Description
+query(prompt)
+Send a prompt to the pre-warmed subprocess and return a
+Query
+. Can only be called once per
+WarmQuery
+close()
+Close the subprocess without sending a prompt. Use this to discard a warm query that is no longer needed
+WarmQuery
+implements
+AsyncDisposable
+, so it can be used with
+await using
+for automatic cleanup.
+​
 SDKControlInitializeResponse
 Return type of
 initializationResult()
@@ -1585,17 +1738,31 @@ Local project settings (gitignored)
 Default behavior
 When
 settingSources
-is
-omitted
-or
+is omitted or
 undefined
-, the SDK does
-not
-load any filesystem settings. This provides isolation for SDK applications.
+,
+query()
+loads the same filesystem settings as the Claude Code CLI: user, project, and local. Managed policy settings are loaded in all cases. See
+What settingSources does not control
+for inputs that are read regardless of this option, and how to disable them.
 ​
 Why use settingSources
-Load all filesystem settings (legacy behavior):
-// Load all settings like SDK v0.0.x did
+Disable filesystem settings:
+// Do not load user, project, or local settings from disk
+const
+result
+=
+query
+({
+prompt:
+"Analyze this code"
+,
+options:
+{
+settingSources:
+[] }
+});
+Load all filesystem settings explicitly:
 const
 result
 =
@@ -1658,8 +1825,8 @@ permissionMode:
 }
 });
 SDK-only applications:
-// Define everything programmatically (default behavior)
-// No filesystem dependencies - settingSources defaults to []
+// Define everything programmatically.
+// Pass [] to opt out of filesystem setting sources.
 const
 result
 =
@@ -1670,7 +1837,8 @@ prompt:
 ,
 options:
 {
-// settingSources: [] is the default, no need to specify
+settingSources:
+[],
 agents:
 {
 /* ... */
@@ -1708,7 +1876,7 @@ type:
 ,
 preset:
 "claude_code"
-// Required to use CLAUDE.md
+// Use Claude Code's system prompt
 },
 settingSources:
 [
@@ -1737,11 +1905,11 @@ Project settings (
 User settings (
 ~/.claude/settings.json
 )
-Programmatic options (like
+Programmatic options such as
 agents
-,
+and
 allowedTools
-) always override filesystem settings.
+override user, project, and local filesystem settings. Managed policy settings take precedence over programmatic options.
 ​
 PermissionMode
 type
@@ -2124,6 +2292,8 @@ SDKHookProgressMessage
 |
 SDKHookResponseMessage
 |
+SDKPluginInstallMessage
+|
 SDKToolProgressMessage
 |
 SDKAuthStatusMessage
@@ -2242,11 +2412,20 @@ isSynthetic
 ?:
 boolean
 ;
+shouldQuery
+?:
+boolean
+;
 tool_use_result
 ?:
 unknown
 ;
 };
+Set
+shouldQuery
+to
+false
+to append the message to the transcript without triggering an assistant turn. The message is held and merged into the next user message that does trigger a turn. Use this to inject context, such as the output of a command you ran out of band, without spending a model call on it.
 ​
 SDKUserMessageReplay
 Replayed user message with required UUID.
@@ -2601,6 +2780,60 @@ pre_tokens
 number
 ;
 };
+};
+​
+SDKPluginInstallMessage
+Plugin installation progress event. Emitted when
+CLAUDE_CODE_SYNC_PLUGIN_INSTALL
+is set, so your Agent SDK application can track marketplace plugin installation before the first turn. The
+started
+and
+completed
+statuses bracket the overall install. The
+installed
+and
+failed
+statuses report individual marketplaces and include
+name
+.
+type
+SDKPluginInstallMessage
+=
+{
+type
+:
+"system"
+;
+subtype
+:
+"plugin_install"
+;
+status
+:
+"started"
+|
+"installed"
+|
+"failed"
+|
+"completed"
+;
+name
+?:
+string
+;
+error
+?:
+string
+;
+uuid
+:
+UUID
+;
+session_id
+:
+string
+;
 };
 ​
 SDKPermissionDenial
@@ -5411,7 +5644,7 @@ SdkBeta
 The
 context-1m-2025-08-07
 beta is retired as of April 30, 2026. Passing this value with Claude Sonnet 4.5 or Sonnet 4 has no effect, and requests that exceed the standard 200k-token context window return an error. To use a 1M-token context window, migrate to
-Claude Sonnet 4.6 or Claude Opus 4.6
+Claude Sonnet 4.6, Claude Opus 4.6, or Claude Opus 4.7
 , which include 1M context at standard pricing with no beta header required.
 ​
 SlashCommand
@@ -5464,6 +5697,8 @@ supportedEffortLevels
 "medium"
 |
 "high"
+|
+"xhigh"
 |
 "max"
 )[];

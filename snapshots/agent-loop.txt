@@ -203,9 +203,11 @@ Stream responses
 .
 ResultMessage
 :
-the last message, always. Contains the final text result, token usage, cost, and session ID. Check the
+marks the end of the agent loop. Contains the final text result, token usage, cost, and session ID. Check the
 subtype
-field to determine whether the task succeeded or hit a limit. See
+field to determine whether the task succeeded or hit a limit. A small number of trailing system events, such as
+prompt_suggestion
+, can arrive after it, so iterate the stream to completion rather than breaking on the result. See
 Handle the result
 .
 These five types cover the full agent loop lifecycle in both SDKs. The TypeScript SDK also yields additional observability events (hook events, tool progress, rate limits, task notifications) that provide extra detail but are not required to drive the loop. See the
@@ -384,7 +386,7 @@ controls what happens to tools that aren’t covered by allow or deny rules. See
 Permission mode
 for available modes.
 You can also scope individual tools with rules like
-"Bash(npm:*)"
+"Bash(npm *)"
 to allow only specific commands. See
 Permissions
 for the full rule syntax.
@@ -471,6 +473,9 @@ Routine edits, standard tasks
 "high"
 Thorough analysis
 Refactors, debugging
+"xhigh"
+Extended reasoning depth
+Coding and agentic tasks; recommended on Opus 4.7
 "max"
 Maximum reasoning depth
 Multi-step problems requiring deep analysis
@@ -569,9 +574,8 @@ System prompt
 Every request
 Small fixed cost, always present
 CLAUDE.md files
-Session start, when
+Session start, via
 settingSources
-is enabled
 Full content in every request (but prompt-cached, so only the first request pays full cost)
 Tool definitions
 Every request
@@ -582,7 +586,7 @@ Conversation history
 Accumulates over turns
 Grows with each turn: prompts, responses, tool inputs, tool outputs
 Skill descriptions
-Session start (with setting sources enabled)
+Session start, via setting sources
 Short summaries; full content loads only when invoked
 Large tool outputs consume significant context. Reading a big file or running a command with verbose output can use thousands of tokens in a single turn. Context accumulates across turns, so longer sessions with many tool calls build up significantly more context than short ones.
 ​
