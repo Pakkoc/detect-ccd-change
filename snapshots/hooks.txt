@@ -868,8 +868,9 @@ once
 no
 If
 true
-, runs only once per session then is removed. Skills only, not agents. See
-Hooks in skills and agents
+, runs once per session then is removed. Only honored for hooks declared in
+skill frontmatter
+; ignored in settings files and agent frontmatter
 ​
 Command hook fields
 In addition to the

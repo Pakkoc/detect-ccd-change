@@ -249,6 +249,15 @@ Installation
 npm
 install
 @anthropic-ai/claude-agent-sdk
+The SDK bundles a native Claude Code binary for your platform as an optional dependency such as
+@anthropic-ai/claude-agent-sdk-darwin-arm64
+. You don’t need to install Claude Code separately. If your package manager skips optional dependencies, the SDK throws
+Native CLI binary for <platform> not found
+; set
+pathToClaudeCodeExecutable
+to a separately installed
+claude
+binary instead.
 ​
 Functions
 ​
@@ -1184,8 +1193,8 @@ Structured outputs
 for details
 pathToClaudeCodeExecutable
 string
-Uses built-in executable
-Path to Claude Code executable
+Auto-resolved from bundled native binary
+Path to Claude Code executable. Only needed if optional dependencies were skipped during install or your platform isn’t in the supported set
 permissionMode
 PermissionMode
 'default'

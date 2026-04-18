@@ -406,8 +406,6 @@ Is draft
 Whether the PR is in draft state
 Is merged
 Whether the PR has been merged
-From fork
-Whether the PR comes from a fork
 Each filter pairs a field with an operator: equals, contains, starts with, is one of, is not one of, or matches regex.
 The
 matches regex
@@ -429,10 +427,6 @@ main
 , head branch contains
 auth-provider
 . Sends any PR that touches authentication to a focused reviewer.
-External contributor triage
-: from fork is
-true
-. Routes every fork-based PR through an extra security and style review before a human looks at it.
 Ready-for-review only
 : is draft is
 false

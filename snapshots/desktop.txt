@@ -114,6 +114,18 @@ Windows-specific issues
 ”Branch doesn’t exist yet” when opening in CLI
 Still stuck?
 The Code tab within the Claude Desktop app lets you use Claude Code through a graphical interface instead of the terminal.
+Download for macOS
+Universal build for Intel and Apple Silicon
+Download for Windows
+For x64 processors
+For Windows ARM64, download the
+ARM64 installer
+. Linux is not supported.
+After installing, launch Claude, sign in, and click the
+Code
+tab. See the
+Get started guide
+for a full walkthrough of your first session.
 Desktop adds these capabilities on top of the standard Claude Code experience:
 Parallel sessions
 with automatic Git worktree isolation
@@ -140,9 +152,6 @@ SSH
 , and
 cloud
 environments
-New to Desktop? Start with
-Get started
-to install the app and make your first edit.
 The workspace layout, terminal, file editor, side chats, and view modes described on this page require Claude Desktop v1.2581.0 or later. Open
 Claude → Check for Updates
 on macOS or
