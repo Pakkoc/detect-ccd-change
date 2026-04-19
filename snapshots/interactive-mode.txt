@@ -142,8 +142,12 @@ Left/Right arrows
 Cycle through dialog tabs
 Navigate between tabs in permission dialogs and menus
 Up/Down arrows
-Navigate command history
-Recall previous inputs
+or
+Ctrl+P
+/
+Ctrl+N
+Move cursor or navigate command history
+In multiline input, first moves the cursor within the prompt. Once the cursor is already on the top or bottom edge, pressing again navigates command history
 Esc
 +
 Esc
@@ -191,22 +195,33 @@ Text editing
 Shortcut
 Description
 Context
+Ctrl+A
+Move cursor to start of current line
+In multiline input, moves to the start of the current logical line
+Ctrl+E
+Move cursor to end of current line
+In multiline input, moves to the end of the current logical line
 Ctrl+K
 Delete to end of line
 Stores deleted text for pasting
 Ctrl+U
-Clear entire input buffer
-Stores cleared text for pasting with
-Ctrl+Y
-.
+Delete from cursor to line start
+Stores deleted text for pasting. Repeat to clear across lines in multiline input. On macOS, terminal emulators including iTerm2 and Terminal.app map
 Cmd+Backspace
-deletes from cursor to line start
+to this shortcut
+Ctrl+W
+Delete previous word
+Stores deleted text for pasting. On Windows,
+Ctrl+Backspace
+also deletes the previous word
 Ctrl+Y
 Paste deleted text
 Paste text deleted with
 Ctrl+K
-or
+,
 Ctrl+U
+, or
+Ctrl+W
 Alt+Y
 (after
 Ctrl+Y

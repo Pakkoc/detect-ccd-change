@@ -7116,6 +7116,10 @@ allowedDomains
 ?:
 string
 [];
+deniedDomains
+?:
+string
+[];
 allowManagedDomainsOnly
 ?:
 boolean
@@ -7149,6 +7153,11 @@ allowedDomains
 string[]
 []
 Domain names that sandboxed processes can access
+deniedDomains
+string[]
+[]
+Domain names that sandboxed processes cannot access. Takes precedence over
+allowedDomains
 allowManagedDomainsOnly
 boolean
 false

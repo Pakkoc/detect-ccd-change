@@ -283,7 +283,7 @@ git log --oneline main
 A single
 *
 matches any sequence of characters including spaces, so one wildcard can span multiple arguments.
-Bash(git:*)
+Bash(git *)
 matches
 git log --oneline --all
 , and
@@ -389,6 +389,25 @@ devbox run rm -rf .
 . To approve work inside an environment runner, write a specific rule that includes both the runner and the inner command, such as
 Bash(devbox run npm test)
 . Add one rule per inner command you want to allow.
+Exec wrappers such as
+watch
+,
+setsid
+,
+ionice
+, and
+flock
+always prompt and cannot be auto-approved by a prefix rule like
+Bash(watch *)
+. The same applies to
+find
+with
+-exec
+or
+-delete
+: a
+Bash(find *)
+rule does not cover these forms. To approve a specific invocation, write an exact-match rule for the full command string.
 ​
 Read-only commands
 Claude Code recognizes a built-in set of Bash commands as read-only and runs them without a permission prompt in every mode. These include
@@ -727,7 +746,9 @@ Sandbox restrictions prevent Bash commands from reaching resources outside defin
 Filesystem restrictions in the sandbox use Read and Edit deny rules, not separate sandbox configuration
 Network restrictions combine WebFetch permission rules with the sandbox’s
 allowedDomains
-list
+and
+deniedDomains
+lists
 When sandboxing is enabled with
 autoAllowBashIfSandboxed: true
 , which is the default, sandboxed Bash commands run without prompting even if your permissions include

@@ -134,7 +134,8 @@ cyan
 default
 to reset
 /compact [instructions]
-Compact conversation with optional focus instructions
+Free up context by summarizing the conversation so far. Optionally pass focus instructions for the summary. See
+how compaction handles rules, skills, and memory files
 /config
 Open the
 Settings
@@ -207,6 +208,12 @@ on or off
 /feedback [report]
 Submit feedback about Claude Code. Alias:
 /bug
+/fewer-permission-prompts
+Skill
+.
+Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project
+.claude/settings.json
+to reduce permission prompts
 /focus
 Toggle the focus view, which shows only your last prompt, a one-line tool-call summary with edit diffstats, and the final response. The selection persists across sessions. Only available in
 fullscreen rendering
@@ -239,12 +246,6 @@ app for a repository. Walks you through selecting a repo and configuring the int
 Install the Claude Slack app. Opens a browser to complete the OAuth flow
 /keybindings
 Open or create your keybindings configuration file
-/less-permission-prompts
-Skill
-.
-Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project
-.claude/settings.json
-to reduce permission prompts
 /login
 Sign in to your Anthropic account
 /logout

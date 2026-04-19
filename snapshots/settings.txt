@@ -1090,6 +1090,15 @@ Array of domains to allow for outbound network traffic. Supports wildcards (e.g.
 *.example.com
 ).
 ["github.com", "*.npmjs.org"]
+network.deniedDomains
+Array of domains to block for outbound network traffic. Supports the same wildcard syntax as
+allowedDomains
+. Takes precedence over
+allowedDomains
+when both match. Merged from all settings sources regardless of
+allowManagedDomainsOnly
+.
+["sensitive.cloud.example.com"]
 network.allowManagedDomainsOnly
 (Managed settings only) Only
 allowedDomains
@@ -1210,6 +1219,10 @@ true
 "*.npmjs.org"
 ,
 "registry.yarnpkg.com"
+],
+"deniedDomains"
+: [
+"uploads.github.com"
 ],
 "allowUnixSockets"
 : [

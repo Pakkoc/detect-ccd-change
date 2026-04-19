@@ -46,6 +46,7 @@ JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
 On this page
+2.1.114
 2.1.113
 2.1.112
 2.1.111
@@ -319,6 +320,10 @@ CHANGELOG.md on GitHub
 Run
 claude --version
 to check your installed version.
+​
+2.1.114
+April 18, 2026
+Fixed a crash in the permission dialog when an agent teams teammate requested tool permission
 ​
 2.1.113
 April 17, 2026
