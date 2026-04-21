@@ -844,7 +844,7 @@ Set to
 to enable the event-level streaming idle watchdog. Off by default. For Bedrock, Vertex, and Foundry, this is the only idle watchdog available. Configure the timeout with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 CLAUDE_ENV_FILE
-Path to a shell script that Claude Code sources before each Bash command. Use to persist virtualenv or conda activation across commands. Also populated dynamically by
+Path to a shell script whose contents Claude Code runs before each Bash command in the same shell process, so exports in the file are visible to the command. Use to persist virtualenv or conda activation across commands. Also populated dynamically by
 SessionStart
 ,
 CwdChanged

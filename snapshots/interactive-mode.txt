@@ -76,9 +76,9 @@ Alt+P
 Alt+T
 ) require configuring Option as Meta in your terminal:
 iTerm2
-: settings → Profiles → Keys → set Left/Right Option key to “Esc+”
-Terminal.app
-: settings → Profiles → Keyboard → check “Use Option as Meta Key”
+: Settings → Profiles → Keys → General → set Left/Right Option key to “Esc+”
+Apple Terminal
+: Settings → Profiles → Keyboard → check “Use Option as Meta Key”
 VS Code
 : set
 "terminal.integrated.macOptionIsMeta": true
@@ -260,19 +260,21 @@ Quick escape
 +
 Enter
 Works in all terminals
-macOS default
+Option key
 Option+Enter
-Default on macOS
+After enabling
+Option as Meta
+on macOS
 Shift+Enter
 Shift+Enter
-Works out of the box in iTerm2, WezTerm, Ghostty, Kitty
+Native in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal
 Control sequence
 Ctrl+J
-Line feed character for multiline
+Works in any terminal without configuration
 Paste mode
 Paste directly
 For code blocks, logs
-Shift+Enter works without configuration in iTerm2, WezTerm, Ghostty, and Kitty. For other terminals (VS Code, Alacritty, Zed, Warp), run
+Shift+Enter works without configuration in iTerm2, WezTerm, Ghostty, Kitty, Warp, and Apple Terminal. For VS Code, Cursor, Windsurf, Alacritty, and Zed, run
 /terminal-setup
 to install the binding.
 ​
@@ -478,6 +480,8 @@ Indent line
 Dedent line
 J
 Join lines
+u
+Undo
 .
 Repeat last change
 ​

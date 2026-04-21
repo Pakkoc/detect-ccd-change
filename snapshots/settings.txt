@@ -751,6 +751,23 @@ to use only your verbs, or
 "append"
 to add them to the defaults
 {"mode": "append", "verbs": ["Pondering", "Crafting"]}
+sshConfigs
+SSH connections to show in the
+Desktop
+environment dropdown. Each entry requires
+id
+,
+name
+, and
+sshHost
+;
+sshPort
+,
+sshIdentityFile
+, and
+startDirectory
+are optional. When set in managed settings, connections are read-only for users. Read from managed and user settings only
+[{"id": "dev-vm", "name": "Dev VM", "sshHost": "user@dev.example.com"}]
 statusLine
 Configure a custom status line to display context. See
 statusLine

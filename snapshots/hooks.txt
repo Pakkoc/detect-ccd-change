@@ -248,8 +248,8 @@ hook that blocks destructive shell commands. The
 matcher
 narrows to Bash tool calls and the
 if
-condition narrows further to commands starting with
-rm
+condition narrows further to Bash subcommands matching
+rm *
 , so
 block-rm.sh
 only spawns when both filters match:
@@ -362,8 +362,10 @@ The
 if
 condition
 "Bash(rm *)"
-matches because the command starts with
-rm
+matches because
+rm -rf /tmp/build
+is a subcommand matching
+rm *
 , so this handler spawns. If the command had been
 npm test
 , the
@@ -706,9 +708,9 @@ uses
 permission rule syntax
 to match against the tool name and arguments together, so
 "Bash(git *)"
-runs only for
-git
-commands and
+runs when any subcommand of the Bash input matches
+git *
+and
 "Edit(*.ts)"
 runs only for TypeScript files.
 ​
@@ -820,7 +822,7 @@ Prompt-based hooks
 Agent hooks
 (
 type: "agent"
-): spawn a subagent that can use tools like Read, Grep, and Glob to verify conditions before returning a decision. See
+): spawn a subagent that can use tools like Read, Grep, and Glob to verify conditions before returning a decision. Agent hooks are experimental and may change. See
 Agent-based hooks
 .
 ​
@@ -844,16 +846,14 @@ Permission rule syntax to filter when this hook runs, such as
 "Bash(git *)"
 or
 "Edit(*.ts)"
-. The hook only spawns if the tool call matches the pattern. Only evaluated on tool events:
+. The hook only spawns if the tool call matches the pattern, or if a Bash command is too complex to parse. Only evaluated on tool events:
 PreToolUse
 ,
 PostToolUse
 ,
 PostToolUseFailure
-,
-PermissionRequest
 , and
-PermissionDenied
+PermissionRequest
 . On other events, a hook with
 if
 set never runs. Uses the same syntax as
@@ -871,6 +871,21 @@ true
 , runs once per session then is removed. Only honored for hooks declared in
 skill frontmatter
 ; ignored in settings files and agent frontmatter
+The
+if
+field holds exactly one permission rule. There is no
+&&
+,
+||
+, or list syntax for combining rules; to apply multiple conditions, define a separate hook handler for each. For Bash, the rule is matched against each subcommand of the tool input after leading
+VAR=value
+assignments are stripped, so
+if: "Bash(git push *)"
+matches both
+FOO=bar git push
+and
+npm test && git push
+. The hook runs if any subcommand matches, and always runs when the command is too complex to parse.
 ​
 Command hook fields
 In addition to the
@@ -4939,6 +4954,9 @@ your explanation
 }
 ​
 Agent-based hooks
+Agent hooks are experimental. Behavior and configuration may change in future releases. For production workflows, prefer
+command hooks
+.
 Agent-based hooks (
 type: "agent"
 ) are like prompt-based hooks but with multi-turn tool access. Instead of a single LLM call, an agent hook spawns a subagent that can read files, search code, and inspect the codebase to verify conditions. Agent hooks support the same events as prompt-based hooks.

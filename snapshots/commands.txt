@@ -389,11 +389,11 @@ session into this terminal: opens a picker, then fetches the branch and conversa
 /tp
 . Requires a claude.ai subscription
 /terminal-setup
-Configure terminal keybindings for Shift+Enter and other shortcuts. Only visible in terminals that need it, like VS Code, Alacritty, or Warp
+Configure terminal keybindings for Shift+Enter and other shortcuts. Only visible in terminals that need it, like VS Code, Cursor, Windsurf, Alacritty, or Zed
 /theme
 Change the color theme. Includes an
 auto
-option that follows your terminal’s dark or light mode, light and dark variants, colorblind-accessible (daltonized) themes, and ANSI themes that use your terminal’s color palette
+option that matches your terminal’s light or dark background, light and dark variants, colorblind-accessible (daltonized) themes, and ANSI themes that use your terminal’s color palette
 /tui [default|fullscreen]
 Set the terminal UI renderer and relaunch into it with your conversation intact.
 fullscreen
