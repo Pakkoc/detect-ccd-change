@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Administration
+Security and data
 Zero data retention
 Getting started
 Build with Claude Code
@@ -20,18 +20,21 @@ Reference
 Agent SDK
 What's New
 Resources
-Administration
+Setup and access
 Advanced setup
 Authentication
-Security
 Server-managed settings
-Data usage
-Zero data retention
+Usage and costs
 Monitoring
 Costs
 Track team usage with analytics
+Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
 On this page
 ZDR scope
 What ZDR covers
@@ -94,13 +97,14 @@ Data retention for policy violations
 Even with ZDR enabled, Anthropic may retain data where required by law or to address Usage Policy violations. If a session is flagged for a policy violation, Anthropic may retain the associated inputs and outputs for up to 2 years, consistent with Anthropic’s standard ZDR policy.
 ​
 Request ZDR
-To request ZDR for Claude Code on Claude for Enterprise, contact your Anthropic account team. Your account team will submit the request internally, and Anthropic will review and enable ZDR on your organization after confirming eligibility. All enablement actions are audit-logged.
+To request ZDR for Claude Code on Claude for Enterprise,
+contact sales
+or your Anthropic account team. Your account team will submit the request internally, and Anthropic will review and enable ZDR on your organization after confirming eligibility. All enablement actions are audit-logged.
 If you are currently using ZDR for Claude Code via pay-as-you-go API keys, you can transition to Claude for Enterprise to gain access to administrative features while maintaining ZDR for Claude Code. Contact your account team to coordinate the migration.
 Was this page helpful?
 Yes
 No
 Data usage
-Monitoring
 ⌘
 I
 Assistant

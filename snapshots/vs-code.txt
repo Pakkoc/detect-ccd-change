@@ -200,7 +200,9 @@ manually.
 Extended thinking
 : lets Claude spend more time reasoning through complex problems. Toggle it on via the command menu (
 /
-). See
+). Claude’s reasoning appears in the conversation as collapsed blocks: click a block to read it, or press
+Ctrl+O
+to expand or collapse every thinking block in the session. See
 Extended thinking
 for details.
 Multi-line input

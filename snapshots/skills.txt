@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Debug configuration
 Error reference
 On this page
 Bundled skills
@@ -380,12 +381,20 @@ Hint shown during autocomplete to indicate expected arguments. Example:
 or
 [filename] [format]
 .
+arguments
+No
+Named positional arguments for
+$name
+substitution
+in the skill content. Accepts a space-separated string or a YAML list. Names map to argument positions in order.
 disable-model-invocation
 No
 Set to
 true
 to prevent Claude from automatically loading this skill. Use for workflows you want to trigger manually with
 /name
+. Also prevents the skill from being
+preloaded into subagents
 . Default:
 false
 .
@@ -403,7 +412,11 @@ No
 Tools Claude can use without asking permission when this skill is active. Accepts a space-separated string or a YAML list.
 model
 No
-Model to use when this skill is active.
+Model to use when this skill is active. The override applies for the rest of the current turn and is not saved to settings; the session model resumes on your next prompt. Accepts the same values as
+/model
+, or
+inherit
+to keep the active model.
 effort
 No
 Effort level
@@ -476,6 +489,16 @@ $0
 for the first argument or
 $1
 for the second.
+$name
+Named argument declared in the
+arguments
+frontmatter list. Names map to positions in order, so with
+arguments: [issue, branch]
+the placeholder
+$issue
+expands to the first argument and
+$branch
+to the second.
 ${CLAUDE_SESSION_ID}
 The current session ID. Useful for logging, creating session-specific files, or correlating skill output with sessions.
 ${CLAUDE_SKILL_DIR}
@@ -1614,6 +1637,8 @@ when_to_use
 text at the source: front-load the key use case, since each entry’s combined text is capped at 1,536 characters regardless of budget.
 ​
 Related resources
+Debug your configuration
+: diagnose why a skill isn’t appearing or triggering
 Subagents
 : delegate tasks to specialized agents
 Plugins

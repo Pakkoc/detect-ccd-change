@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Configuration
+Interface
 Voice dictation
 Getting started
 Build with Claude Code
@@ -20,16 +20,18 @@ Reference
 Agent SDK
 What's New
 Resources
-Configuration
+Settings and permissions
 Settings
 Permissions
 Sandboxing
-Terminal configuration
-Fullscreen rendering
+Model and responses
 Model configuration
 Speed up responses with fast mode
-Voice dictation
 Output styles
+Interface
+Terminal configuration
+Fullscreen rendering
+Voice dictation
 Customize status line
 Customize keyboard shortcuts
 On this page
@@ -311,8 +313,8 @@ Commands
 Was this page helpful?
 Yes
 No
-Speed up responses with fast mode
-Output styles
+Fullscreen rendering
+Customize status line
 ⌘
 I
 Assistant

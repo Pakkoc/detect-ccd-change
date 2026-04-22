@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Configuration
+Model and responses
 Model configuration
 Getting started
 Build with Claude Code
@@ -20,16 +20,18 @@ Reference
 Agent SDK
 What's New
 Resources
-Configuration
+Settings and permissions
 Settings
 Permissions
 Sandboxing
-Terminal configuration
-Fullscreen rendering
+Model and responses
 Model configuration
 Speed up responses with fast mode
-Voice dictation
 Output styles
+Interface
+Terminal configuration
+Fullscreen rendering
+Voice dictation
 Customize status line
 Customize keyboard shortcuts
 On this page
@@ -779,7 +781,7 @@ setting takes precedence over the model-specific settings, allowing you to quick
 Was this page helpful?
 Yes
 No
-Fullscreen rendering
+Sandboxing
 Speed up responses with fast mode
 ⌘
 I

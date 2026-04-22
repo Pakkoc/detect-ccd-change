@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Debug configuration
 Error reference
 On this page
 Set up your first hook
@@ -878,6 +879,8 @@ SessionStart
 When a session begins or resumes
 UserPromptSubmit
 When you submit a prompt, before Claude processes it
+UserPromptExpansion
+When a user-typed command expands into a prompt, before it reaches Claude. Can block the expansion
 PreToolUse
 Before a tool call executes. Can block it
 PermissionRequest
@@ -1071,7 +1074,9 @@ The exit code determines what happens next:
 Exit 0
 : the action proceeds. For
 UserPromptSubmit
-and
+,
+UserPromptExpansion
+, and
 SessionStart
 hooks, anything you write to stdout is added to Claude’s context.
 Exit 2
@@ -1322,6 +1327,9 @@ literal filenames to watch (see
 FileChanged
 )
 .envrc|.env
+UserPromptExpansion
+command name
+your skill or command names
 UserPromptSubmit
 ,
 Stop

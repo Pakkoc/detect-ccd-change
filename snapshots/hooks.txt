@@ -64,6 +64,9 @@ InstructionsLoaded decision control
 UserPromptSubmit
 UserPromptSubmit input
 UserPromptSubmit decision control
+UserPromptExpansion
+UserPromptExpansion input
+UserPromptExpansion decision control
 PreToolUse
 PreToolUse input
 PreToolUse decision control
@@ -177,6 +180,8 @@ SessionStart
 When a session begins or resumes
 UserPromptSubmit
 When you submit a prompt, before Claude processes it
+UserPromptExpansion
+When a user-typed command expands into a prompt, before it reaches Claude. Can block the expansion
 PreToolUse
 Before a tool call executes. Can block it
 PermissionRequest
@@ -625,6 +630,9 @@ path_glob_match
 include
 ,
 compact
+UserPromptExpansion
+command name
+your skill or command names
 Elicitation
 MCP server name
 your configured MCP server names
@@ -1318,7 +1326,9 @@ means success. Claude Code parses stdout for
 JSON output fields
 . JSON output is only processed on exit 0. For most events, stdout is written to the debug log but not shown in the transcript. The exceptions are
 UserPromptSubmit
-and
+,
+UserPromptExpansion
+, and
 SessionStart
 , where stdout is added as context that Claude can see and act on.
 Exit 2
@@ -1387,6 +1397,9 @@ Denies the permission
 UserPromptSubmit
 Yes
 Blocks prompt processing and erases the prompt
+UserPromptExpansion
+Yes
+Blocks the expansion
 Stop
 Yes
 Prevents Claude from stopping, continues the conversation
@@ -1543,7 +1556,7 @@ Not every event supports blocking or controlling behavior through JSON. The even
 Events
 Decision pattern
 Key fields
-UserPromptSubmit, PostToolUse, PostToolUseFailure, Stop, SubagentStop, ConfigChange, PreCompact
+UserPromptSubmit, UserPromptExpansion, PostToolUse, PostToolUseFailure, Stop, SubagentStop, ConfigChange, PreCompact
 Top-level
 decision
 decision: "block"
@@ -1596,6 +1609,8 @@ PreToolUse
 PermissionRequest
 Used by
 UserPromptSubmit
+,
+UserPromptExpansion
 ,
 PostToolUse
 ,
@@ -2072,6 +2087,131 @@ Sets the session title, same effect as
 }
 The JSON format isn’t required for simple use cases. To add context, you can print plain text to stdout with exit code 0. Use JSON when you need to
 block prompts or want more structured control.
+​
+UserPromptExpansion
+Runs when a user-typed slash command expands into a prompt before reaching Claude. Use this to block specific commands from direct invocation, inject context for a particular skill, or log which commands users invoke. For example, a hook matching
+deploy
+can block
+/deploy
+unless an approval file is present, or a hook matching a review skill can append the team’s review checklist as
+additionalContext
+.
+This event covers the path
+PreToolUse
+does not: a
+PreToolUse
+hook matching the
+Skill
+tool fires only when Claude calls the tool, but typing
+/skillname
+directly bypasses
+PreToolUse
+.
+UserPromptExpansion
+fires on that direct path.
+Matches on
+command_name
+. Leave the matcher empty to fire on every prompt-type slash command.
+​
+UserPromptExpansion input
+In addition to the
+common input fields
+, UserPromptExpansion hooks receive
+expansion_type
+,
+command_name
+,
+command_args
+,
+command_source
+, and the original
+prompt
+string. The
+expansion_type
+field is
+slash_command
+for skill and custom commands, or
+mcp_prompt
+for MCP server prompts.
+{
+"session_id"
+:
+"abc123"
+,
+"transcript_path"
+:
+"/Users/.../00893aaf.jsonl"
+,
+"cwd"
+:
+"/Users/..."
+,
+"permission_mode"
+:
+"default"
+,
+"hook_event_name"
+:
+"UserPromptExpansion"
+,
+"expansion_type"
+:
+"slash_command"
+,
+"command_name"
+:
+"example-skill"
+,
+"command_args"
+:
+"arg1 arg2"
+,
+"command_source"
+:
+"plugin"
+,
+"prompt"
+:
+"/example-skill arg1 arg2"
+}
+​
+UserPromptExpansion decision control
+UserPromptExpansion
+hooks can block the expansion or add context. All
+JSON output fields
+are available.
+Field
+Description
+decision
+"block"
+prevents the slash command from expanding. Omit to allow it to proceed
+reason
+Shown to the user when
+decision
+is
+"block"
+additionalContext
+String added to Claude’s context alongside the expanded prompt
+{
+"decision"
+:
+"block"
+,
+"reason"
+:
+"This slash command is not available"
+,
+"hookSpecificOutput"
+: {
+"hookEventName"
+:
+"UserPromptExpansion"
+,
+"additionalContext"
+:
+"Additional context for this expansion"
+}
+}
 ​
 PreToolUse
 Runs after Claude creates tool parameters and before processing the tool call. Matches on tool name:
@@ -4000,9 +4140,7 @@ CwdChanged hooks have access to
 CLAUDE_ENV_FILE
 . Variables written to that file persist into subsequent Bash commands for the session, just as in
 SessionStart hooks
-. Only
-type: "command"
-hooks are supported.
+.
 CwdChanged does not support matchers and fires on every directory change.
 ​
 CwdChanged input
@@ -4078,9 +4216,7 @@ FileChanged hooks have access to
 CLAUDE_ENV_FILE
 . Variables written to that file persist into subsequent Bash commands for the session, just as in
 SessionStart hooks
-. Only
-type: "command"
-hooks are supported.
+.
 ​
 FileChanged input
 In addition to the
@@ -4766,6 +4902,7 @@ Stop
 SubagentStop
 TaskCompleted
 TaskCreated
+UserPromptExpansion
 UserPromptSubmit
 Events that support
 command
@@ -5344,7 +5481,13 @@ CLAUDE_CODE_DEBUG_LOG_LEVEL=verbose
 to see additional log lines such as hook matcher counts and query matching.
 For troubleshooting common issues like hooks not firing, infinite Stop hook loops, or configuration errors, see
 Limitations and troubleshooting
-in the guide.
+in the guide. For a broader diagnostic walkthrough covering
+/context
+,
+/doctor
+, and settings precedence, see
+Debug your config
+.
 Was this page helpful?
 Yes
 No

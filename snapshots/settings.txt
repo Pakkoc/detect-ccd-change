@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Configuration
+Settings and permissions
 Claude Code settings
 Getting started
 Build with Claude Code
@@ -20,16 +20,18 @@ Reference
 Agent SDK
 What's New
 Resources
-Configuration
+Settings and permissions
 Settings
 Permissions
 Sandboxing
-Terminal configuration
-Fullscreen rendering
+Model and responses
 Model configuration
 Speed up responses with fast mode
-Voice dictation
 Output styles
+Interface
+Terminal configuration
+Fullscreen rendering
+Voice dictation
 Customize status line
 Customize keyboard shortcuts
 On this page
@@ -192,7 +194,9 @@ MDM/OS-level policies
 : delivered through native device management on macOS and Windows:
 macOS:
 com.anthropic.claudecode
-managed preferences domain (deployed via configuration profiles in Jamf, Iru (Kandji), or other MDM tools)
+managed preferences domain. The plist’s top-level keys mirror
+managed-settings.json
+, with nested settings as dictionaries and arrays as plist arrays. Deploy via configuration profiles in Jamf, Iru (Kandji), or similar MDM tools.
 Windows:
 HKLM\SOFTWARE\Policies\ClaudeCode
 registry key with a
@@ -724,6 +728,15 @@ instead. Non-interactive mode (
 -p
 ) and SDK callers always receive summaries regardless of this setting
 true
+skipWebFetchPreflight
+Skip the
+WebFetch domain safety check
+that sends each requested hostname to
+api.anthropic.com
+before fetching. Set to
+true
+in environments that block traffic to Anthropic, such as Bedrock, Vertex AI, or Foundry deployments with restrictive egress. When skipped, WebFetch attempts any URL without consulting the blocklist
+true
 spinnerTipsEnabled
 Show tips in the spinner while Claude is working. Set to
 false
@@ -1034,7 +1047,7 @@ true
 failIfUnavailable
 Exit with an error at startup if
 sandbox.enabled
-is true but the sandbox cannot start (missing dependencies, unsupported platform, or platform restrictions). When false (default), a warning is shown and commands run unsandboxed. Intended for managed settings deployments that require sandboxing as a hard gate
+is true but the sandbox cannot start (missing dependencies or unsupported platform). When false (default), a warning is shown and commands run unsandboxed. Intended for managed settings deployments that require sandboxing as a hard gate
 true
 autoAllowBashIfSandboxed
 Auto-approve bash commands when sandboxed. Default: true
@@ -1476,6 +1489,8 @@ Enterprise managed settings (remote)
 Enterprise managed settings (plist)
 ,
 Enterprise managed settings (HKLM)
+,
+Enterprise managed settings (HKCU)
 , or
 Enterprise managed settings (file)
 . If a settings file contains errors,
@@ -2321,8 +2336,10 @@ Permissions
 : permission system, rule syntax, tool-specific patterns, and managed policies
 Authentication
 : set up user access to Claude Code
+Debug your configuration
+: diagnose why a setting, hook, or MCP server isn’t taking effect
 Troubleshooting
-: solutions for common configuration issues
+: installation, authentication, and platform issues
 Was this page helpful?
 Yes
 No

@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Administration
+Plugin distribution
 Create and distribute a plugin marketplace
 Getting started
 Build with Claude Code
@@ -20,18 +20,21 @@ Reference
 Agent SDK
 What's New
 Resources
-Administration
+Setup and access
 Advanced setup
 Authentication
-Security
 Server-managed settings
-Data usage
-Zero data retention
+Usage and costs
 Monitoring
 Costs
 Track team usage with analytics
+Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
 On this page
 Overview
 Walkthrough: create a local marketplace
@@ -39,7 +42,7 @@ Create the marketplace file
 Marketplace schema
 Required fields
 Owner fields
-Optional metadata
+Optional fields
 Plugin entries
 Required fields
 Optional plugin fields
@@ -364,7 +367,7 @@ string
 No
 Contact email for the maintainer
 ​
-Optional metadata
+Optional fields
 Field
 Type
 Description
@@ -383,6 +386,11 @@ lets you write
 instead of
 "source": "./plugins/formatter"
 )
+allowCrossMarketplaceDependenciesOn
+array
+Other marketplaces that plugins in this marketplace may depend on. Dependencies from a marketplace not listed here are blocked at install. See
+Depend on a plugin from another marketplace
+.
 ​
 Plugin entries
 Each plugin entry in the

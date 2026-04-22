@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Administration
+Usage and costs
 Manage costs effectively
 Getting started
 Build with Claude Code
@@ -20,18 +20,21 @@ Reference
 Agent SDK
 What's New
 Resources
-Administration
+Setup and access
 Advanced setup
 Authentication
-Security
 Server-managed settings
-Data usage
-Zero data retention
+Usage and costs
 Monitoring
 Costs
 Track team usage with analytics
+Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
 On this page
 Track your costs
 Using the /cost command

@@ -225,6 +225,7 @@ SDKToolProgressMessage
 SDKAuthStatusMessage
 SDKTaskStartedMessage
 SDKTaskProgressMessage
+SDKTaskUpdatedMessage
 SDKFilesPersistedEvent
 SDKRateLimitEvent
 SDKLocalCommandOutputMessage
@@ -1240,6 +1241,11 @@ sessionId
 string
 Auto-generated
 Use a specific UUID for the session instead of auto-generating one
+sessionStore
+SessionStore
+undefined
+Mirror session transcripts to an external backend so any host can resume them. See
+Persist sessions to external storage
 settingSources
 SettingSource
 []
@@ -1641,13 +1647,7 @@ string
 ;
 model
 ?:
-"sonnet"
-|
-"opus"
-|
-"haiku"
-|
-"inherit"
+string
 ;
 mcpServers
 ?:
@@ -1657,9 +1657,43 @@ skills
 ?:
 string
 [];
+initialPrompt
+?:
+string
+;
 maxTurns
 ?:
 number
+;
+background
+?:
+boolean
+;
+memory
+?:
+"user"
+|
+"project"
+|
+"local"
+;
+effort
+?:
+"low"
+|
+"medium"
+|
+"high"
+|
+"xhigh"
+|
+"max"
+|
+number
+;
+permissionMode
+?:
+PermissionMode
 ;
 criticalSystemReminder_EXPERIMENTAL
 ?:
@@ -1683,7 +1717,15 @@ Yes
 The agent’s system prompt
 model
 No
-Model override for this agent. If omitted or
+Model override for this agent. Accepts an alias such as
+'sonnet'
+,
+'opus'
+,
+'haiku'
+,
+'inherit'
+, or a full model ID. If omitted or
 'inherit'
 , uses the main model
 mcpServers
@@ -1692,9 +1734,30 @@ MCP server specifications for this agent
 skills
 No
 Array of skill names to preload into the agent context
+initialPrompt
+No
+Auto-submitted as the first user turn when this agent runs as the main thread agent
 maxTurns
 No
 Maximum number of agentic turns (API round-trips) before stopping
+background
+No
+Run this agent as a non-blocking background task when invoked
+memory
+No
+Memory source for this agent:
+'user'
+,
+'project'
+, or
+'local'
+effort
+No
+Reasoning effort level for this agent. Accepts a named level or an integer
+permissionMode
+No
+Permission mode for tool execution within this agent. See
+PermissionMode
 criticalSystemReminder_EXPERIMENTAL
 No
 Experimental: Critical reminder added to the system prompt
@@ -2312,6 +2375,8 @@ SDKTaskNotificationMessage
 SDKTaskStartedMessage
 |
 SDKTaskProgressMessage
+|
+SDKTaskUpdatedMessage
 |
 SDKFilesPersistedEvent
 |
@@ -6775,6 +6840,82 @@ last_tool_name
 ?:
 string
 ;
+uuid
+:
+UUID
+;
+session_id
+:
+string
+;
+};
+​
+SDKTaskUpdatedMessage
+Emitted when a background task’s state changes, such as when it transitions from
+running
+to
+completed
+. Merge
+patch
+into your local task map keyed by
+task_id
+. The
+end_time
+field is a Unix epoch timestamp in milliseconds, comparable with
+Date.now()
+.
+type
+SDKTaskUpdatedMessage
+=
+{
+type
+:
+"system"
+;
+subtype
+:
+"task_updated"
+;
+task_id
+:
+string
+;
+patch
+:
+{
+status
+?:
+"pending"
+|
+"running"
+|
+"completed"
+|
+"failed"
+|
+"killed"
+;
+description
+?:
+string
+;
+end_time
+?:
+number
+;
+total_paused_ms
+?:
+number
+;
+error
+?:
+string
+;
+is_backgrounded
+?:
+boolean
+;
+};
 uuid
 :
 UUID

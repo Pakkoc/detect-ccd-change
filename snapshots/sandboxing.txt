@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Configuration
+Settings and permissions
 Sandboxing
 Getting started
 Build with Claude Code
@@ -20,16 +20,18 @@ Reference
 Agent SDK
 What's New
 Resources
-Configuration
+Settings and permissions
 Settings
 Permissions
 Sandboxing
-Terminal configuration
-Fullscreen rendering
+Model and responses
 Model configuration
 Speed up responses with fast mode
-Voice dictation
 Output styles
+Interface
+Terminal configuration
+Fullscreen rendering
+Voice dictation
 Customize status line
 Customize keyboard shortcuts
 On this page
@@ -165,7 +167,7 @@ bubblewrap
 or
 socat
 on Linux), the menu displays installation instructions for your platform.
-By default, if the sandbox cannot start (missing dependencies, unsupported platform, or platform restrictions), Claude Code shows a warning and runs commands without sandboxing. To make this a hard failure instead, set
+By default, if the sandbox cannot start (missing dependencies or unsupported platform), Claude Code shows a warning and runs commands without sandboxing. To make this a hard failure instead, set
 sandbox.failIfUnavailable
 to
 true
@@ -174,7 +176,13 @@ true
 Sandbox modes
 Claude Code offers two sandbox modes:
 Auto-allow mode
-: Bash commands will attempt to run inside the sandbox and are automatically allowed without requiring permission. Commands that cannot be sandboxed (such as those needing network access to non-allowed hosts) fall back to the regular permission flow. Explicit deny rules are always respected. Ask rules apply only to commands that fall back to the regular permission flow.
+: Bash commands will attempt to run inside the sandbox and are automatically allowed without requiring permission. Commands that cannot be sandboxed (such as those needing network access to non-allowed hosts) fall back to the regular permission flow. Explicit deny rules are always respected, and
+rm
+or
+rmdir
+commands that target
+/
+, your home directory, or other critical system paths still trigger a permission prompt. Ask rules apply only to commands that fall back to the regular permission flow.
 Regular permissions mode
 : All bash commands go through the standard permission flow, even when sandboxed. This provides more control but requires more approvals.
 In both modes, the sandbox enforces the same filesystem and network restrictions. The difference is only in whether sandboxed commands are auto-approved or require explicit permission.
@@ -562,7 +570,7 @@ Was this page helpful?
 Yes
 No
 Permissions
-Terminal configuration
+Model configuration
 ⌘
 I
 Assistant

@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Debug configuration
 Error reference
 On this page
 How marketplaces work

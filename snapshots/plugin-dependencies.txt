@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Administration
+Plugin distribution
 Constrain plugin dependency versions
 Getting started
 Build with Claude Code
@@ -20,21 +20,25 @@ Reference
 Agent SDK
 What's New
 Resources
-Administration
+Setup and access
 Advanced setup
 Authentication
-Security
 Server-managed settings
-Data usage
-Zero data retention
+Usage and costs
 Monitoring
 Costs
 Track team usage with analytics
+Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
 On this page
 Why constrain dependency versions
 Declare a dependency with a version constraint
+Depend on a plugin from another marketplace
 Tag plugin releases for version resolution
 How constraints interact
 Resolve dependency errors
@@ -42,7 +46,9 @@ See also
 A plugin can depend on other plugins by listing them in
 plugin.json
 or in its marketplace entry. By default, a dependency tracks the latest available version, so an upstream release can change the dependency under your plugin without warning. Version constraints let you hold a dependency at a tested version range until you choose to move.
-When you install a plugin that declares dependencies, Claude Code resolves and installs them automatically and lists which dependencies were added at the end of the install output.
+When you install a plugin that declares dependencies, Claude Code resolves and installs them automatically and lists which dependencies were added at the end of the install output. If a dependency later goes missing,
+/reload-plugins
+and the background plugin auto-update install it automatically, provided its marketplace is already in your configured marketplaces. Dependencies from a marketplace you have not added are left unresolved.
 This guide is for plugin authors who declare dependencies in
 plugin.json
 and for marketplace maintainers who tag releases. To install plugins that have dependencies, see
@@ -140,7 +146,9 @@ marketplace
 string
 A different marketplace to resolve
 name
-in. Cross-marketplace dependencies are blocked unless the target marketplace is allowlisted in the root marketplace’s
+in. Cross-marketplace dependencies are blocked unless the target marketplace is listed in
+allowCrossMarketplaceDependenciesOn
+in the root marketplace’s
 marketplace.json
 .
 The
@@ -152,6 +160,66 @@ package, including caret, tilde, hyphen, and comparator ranges. Pre-release vers
 are excluded unless your range opts in with a pre-release suffix like
 ^2.0.0-0
 .
+​
+Depend on a plugin from another marketplace
+By default, Claude Code refuses to auto-install a dependency that lives in a different marketplace than the plugin declaring it. This prevents one marketplace from silently pulling in plugins from a source you have not reviewed.
+To allow it, the maintainer of the root marketplace adds the target marketplace name to
+allowCrossMarketplaceDependenciesOn
+in
+marketplace.json
+. The root marketplace is the one that hosts the plugin the user is installing; only its allowlist is consulted, so trust does not chain through intermediate marketplaces.
+The following
+marketplace.json
+allows
+deploy-kit
+to depend on a plugin from
+acme-shared
+:
+.claude-plugin/marketplace.json
+{
+"name"
+:
+"acme-tools"
+,
+"owner"
+: {
+"name"
+:
+"Acme"
+},
+"allowCrossMarketplaceDependenciesOn"
+: [
+"acme-shared"
+],
+"plugins"
+: [
+{
+"name"
+:
+"deploy-kit"
+,
+"source"
+:
+"./deploy-kit"
+,
+"dependencies"
+: [
+{
+"name"
+:
+"audit-logger"
+,
+"marketplace"
+:
+"acme-shared"
+}
+]
+}
+]
+}
+If the field is missing or does not include the target marketplace, install fails with a
+cross-marketplace
+error naming the field to set. Users can still install the dependency manually first, which satisfies the constraint without changing the allowlist.
 ​
 Tag plugin releases for version resolution
 Version constraints resolve against git tags on the marketplace repository. For Claude Code to find a dependency’s available versions, the upstream plugin’s releases must be tagged using a specific naming convention.
@@ -261,6 +329,7 @@ Was this page helpful?
 Yes
 No
 Create and distribute a plugin marketplace
+Security
 ⌘
 I
 Assistant

@@ -35,6 +35,7 @@ Run prompts on a schedule
 Programmatic usage
 Troubleshooting
 Troubleshooting
+Debug configuration
 Error reference
 On this page
 Find your error
@@ -754,7 +755,7 @@ on GitHub
 Was this page helpful?
 Yes
 No
-Troubleshooting
+Debug configuration
 ⌘
 I
 Assistant

@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Administration
+Setup and access
 Advanced setup
 Getting started
 Build with Claude Code
@@ -20,18 +20,21 @@ Reference
 Agent SDK
 What's New
 Resources
-Administration
+Setup and access
 Advanced setup
 Authentication
-Security
 Server-managed settings
-Data usage
-Zero data retention
+Usage and costs
 Monitoring
 Costs
 Track team usage with analytics
+Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
 On this page
 System requirements
 Additional dependencies
@@ -563,7 +566,7 @@ VERSION
 to the release you want to verify.
 REPO
 =
-https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases
+https://downloads.claude.ai/claude-code-releases
 VERSION
 =
 2.1.89

@@ -637,6 +637,8 @@ Write effective instructions
 for guidance on size, structure, and specificity.
 ​
 Related resources
+Debug your configuration
+: diagnose why CLAUDE.md or settings aren’t taking effect
 Skills
 : package repeatable workflows that load on demand
 Settings

@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Administration
+Security and data
 Security
 Getting started
 Build with Claude Code
@@ -20,18 +20,21 @@ Reference
 Agent SDK
 What's New
 Resources
-Administration
+Setup and access
 Advanced setup
 Authentication
-Security
 Server-managed settings
-Data usage
-Zero data retention
+Usage and costs
 Monitoring
 Costs
 Track team usage with analytics
+Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
 On this page
 How we approach security
 Security foundation
@@ -231,8 +234,8 @@ Anthropic Trust Center
 Was this page helpful?
 Yes
 No
-Authentication
-Server-managed settings
+Plugin dependency versions
+Data usage
 ⌘
 I
 Assistant

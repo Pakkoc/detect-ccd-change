@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Configuration
+Model and responses
 Output styles
 Getting started
 Build with Claude Code
@@ -20,16 +20,18 @@ Reference
 Agent SDK
 What's New
 Resources
-Configuration
+Settings and permissions
 Settings
 Permissions
 Sandboxing
-Terminal configuration
-Fullscreen rendering
+Model and responses
 Model configuration
 Speed up responses with fast mode
-Voice dictation
 Output styles
+Interface
+Terminal configuration
+Fullscreen rendering
+Voice dictation
 Customize status line
 Customize keyboard shortcuts
 On this page
@@ -182,8 +184,8 @@ or that Claude loads automatically when relevant. Use output styles for consiste
 Was this page helpful?
 Yes
 No
-Voice dictation
-Customize status line
+Speed up responses with fast mode
+Terminal configuration
 ⌘
 I
 Assistant
