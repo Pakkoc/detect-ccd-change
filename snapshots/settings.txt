@@ -407,7 +407,7 @@ allow
 , and
 soft_deny
 arrays of prose rules. See
-Configure the auto mode classifier
+Configure auto mode
 . Not read from shared project settings
 {"environment": ["Trusted repo: github.example.com/acme"]}
 autoUpdatesChannel
@@ -448,7 +448,7 @@ advanced credential configuration
 )
 /bin/generate_aws_grant.sh
 blockedMarketplaces
-(Managed settings only) Blocklist of marketplace sources. Blocked sources are checked before downloading, so they never touch the filesystem. See
+(Managed settings only) Blocklist of marketplace sources. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. Blocked sources are checked before downloading, so they never touch the filesystem. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "untrusted/plugins" }]
 channelsEnabled
@@ -787,7 +787,7 @@ statusLine
 documentation
 {"type": "command", "command": "~/.claude/statusline.sh"}
 strictKnownMarketplaces
-(Managed settings only) Allowlist of plugin marketplaces users can add. Undefined = no restrictions, empty array = lockdown. Applies to marketplace additions only. See
+(Managed settings only) Allowlist of plugin marketplace sources. Undefined = no restrictions, empty array = lockdown. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "acme-corp/plugins" }]
 tui
@@ -818,12 +818,28 @@ Default transcript view mode on startup:
 /focus
 selection when set
 "verbose"
-voiceEnabled
-Enable push-to-talk
-voice dictation
-. Written automatically when you run
+voice
+Voice dictation
+settings:
+enabled
+turns dictation on,
+mode
+selects
+"hold"
+or
+"tap"
+, and
+autoSubmit
+sends the prompt on key release in hold mode. Written automatically when you run
 /voice
 . Requires a Claude.ai account
+{ "enabled": true, "mode": "tap" }
+voiceEnabled
+Legacy alias for
+voice.enabled
+. Prefer the
+voice
+object
 true
 ​
 Global config settings
@@ -1752,7 +1768,7 @@ enabledPlugins
 ​
 strictKnownMarketplaces
 Managed settings only
-: Controls which plugin marketplaces users are allowed to add. This setting can only be configured in
+: Controls which plugin marketplaces users are allowed to add and install plugins from. This setting can only be configured in
 managed settings
 and provides administrators with strict control over marketplace sources.
 Managed settings file locations
@@ -2296,7 +2312,7 @@ Important notes
 :
 Restrictions are checked BEFORE any network requests or filesystem operations
 When blocked, users see clear error messages indicating the source is blocked by managed policy
-The restriction applies only to adding NEW marketplaces; previously installed marketplaces remain accessible
+The restriction is enforced on marketplace add and on plugin install, update, refresh, and auto-update. A marketplace added before the policy was set cannot be used to install or update plugins once its source no longer matches the allowlist
 Managed settings have the highest precedence and cannot be overridden
 See
 Managed marketplace restrictions

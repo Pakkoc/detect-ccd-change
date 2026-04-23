@@ -97,14 +97,28 @@ After you’ve signed in, run
 any time to reopen the wizard and change your credentials, project, region, or model pins.
 ​
 Region configuration
-Claude Code can be used with both Vertex AI
+Claude Code supports Vertex AI
 global
-and regional endpoints.
-Vertex AI may not support the Claude Code default models in all
-regions
-or on
+, multi-region, and regional endpoints. Set
+CLOUD_ML_REGION
+to
+global
+, a multi-region location such as
+eu
+or
+us
+, or a specific region such as
+us-east5
+. Claude Code selects the correct Vertex AI hostname for each form, including the
+aiplatform.eu.rep.googleapis.com
+and
+aiplatform.us.rep.googleapis.com
+hosts for multi-region locations.
+Vertex AI may not support the Claude Code default models on every endpoint type. Model availability varies across
+specific regions
+, multi-region locations, and
 global endpoints
-. You may need to switch to a supported region, use a regional endpoint, or specify a supported model.
+. You may need to switch to a supported location or specify a supported model.
 ​
 Set up manually
 To configure Vertex AI through environment variables instead of the wizard, for example in CI or a scripted enterprise rollout, follow the steps below.
@@ -286,7 +300,13 @@ Cloud Console
 If you encounter “model not found” 404 errors:
 Confirm model is Enabled in
 Model Garden
-Verify you have access to the specified region
+Verify the model is available in the location you specified. Some models are offered only on
+global
+or multi-region locations such as
+eu
+and
+us
+, not in specific regions
 If using
 CLOUD_ML_REGION=global
 , check that your models support global endpoints in
@@ -297,7 +317,7 @@ ANTHROPIC_MODEL
 or
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 , or
-Set a regional endpoint using
+Set a region or multi-region location using
 VERTEX_REGION_<MODEL_NAME>
 environment variables
 If you encounter 429 errors:

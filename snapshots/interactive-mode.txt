@@ -333,12 +333,14 @@ Voice input
 Shortcut
 Description
 Notes
-Hold
+Hold or tap
 Space
-Push-to-talk dictation
+Voice dictation
 Requires
 voice dictation
-to be enabled. Transcript inserts at cursor.
+to be enabled. Hold to record, or run
+/voice tap
+for tap-to-toggle.
 Rebindable
 ​
 Commands

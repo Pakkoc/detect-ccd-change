@@ -357,7 +357,7 @@ claude auto-mode defaults
 to see the full rule lists. If routine actions get blocked, an administrator can add trusted repos, buckets, and services via the
 autoMode.environment
 setting: see
-Configure the auto mode classifier
+Configure auto mode
 .
 ​
 Boundaries you state in conversation
@@ -512,7 +512,9 @@ Protected files:
 ​
 See also
 Permissions
-: allow, ask, and deny rules; auto mode classifier configuration; managed policies
+: allow, ask, and deny rules; managed policies
+Configure auto mode
+: tell the classifier which infrastructure your organization trusts
 Hooks
 : custom permission logic via
 PreToolUse

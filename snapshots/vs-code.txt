@@ -593,7 +593,11 @@ To add an MCP server, open the integrated terminal (
 Ctrl+`
 or
 Cmd+`
-) and run:
+) and run
+claude mcp add
+. The example below adds GitHub’s remote MCP server, which authenticates with a
+personal access token
+passed as a header:
 claude
 mcp
 add
@@ -601,6 +605,9 @@ add
 http
 github
 https://api.githubcopilot.com/mcp/
+\
+--header
+"Authorization: Bearer YOUR_GITHUB_PAT"
 Once configured, ask Claude to use the tools (e.g., “Review PR #456”).
 To manage MCP servers without leaving VS Code, type
 /mcp

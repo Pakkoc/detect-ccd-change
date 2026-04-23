@@ -24,6 +24,7 @@ Setup and access
 Advanced setup
 Authentication
 Server-managed settings
+Auto mode
 Usage and costs
 Monitoring
 Costs

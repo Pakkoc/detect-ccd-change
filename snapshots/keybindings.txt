@@ -606,7 +606,9 @@ Default
 Description
 voice:pushToTalk
 Space
-Hold to dictate a prompt
+Dictate a prompt. Hold or tap depending on
+/voice
+mode
 ​
 Scroll actions
 Actions available in the

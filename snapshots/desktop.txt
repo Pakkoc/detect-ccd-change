@@ -1219,7 +1219,7 @@ permissions
 .
 autoMode
 customize what the auto mode classifier trusts and blocks across your organization. See
-Configure the auto mode classifier
+Configure auto mode
 .
 sshConfigs
 pre-configure

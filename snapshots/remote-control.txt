@@ -63,7 +63,7 @@ Troubleshooting
 ”Remote credentials fetch failed”
 Choose the right approach
 Related resources
-Remote Control is available on all plans. On Team and Enterprise, it is off by default until an admin enables the Remote Control toggle in
+Remote Control is in research preview and available on all plans. On Team and Enterprise, it is off by default until an admin enables the Remote Control toggle in
 Claude Code admin settings
 .
 Remote Control connects

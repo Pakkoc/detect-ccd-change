@@ -189,22 +189,39 @@ CLAUDE_CODE_CLIENT_KEY_PASSPHRASE
 "your-passphrase"
 ​
 Network access requirements
-Claude Code requires access to the following URLs:
+Claude Code requires access to the following URLs. Allowlist these in your proxy configuration and firewall rules, especially in containerized or restricted network environments.
+URL
+Required for
 api.anthropic.com
-: Claude API endpoints
+Claude API requests
 claude.ai
-: authentication for claude.ai accounts
+claude.ai account authentication
 platform.claude.com
-: authentication for Anthropic Console accounts
-Ensure these URLs are allowlisted in your proxy configuration and firewall rules. This is especially important when using Claude Code in containerized or restricted network environments.
+Anthropic Console account authentication
+downloads.claude.ai
+Plugin executable downloads; native installer and native auto-updater
+storage.googleapis.com
+Native installer and native auto-updater on versions prior to 2.1.116
+bridge.claudeusercontent.com
+Claude in Chrome
+extension WebSocket bridge
+If you install Claude Code through npm or manage your own binary distribution, end users may not need access to
+downloads.claude.ai
+or
+storage.googleapis.com
+.
 When using
-Bedrock
+Amazon Bedrock
 ,
-Vertex AI
+Google Vertex AI
 , or
-Foundry
-, model traffic goes to your provider instead of
+Microsoft Foundry
+, model traffic and authentication go to your provider instead of
 api.anthropic.com
+,
+claude.ai
+, or
+platform.claude.com
 . The WebFetch tool still calls
 api.anthropic.com
 for its
@@ -214,18 +231,6 @@ skipWebFetchPreflight: true
 in
 settings
 .
-The native installer and update checks also require the following URLs. Allowlist both, since clients running older Claude Code versions fetch from
-storage.googleapis.com
-. If you install Claude Code through npm or manage your own binary distribution, end users may not need access:
-downloads.claude.ai
-: download host for the Claude Code binary, auto-updater, version pointers, manifests, install script, signing keys, and plugin executables
-storage.googleapis.com
-: legacy download host used by older clients
-The
-Chrome integration
-connects to the browser extension over a WebSocket bridge. If you use Claude in Chrome, allowlist
-bridge.claudeusercontent.com
-for outbound WebSocket connections.
 Claude Code on the web
 and
 Code Review

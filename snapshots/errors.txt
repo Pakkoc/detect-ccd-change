@@ -502,8 +502,9 @@ Disable MCP servers you are not using with
 to remove their tool definitions from context
 Trim large
 CLAUDE.md
-memory files or split them into
-imports
+memory files, or move instructions into
+path-scoped rules
+that load only when relevant
 Subagents inherit every MCP tool definition from the parent session, which can fill their context window before the first turn. Disable MCP servers you are not using before spawning subagents.
 Auto-compact is on by default and normally prevents this error. If you have set
 DISABLE_AUTO_COMPACT
@@ -695,7 +696,7 @@ environment variable may have you on a smaller model than you intended.
 Effort level
 : run
 /effort
-to check the current reasoning level and raise it for hard debugging or design work. Defaults vary by model and plan, so check before assuming you are below the maximum. See
+to check the current reasoning level and raise it for hard debugging or design work. Defaults vary by model, so check before assuming you are below the maximum. See
 Adjust effort level
 for per-model defaults and the
 ultrathink

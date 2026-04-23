@@ -2698,7 +2698,9 @@ false
 }] }
 }
 }
-There is no timeout or retry limit. The session remains on disk until you resume it. If the answer is not ready when you resume, the hook can return
+There is no timeout or retry limit. The session remains on disk until you resume it, subject to the
+cleanupPeriodDays
+retention sweep that deletes session files after 30 days by default. If the answer is not ready when you resume, the hook can return
 "defer"
 again and the process exits the same way. The calling process controls when to break the loop by eventually returning
 "allow"

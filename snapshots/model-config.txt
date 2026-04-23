@@ -143,6 +143,16 @@ Settings
 - Configure permanently in your settings file using the
 model
 field.
+Your
+/model
+selection is saved to user settings and persists across restarts. As of v2.1.117, if the project’s
+.claude/settings.json
+pins a different model, Claude Code also writes your choice to
+.claude/settings.local.json
+so it continues to apply in that project after a restart. Managed settings take precedence and reapply on the next launch.
+When the active model at startup comes from project or managed settings rather than your own selection, the startup header shows which settings file set it. Run
+/model
+to override for the current session.
 Example usage:
 # Start with Opus
 claude
@@ -344,13 +354,11 @@ xhigh
 runs as
 high
 on Opus 4.6.
-On Opus 4.7, the default effort is
+As of v2.1.117, the default effort is
 xhigh
-for all plans and providers. On Opus 4.6 and Sonnet 4.6, the default is
+on Opus 4.7 and
 high
-, or
-medium
-on Pro and Max.
+on Opus 4.6 and Sonnet 4.6.
 When you first run Opus 4.7, Claude Code applies
 xhigh
 even if you previously set a different effort level for Opus 4.6 or Sonnet 4.6. Run

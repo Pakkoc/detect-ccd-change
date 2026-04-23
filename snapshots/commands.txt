@@ -417,10 +417,10 @@ Show plan usage limits and rate limit status
 Removed in v2.1.92. To toggle between Vim and Normal editing modes, use
 /config
 → Editor mode
-/voice
-Toggle push-to-talk
+/voice [hold|tap|off]
+Toggle
 voice dictation
-. Requires a Claude.ai account
+, or enable it in a specific mode. Requires a Claude.ai account
 /web-setup
 Connect your GitHub account to
 Claude Code on the web

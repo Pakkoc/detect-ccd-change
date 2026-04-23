@@ -24,6 +24,7 @@ Setup and access
 Advanced setup
 Authentication
 Server-managed settings
+Auto mode
 Usage and costs
 Monitoring
 Costs
@@ -273,7 +274,9 @@ Enable logging of user prompt content (default: disabled)
 1
 to enable
 OTEL_LOG_TOOL_DETAILS
-Enable logging of tool parameters and input arguments in tool events and trace span attributes: Bash commands, MCP server and tool names, skill names, and tool input (default: disabled)
+Enable logging of tool parameters and input arguments in tool events and trace span attributes: Bash commands, MCP server and tool names, skill names, and tool input. Also enables custom, plugin, and MCP command names on
+user_prompt
+events (default: disabled)
 1
 to enable
 OTEL_LOG_TOOL_CONTENT
@@ -1027,6 +1030,20 @@ speed
 :
 "fast"
 when the request used fast mode. Absent otherwise
+effort
+:
+Effort level
+applied to the request:
+"low"
+,
+"medium"
+,
+"high"
+,
+"xhigh"
+, or
+"max"
+. Absent when the model does not support effort.
 ​
 Token counter
 Incremented after each API request.
@@ -1057,6 +1074,12 @@ speed
 :
 "fast"
 when the request used fast mode. Absent otherwise
+effort
+:
+Effort level
+applied to the request. See
+Cost counter
+for details.
 ​
 Code edit tool decision counter
 Incremented when user accepts or rejects Edit, Write, or NotebookEdit tool usage.
@@ -1158,6 +1181,29 @@ prompt
 : Prompt content (redacted by default, enable with
 OTEL_LOG_USER_PROMPTS=1
 )
+command_name
+: Command name when the prompt invokes one. Built-in and bundled command names such as
+compact
+or
+debug
+are emitted as-is; aliases such as
+reset
+emit as typed rather than the canonical name. Custom, plugin, and MCP command names collapse to
+custom
+or
+mcp
+unless
+OTEL_LOG_TOOL_DETAILS=1
+is set
+command_source
+: Origin of the command when present:
+builtin
+,
+custom
+, or
+mcp
+. Plugin-provided commands report as
+custom
 ​
 Tool result event
 Logged when a tool completes execution.
@@ -1295,6 +1341,20 @@ query_source
 ,
 "compact"
 , or a subagent name
+effort
+:
+Effort level
+applied to the request:
+"low"
+,
+"medium"
+,
+"high"
+,
+"xhigh"
+, or
+"max"
+. Absent when the model does not support effort.
 ​
 API error event
 Logged when an API request to Claude fails.
@@ -1344,6 +1404,10 @@ query_source
 ,
 "compact"
 , or a subagent name
+effort
+:
+Effort level
+applied to the request. Absent when the model does not support effort.
 ​
 API request body event
 Logged for each API request attempt when
@@ -2022,7 +2086,11 @@ events include a
 tool_parameters
 attribute with Bash commands, MCP server and tool names, and skill names, plus a
 tool_input
-attribute with file paths, URLs, search patterns, and other arguments. Trace spans include the same
+attribute with file paths, URLs, search patterns, and other arguments.
+user_prompt
+events include the verbatim
+command_name
+for custom, plugin, and MCP commands. Trace spans include the same
 tool_input
 attribute and input-derived attributes such as
 file_path
@@ -2059,7 +2127,7 @@ Claude Code Monitoring Implementation (Bedrock)
 Was this page helpful?
 Yes
 No
-Server-managed settings
+Auto mode
 Costs
 ⌘
 I
