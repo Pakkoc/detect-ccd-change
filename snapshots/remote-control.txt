@@ -354,7 +354,7 @@ Some commands are local-only
 ,
 /context
 ,
-/cost
+/usage
 ,
 /exit
 ,

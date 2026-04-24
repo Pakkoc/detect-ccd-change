@@ -21,6 +21,7 @@ Agent SDK
 What's New
 Resources
 Setup and access
+Administration overview
 Advanced setup
 Authentication
 Server-managed settings
@@ -38,7 +39,7 @@ Data usage
 Zero data retention
 On this page
 Track your costs
-Using the /cost command
+Using the /usage command
 Managing costs for teams
 Rate limit recommendations
 Agent team token costs
@@ -71,17 +72,13 @@ reduce token usage
 Track your costs
 ​
 Using the
-/cost
+/usage
 command
+The Session block in
+/usage
+shows API token usage and is intended for API users. Claude Max and Pro subscribers have usage included in their subscription, so the session cost figure isn’t relevant for billing purposes. Subscribers see plan usage bars and activity stats on the same screen.
 The
-/cost
-command shows API token usage and is intended for API users. Claude Max and Pro subscribers have usage included in their subscription, so
-/cost
-data isn’t relevant for billing purposes. Subscribers can use
-/stats
-to view usage patterns.
-The
-/cost
+/usage
 command provides detailed token usage statistics for your current session. The dollar figure is an estimate computed locally from token counts and may differ from your actual bill. For authoritative billing, see the Usage page in the
 Claude Console
 .
@@ -155,7 +152,7 @@ The following strategies help you keep context small and reduce per-message cost
 ​
 Manage context proactively
 Use
-/cost
+/usage
 to check your current token usage, or
 configure your status line
 to display it continuously.
@@ -388,7 +385,7 @@ claude --resume
 feature
 Command processing
 : Some commands like
-/cost
+/usage
 may generate requests to check status
 These background processes consume a small amount of tokens (typically under $0.04 per session) even without active interaction.
 ​

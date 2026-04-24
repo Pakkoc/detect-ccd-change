@@ -893,6 +893,8 @@ PostToolUse
 After a tool call succeeds
 PostToolUseFailure
 After a tool call fails
+PostToolBatch
+After a full batch of parallel tool calls resolves, before the next model call
 Notification
 When Claude Code sends a notification
 SubagentStart
@@ -959,10 +961,14 @@ Each hook has a
 type
 that determines how it runs. Most hooks use
 "type": "command"
-, which runs a shell command. Three other types are available:
+, which runs a shell command. Four other types are available:
 "type": "http"
 : POST event data to a URL. See
 HTTP hooks
+.
+"type": "mcp_tool"
+: call a tool on an already-connected MCP server. See
+MCP tool hooks
 .
 "type": "prompt"
 : single-turn LLM evaluation. See
@@ -1332,6 +1338,8 @@ command name
 your skill or command names
 UserPromptSubmit
 ,
+PostToolBatch
+,
 Stop
 ,
 TeammateIdle
@@ -1549,8 +1557,10 @@ PreToolUse
 PostToolUse
 ,
 PostToolUseFailure
-, and
+,
 PermissionRequest
+, and
+PermissionDenied
 . Adding it to any other event prevents the hook from running.
 ​
 Configure hook location

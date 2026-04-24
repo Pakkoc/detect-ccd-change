@@ -170,8 +170,8 @@ Unique identifier and skill namespace. Skills are prefixed with this (e.g.,
 description
 Shown in the plugin manager when browsing or installing plugins.
 version
-Track releases using
-semantic versioning
+Optional. If set, users only receive updates when you bump this field. If omitted and your plugin is distributed via git, the commit SHA is used and every commit counts as a new version. See
+version management
 .
 author
 Optional. Helpful for attribution.
@@ -527,11 +527,11 @@ Add documentation
 : Include a
 README.md
 with installation and usage instructions
-Version your plugin
-: Use
-semantic versioning
-in your
-plugin.json
+Choose a versioning strategy
+: Decide whether to set an explicit
+version
+or rely on the git commit SHA. See
+version management
 Create or use a marketplace
 : Distribute through
 plugin marketplaces

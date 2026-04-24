@@ -527,6 +527,8 @@ Sharing hooks between CLI and SDK sessions. Supports
 (shell scripts),
 "http"
 (POST to an endpoint),
+"mcp_tool"
+(call a connected MCP server’s tool),
 "prompt"
 (LLM evaluates a prompt), and
 "agent"

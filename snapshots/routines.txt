@@ -58,6 +58,7 @@ Create from the CLI
 Create from the Desktop app
 Configure triggers
 Add a schedule trigger
+Schedule a one-off run
 Add an API trigger
 Trigger a routine
 API reference
@@ -79,7 +80,7 @@ connectors
 , packaged once and run automatically. Routines execute on Anthropic-managed cloud infrastructure, so they keep working when your laptop is closed.
 Each routine can have one or more triggers attached to it:
 Scheduled
-: run on a recurring cadence like hourly, nightly, or weekly
+: run on a recurring cadence like hourly, nightly, or weekly, or once at a specific future time
 API
 : trigger on demand by sending an HTTP POST to a per-routine endpoint with a bearer token
 GitHub
@@ -179,9 +180,9 @@ Select a trigger
 Schedule
 GitHub event
 API
-Pick a preset frequency: hourly, daily, weekdays, or weekly. See
+Pick a preset frequency for a recurring run, or schedule a single one-off run at a specific timestamp. See
 Add a schedule trigger
-for timezone handling, stagger, and custom cron intervals.
+for timezone handling, stagger, custom cron intervals, and one-off runs.
 Select the repository, the event to react to, and optional filters. See
 Add a GitHub trigger
 for the full list of supported events and filter fields.
@@ -207,8 +208,10 @@ Each run creates a new session alongside your other sessions, where you can see 
 Create from the CLI
 Run
 /schedule
-in any session to create a scheduled routine conversationally. You can also pass a description directly, as in
+in any session to create a scheduled routine conversationally. You can also pass a description directly, for a recurring routine like
 /schedule daily PR review at 9am
+or a one-off like
+/schedule clean up feature flag in one week
 . Claude walks through the same information the web form collects, then saves the routine to your account.
 /schedule
 in the CLI creates scheduled routines only. To add an API or GitHub trigger, edit the routine on the web at
@@ -239,13 +242,25 @@ Select a trigger
 section of the routine’s edit form.
 ​
 Add a schedule trigger
-A schedule trigger runs the routine on a recurring cadence. Pick a preset frequency in the
+A schedule trigger runs the routine on a recurring cadence, or once at a specific future time. Pick a preset frequency in the
 Select a trigger
 section: hourly, daily, weekdays, or weekly. Times are entered in your local zone and converted automatically, so the routine runs at that wall-clock time regardless of where the cloud infrastructure is located.
 Runs may start a few minutes after the scheduled time due to stagger. The offset is consistent for each routine.
 For a custom interval such as every two hours or the first of each month, pick the closest preset in the form, then run
 /schedule update
 in the CLI to set a specific cron expression. The minimum interval is one hour; expressions that run more frequently are rejected.
+​
+Schedule a one-off run
+A one-off schedule fires the routine a single time at a specific timestamp. Use it to remind yourself later in the week, to open a cleanup PR after a rollout finishes, or to kick off a follow-up task when an upstream change lands. After the routine fires, it auto-disables and the web UI marks it as
+Ran
+. To run it again, edit the routine and set a new one-off time.
+Create a one-off run from the CLI by describing the time in natural language. Claude resolves the phrase against the current time and confirms the absolute timestamp before saving.
+/schedule tomorrow at 9am, summarize yesterday's merged PRs
+/schedule in 2 weeks, open a cleanup PR that removes the feature flag
+The same local-to-UTC conversion as recurring schedules applies to one-off timestamps.
+One-off runs do not count against the daily routine run cap. They consume your plan’s regular subscription usage like any other session. See
+Usage and limits
+for details.
 ​
 Add an API trigger
 An API trigger gives a routine a dedicated HTTP endpoint. POSTing to the endpoint with the routine’s bearer token starts a new session and returns a session URL. Use this to wire Claude Code into alerting systems, deploy pipelines, internal tools, or anywhere you can make an authenticated HTTP request.
@@ -500,6 +515,7 @@ claude.ai/settings/usage
 When a routine hits the daily cap or your subscription usage limit, organizations with extra usage enabled can keep running routines on metered overage. Without extra usage, additional runs are rejected until the window resets. Enable extra usage from
 Settings > Billing
 on claude.ai.
+One-off runs do not count against the daily routine cap. They draw down your regular subscription usage like any other session, but they are exempt from the per-account daily routine run allowance.
 ​
 Related resources
 /loop

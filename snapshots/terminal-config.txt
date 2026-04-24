@@ -41,6 +41,7 @@ Get a terminal bell or notification
 Play a sound with a Notification hook
 Configure tmux
 Match the color theme
+Create a custom theme
 Switch to fullscreen rendering
 Paste large content
 Edit prompts with Vim keybindings
@@ -184,10 +185,102 @@ Use the
 /theme
 command, or the theme picker in
 /config
-, to choose a Claude Code theme that matches your terminal. Selecting the auto option detects your terminal’s light or dark background, so the theme follows OS appearance changes whenever your terminal does. The available themes are built in; there is no custom theme file. Claude Code does not control the terminal’s own color scheme, which is set by the terminal application.
+, to choose a Claude Code theme that matches your terminal. Selecting the auto option detects your terminal’s light or dark background, so the theme follows OS appearance changes whenever your terminal does. Claude Code does not control the terminal’s own color scheme, which is set by the terminal application.
 To customize what appears at the bottom of the interface, configure a
 custom status line
 that shows the current model, working directory, git branch, or other context.
+​
+Create a custom theme
+Custom themes require Claude Code v2.1.118 or later.
+In addition to the built-in presets,
+/theme
+lists any custom themes you have defined and any themes contributed by installed
+plugins
+. Select
+New custom theme…
+at the end of the list to create one interactively: you name the theme, then pick individual color tokens to override. Press
+Ctrl+E
+while a custom theme is highlighted to edit it.
+Each custom theme is a JSON file in
+~/.claude/themes/
+. The filename without the
+.json
+extension is the theme’s slug, and selecting the theme stores
+custom:<slug>
+as your theme preference. The file has three optional fields:
+Field
+Type
+Description
+name
+string
+Display label shown in
+/theme
+. Defaults to the filename slug
+base
+string
+Built-in preset the theme starts from:
+dark
+,
+light
+,
+dark-daltonized
+,
+light-daltonized
+,
+dark-ansi
+, or
+light-ansi
+. Defaults to
+dark
+overrides
+object
+Map of color token names to color values. Tokens not listed here fall through to the base preset
+Color values accept
+#rrggbb
+,
+#rgb
+,
+rgb(r,g,b)
+,
+ansi256(n)
+, or
+ansi:<name>
+where
+<name>
+is one of the 16 standard ANSI color names such as
+red
+or
+cyanBright
+. Unknown tokens and invalid color values are ignored, so a typo cannot break rendering.
+The following example defines a theme that keeps the dark preset but recolors the prompt accent, error text, and success text:
+~/.claude/themes/dracula.json
+{
+"name"
+:
+"Dracula"
+,
+"base"
+:
+"dark"
+,
+"overrides"
+: {
+"claude"
+:
+"#bd93f9"
+,
+"error"
+:
+"#ff5555"
+,
+"success"
+:
+"#50fa7b"
+}
+}
+Claude Code watches
+~/.claude/themes/
+and reloads when a file changes, so edits made in your editor apply to a running session without a restart.
 ​
 Switch to fullscreen rendering
 If the display flickers or the scroll position jumps while Claude is working, switch to
@@ -226,9 +319,13 @@ in
 . Set Editor mode back to
 normal
 to turn it off.
-Vim mode supports a subset of NORMAL-mode motions and operators, such as
+Vim mode supports a subset of NORMAL- and VISUAL-mode motions and operators, such as
 hjkl
-navigation and
+navigation,
+v
+/
+V
+selection, and
 d
 /
 c

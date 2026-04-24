@@ -248,6 +248,10 @@ keybindings.json
 Global only
 Custom keyboard shortcuts
 Keybindings
+themes/*.json
+Global only
+Custom color themes
+Custom themes
 ​
 Troubleshoot configuration
 If a setting, hook, or file isn’t taking effect, see
@@ -305,7 +309,7 @@ history.jsonl
 Every prompt you’ve typed, with timestamp and project path. Used for up-arrow recall.
 stats-cache.json
 Aggregated token and cost counts shown by
-/cost
+/usage
 todos/
 Legacy per-session task lists. No longer written by current versions; safe to delete.
 Other small cache and lock files appear depending on which features you use and are safe to delete.
@@ -344,7 +348,7 @@ Up-arrow prompt recall
 Checkpoint restore for past sessions
 ~/.claude/stats-cache.json
 Historical totals shown by
-/cost
+/usage
 ~/.claude/debug/
 ,
 ~/.claude/plans/

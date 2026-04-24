@@ -243,13 +243,13 @@ chat:cycleMode
 Shift+Tab*
 Cycle permission modes
 chat:modelPicker
-Cmd+P / Meta+P
+Meta+P
 Open model picker
 chat:fastMode
 Meta+O
 Toggle fast mode
 chat:thinkingToggle
-Cmd+T / Meta+T
+Meta+T
 Toggle extended thinking
 chat:submit
 Enter
@@ -688,24 +688,37 @@ ctrl
 or
 control
 - Control key
+shift
+- Shift key
 alt
 ,
 opt
-, or
-option
-- Alt/Option key
-shift
-- Shift key
-meta
 ,
-cmd
+option
 , or
+meta
+- Alt key on Windows and Linux, Option key on macOS
+cmd
+,
 command
-- Meta/Command key
+,
+super
+, or
+win
+- Command key on macOS, Windows key on Windows, Super key on Linux
+The
+cmd
+group is only detected in terminals that report the Super modifier, such as those supporting the Kitty keyboard protocol or xterm’s
+modifyOtherKeys
+mode. Most terminals do not send it, so use
+ctrl
+or
+meta
+for bindings you want to work everywhere.
 For example:
-ctrl+k          Single key with modifier
+ctrl+k          Ctrl + K
 shift+tab       Shift + Tab
-meta+p          Command/Meta + P
+meta+p          Option + P on macOS, Alt + P elsewhere
 ctrl+shift+c    Multiple modifiers
 ​
 Uppercase letters

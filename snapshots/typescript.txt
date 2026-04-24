@@ -130,6 +130,7 @@ BaseHookInput
 PreToolUseHookInput
 PostToolUseHookInput
 PostToolUseFailureHookInput
+PostToolBatchHookInput
 NotificationHookInput
 UserPromptSubmitHookInput
 SessionStartHookInput
@@ -168,7 +169,6 @@ TodoWrite
 ExitPlanMode
 ListMcpResources
 ReadMcpResource
-Config
 EnterWorktree
 Tool Output Types
 ToolOutputSchemas
@@ -189,7 +189,6 @@ TodoWrite
 ExitPlanMode
 ListMcpResources
 ReadMcpResource
-Config
 EnterWorktree
 Permission Types
 PermissionUpdate
@@ -1120,7 +1119,9 @@ File checkpointing
 env
 Record<string, string | undefined>
 process.env
-Environment variables. Set
+Environment variables. See
+Environment variables
+for variables the underlying CLI reads. Set
 CLAUDE_AGENT_SDK_CLIENT_APP
 to identify your app in the User-Agent header
 executable
@@ -2989,6 +2990,8 @@ HookEvent
 |
 "PostToolUseFailure"
 |
+"PostToolBatch"
+|
 "Notification"
 |
 "UserPromptSubmit"
@@ -3082,6 +3085,8 @@ PreToolUseHookInput
 PostToolUseHookInput
 |
 PostToolUseFailureHookInput
+|
+PostToolBatchHookInput
 |
 NotificationHookInput
 |
@@ -3230,6 +3235,53 @@ string
 is_interrupt
 ?:
 boolean
+;
+};
+​
+PostToolBatchHookInput
+Fires once after every tool call in a batch has resolved, before the next model request.
+tool_response
+carries the serialized
+tool_result
+content the model sees; the shape differs from
+PostToolUseHookInput
+’s structured
+Output
+object.
+type
+PostToolBatchHookInput
+=
+BaseHookInput
+&
+{
+hook_event_name
+:
+"PostToolBatch"
+;
+tool_calls
+:
+PostToolBatchToolCall
+[];
+};
+type
+PostToolBatchToolCall
+=
+{
+tool_name
+:
+string
+;
+tool_input
+:
+unknown
+;
+tool_use_id
+:
+string
+;
+tool_response
+?:
+unknown
 ;
 };
 ​
@@ -3751,6 +3803,17 @@ string
 {
 hookEventName
 :
+"PostToolBatch"
+;
+additionalContext
+?:
+string
+;
+}
+|
+{
+hookEventName
+:
 "Notification"
 ;
 additionalContext
@@ -3823,8 +3886,6 @@ AskUserQuestionInput
 BashInput
 |
 TaskOutputInput
-|
-ConfigInput
 |
 EnterWorktreeInput
 |
@@ -4406,28 +4467,6 @@ string
 };
 Reads a specific MCP resource from a server.
 ​
-Config
-Tool name:
-Config
-type
-ConfigInput
-=
-{
-setting
-:
-string
-;
-value
-?:
-string
-|
-boolean
-|
-number
-;
-};
-Gets or sets a configuration value.
-​
 EnterWorktree
 Tool name:
 EnterWorktree
@@ -4468,8 +4507,6 @@ AgentOutput
 AskUserQuestionOutput
 |
 BashOutput
-|
-ConfigOutput
 |
 EnterWorktreeOutput
 |
@@ -5507,46 +5544,6 @@ string
 }>;
 };
 Returns the contents of the requested MCP resource.
-​
-Config
-Tool name:
-Config
-type
-ConfigOutput
-=
-{
-success
-:
-boolean
-;
-operation
-?:
-"get"
-|
-"set"
-;
-setting
-?:
-string
-;
-value
-?:
-unknown
-;
-previousValue
-?:
-unknown
-;
-newValue
-?:
-unknown
-;
-error
-?:
-string
-;
-};
-Returns the result of a configuration get or set operation.
 ​
 EnterWorktree
 Tool name:
@@ -7060,7 +7057,7 @@ SDKLocalCommandOutputMessage
 Output from a local slash command (for example,
 /voice
 or
-/cost
+/usage
 ). Displayed as assistant-style text in the transcript.
 type
 SDKLocalCommandOutputMessage

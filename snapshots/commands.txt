@@ -61,7 +61,10 @@ Add a working directory for file access during the current session. Most
 .claude/
 configuration is
 not discovered
-from the added directory
+from the added directory. You can later resume the session from the added directory with
+--continue
+or
+--resume
 /agents
 Manage
 agent
@@ -89,6 +92,13 @@ Create a branch of the current conversation at this point. Switches you into the
 /resume
 . Alias:
 /fork
+. When
+CLAUDE_CODE_FORK_SUBAGENT
+is set,
+/fork
+instead spawns a
+forked subagent
+and is no longer an alias for this command
 /btw <question>
 Ask a quick
 side question
@@ -132,7 +142,9 @@ pink
 cyan
 . Use
 default
-to reset
+to reset. When
+Remote Control
+is connected, the color syncs to claude.ai/code
 /compact [instructions]
 Free up context by summarizing the conversation so far. Optionally pass focus instructions for the summary. See
 how compaction handles rules, skills, and memory files
@@ -154,9 +166,8 @@ copies the second-to-last. When code blocks are present, shows an interactive pi
 w
 in the picker to write the selection to a file instead of the clipboard, which is useful over SSH
 /cost
-Show token usage statistics. See
-cost tracking guide
-for subscription-specific details
+Alias for
+/usage
 /debug [description]
 Skill
 .
@@ -368,7 +379,9 @@ skills
 t
 to sort by token count
 /stats
-Visualize daily usage, session history, streaks, and model preferences
+Alias for
+/usage
+. Opens on the Stats tab
 /status
 Open the Settings interface (Status tab) showing version, model, account, and connectivity. Works while Claude is responding, without waiting for the current response to finish
 /statusline
@@ -393,7 +406,13 @@ Configure terminal keybindings for Shift+Enter and other shortcuts. Only visible
 /theme
 Change the color theme. Includes an
 auto
-option that matches your terminal’s light or dark background, light and dark variants, colorblind-accessible (daltonized) themes, and ANSI themes that use your terminal’s color palette
+option that matches your terminal’s light or dark background, light and dark variants, colorblind-accessible (daltonized) themes, ANSI themes that use your terminal’s color palette, and any
+custom themes
+from
+~/.claude/themes/
+or plugins. Select
+New custom theme…
+to create one
 /tui [default|fullscreen]
 Set the terminal UI renderer and relaunch into it with your conversation intact.
 fullscreen
@@ -412,7 +431,13 @@ extra usage
 /upgrade
 Open the upgrade page to switch to a higher plan tier
 /usage
-Show plan usage limits and rate limit status
+Show session cost, plan usage limits, and activity stats. See the
+cost tracking guide
+for subscription-specific details.
+/cost
+and
+/stats
+are aliases
 /vim
 Removed in v2.1.92. To toggle between Vim and Normal editing modes, use
 /config

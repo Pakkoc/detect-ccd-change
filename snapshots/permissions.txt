@@ -837,6 +837,15 @@ allow rules from managed settings are respected. Non-allowed domains are blocked
 strictKnownMarketplaces
 Controls which plugin marketplace sources users can add and install plugins from. See
 managed marketplace restrictions
+wslInheritsWindowsSettings
+When
+true
+in the Windows HKLM registry key or
+C:\Program Files\ClaudeCode\managed-settings.json
+, WSL reads managed settings from the Windows policy chain in addition to
+/etc/claude-code
+. See
+Settings files
 disableBypassPermissionsMode
 is typically placed in managed settings to enforce organizational policy, but it works from any scope. A user can set it in their own settings to lock themselves out of bypass mode.
 Access to

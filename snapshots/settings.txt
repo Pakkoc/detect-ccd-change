@@ -406,10 +406,12 @@ environment
 allow
 , and
 soft_deny
-arrays of prose rules. See
+arrays of prose rules. Include the literal string
+"$defaults"
+in an array to inherit the built-in rules at that position. See
 Configure auto mode
 . Not read from shared project settings
-{"environment": ["Trusted repo: github.example.com/acme"]}
+{"soft_deny": ["$defaults", "Never run terraform apply"]}
 autoUpdatesChannel
 Release channel to follow for updates. Use
 "stable"
@@ -422,7 +424,7 @@ Restrict which models users can select via
 /model
 ,
 --model
-, Config tool, or
+, or
 ANTHROPIC_MODEL
 . Does not affect the Default option. See
 Restrict model selection
@@ -840,6 +842,15 @@ voice.enabled
 . Prefer the
 voice
 object
+true
+wslInheritsWindowsSettings
+(Windows managed settings only) When
+true
+, Claude Code on WSL reads managed settings from the Windows policy chain in addition to
+/etc/claude-code
+, with Windows sources taking priority. Only honored when set in the HKLM registry key or
+C:\Program Files\ClaudeCode\managed-settings.json
+, both of which require Windows admin to write. For HKCU policy to also apply on WSL, the flag must additionally be set in HKCU itself. Has no effect on native Windows
 true
 ​
 Global config settings

@@ -525,6 +525,16 @@ agent teams
 . Agent teams are experimental and disabled by default
 CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS
 Override the default token limit for file reads. Useful when you need to read larger files in full
+CLAUDE_CODE_FORK_SUBAGENT
+Set to
+1
+to enable
+forked subagents
+. A forked subagent inherits the full conversation context from the main session instead of starting fresh. When enabled,
+/fork
+spawns a forked subagent rather than acting as an alias for
+/branch
+, and all subagent spawns run in the background. Interactive mode only
 CLAUDE_CODE_GIT_BASH_PATH
 Windows only: path to the Git Bash executable (
 bash.exe
@@ -875,7 +885,11 @@ CLAUDE_ENABLE_STREAM_WATCHDOG=1
 DISABLE_AUTOUPDATER
 Set to
 1
-to disable automatic updates
+to disable automatic background updates. Manual
+claude update
+still works. Use
+DISABLE_UPDATES
+to block both
 DISABLE_AUTO_COMPACT
 Set to
 1
@@ -964,6 +978,16 @@ DISABLE_TELEMETRY
 Set to
 1
 to opt out of Statsig telemetry (note that Statsig events do not include user data like code, file paths, or bash commands)
+DISABLE_UPDATES
+Set to
+1
+to block all updates including manual
+claude update
+and
+claude install
+. Stricter than
+DISABLE_AUTOUPDATER
+. Use when distributing Claude Code through your own channels and users should not self-update
 DISABLE_UPGRADE_COMMAND
 Set to
 1

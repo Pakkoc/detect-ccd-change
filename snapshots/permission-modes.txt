@@ -120,6 +120,9 @@ plan
 auto
 : appears when your account meets the
 auto mode requirements
+; cycling to auto shows an opt-in prompt until you accept it, or select
+No, don’t ask again
+to remove auto from the cycle
 bypassPermissions
 : appears after you start with
 --permission-mode bypassPermissions

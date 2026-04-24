@@ -65,6 +65,16 @@ claude -r "auth-refactor" "Finish this PR"
 claude update
 Update to latest version
 claude update
+claude install [version]
+Install or reinstall the native binary. Accepts a version like
+2.1.118
+, or
+stable
+or
+latest
+. See
+Install a specific version
+claude install stable
 claude auth login
 Sign in to your Anthropic account. Use
 --email
@@ -201,7 +211,8 @@ claude --chrome
 --continue
 ,
 -c
-Load the most recent conversation in the current directory
+Load the most recent conversation in the current directory. Includes sessions that added this directory with
+/add-dir
 claude --continue
 --dangerously-load-development-channels
 Enable
@@ -422,7 +433,8 @@ claude -p --input-format stream-json --output-format stream-json --replay-user-m
 --resume
 ,
 -r
-Resume a specific session by ID or name, or show an interactive picker to choose a session
+Resume a specific session by ID or name, or show an interactive picker to choose a session. Includes sessions that added this directory with
+/add-dir
 claude --resume auth-refactor
 --session-id
 Use a specific session ID for the conversation (must be a valid UUID)

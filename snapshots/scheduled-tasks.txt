@@ -74,7 +74,7 @@ GitHub Actions
 .
 ​
 Compare scheduling options
-Claude Code offers three ways to schedule recurring work:
+Claude Code offers three ways to schedule recurring or one-off work:
 Cloud
 Desktop
 /loop

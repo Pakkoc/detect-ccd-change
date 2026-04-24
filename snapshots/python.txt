@@ -2580,7 +2580,9 @@ Additional directories Claude can access
 env
 dict[str, str]
 {}
+Environment variables merged on top of the inherited process environment. See
 Environment variables
+for variables the underlying CLI reads
 extra_args
 dict[str, str | None]
 {}
@@ -4741,8 +4743,10 @@ TaskCompleted
 ConfigChange
 ,
 WorktreeCreate
-, and
+,
 WorktreeRemove
+, and
+PostToolBatch
 .
 ​
 HookCallback

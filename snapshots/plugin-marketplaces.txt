@@ -21,6 +21,7 @@ Agent SDK
 What's New
 Resources
 Setup and access
+Administration overview
 Advanced setup
 Authentication
 Server-managed settings
@@ -67,6 +68,7 @@ Common configurations
 How restrictions work
 Version resolution and release channels
 Set up release channels
+Pin dependency versions
 Validation and testing
 Manage marketplaces from the CLI
 Plugin marketplace add
@@ -178,6 +180,13 @@ my-marketplace/plugins/quality-review-plugin/.claude-plugin/plugin.json
 :
 "1.0.0"
 }
+Setting
+version
+means users only receive updates when you change this field, so bump it on every release. If you omit
+version
+and host this marketplace in git, every commit automatically counts as a new version. See
+Version resolution
+to choose the right approach.
 4
 Create the marketplace file
 Create the marketplace catalog that lists your plugin.
@@ -443,7 +452,11 @@ string
 Brief plugin description
 version
 string
-Plugin version
+Plugin version. If set (here or in
+plugin.json
+), the plugin is pinned to this string and users only receive updates when it changes. Omit to fall back to the git commit SHA. See
+Version resolution
+.
 author
 object
 Plugin author information (
@@ -1408,22 +1421,53 @@ strictKnownMarketplaces reference
 .
 ​
 Version resolution and release channels
-Plugin versions determine cache paths and update detection. You can specify the version in the plugin manifest (
+Plugin versions determine cache paths and update detection: if the resolved version matches what a user already has,
+/plugin update
+and auto-update skip the plugin.
+Claude Code resolves a plugin’s version from the first of these that is set:
+version
+in the plugin’s
 plugin.json
-) or in the marketplace entry (
+version
+in the plugin’s marketplace entry
+The git commit SHA of the plugin’s source
+For the git-based source types
+github
+,
+url
+,
+git-subdir
+, and relative paths inside a git-hosted marketplace, you can omit
+version
+entirely and every new commit is treated as a new version. This is the simplest setup for internal or actively-developed plugins.
+Setting
+version
+pins the plugin. If
+plugin.json
+declares
+"version": "1.0.0"
+, pushing new commits without changing that string does nothing for existing users, because Claude Code sees the same version and keeps the cached copy. Bump the field on every release, or omit it to use the commit SHA.
+Avoid setting
+version
+in both
+plugin.json
+and the marketplace entry. The
+plugin.json
+value always wins silently, so a stale manifest version can mask a version you set in
 marketplace.json
-).
-When possible, avoid setting the version in both places. The plugin manifest always wins silently, which can cause the marketplace version to be ignored. For relative-path plugins, set the version in the marketplace entry. For all other plugin sources, set it in the plugin manifest.
+.
 ​
 Set up release channels
 To support “stable” and “latest” release channels for your plugins, you can set up two marketplaces that point to different refs or SHAs of the same repo. You can then assign the two marketplaces to different user groups through
 managed settings
 .
-The plugin’s
+Each channel must resolve to a different version. If you use explicit versions,
 plugin.json
 must declare a different
 version
-at each pinned ref or commit. If two refs or commits have the same manifest version, Claude Code treats them as identical and skips the update.
+at each pinned ref. If you omit
+version
+, the distinct commit SHAs already distinguish the channels. If two refs resolve to the same version string, Claude Code treats them as identical and skips the update.
 Example
 {
 "name"
@@ -1524,6 +1568,13 @@ instead:
 }
 }
 }
+​
+Pin dependency versions
+A plugin can constrain its dependencies to a semver range so that updates to a dependency do not break the dependent plugin. See
+Constrain plugin dependency versions
+for the
+{plugin-name}--v{version}
+git-tag convention, range syntax, and how multiple constraints on the same dependency are combined.
 ​
 Validation and testing
 Test your marketplace before sharing.

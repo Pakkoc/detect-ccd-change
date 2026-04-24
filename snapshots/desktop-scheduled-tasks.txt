@@ -60,7 +60,7 @@ Related resources
 By default, scheduled tasks start a new session automatically at a time and frequency you choose. Use them for recurring work like daily code reviews, dependency update checks, or morning briefings that pull from your calendar and inbox.
 ​
 Compare scheduling options
-Claude Code offers three ways to schedule recurring work:
+Claude Code offers three ways to schedule recurring or one-off work:
 Cloud
 Desktop
 /loop

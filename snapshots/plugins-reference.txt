@@ -38,6 +38,7 @@ Hooks
 MCP servers
 LSP servers
 Monitors
+Themes
 Plugin installation scopes
 Plugin manifest schema
 Complete schema
@@ -62,6 +63,7 @@ plugin enable
 plugin disable
 plugin update
 plugin list
+plugin tag
 Debugging and development tools
 Debugging commands
 Common issues
@@ -253,6 +255,8 @@ PostToolUse
 After a tool call succeeds
 PostToolUseFailure
 After a tool call fails
+PostToolBatch
+After a full batch of parallel tool calls resolves, before the next model call
 Notification
 When Claude Code sends a notification
 SubagentStart
@@ -310,6 +314,9 @@ command
 : execute shell commands or scripts
 http
 : send the event JSON as a POST request to a URL
+mcp_tool
+: call a tool on a configured
+MCP server
 prompt
 : evaluate a prompt with an LLM (uses
 $ARGUMENTS
@@ -597,6 +604,50 @@ cd "${CLAUDE_PLUGIN_ROOT}" &&
 if the script needs to run from the plugin’s own directory.
 Disabling a plugin mid-session does not stop monitors that are already running. They stop when the session ends.
 ​
+Themes
+Plugins can ship color themes that appear in
+/theme
+alongside the built-in presets and the user’s local themes. A theme is a JSON file in
+themes/
+with a
+base
+preset and a sparse
+overrides
+map of color tokens.
+{
+"name"
+:
+"Dracula"
+,
+"base"
+:
+"dark"
+,
+"overrides"
+: {
+"claude"
+:
+"#bd93f9"
+,
+"error"
+:
+"#ff5555"
+,
+"success"
+:
+"#50fa7b"
+}
+}
+Selecting a plugin theme persists
+custom:<plugin-name>:<slug>
+in the user’s config. Plugin themes are read-only; pressing
+Ctrl+E
+on one in
+/theme
+copies it into
+~/.claude/themes/
+so the user can edit the copy.
+​
 Plugin installation scopes
 When you install a plugin, you choose a
 scope
@@ -700,6 +751,10 @@ Complete schema
 :
 "./styles/"
 ,
+"themes"
+:
+"./themes/"
+,
 "lspServers"
 :
 "./.lsp.json"
@@ -752,9 +807,11 @@ Description
 Example
 version
 string
-Semantic version. If also set in the marketplace entry,
+Optional. Semantic version. Setting this pins the plugin to that version string, so users only receive updates when you bump it. If omitted, Claude Code falls back to the git commit SHA, so every commit is treated as a new version. If also set in the marketplace entry,
 plugin.json
-takes priority. You only need to set it in one place.
+wins. See
+Version management
+.
 "2.1.0"
 description
 string
@@ -826,6 +883,13 @@ Custom output style files/directories (replaces default
 output-styles/
 )
 "./styles/"
+themes
+string|array
+Color theme files/directories (replaces default
+themes/
+). See
+Themes
+"./themes/"
 lspServers
 string|array|object
 Language Server Protocol
@@ -1025,6 +1089,8 @@ commands
 agents
 ,
 outputStyles
+,
+themes
 , and
 monitors
 , a custom path replaces the default. If the manifest specifies
@@ -1271,6 +1337,8 @@ enterprise-plugin/
 │   └── compliance-checker.md
 ├── output-styles/            # Output style definitions
 │   └── terse.md
+├── themes/                   # Color theme definitions
+│   └── dracula.json
 ├── monitors/                 # Background monitor configurations
 │   └── monitors.json
 ├── hooks/                    # Hook configurations
@@ -1291,7 +1359,7 @@ The
 .claude-plugin/
 directory contains the
 plugin.json
-file. All other directories (commands/, agents/, skills/, output-styles/, monitors/, hooks/) must be at the plugin root, not inside
+file. All other directories (commands/, agents/, skills/, output-styles/, themes/, monitors/, hooks/) must be at the plugin root, not inside
 .claude-plugin/
 .
 ​
@@ -1318,6 +1386,9 @@ Subagent Markdown files
 Output styles
 output-styles/
 Output style definitions
+Themes
+themes/
+Color theme definitions
 Hooks
 hooks/hooks.json
 Hook configuration
@@ -1549,6 +1620,27 @@ Include available plugins from marketplaces. Requires
 -h, --help
 Display help for command
 ​
+plugin tag
+Create a release git tag for the plugin in the current directory. Run from inside the plugin’s folder. See
+Tag plugin releases
+.
+claude
+plugin
+tag
+[options]
+Options:
+Option
+Description
+Default
+--push
+Push the tag to the remote after creating it
+--dry-run
+Print what would be tagged without creating the tag
+-f, --force
+Create the tag even if the working tree is dirty or the tag already exists
+-h, --help
+Display help for command
+​
 Debugging and development tools
 ​
 Debugging commands
@@ -1655,6 +1747,8 @@ command
 ,
 http
 ,
+mcp_tool
+,
 prompt
 , or
 agent
@@ -1710,50 +1804,64 @@ Verify file permissions allow reading the plugin files
 Distribution and versioning reference
 ​
 Version management
-Follow semantic versioning for plugin releases:
-{
-"name"
-:
-"my-plugin"
-,
-"version"
-:
-"2.1.0"
-}
-Version format
-:
-MAJOR.MINOR.PATCH
-MAJOR
-: Breaking changes (incompatible API changes)
-MINOR
-: New features (backward-compatible additions)
-PATCH
-: Bug fixes (backward-compatible fixes)
-Best practices
-:
-Start at
-1.0.0
-for your first stable release
-Update the version in
-plugin.json
-before distributing changes
-Document changes in a
-CHANGELOG.md
-file
-Use pre-release versions like
-2.0.0-beta.1
-for testing
-Claude Code uses the version to determine whether to update your plugin. If you change your plugin’s code but don’t bump the version in
-plugin.json
-, your plugin’s existing users won’t see your changes due to caching.
-If your plugin is within a
-marketplace
-directory, you can manage the version through
-marketplace.json
-instead and omit the
+Claude Code uses the plugin’s version as the cache key that determines whether an update is available. When you run
+/plugin update
+or auto-update fires, Claude Code computes the current version and skips the update if it matches what’s already installed.
+The version is resolved from the first of these that is set:
+The
 version
-field from
+field in the plugin’s
 plugin.json
+The
+version
+field in the plugin’s marketplace entry in
+marketplace.json
+The git commit SHA of the plugin’s source, for
+github
+,
+url
+,
+git-subdir
+, and relative-path sources in a git-hosted marketplace
+unknown
+, for
+npm
+sources or local directories not inside a git repository
+This gives you two ways to version a plugin:
+Approach
+How
+Update behavior
+Best for
+Explicit version
+Set
+"version": "2.1.0"
+in
+plugin.json
+Users get updates only when you bump this field. Pushing new commits without bumping it has no effect, and
+/plugin update
+reports “already at the latest version”.
+Published plugins with stable release cycles
+Commit-SHA version
+Omit
+version
+from both
+plugin.json
+and the marketplace entry
+Users get updates on every new commit to the plugin’s git source
+Internal or team plugins under active development
+If you set
+version
+in
+plugin.json
+, you must bump it every time you want users to receive changes. Pushing new commits alone is not enough, because Claude Code sees the same version string and keeps the cached copy. If you’re iterating quickly, leave
+version
+unset so the git commit SHA is used instead.
+If you use explicit versions, follow
+semantic versioning
+(
+MAJOR.MINOR.PATCH
+): bump MAJOR for breaking changes, MINOR for new features, PATCH for bug fixes. Document changes in a
+CHANGELOG.md
 .
 ​
 See also

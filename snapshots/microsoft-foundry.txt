@@ -137,6 +137,12 @@ Models overview
 . See
 Model configuration
 for the full list of environment variables.
+Prompt caching
+is enabled automatically. To request a 1-hour cache TTL instead of the 5-minute default, set the following variable; cache writes with a 1-hour TTL are billed at a higher rate:
+export
+ENABLE_PROMPT_CACHING_1H
+=
+1
 ​
 Azure RBAC configuration
 The

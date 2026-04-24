@@ -21,6 +21,7 @@ Agent SDK
 What's New
 Resources
 Setup and access
+Administration overview
 Advanced setup
 Authentication
 Server-managed settings

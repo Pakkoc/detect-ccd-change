@@ -405,8 +405,12 @@ Name of the current output style
 vim.mode
 Current vim mode (
 NORMAL
-or
+,
 INSERT
+,
+VISUAL
+, or
+VISUAL LINE
 ) when
 vim mode
 is enabled
