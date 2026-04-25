@@ -298,7 +298,7 @@ none
 The dependency stays at
 2.1.0
 . Auto-update skips newer versions while plugin A is installed.
-Auto-update checks each constrained dependency against every installed plugin’s range before applying an update. If the marketplace moves a dependency to a version outside any range, the update is skipped and the skip appears in
+Auto-update fetches a constrained dependency at the highest git tag that satisfies every installed plugin’s range, rather than at the marketplace’s latest version, so the dependency continues to receive updates within its allowed range. If no tag satisfies all ranges, the update is skipped and the skip appears in
 /doctor
 and the
 /plugin

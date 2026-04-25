@@ -3203,6 +3203,10 @@ tool_use_id
 :
 string
 ;
+duration_ms
+?:
+number
+;
 };
 ​
 PostToolUseFailureHookInput
@@ -3235,6 +3239,10 @@ string
 is_interrupt
 ?:
 boolean
+;
+duration_ms
+?:
+number
 ;
 };
 ​
@@ -5776,6 +5784,10 @@ argumentHint
 :
 string
 ;
+aliases
+?:
+string
+[];
 };
 ​
 ModelInfo

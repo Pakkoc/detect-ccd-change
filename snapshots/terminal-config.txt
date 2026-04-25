@@ -310,12 +310,12 @@ The VS Code integrated terminal can drop characters from very large pastes befor
 Edit prompts with Vim keybindings
 Claude Code includes a Vim-style editing mode for the prompt input. Enable it through
 /config
-→ Editor mode, or by setting the
+→ Editor mode, or by setting
 editorMode
-global config key to
+to
 "vim"
 in
-~/.claude.json
+~/.claude/settings.json
 . Set Editor mode back to
 normal
 to turn it off.

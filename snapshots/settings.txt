@@ -257,7 +257,7 @@ Managed marketplace restrictions
 Other configuration
 is stored in
 ~/.claude.json
-. This file contains your preferences (theme, notification settings, editor mode), OAuth session,
+. This file contains your OAuth session,
 MCP server
 configurations for user and local scopes, per-project state (allowed tools, trust settings), and various caches. Project-scoped MCP servers are stored separately in
 .mcp.json
@@ -412,6 +412,17 @@ in an array to inherit the built-in rules at that position. See
 Configure auto mode
 . Not read from shared project settings
 {"soft_deny": ["$defaults", "Never run terraform apply"]}
+autoScrollEnabled
+In
+fullscreen rendering
+, follow new output to the bottom of the conversation. Default:
+true
+. Appears in
+/config
+as
+Auto-scroll
+. Permission prompts still scroll into view when this is off
+false
 autoUpdatesChannel
 Release channel to follow for updates. Use
 "stable"
@@ -551,6 +562,18 @@ instead of being run. Bundled and managed skills are not affected. Most useful i
 managed settings
 where users cannot override it
 true
+editorMode
+Key binding mode for the input prompt:
+"normal"
+or
+"vim"
+. Default:
+"normal"
+. Appears in
+/config
+as
+Editor mode
+"vim"
 effortLevel
 Persist the
 effort level
@@ -701,6 +724,25 @@ pluginTrustMessage
 prefersReducedMotion
 Reduce or disable UI animations (spinners, shimmer, flash effects) for accessibility
 true
+prUrlTemplate
+URL template for the PR badge shown in the footer and in tool-result summaries. Substitutes
+{host}
+,
+{owner}
+,
+{repo}
+,
+{number}
+, and
+{url}
+from the
+gh
+-reported PR URL. Use to point PR links at an internal code-review tool instead of
+github.com
+. Does not affect
+#123
+autolinks in Claude’s prose
+"https://reviews.example.com/{owner}/{repo}/pull/{number}"
 respectGitignore
 Control whether the
 @
@@ -730,6 +772,14 @@ instead. Non-interactive mode (
 -p
 ) and SDK callers always receive summaries regardless of this setting
 true
+showTurnDuration
+Show turn duration messages after responses, e.g. “Cooked for 1m 6s”. Default:
+true
+. Appears in
+/config
+as
+Show turn duration
+false
 skipWebFetchPreflight
 Skip the
 WebFetch domain safety check
@@ -792,6 +842,26 @@ strictKnownMarketplaces
 (Managed settings only) Allowlist of plugin marketplace sources. Undefined = no restrictions, empty array = lockdown. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "acme-corp/plugins" }]
+teammateMode
+How
+agent team
+teammates display:
+auto
+(picks split panes in tmux or iTerm2, in-process otherwise),
+in-process
+, or
+tmux
+. See
+choose a display mode
+"in-process"
+terminalProgressBarEnabled
+Show the terminal progress bar in supported terminals: ConEmu, Ghostty 1.2.0+, and iTerm2 3.6.6+. Default:
+true
+. Appears in
+/config
+as
+Terminal progress bar
+false
 tui
 Terminal UI renderer. Use
 "fullscreen"
@@ -861,6 +931,19 @@ settings.json
 . Adding them to
 settings.json
 will trigger a schema validation error.
+Versions before v2.1.119 also store
+autoScrollEnabled
+,
+editorMode
+,
+showTurnDuration
+,
+teammateMode
+, and
+terminalProgressBarEnabled
+here instead of in
+settings.json
+.
 Key
 Description
 Example
@@ -884,29 +967,6 @@ when running inside a VS Code or JetBrains terminal. You can also set the
 CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL
 environment variable
 false
-autoScrollEnabled
-In
-fullscreen rendering
-, follow new output to the bottom of the conversation. Default:
-true
-. Appears in
-/config
-as
-Auto-scroll
-. Permission prompts still scroll into view when this is off
-false
-editorMode
-Key binding mode for the input prompt:
-"normal"
-or
-"vim"
-. Default:
-"normal"
-. Appears in
-/config
-as
-Editor mode
-"vim"
 externalEditorContext
 Prepend Claude’s previous response as
 #
@@ -919,34 +979,6 @@ false
 as
 Show last response in external editor
 true
-showTurnDuration
-Show turn duration messages after responses, e.g. “Cooked for 1m 6s”. Default:
-true
-. Appears in
-/config
-as
-Show turn duration
-false
-terminalProgressBarEnabled
-Show the terminal progress bar in supported terminals: ConEmu, Ghostty 1.2.0+, and iTerm2 3.6.6+. Default:
-true
-. Appears in
-/config
-as
-Terminal progress bar
-false
-teammateMode
-How
-agent team
-teammates display:
-auto
-(picks split panes in tmux or iTerm2, in-process otherwise),
-in-process
-, or
-tmux
-. See
-choose a display mode
-"in-process"
 ​
 Worktree settings
 Configure how

@@ -1224,6 +1224,10 @@ event.sequence
 : monotonically increasing counter for ordering events within a session
 tool_name
 : Name of the tool
+tool_use_id
+: Unique identifier for this tool invocation. Matches the
+tool_use_id
+passed to hooks, allowing correlation between OTel events and hook-captured data.
 success
 :
 "true"
@@ -1258,6 +1262,8 @@ decision_source
 "user_abort"
 , or
 "user_reject"
+tool_input_size_bytes
+: Size of the JSON-serialized tool input in bytes
 tool_result_size_bytes
 : Size of the tool result in bytes
 mcp_server_scope
@@ -1520,6 +1526,10 @@ event.sequence
 : monotonically increasing counter for ordering events within a session
 tool_name
 : Name of the tool (for example, “Read”, “Edit”, “Write”, “NotebookEdit”)
+tool_use_id
+: Unique identifier for this tool invocation. Matches the
+tool_use_id
+passed to hooks, allowing correlation between OTel events and hook-captured data.
 decision
 : Either
 "accept"

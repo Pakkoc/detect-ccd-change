@@ -400,6 +400,8 @@ If the classifier blocks, Claude receives the reason and tries an alternative
 On entering auto mode, broad allow rules that grant arbitrary code execution are dropped:
 Blanket
 Bash(*)
+or
+PowerShell(*)
 Wildcarded interpreters like
 Bash(python*)
 Package-manager run commands

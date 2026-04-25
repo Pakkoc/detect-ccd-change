@@ -193,10 +193,8 @@ The default is
 "tmux"
 setting enables split-pane mode and auto-detects whether to use tmux or iTerm2 based on your terminal. To override, set
 teammateMode
-in your
-global config
-at
-~/.claude.json
+in
+~/.claude/settings.json
 :
 {
 "teammateMode"

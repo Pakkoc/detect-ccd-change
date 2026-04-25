@@ -3149,7 +3149,15 @@ true
 "tool_use_id"
 :
 "toolu_01ABC123..."
+,
+"duration_ms"
+:
+12
 }
+Field
+Description
+duration_ms
+Optional. Tool execution time in milliseconds. Excludes time spent in permission prompts and PreToolUse hooks
 ​
 PostToolUse decision control
 PostToolUse
@@ -3251,6 +3259,10 @@ fields as PostToolUse, along with error information as top-level fields:
 "is_interrupt"
 :
 false
+,
+"duration_ms"
+:
+4187
 }
 Field
 Description
@@ -3258,6 +3270,8 @@ error
 String describing what went wrong
 is_interrupt
 Optional boolean indicating whether the failure was caused by user interruption
+duration_ms
+Optional. Tool execution time in milliseconds. Excludes time spent in permission prompts and PreToolUse hooks
 ​
 PostToolUseFailure decision control
 PostToolUseFailure
