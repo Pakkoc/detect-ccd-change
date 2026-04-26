@@ -55,7 +55,6 @@ Example use cases
 Create a routine
 Create from the web
 Create from the CLI
-Create from the Desktop app
 Configure triggers
 Add a schedule trigger
 Schedule a one-off run
@@ -118,15 +117,19 @@ filtered to merged PRs in one SDK repository. The routine ports the change to a 
 The sections below walk through creating a routine and configuring each of these trigger types.
 ​
 Create a routine
-Create a routine from the web, the Desktop app, or the CLI. All three surfaces write to the same cloud account, so a routine you create in the CLI shows up at claude.ai/code/routines immediately. In the Desktop app, click
-New task
-and choose
-New remote task
+Create a routine from the web at
+claude.ai/code/routines
+, from the Desktop app, or from the CLI. All three surfaces write to the same cloud account, so a routine you create in one shows up in the others immediately. In the Desktop app, click
+Routines
+in the sidebar, then
+New routine
+, and choose
+Remote
 ; choosing
-New local task
+Local
 instead creates a
-local Desktop scheduled task
-, which runs on your machine and is not a routine.
+Desktop scheduled task
+, which runs on your machine rather than in the cloud.
 The creation form sets up the routine’s prompt, repositories, environment, connectors, and triggers.
 Routines run autonomously as full Claude Code cloud sessions: there is no permission-mode picker and no approval prompts during a run. The session can run shell commands, use
 skills
@@ -151,9 +154,7 @@ The prompt input includes a model selector. Claude uses the selected model on ev
 Select repositories
 Add one or more GitHub repositories for Claude to work in. Each repository is cloned at the start of a run, starting from the default branch. Claude creates
 claude/
--prefixed branches for its changes. To allow pushes to any branch, enable
-Allow unrestricted branch pushes
-for that repository.
+-prefixed branches for its changes.
 4
 Select an environment
 Pick a
@@ -192,10 +193,20 @@ here, then save the routine. The URL and token are generated after the routine i
 Add an API trigger
 to copy the URL and generate a token.
 6
-Review connectors
-All of your connected
+Review connectors and permissions
+The
+Connectors
+and
+Permissions
+tabs at the bottom of the form control what the routine can reach.
+Under Connectors, all of your connected
 MCP connectors
-are included by default. Remove any that the routine doesn’t need. Connectors give Claude access to external services like Slack, Linear, or Google Drive during each run.
+are included by default. Remove any the routine doesn’t need. Claude can use every tool from an included connector, including writes, without asking for permission during a run.
+Under Permissions, enable
+Allow unrestricted branch pushes
+for any repository where Claude should be able to push to existing branches instead of only
+claude/
+-prefixed ones.
 7
 Create the routine
 Click
@@ -224,17 +235,6 @@ to see all routines,
 to change one, or
 /schedule run
 to trigger it immediately.
-​
-Create from the Desktop app
-Open the
-Schedule
-page in the Desktop app, click
-New task
-, and choose
-New remote task
-. The Desktop app shows both local scheduled tasks and routines in the same grid. See
-Desktop scheduled tasks
-for details on the local option.
 ​
 Configure triggers
 A routine starts when one of its triggers matches. You can attach any combination of schedule, API, and GitHub triggers to the same routine, and add or remove them at any time from the

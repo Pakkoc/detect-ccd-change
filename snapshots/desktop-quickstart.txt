@@ -118,7 +118,7 @@ Remote
 Claude Code on the web
 .
 SSH
-: Connect to a remote machine over SSH (your own servers, cloud VMs, or dev containers). Claude Code must be installed on the remote machine.
+: Connect to a remote machine over SSH, such as your own servers, cloud VMs, or dev containers. Desktop installs Claude Code on the remote machine automatically the first time you connect.
 2
 Choose a model
 Select a model from the dropdown next to the send button. See

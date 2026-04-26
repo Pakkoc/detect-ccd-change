@@ -205,7 +205,7 @@ This project only
 Plugin
 <plugin>/skills/<skill-name>/SKILL.md
 Where plugin is enabled
-When skills share the same name across levels, higher-priority locations win: enterprise > personal > project. Plugin skills use a
+When skills share the same name across levels, enterprise overrides personal, and personal overrides project. Plugin skills use a
 plugin-name:skill-name
 namespace, so they cannot conflict with other levels. If you have files in
 .claude/commands/

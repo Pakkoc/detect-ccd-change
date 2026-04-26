@@ -107,13 +107,18 @@ without adding to the conversation
 Configure
 Claude in Chrome
 settings
-/claude-api
+/claude-api [migrate|managed-agents-onboard]
 Skill
 .
 Load Claude API reference material for your project’s language (Python, TypeScript, Java, Go, Ruby, C#, PHP, or cURL) and Managed Agents reference. Covers tool use, streaming, batches, structured outputs, and common pitfalls. Also activates automatically when your code imports
 anthropic
 or
 @anthropic-ai/sdk
+. Run
+/claude-api migrate
+to upgrade existing Claude API code to a newer model: Claude asks which files to scan and which model to target, then updates model IDs, thinking configuration, and other parameters that changed between versions. Run
+/claude-api managed-agents-onboard
+for an interactive walkthrough that creates a new Managed Agent from scratch
 /clear
 Start a new conversation with empty context. The previous conversation stays available in
 /resume
