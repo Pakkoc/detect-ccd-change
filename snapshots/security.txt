@@ -197,7 +197,7 @@ Working with sensitive code
 Review all suggested changes before approval
 Use project-specific permission settings for sensitive repositories
 Consider using
-devcontainers
+dev containers
 for additional isolation
 Regularly audit your permission settings with
 /permissions

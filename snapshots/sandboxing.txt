@@ -506,7 +506,7 @@ permission settings
 for defense-in-depth
 Development containers
 : Use with
-devcontainers
+dev containers
 for additional isolation
 Enterprise policies
 : Enforce sandbox configurations through

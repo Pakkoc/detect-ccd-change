@@ -1,0 +1,173 @@
+Week 16 · April 13–17, 2026 - Claude Code Docs
+Skip to main content
+Claude Code Docs
+home page
+English
+Search...
+⌘
+K
+Ask AI
+Search...
+Navigation
+What's New
+Week 16 · April 13–17, 2026
+Getting started
+Build with Claude Code
+Deployment
+Administration
+Configuration
+Reference
+Agent SDK
+What's New
+Resources
+What's New
+What's new
+Week 17 · Apr 20–24
+Week 16 · Apr 13–17
+Week 15 · Apr 6–10
+Week 14 · Mar 30 – Apr 3
+Week 13 · Mar 23–27
+Releases
+v2.1.105 → v2.1.113
+5 features · April 13–17
+Claude Opus 4.7
+new model
+Anthropic’s strongest coding model yet is now the default on Max and Team Premium, and available everywhere else from
+/model
+. It adds a new
+xhigh
+effort level that sits between
+high
+and
+max
+: best results for most coding and agentic tasks, applied as the default the first time you switch to 4.7.
+/effort
+now opens an interactive arrow-key slider when you call it without arguments, so you can dial intelligence against speed without remembering the level names.
+Switch model and effort in one go:
+Claude Code
+> /model opus
+> /effort xhigh
+Model config: effort levels
+Routines
+web
+Templated cloud agents that fire on a schedule, a GitHub event, or an API call. Define a routine once on Claude Code on the web with a prompt, the repos it can touch, and the connectors it needs, then let PR-opened, release-published, or your own webhook trigger it without your machine running. The trigger picker now covers GitHub events with optional filters and gives every routine a tokened
+/fire
+endpoint for external systems.
+Create one from the web UI, or scaffold from your terminal:
+Claude Code
+> /schedule daily PR review at 9am
+Routines guide
+/usage breakdown
+CLI
+More visibility into where your Claude Code usage goes.
+/usage
+now shows what’s driving your limits: parallel sessions, subagents, cache misses, and long context, each with a percentage of your last 24 hours and a tip to optimize it. Press
+d
+or
+w
+to switch between day and week views.
+Run it any time:
+Claude Code
+> /usage
+Commands reference
+/ultrareview
+v2.1.111
+Comprehensive code review in the cloud. Ultrareview fans your branch out across parallel reviewers on Claude Code on the web, runs an adversarial critique pass over each finding, and returns a verified findings report while your terminal stays free. Call it with no arguments to review your current branch, or pass a PR number to fetch and review that PR. The launch dialog now shows a diffstat so you know what’s going up before you confirm.
+Review the branch you’re on:
+Claude Code
+> /ultrareview
+Or point it at a PR:
+Claude Code
+> /ultrareview 1234
+Ultrareview guide
+Native binaries
+v2.1.113
+The
+claude
+CLI now spawns a native per-platform binary instead of bundled JavaScript, so the installed
+claude
+command no longer invokes Node. The npm package pulls the right binary in through an optional dependency such as
+@anthropic-ai/claude-code-darwin-arm64
+, so your install command doesn’t change. The standalone installer already shipped this binary; npm now matches it.
+Upgrade and check what you’re running:
+claude
+update
+claude
+--version
+Setup guide
+Other wins
+Auto mode
+is now available for Max subscribers on Opus 4.7, and the
+—enable-auto-mode
+flag is no longer required
+Session recap
+shows a one-line summary of what happened while you were away; run
+/recap
+on demand or turn it off from
+/config
+New
+/tui
+command and
+tui
+setting switch between classic and flicker-free rendering mid-conversation; focus view moved from
+Ctrl+O
+to its own
+/focus
+command
+Push notification tool: with
+Remote Control
+connected and “Push when Claude decides” enabled, Claude can ping your phone when it needs you
+Plugins can ship background watchers via a top-level
+monitors
+manifest key that auto-arms at session start or on skill invoke
+”Auto (match terminal)” option in
+/theme
+follows your terminal’s dark/light mode
+/fewer-permission-prompts
+scans your transcripts for common read-only Bash and MCP calls and proposes an allowlist for
+.claude/settings.json
+Claude can now discover and run built-in commands like
+/init
+,
+/review
+, and
+/security-review
+via the Skill tool
+PreCompact
+hooks can block compaction by exiting with code 2 or returning
+“decision”:“block”
+ENABLE_PROMPT_CACHING_1H
+opts API key, Bedrock, Vertex, and Foundry users into 1-hour prompt cache TTL
+sandbox.network.deniedDomains
+setting carves specific domains out of a broader
+allowedDomains
+wildcard
+/undo
+is now an alias for
+/rewind
+, and
+/proactive
+is an alias for
+/loop
+Hardened Bash permissions: deny rules now match through
+env
+/
+sudo
+/
+watch
+wrappers, and
+Bash(find:*)
+allow rules no longer auto-approve
+-exec
+or
+-delete
+Full changelog for v2.1.105–v2.1.113 →
+Was this page helpful?
+Yes
+No
+Week 17 · Apr 20–24
+Week 15 · Apr 6–10
+⌘
+I
+Assistant
+Responses are generated using AI and may contain mistakes.
