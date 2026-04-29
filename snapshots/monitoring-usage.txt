@@ -13,7 +13,6 @@ Usage and costs
 Monitoring
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -26,6 +25,14 @@ Advanced setup
 Authentication
 Server-managed settings
 Auto mode
+Deployment
+Overview
+Amazon Bedrock
+Google Vertex AI
+Microsoft Foundry
+Network configuration
+LLM gateway
+Development containers
 Usage and costs
 Monitoring
 Costs
@@ -37,6 +44,9 @@ Security and data
 Security
 Data usage
 Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 Quick start
 Administrator configuration
@@ -97,6 +107,10 @@ Service information
 ROI measurement resources
 Security and privacy
 Monitor Claude Code on Amazon Bedrock
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Track Claude Code usage, costs, and tool activity across your organization by exporting telemetry data through OpenTelemetry (OTel). Claude Code exports metrics as time series data via the standard metrics protocol, events via the logs/events protocol, and optionally distributed traces via the
 traces protocol
 . Configure your metrics, logs, and traces backends to match your monitoring requirements.
@@ -522,6 +536,25 @@ Error message when the request failed
 response.has_tool_call
 true
 when the response contained tool-use blocks
+stop_reason
+API response
+stop_reason
+, such as
+end_turn
+,
+tool_use
+,
+max_tokens
+,
+stop_sequence
+,
+pause_turn
+, or
+refusal
+gen_ai.response.finish_reasons
+Same value as
+stop_reason
+, wrapped in a string array. OpenTelemetry GenAI semantic convention
 Each retry attempt is also recorded as a
 gen_ai.request.attempt
 span event with
@@ -626,10 +659,22 @@ new_context
 ,
 system_prompt_preview
 ,
+user_system_prompt
+,
 tool_input
 , and
 response.model_output
 are emitted only when detailed beta tracing is active. They are not part of the stable span schema.
+user_system_prompt
+additionally requires
+OTEL_LOG_USER_PROMPTS=1
+. It carries only the system prompt text you provide via the
+systemPrompt
+SDK option or
+--system-prompt
+and
+--append-system-prompt
+flags, truncated at 60 KB, and is emitted once per session rather than per request.
 ​
 Dynamic headers
 For enterprise environments that require dynamic authentication, you can configure a script to generate headers dynamically:
@@ -2080,7 +2125,8 @@ Claude Code ROI Measurement Guide
 . This repository provides ready-to-use Docker Compose configurations, Prometheus and OpenTelemetry setups, and templates for generating productivity reports integrated with tools like Linear.
 ​
 Security and privacy
-Telemetry is opt-in and requires explicit configuration
+OpenTelemetry export to your backend is opt-in and requires explicit configuration. For Anthropic’s separate operational telemetry and how to disable it, see
+Data usage
 Raw file contents and code snippets are not included in metrics or events. Trace spans are a separate data path: see the
 OTEL_LOG_TOOL_CONTENT
 bullet below
@@ -2138,7 +2184,7 @@ Claude Code Monitoring Implementation (Bedrock)
 Was this page helpful?
 Yes
 No
-Auto mode
+Development containers
 Costs
 ⌘
 I

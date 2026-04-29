@@ -13,7 +13,6 @@ Claude Code on desktop
 Use Claude Code Desktop
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -114,6 +113,10 @@ App won’t quit
 Windows-specific issues
 ”Branch doesn’t exist yet” when opening in CLI
 Still stuck?
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 The Claude Desktop app has three tabs:
 Chat
 for conversations,

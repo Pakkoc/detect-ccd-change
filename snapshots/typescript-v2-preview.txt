@@ -13,7 +13,6 @@ SDK references
 TypeScript SDK V2 interface (preview)
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -73,6 +72,10 @@ SDKSession interface
 Feature availability
 Feedback
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 The V2 interface is an
 unstable preview
 . APIs may change based on feedback before becoming stable. Some features like session forking are only available in the

@@ -13,7 +13,6 @@ Reference
 Environment variables
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -30,8 +29,14 @@ Checkpointing
 Hooks reference
 Plugins reference
 Channels reference
+Glossary
+Glossary
 On this page
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code supports the following environment variables to control its behavior. Set them in your shell before launching
 claude
 , or configure them in
@@ -249,6 +254,12 @@ CLAUDE_CODE_API_KEY_HELPER_TTL_MS
 Interval in milliseconds at which credentials should be refreshed (when using
 apiKeyHelper
 )
+CLAUDE_CODE_ATTRIBUTION_HEADER
+Set to
+0
+to omit the attribution block (client version and prompt fingerprint) from the start of the system prompt. Disabling it improves prompt-cache hit rates when routing through an
+LLM gateway
+. Anthropic API caching is unaffected
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
 Set the context capacity in tokens used for auto-compaction calculations. Defaults to the model’s context window: 200K for standard models or 1M for
 extended context
@@ -432,6 +443,10 @@ CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL
 Set to
 1
 to skip automatic addition of the official plugin marketplace on first run
+CLAUDE_CODE_DISABLE_POLICY_SKILLS
+Set to
+1
+to skip loading skills from the system-wide managed skills directory. Useful for container or CI sessions that should not load operator-provisioned skills
 CLAUDE_CODE_DISABLE_TERMINAL_TITLE
 Set to
 1
@@ -523,6 +538,8 @@ Set to
 to enable
 agent teams
 . Agent teams are experimental and disabled by default
+CLAUDE_CODE_EXTRA_BODY
+JSON object to merge into the top level of every API request body. Useful for passing provider-specific parameters that Claude Code does not expose directly
 CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS
 Override the default token limit for file reads. Useful when you need to read larger files in full
 CLAUDE_CODE_FORK_SUBAGENT
@@ -534,7 +551,8 @@ forked subagents
 /fork
 spawns a forked subagent rather than acting as an alias for
 /branch
-, and all subagent spawns run in the background. Interactive mode only
+, and all subagent spawns run in the background. Works in interactive mode and via the SDK or
+claude -p
 CLAUDE_CODE_GIT_BASH_PATH
 Windows only: path to the Git Bash executable (
 bash.exe
@@ -595,6 +613,12 @@ CLAUDE_CODE_MAX_RETRIES
 Override the number of times to retry failed API requests (default: 10)
 CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY
 Maximum number of read-only tools and subagents that can execute in parallel (default: 10). Higher values increase parallelism but consume more resources
+CLAUDE_CODE_MCP_ALLOWLIST_ENV
+Set to
+1
+to spawn stdio MCP servers with only a safe baseline environment plus the server’s configured
+env
+, instead of inheriting your shell environment
 CLAUDE_CODE_NEW_INIT
 Set to
 1
@@ -739,9 +763,7 @@ CLI flag sets this
 CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT
 Set to
 1
-to use the minimal system prompt and collapsed tool descriptions from
-CLAUDE_CODE_SIMPLE
-without the other simple-mode changes. The full tool set, hooks, MCP servers, and CLAUDE.md discovery remain enabled
+to use a shorter system prompt and abbreviated tool descriptions on Opus 4.7. Has no effect on other models. The full tool set, hooks, MCP servers, and CLAUDE.md discovery remain enabled
 CLAUDE_CODE_SKIP_BEDROCK_AUTH
 Skip AWS authentication for Bedrock (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_FOUNDRY_AUTH
@@ -829,8 +851,14 @@ Microsoft Foundry
 CLAUDE_CODE_USE_MANTLE
 Use the Bedrock
 Mantle endpoint
+CLAUDE_CODE_USE_NATIVE_FILE_SEARCH
+Set to
+1
+to discover custom commands, subagents, and output styles using Node.js file APIs instead of ripgrep. Set this if the bundled ripgrep binary is unavailable or blocked in your environment. Does not affect the Grep or file search tools
 CLAUDE_CODE_USE_POWERSHELL_TOOL
-Controls the PowerShell tool. On Windows, the tool is rolling out progressively: set to
+Controls the PowerShell tool. On Windows without Git Bash, the tool is enabled automatically; set to
+0
+to disable it. On Windows with Git Bash installed, the tool is rolling out progressively: set to
 1
 to opt in or
 0
@@ -866,6 +894,8 @@ CLAUDE_STREAM_IDLE_TIMEOUT_MS
 CLAUDE_ENV_FILE
 Path to a shell script whose contents Claude Code runs before each Bash command in the same shell process, so exports in the file are visible to the command. Use to persist virtualenv or conda activation across commands. Also populated dynamically by
 SessionStart
+,
+Setup
 ,
 CwdChanged
 , and

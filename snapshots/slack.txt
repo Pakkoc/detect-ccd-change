@@ -13,7 +13,6 @@ Platforms and integrations
 Claude Code in Slack
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -73,6 +72,10 @@ Authentication errors
 Session expiration
 Current limitations
 Related resources
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code in Slack brings the power of Claude Code directly into your Slack workspace. When you mention
 @Claude
 with a coding task, Claude automatically detects the intent and creates a Claude Code session on the web, allowing you to delegate development work without leaving your team conversations.

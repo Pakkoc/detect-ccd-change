@@ -13,7 +13,6 @@ Plugin distribution
 Create and distribute a plugin marketplace
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -26,6 +25,14 @@ Advanced setup
 Authentication
 Server-managed settings
 Auto mode
+Deployment
+Overview
+Amazon Bedrock
+Google Vertex AI
+Microsoft Foundry
+Network configuration
+LLM gateway
+Development containers
 Usage and costs
 Monitoring
 Costs
@@ -37,6 +44,9 @@ Security and data
 Security
 Data usage
 Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 Overview
 Walkthrough: create a local marketplace
@@ -85,6 +95,10 @@ Git operations time out
 Plugins with relative paths fail in URL-based marketplaces
 Files not found after installation
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 A
 plugin marketplace
 is a catalog that lets you distribute plugins to others. Marketplaces provide centralized discovery, version tracking, automatic updates, and support for multiple source types (git repositories, local paths, and more). This guide shows you how to create your own marketplace to share plugins with your team or community.
@@ -381,12 +395,15 @@ Optional fields
 Field
 Type
 Description
-metadata.description
+$schema
+string
+JSON Schema URL for editor autocomplete and validation. Claude Code ignores this field at load time.
+description
 string
 Brief marketplace description
-metadata.version
+version
 string
-Marketplace version
+Marketplace manifest version
 metadata.pluginRoot
 string
 Base directory prepended to relative plugin source paths (for example,
@@ -401,6 +418,12 @@ array
 Other marketplaces that plugins in this marketplace may depend on. Dependencies from a marketplace not listed here are blocked at install. See
 Depend on a plugin from another marketplace
 .
+description
+and
+version
+are also accepted under
+metadata
+for backward compatibility.
 ​
 Plugin entries
 Each plugin entry in the
@@ -1829,8 +1852,8 @@ Marketplace has no plugins defined
 plugins
 array
 No marketplace description provided
-: add
-metadata.description
+: add a top-level
+description
 to help users understand your marketplace
 Plugin name "x" is not kebab-case
 : the plugin name contains uppercase letters, spaces, or special characters. Rename to lowercase letters, digits, and hyphens only (for example,

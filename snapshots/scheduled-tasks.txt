@@ -13,7 +13,6 @@ Automation
 Run prompts on a schedule
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -34,7 +33,8 @@ Push external events to Claude
 Run prompts on a schedule
 Programmatic usage
 Troubleshooting
-Troubleshooting
+Troubleshoot installation and login
+Troubleshoot performance and stability
 Debug configuration
 Error reference
 On this page
@@ -53,6 +53,10 @@ Seven-day expiry
 Cron expression reference
 Disable scheduled tasks
 Limitations
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Scheduled tasks require Claude Code v2.1.72 or later. Check your version with
 claude --version
 .

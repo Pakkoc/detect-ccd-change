@@ -13,7 +13,6 @@ Settings and permissions
 Claude Code settings
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -66,6 +65,10 @@ Managing plugins
 Environment variables
 Tools available to Claude
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code offers a variety of settings to configure its behavior to meet your needs. You can configure Claude Code by running the
 /config
 command when using the interactive REPL, which opens a tabbed Settings interface where you can view status information and modify configuration options.
@@ -2397,7 +2400,7 @@ Authentication
 : set up user access to Claude Code
 Debug your configuration
 : diagnose why a setting, hook, or MCP server isn’t taking effect
-Troubleshooting
+Troubleshoot installation and login
 : installation, authentication, and platform issues
 Was this page helpful?
 Yes

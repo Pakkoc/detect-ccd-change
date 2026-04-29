@@ -13,7 +13,6 @@ Reference
 Hooks reference
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -30,6 +29,8 @@ Checkpointing
 Hooks reference
 Plugins reference
 Channels reference
+Glossary
+Glossary
 On this page
 Hook lifecycle
 How a hook resolves
@@ -53,12 +54,16 @@ Exit code output
 Exit code 2 behavior per event
 HTTP response handling
 JSON output
+Add context for Claude
 Decision control
 Hook events
 SessionStart
 SessionStart input
 SessionStart decision control
 Persist environment variables
+Setup
+Setup input
+Setup decision control
 InstructionsLoaded
 InstructionsLoaded input
 InstructionsLoaded decision control
@@ -152,6 +157,10 @@ Disclaimer
 Security best practices
 Windows PowerShell tool
 Debug hooks
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 For a quickstart guide with examples, see
 Automate workflows with hooks
 .
@@ -182,6 +191,16 @@ Event
 When it fires
 SessionStart
 When a session begins or resumes
+Setup
+When you start Claude Code with
+--init-only
+, or with
+--init
+or
+--maintenance
+in
+-p
+mode. For one-time preparation in CI or scripts
 UserPromptSubmit
 When you submit a prompt, before Claude processes it
 UserPromptExpansion
@@ -550,6 +569,11 @@ resume
 clear
 ,
 compact
+Setup
+which CLI flag triggered setup
+init
+,
+maintenance
 SessionEnd
 why the session ended
 clear
@@ -572,9 +596,13 @@ idle_prompt
 auth_success
 ,
 elicitation_dialog
+,
+elicitation_complete
+,
+elicitation_response
 SubagentStart
 agent type
-Bash
+general-purpose
 ,
 Explore
 ,
@@ -1546,6 +1574,9 @@ Shows stderr to user only
 SessionStart
 No
 Shows stderr to user only
+Setup
+No
+Shows stderr to user only
 SessionEnd
 No
 Shows stderr to user only
@@ -1653,6 +1684,80 @@ false
 :
 "Build failed, fix errors before continuing"
 }
+​
+Add context for Claude
+The
+additionalContext
+field passes a string from your hook into Claude’s context window. Claude Code wraps the string in a system reminder and inserts it into the conversation at the point where the hook fired. Claude reads the reminder on the next model request, but it does not appear as a chat message in the interface.
+Return
+additionalContext
+inside
+hookSpecificOutput
+alongside the event name:
+{
+"hookSpecificOutput"
+: {
+"hookEventName"
+:
+"PostToolUse"
+,
+"additionalContext"
+:
+"This file is generated. Edit src/schema.ts and run `bun generate` instead."
+}
+}
+Where the reminder appears depends on the event:
+SessionStart
+,
+Setup
+, and
+SubagentStart
+: at the start of the conversation, before the first prompt
+UserPromptSubmit
+and
+UserPromptExpansion
+: alongside the submitted prompt
+PreToolUse
+,
+PostToolUse
+,
+PostToolUseFailure
+, and
+PostToolBatch
+: next to the tool result
+When several hooks return
+additionalContext
+for the same event, Claude receives all of the values. If a value exceeds 10,000 characters, Claude Code writes the full text to a file in the session directory and passes Claude the file path with a short preview instead.
+Use
+additionalContext
+for information Claude should know about the current state of your environment or the operation that just ran:
+Environment state
+: the current branch, deployment target, or active feature flags
+Conditional project rules
+: which test command applies to the file just edited, which directories are read-only in this worktree
+External data
+: open issues assigned to you, recent CI results, content fetched from an internal service
+For instructions that never change, prefer
+CLAUDE.md
+. It loads without running a script and is the standard place for static project conventions.
+Write the text as factual statements rather than imperative system instructions. Phrasing such as “The deployment target is production” or “This repo uses
+bun test
+” reads as project information. Text framed as out-of-band system commands can trigger Claude’s prompt-injection defenses, which causes Claude to surface the text to you instead of treating it as context.
+Once injected, the text is saved in the session transcript. For mid-session events like
+PostToolUse
+or
+UserPromptSubmit
+, resuming with
+--continue
+or
+--resume
+replays the saved text rather than re-running the hook for past turns, so values like timestamps or commit SHAs become stale on resume.
+SessionStart
+hooks run again on resume with
+source
+set to
+"resume"
+, so they can refresh their context.
 ​
 Decision control
 Not every event supports blocking or controlling behavior through JSON. The events that do each use a different set of fields to express that decision. Use this table as a quick reference before writing a hook:
@@ -1885,7 +1990,9 @@ available to all hooks, you can return these event-specific fields:
 Field
 Description
 additionalContext
-String added to Claude’s context. Multiple hooks’ values are concatenated
+String added to Claude’s context at the start of the conversation, before the first prompt. See
+Add context for Claude
+for how the text is delivered and what to put in it
 {
 "hookSpecificOutput"
 : {
@@ -1895,9 +2002,16 @@ String added to Claude’s context. Multiple hooks’ values are concatenated
 ,
 "additionalContext"
 :
-"My additional context here"
+"Current branch: feat/auth-refactor
+\n
+Uncommitted changes: src/auth.ts, src/login.tsx
+\n
+Active issue: #4211 Migrate to OAuth2"
 }
 }
+Since plain stdout already reaches Claude for this event, a hook that only loads context can print to stdout directly without building JSON. Use the JSON form when you need to combine context with other fields such as
+suppressOutput
+.
 ​
 Persist environment variables
 SessionStart hooks have access to the
@@ -1994,10 +2108,119 @@ exit
 Any variables written to this file will be available in all subsequent Bash commands that Claude Code executes during the session.
 CLAUDE_ENV_FILE
 is available for SessionStart,
+Setup
+,
 CwdChanged
 , and
 FileChanged
 hooks. Other hook types do not have access to this variable.
+​
+Setup
+Fires only when you launch Claude Code with
+--init-only
+, or with
+--init
+or
+--maintenance
+in print mode (
+-p
+). It does not fire on normal startup. Use it for one-time dependency installation or scheduled cleanup that you trigger explicitly from CI or scripts, separate from normal session startup. For per-session initialization, use
+SessionStart
+instead.
+The matcher value corresponds to the CLI flag that triggered the hook:
+Matcher
+When it fires
+init
+claude --init-only
+or
+claude -p --init
+maintenance
+claude -p --maintenance
+--init-only
+runs Setup hooks and
+SessionStart
+hooks with the
+startup
+matcher, then exits without starting a conversation.
+--init
+and
+--maintenance
+fire Setup hooks only when combined with
+-p
+(print mode); in an interactive session those two flags do not currently fire Setup hooks.
+Because Setup does not fire on every launch, a plugin that needs a dependency installed cannot rely on Setup alone. The practical pattern is to check for the dependency on first use and install on miss, for example a hook or skill that tests for
+${CLAUDE_PLUGIN_DATA}/node_modules
+and runs
+npm install
+if absent. See the
+persistent data directory
+for where to store installed dependencies.
+​
+Setup input
+In addition to the
+common input fields
+, Setup hooks receive a
+trigger
+field set to either
+"init"
+or
+"maintenance"
+:
+{
+"session_id"
+:
+"abc123"
+,
+"transcript_path"
+:
+"/Users/.../.claude/projects/.../00893aaf-19fa-41d2-8238-13269b9b3ca0.jsonl"
+,
+"cwd"
+:
+"/Users/..."
+,
+"hook_event_name"
+:
+"Setup"
+,
+"trigger"
+:
+"init"
+}
+​
+Setup decision control
+Setup hooks cannot block. On exit code 2, stderr is shown to the user; on any other non-zero exit code, stderr appears only when you launch with
+--verbose
+. In both cases execution continues. To pass information into Claude’s context, return
+additionalContext
+in JSON output; plain stdout is written to the debug log only. In addition to the
+JSON output fields
+available to all hooks, you can return these event-specific fields:
+Field
+Description
+additionalContext
+String added to Claude’s context. Multiple hooks’ values are concatenated
+{
+"hookSpecificOutput"
+: {
+"hookEventName"
+:
+"Setup"
+,
+"additionalContext"
+:
+"Dependencies installed: node_modules, .venv"
+}
+}
+Setup hooks have access to
+CLAUDE_ENV_FILE
+. Variables written to that file persist into subsequent Bash commands for the session, just as in
+SessionStart hooks
+. Only
+type: "command"
+and
+type: "mcp_tool"
+hooks are supported.
 ​
 InstructionsLoaded
 Fires when a
@@ -2163,7 +2386,8 @@ is
 "block"
 . Not added to context
 additionalContext
-String added to Claude’s context
+String added to Claude’s context alongside the submitted prompt. See
+Add context for Claude
 sessionTitle
 Sets the session title, same effect as
 /rename
@@ -2298,7 +2522,8 @@ decision
 is
 "block"
 additionalContext
-String added to Claude’s context alongside the expanded prompt
+String added to Claude’s context alongside the expanded prompt. See
+Add context for Claude
 {
 "decision"
 :
@@ -2608,9 +2833,12 @@ to show the modified input to the user. For
 "defer"
 , ignored
 additionalContext
-String added to Claude’s context before the tool executes. For
+String added to Claude’s context alongside the tool result. Ignored when
+permissionDecision
+is
 "defer"
-, ignored
+. See
+Add context for Claude
 When multiple PreToolUse hooks return different decisions, precedence is
 deny
 >
@@ -3177,20 +3405,22 @@ decision
 is
 "block"
 additionalContext
-Additional context for Claude to consider
+String added to Claude’s context alongside the tool result. See
+Add context for Claude
+updatedToolOutput
+Replaces the tool’s output with the provided value before it is sent to Claude. The value must match the tool’s output shape
 updatedMCPToolOutput
-For
+Replaces the output for
 MCP tools
-only: replaces the tool’s output with the provided value
+only. Prefer
+updatedToolOutput
+, which works for all tools
+The example below replaces the output of a
+Bash
+call. The replacement value matches the
+Bash
+tool’s output shape:
 {
-"decision"
-:
-"block"
-,
-"reason"
-:
-"Explanation for decision"
-,
 "hookSpecificOutput"
 : {
 "hookEventName"
@@ -3200,8 +3430,42 @@ only: replaces the tool’s output with the provided value
 "additionalContext"
 :
 "Additional information for Claude"
+,
+"updatedToolOutput"
+: {
+"stdout"
+:
+"[redacted]"
+,
+"stderr"
+:
+""
+,
+"interrupted"
+:
+false
+,
+"isImage"
+:
+false
 }
 }
+}
+updatedToolOutput
+only changes what Claude sees. The tool has already run by the time the hook fires, so any files written, commands executed, or network requests sent have already taken effect. Telemetry such as OpenTelemetry tool spans and analytics events also captures the original output before the hook runs. To prevent or modify a tool call before it runs, use a
+PreToolUse
+hook instead.
+The replacement value must match the tool’s output shape. Built-in tools return structured objects rather than plain strings. For example,
+Bash
+returns an object with
+stdout
+,
+stderr
+,
+interrupted
+, and
+isImage
+fields. For built-in tools, a value that does not match the tool’s output schema is ignored and the original output is used. MCP tool output is passed through without schema validation. Stripping error details that Claude needs can cause it to proceed on a false assumption.
 ​
 PostToolUseFailure
 Runs when a tool execution fails. This event fires for tool calls that throw errors or return failure results. Use this to log failures, send alerts, or provide corrective feedback to Claude.
@@ -3281,7 +3545,8 @@ available to all hooks, your hook script can return these event-specific fields:
 Field
 Description
 additionalContext
-Additional context for Claude to consider alongside the error
+String added to Claude’s context alongside the error. See
+Add context for Claude
 {
 "hookSpecificOutput"
 : {
@@ -3415,7 +3680,9 @@ available to all hooks, your hook script can return these event-specific fields:
 Field
 Description
 additionalContext
-Context string injected once before the next model call
+Context string injected once before the next model call. See
+Add context for Claude
+for delivery details, what to put in it, and how resumed sessions handle past values
 {
 "hookSpecificOutput"
 : {
@@ -3428,14 +3695,6 @@ Context string injected once before the next model call
 "These files are part of the ledger module. Run pytest before marking the task complete."
 }
 }
-Injected
-additionalContext
-is persisted to the session transcript. On
---continue
-or
---resume
-, the saved text is replayed from disk and the hook does not re-run for past turns. Prefer static context such as conventions or file-type guidance over dynamic values like timestamps or the current commit SHA, since those become stale on resume.
-Frame the context as factual information rather than imperative system instructions. Text written as out-of-band system commands can trigger Claude’s prompt-injection defenses, which surfaces the injection to the user instead of acting on it.
 Returning
 decision: "block"
 or
@@ -3547,6 +3806,10 @@ idle_prompt
 auth_success
 ,
 elicitation_dialog
+,
+elicitation_complete
+,
+elicitation_response
 . Omit the matcher to run hooks for all notification types.
 Use separate matchers to run different handlers depending on the notification type. This configuration triggers a permission-specific alert script when Claude needs permission approval and a different notification when Claude has been idle:
 {
@@ -3633,19 +3896,15 @@ indicating which type fired.
 :
 "permission_prompt"
 }
-Notification hooks cannot block or modify notifications. In addition to the
-JSON output fields
-available to all hooks, you can return
-additionalContext
-to add context to the conversation:
-Field
-Description
-additionalContext
-String added to Claude’s context
+Notification hooks cannot block or modify notifications. They are intended for side effects such as forwarding the notification to an external service. The
+common JSON output fields
+such as
+systemMessage
+apply.
 ​
 SubagentStart
 Runs when a Claude Code subagent is spawned via the Agent tool. Supports matchers to filter by agent type name (built-in agents like
-Bash
+general-purpose
 ,
 Explore
 ,
@@ -3662,7 +3921,7 @@ agent_id
 with the unique identifier for the subagent and
 agent_type
 with the agent name (built-in agents like
-"Bash"
+"general-purpose"
 ,
 "Explore"
 ,
@@ -3699,7 +3958,8 @@ available to all hooks, you can return:
 Field
 Description
 additionalContext
-String added to the subagent’s context
+String added to the subagent’s context at the start of its conversation, before its first prompt. See
+Add context for Claude
 {
 "hookSpecificOutput"
 : {

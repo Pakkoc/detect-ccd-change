@@ -13,7 +13,6 @@ Interface
 Configure your terminal for Claude Code
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -46,6 +45,10 @@ Switch to fullscreen rendering
 Paste large content
 Edit prompts with Vim keybindings
 Related resources
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code works in any terminal without configuration. This page is for when something specific is not behaving the way you expect. Find your symptom below. If everything already feels right, you do not need this page.
 Shift+Enter submits instead of inserting a newline
 Option-key shortcuts do nothing on macOS
@@ -106,6 +109,11 @@ If you accepted Claude Code’s first-run prompt that offered “Option+Enter fo
 /terminal-setup
 for you, which enables Option as Meta and switches the audio bell to a visual screen flash in your Apple Terminal profile.
 Open Settings → Profiles → Keys → General and set Left Option key and Right Option key to “Esc+”.
+Running
+/terminal-setup
+in iTerm2 enables “Applications in terminal may access clipboard” under Settings → General → Selection so the
+/copy
+command can write to your system clipboard. The command detects iTerm2 even when run from inside tmux. Restart iTerm2 for the change to take effect.
 Add
 "terminal.integrated.macOptionIsMeta": true
 to your VS Code settings.

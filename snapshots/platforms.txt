@@ -13,7 +13,6 @@ Platforms and integrations
 Platforms and integrations
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -53,6 +52,10 @@ Related resources
 Platforms
 Integrations
 Remote access
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code runs the same underlying engine everywhere, but each surface is tuned for a different way of working. This page helps you pick the right platform for your workflow and connect the tools you already use.
 ​
 Where to run Claude Code

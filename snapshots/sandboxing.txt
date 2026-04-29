@@ -13,7 +13,6 @@ Settings and permissions
 Sandboxing
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -61,6 +60,10 @@ Open source
 Limitations
 What sandboxing does not cover
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 ​
 Overview
 Claude Code features native sandboxing to provide a more secure environment for agent execution while reducing the need for constant permission prompts. Instead of asking permission for each bash command, sandboxing creates defined boundaries upfront where Claude Code can work more freely with reduced risk.
@@ -156,6 +159,18 @@ dnf
 install
 bubblewrap
 socat
+WSL1 does not support sandboxing because it lacks the required Linux namespace primitives. If you see
+Sandboxing requires WSL2
+, upgrade your distribution to WSL2 or run Claude Code without sandboxing.
+On WSL2, sandboxed commands cannot launch Windows binaries such as
+cmd.exe
+,
+powershell.exe
+, or anything under
+/mnt/c/
+. WSL hands these off to the Windows host over a Unix socket, which the sandbox blocks. If a command needs to invoke a Windows binary, add it to
+excludedCommands
+so it runs outside the sandbox.
 ​
 Enable sandboxing
 You can enable sandboxing by running the

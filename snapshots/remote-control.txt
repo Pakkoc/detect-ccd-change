@@ -13,7 +13,6 @@ Platforms and integrations
 Continue local sessions from any device with Remote Control
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -63,6 +62,10 @@ Troubleshooting
 ”Remote credentials fetch failed”
 Choose the right approach
 Related resources
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Remote Control is in research preview and available on all plans. On Team and Enterprise, it is off by default until an admin enables the Remote Control toggle in
 Claude Code admin settings
 .

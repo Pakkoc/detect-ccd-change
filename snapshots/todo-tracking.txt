@@ -13,7 +13,6 @@ Control and observability
 Todo Lists
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -64,6 +63,10 @@ Examples
 Monitoring Todo Changes
 Real-time Progress Display
 Related Documentation
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Todo tracking provides a structured way to manage tasks and display progress to users. The Claude Agent SDK includes built-in todo functionality that helps organize complex workflows and keep users informed about task progression.
 ​
 Todo Lifecycle

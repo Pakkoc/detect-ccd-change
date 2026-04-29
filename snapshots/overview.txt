@@ -13,7 +13,6 @@ Getting started
 Claude Code overview
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -50,6 +49,10 @@ Get started
 What you can do
 Use Claude Code everywhere
 Next steps
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code is an AI-powered coding assistant that helps you build features, fix bugs, and automate development tasks. It understands your entire codebase and can work across multiple files and tools to get things done.
 ​
 Get started
@@ -102,10 +105,8 @@ C:\
 without the
 PS
 when you’re in CMD.
-Native Windows setups require
 Git for Windows
-.
-Install it first if you don’t have it. WSL setups do not need it.
+is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
 Native installations automatically update in the background to keep you on the latest version.
 brew
 install
@@ -137,7 +138,7 @@ Continue with the Quickstart →
 See
 advanced setup
 for installation options, manual updates, or uninstallation instructions. Visit
-troubleshooting
+installation troubleshooting
 if you hit issues.
 The VS Code extension provides inline diffs, @-mentions, plan review, and conversation history directly in your editor.
 Install for VS Code

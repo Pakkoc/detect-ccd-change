@@ -13,7 +13,6 @@ Security and data
 Security
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -26,6 +25,14 @@ Advanced setup
 Authentication
 Server-managed settings
 Auto mode
+Deployment
+Overview
+Amazon Bedrock
+Google Vertex AI
+Microsoft Foundry
+Network configuration
+LLM gateway
+Development containers
 Usage and costs
 Monitoring
 Costs
@@ -37,6 +44,9 @@ Security and data
 Security
 Data usage
 Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 How we approach security
 Security foundation
@@ -55,6 +65,10 @@ Working with sensitive code
 Team security
 Reporting security issues
 Related resources
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 ​
 How we approach security
 ​

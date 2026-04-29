@@ -13,7 +13,6 @@ Setup and access
 Configure server-managed settings
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -26,6 +25,14 @@ Advanced setup
 Authentication
 Server-managed settings
 Auto mode
+Deployment
+Overview
+Amazon Bedrock
+Google Vertex AI
+Microsoft Foundry
+Network configuration
+LLM gateway
+Development containers
 Usage and costs
 Monitoring
 Costs
@@ -37,6 +44,9 @@ Security and data
 Security
 Data usage
 Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 Requirements
 Choose between server-managed and endpoint-managed settings
@@ -54,6 +64,10 @@ Platform availability
 Audit logging
 Security considerations
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Server-managed settings allow administrators to centrally configure Claude Code through a web-based interface on Claude.ai. Claude Code clients automatically receive these settings when users authenticate with their organization credentials.
 This approach is designed for organizations that do not have device management infrastructure in place, or need to manage settings for users on unmanaged devices.
 Server-managed settings are available for
@@ -300,9 +314,18 @@ forceRemoteSettingsRefresh: true
 , the CLI exits instead of continuing
 User authenticates with a different organization
 Settings are not delivered for accounts outside the managed organization
-User sets a non-default
+User configures a
+third-party model provider
+Server-managed settings are bypassed. This includes setting
+CLAUDE_CODE_USE_BEDROCK
+,
+CLAUDE_CODE_USE_MANTLE
+,
+CLAUDE_CODE_USE_VERTEX
+,
+CLAUDE_CODE_USE_FOUNDRY
+, or a non-default
 ANTHROPIC_BASE_URL
-Server-managed settings are bypassed when using third-party API providers
 To detect runtime configuration changes, use
 ConfigChange
 hooks

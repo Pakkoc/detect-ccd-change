@@ -13,7 +13,6 @@ Reference
 Channels reference
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -30,6 +29,8 @@ Checkpointing
 Hooks reference
 Plugins reference
 Channels reference
+Glossary
+Glossary
 On this page
 Overview
 What you need
@@ -46,6 +47,10 @@ Add relay to a chat bridge
 Full example
 Package as a plugin
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Channels are in
 research preview
 and require Claude Code v2.1.80 or later. They require claude.ai login. Console and API key authentication is not supported. Team and Enterprise organizations must
@@ -2397,6 +2402,7 @@ Was this page helpful?
 Yes
 No
 Plugins reference
+Glossary
 ⌘
 I
 Assistant

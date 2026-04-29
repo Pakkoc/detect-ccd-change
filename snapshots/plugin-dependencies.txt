@@ -13,7 +13,6 @@ Plugin distribution
 Constrain plugin dependency versions
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -26,6 +25,14 @@ Advanced setup
 Authentication
 Server-managed settings
 Auto mode
+Deployment
+Overview
+Amazon Bedrock
+Google Vertex AI
+Microsoft Foundry
+Network configuration
+LLM gateway
+Development containers
 Usage and costs
 Monitoring
 Costs
@@ -37,14 +44,22 @@ Security and data
 Security
 Data usage
 Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 Why constrain dependency versions
 Declare a dependency with a version constraint
 Depend on a plugin from another marketplace
 Tag plugin releases for version resolution
 How constraints interact
+Remove orphaned auto-installed dependencies
 Resolve dependency errors
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 A plugin can depend on other plugins by listing them in
 plugin.json
 or in its marketplace entry. By default, a dependency tracks the latest available version, so an upstream release can change the dependency under your plugin without warning. Version constraints let you hold a dependency at a tested version range until you choose to move.
@@ -304,6 +319,40 @@ and the
 /plugin
 Errors tab, naming the constraining plugin.
 When you uninstall the last plugin that constrains a dependency, the dependency is no longer held and resumes tracking its marketplace entry on the next update.
+​
+Remove orphaned auto-installed dependencies
+Auto-installed dependencies stay on disk after the plugins that installed them are uninstalled, in case you reinstall a dependent plugin or want to keep using the dependency directly. To clean them up, run
+claude plugin prune
+to list the auto-installed dependencies that no longer have any installed plugin requiring them and remove them after a confirmation prompt. This requires Claude Code v2.1.121 or later.
+claude
+plugin
+prune
+By default, prune operates at user scope. Use
+--scope project
+or
+--scope local
+to target a different scope. Pass
+--dry-run
+to list what would be removed without changing anything. Pass
+-y
+to skip the confirmation prompt. When stdin or stdout is not a terminal, prune lists the orphans and exits without removing them unless
+-y
+is passed.
+To prune as part of an uninstall, pass
+--prune
+to
+claude plugin uninstall
+. After removing the named plugin, Claude Code scans for and removes any auto-installed dependencies that are now orphaned. Plugins you installed yourself are never pruned, only those installed automatically through another plugin’s
+dependencies
+array.
+For example, to uninstall
+deploy-kit
+and clean up the dependencies it leaves behind:
+claude
+plugin
+uninstall
+deploy-kit
+--prune
 ​
 Resolve dependency errors
 Dependency problems surface in

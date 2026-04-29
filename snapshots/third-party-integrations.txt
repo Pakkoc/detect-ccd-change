@@ -13,13 +13,18 @@ Deployment
 Enterprise deployment overview
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
 Agent SDK
 What's New
 Resources
+Setup and access
+Administration overview
+Advanced setup
+Authentication
+Server-managed settings
+Auto mode
 Deployment
 Overview
 Amazon Bedrock
@@ -28,6 +33,20 @@ Microsoft Foundry
 Network configuration
 LLM gateway
 Development containers
+Usage and costs
+Monitoring
+Costs
+Track team usage with analytics
+Plugin distribution
+Create and distribute a plugin marketplace
+Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 Compare deployment options
 Configure proxies and gateways
@@ -42,6 +61,10 @@ Pin model versions for cloud providers
 Configure security policies
 Leverage MCP for integrations
 Next steps
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Organizations can deploy Claude Code through Anthropic directly or through a cloud provider. This page helps you choose the right configuration.
 ​
 Compare deployment options
@@ -351,6 +374,7 @@ to define what Claude Code can and cannot do in your environment.
 Was this page helpful?
 Yes
 No
+Auto mode
 Amazon Bedrock
 ⌘
 I

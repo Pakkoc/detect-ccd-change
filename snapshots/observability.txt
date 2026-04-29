@@ -13,7 +13,6 @@ Control and observability
 Observability with OpenTelemetry
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -66,6 +65,10 @@ Link traces to your application
 Tag telemetry from your agent
 Control sensitive data in exports
 Related documentation
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 When you run agents in production, you need visibility into what they did:
 which tools they called
 how long each model request took

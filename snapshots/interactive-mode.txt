@@ -13,7 +13,6 @@ Reference
 Interactive mode
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -30,6 +29,8 @@ Checkpointing
 Hooks reference
 Plugins reference
 Channels reference
+Glossary
+Glossary
 On this page
 Keyboard shortcuts
 General controls
@@ -50,13 +51,17 @@ Command history
 Reverse search with Ctrl+R
 Background bash commands
 How backgrounding works
-Bash mode with ! prefix
+Shell mode with ! prefix
 Prompt suggestions
 Side questions with /btw
 Task list
 Session recap
 PR review status
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 ​
 Keyboard shortcuts
 Keyboard shortcuts may vary by platform and terminal. Press
@@ -292,7 +297,7 @@ and
 skills
 !
 at start
-Bash mode
+Shell mode
 Run commands directly and add execution output to the session
 @
 File path mention
@@ -658,10 +663,10 @@ Test runners (jest, pytest)
 Development servers
 Long-running processes (docker, terraform)
 ​
-Bash mode with
+Shell mode with
 !
 prefix
-Run bash commands directly without going through Claude by prefixing your input with
+Run shell commands directly without going through Claude by prefixing your input with
 !
 :
 !
@@ -673,7 +678,7 @@ status
 !
 ls
 -la
-Bash mode:
+Shell mode:
 Adds the command and its output to the conversation context
 Shows real-time progress and output
 Supports the same
@@ -694,7 +699,7 @@ Ctrl+U
 on an empty prompt
 Pasting text that starts with
 !
-into an empty prompt enters bash mode automatically, matching typed
+into an empty prompt enters shell mode automatically, matching typed
 !
 behavior
 This is useful for quick shell operations while maintaining conversation context.

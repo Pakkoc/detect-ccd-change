@@ -13,7 +13,6 @@ Reference
 CLI reference
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -30,11 +29,17 @@ Checkpointing
 Hooks reference
 Plugins reference
 Channels reference
+Glossary
+Glossary
 On this page
 CLI commands
 CLI flags
 System prompt flags
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 ​
 CLI commands
 You can start sessions, pipe content, resume conversations, and manage updates with these commands:
@@ -128,6 +133,15 @@ claude setup-token
 Generate a long-lived OAuth token for CI and scripts. Prints the token to the terminal without saving it. Requires a Claude subscription. See
 Generate a long-lived token
 claude setup-token
+claude ultrareview [target]
+Run
+ultrareview
+non-interactively. Prints findings to stdout and exits 0 on success or 1 on failure. Use
+--json
+for the raw payload and
+--timeout <minutes>
+to override the 30-minute default
+claude ultrareview 1234 --json
 If you mistype a subcommand, Claude Code suggests the closest match and exits without starting a session. For example,
 claude udpate
 prints
@@ -295,10 +309,18 @@ claude --from-pr 123
 Automatically connect to IDE on startup if exactly one valid IDE is available
 claude --ide
 --init
-Run initialization hooks and start interactive mode
-claude --init
+Run
+Setup hooks
+with the
+init
+matcher before the session (print mode only)
+claude -p --init "query"
 --init-only
-Run initialization hooks and exit (no interactive session)
+Run
+Setup
+and
+SessionStart
+hooks, then exit without starting a conversation
 claude --init-only
 --include-hook-events
 Include all hook lifecycle events in the output stream. Requires
@@ -323,8 +345,12 @@ structured outputs
 )
 claude -p --json-schema '{"type":"object","properties":{...}}' "query"
 --maintenance
-Run maintenance hooks and start interactive mode
-claude --maintenance
+Run
+Setup hooks
+with the
+maintenance
+matcher before the session (print mode only)
+claude -p --maintenance "query"
 --max-budget-usd
 Maximum dollar amount to spend on API calls before stopping (print mode only)
 claude -p --max-budget-usd 5.00 "query"

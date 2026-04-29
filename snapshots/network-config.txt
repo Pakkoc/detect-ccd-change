@@ -13,13 +13,18 @@ Deployment
 Enterprise network configuration
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
 Agent SDK
 What's New
 Resources
+Setup and access
+Administration overview
+Advanced setup
+Authentication
+Server-managed settings
+Auto mode
 Deployment
 Overview
 Amazon Bedrock
@@ -28,6 +33,20 @@ Microsoft Foundry
 Network configuration
 LLM gateway
 Development containers
+Usage and costs
+Monitoring
+Costs
+Track team usage with analytics
+Plugin distribution
+Create and distribute a plugin marketplace
+Plugin dependency versions
+Security and data
+Security
+Data usage
+Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 Proxy configuration
 Environment variables
@@ -37,6 +56,10 @@ Custom CA certificates
 mTLS authentication
 Network access requirements
 Additional resources
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code supports various enterprise network and security configurations through environment variables. This includes routing traffic through corporate proxy servers, trusting custom Certificate Authorities (CA), and authenticating with mutual Transport Layer Security (mTLS) certificates for enhanced security.
 All environment variables shown on this page can also be configured in
 settings.json

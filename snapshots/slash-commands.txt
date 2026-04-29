@@ -13,7 +13,6 @@ Customize behavior
 Slash Commands in the SDK
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -78,6 +77,10 @@ Practical Examples
 Code Review Command
 Test Runner Command
 See Also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Slash commands provide a way to control Claude Code sessions with special commands that start with
 /
 . These commands can be sent through the SDK to perform actions like compacting context, listing context usage, or invoking custom commands. Only commands that work without an interactive terminal are dispatchable through the SDK; the

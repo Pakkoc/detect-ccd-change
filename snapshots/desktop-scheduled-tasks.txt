@@ -13,7 +13,6 @@ Claude Code on desktop
 Schedule recurring tasks in Claude Code Desktop
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -57,6 +56,10 @@ Missed runs
 Permissions for scheduled tasks
 Manage scheduled tasks
 Related resources
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Scheduled tasks start a new session automatically at a time and frequency you choose. Use them for recurring work like daily code reviews, dependency update checks, or morning briefings that pull from your calendar and inbox.
 The Desktop app’s
 Routines

@@ -13,7 +13,6 @@ Code review & CI/CD
 Claude Code GitLab CI/CD
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -78,6 +77,10 @@ Authentication errors
 Advanced configuration
 Common parameters and variables
 Customizing Claude’s behavior
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code for GitLab CI/CD is currently in beta. Features and functionality may evolve as we refine the experience.
 This integration is maintained by GitLab. For support, see the following
 GitLab issue

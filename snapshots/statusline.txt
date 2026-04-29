@@ -13,7 +13,6 @@ Interface
 Customize your status line
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -55,6 +54,10 @@ Windows configuration
 Subagent status lines
 Tips
 Troubleshooting
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 The status line is a customizable bar at the bottom of Claude Code that runs any shell script you configure. It receives JSON session data on stdin and displays whatever your script prints, giving you a persistent, at-a-glance view of context usage, costs, git status, or anything else you want to track.
 Status lines are useful when you:
 Want to monitor context window usage as you work
@@ -161,6 +164,15 @@ event-driven updates
 . The minimum is
 1
 . Set this when your status line shows time-based data such as a clock, or when background subagents change git state while the main session is idle. Leave it unset to run only on events.
+The optional
+hideVimModeIndicator
+field suppresses the built-in
+-- INSERT --
+text below the prompt. Set this to
+true
+when your script renders
+vim.mode
+itself, so the mode is not shown twice.
 ​
 Disable the status line
 Run

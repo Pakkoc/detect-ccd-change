@@ -13,7 +13,6 @@ Resources
 Legal and compliance
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -34,6 +33,10 @@ Authentication and credential use
 Security and trust
 Trust and safety
 Security vulnerability reporting
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 ​
 Legal agreements
 ​

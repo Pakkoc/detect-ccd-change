@@ -13,7 +13,6 @@ Input and output
 Stream responses in real-time
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -66,6 +65,10 @@ Stream tool calls
 Build a streaming UI
 Known limitations
 Next steps
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 By default, the Agent SDK yields complete
 AssistantMessage
 objects after Claude finishes generating each response. To receive incremental updates as text and tool calls are generated, enable partial message streaming by setting

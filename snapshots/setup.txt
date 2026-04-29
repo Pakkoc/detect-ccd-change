@@ -13,7 +13,6 @@ Setup and access
 Advanced setup
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -26,6 +25,14 @@ Advanced setup
 Authentication
 Server-managed settings
 Auto mode
+Deployment
+Overview
+Amazon Bedrock
+Google Vertex AI
+Microsoft Foundry
+Network configuration
+LLM gateway
+Development containers
 Usage and costs
 Monitoring
 Costs
@@ -37,6 +44,9 @@ Security and data
 Security
 Data usage
 Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 System requirements
 Additional dependencies
@@ -65,6 +75,10 @@ WinGet installation
 apt / dnf / apk
 npm
 Remove configuration files
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 This page covers system requirements, platform-specific installation details, updates, and uninstallation. For a guided walkthrough of your first session, see the
 quickstart
 . If you’ve never used a terminal before, see the
@@ -87,9 +101,9 @@ Network
 network configuration
 .
 Shell
-: Bash, Zsh, PowerShell, or CMD. Native Windows setups require
+: Bash, Zsh, PowerShell, or CMD. On native Windows,
 Git for Windows
-. WSL setups do not.
+is recommended; Claude Code falls back to PowerShell when Git Bash is absent. WSL setups do not require Git for Windows.
 Location
 :
 Anthropic supported countries
@@ -147,10 +161,8 @@ C:\
 without the
 PS
 when you’re in CMD.
-Native Windows setups require
 Git for Windows
-.
-Install it first if you don’t have it. WSL setups do not need it.
+is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
 Native installations automatically update in the background to keep you on the latest version.
 brew
 install
@@ -175,8 +187,8 @@ apt, dnf, or apk
 on Debian, Fedora, RHEL, and Alpine.
 After installation completes, open a terminal in the project you want to work in and start Claude Code:
 claude
-If you encounter any issues during installation, see the
-troubleshooting guide
+If you encounter any issues during installation, see
+Troubleshoot installation and login
 .
 ​
 Set up on Windows
@@ -187,6 +199,7 @@ Sandboxing
 When to use
 Native Windows
 Git for Windows
+recommended; PowerShell used if absent
 Not supported
 Windows-native projects and tools
 WSL 2
@@ -212,7 +225,7 @@ terminal guide
 walks through each step.
 After installation, launch
 claude
-from PowerShell, CMD, or Git Bash. Claude Code uses Git Bash internally to execute commands regardless of where you launched it. If Claude Code can’t find your Git Bash installation, set the path in your
+from PowerShell, CMD, or Git Bash. When Git Bash is installed, Claude Code uses it internally to execute commands regardless of where you launched it. If Claude Code can’t find your Git Bash installation, set the path in your
 settings.json file
 :
 {
@@ -231,7 +244,7 @@ bin
 bash.exe"
 }
 }
-Claude Code can also run PowerShell natively on Windows. The PowerShell tool is rolling out progressively; set
+Claude Code can also run PowerShell natively on Windows. When Git Bash is installed, the PowerShell tool is rolling out progressively as an additional option: set
 CLAUDE_CODE_USE_POWERSHELL_TOOL=1
 to opt in or
 0
@@ -281,6 +294,11 @@ Verify your installation
 After installing, confirm Claude Code is working:
 claude
 --version
+If this fails with
+command not found
+or another error, see
+Troubleshoot installation and login
+.
 For a more detailed check of your installation and configuration, run
 claude doctor
 :

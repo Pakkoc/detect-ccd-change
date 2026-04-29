@@ -13,7 +13,6 @@ Use Claude Code
 Common workflows
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -84,6 +83,10 @@ Run Claude on a schedule
 Ask Claude about its capabilities
 Example questions
 Next steps
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 This page covers practical workflows for everyday development: exploring unfamiliar code, debugging, refactoring, writing tests, creating PRs, and managing sessions. Each section includes example prompts you can adapt to your own projects. For higher-level patterns and tips, see
 Best practices
 .
@@ -924,7 +927,11 @@ Claude is done and waiting for your next prompt
 auth_success
 Authentication completes
 elicitation_dialog
-Claude is asking you a question
+An MCP server opens an elicitation form
+elicitation_complete
+An MCP elicitation form is submitted or dismissed
+elicitation_response
+An MCP elicitation response is sent back to the server
 3
 Verify the hook
 Type

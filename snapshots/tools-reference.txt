@@ -13,7 +13,6 @@ Reference
 Tools reference
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -30,6 +29,8 @@ Checkpointing
 Hooks reference
 Plugins reference
 Channels reference
+Glossary
+Glossary
 On this page
 Bash tool behavior
 LSP tool behavior
@@ -40,6 +41,10 @@ Shell selection in settings, hooks, and skills
 Preview limitations
 Check which tools are available
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code has access to a set of built-in tools that help it understand and modify your codebase. The tool names are the exact strings you use in
 permission rules
 ,
@@ -277,7 +282,7 @@ plugin monitors
 .
 ​
 PowerShell tool
-The PowerShell tool lets Claude run PowerShell commands natively. On Windows, this means commands run in PowerShell instead of routing through Git Bash. The tool is rolling out progressively on Windows and is opt-in on Linux, macOS, and WSL.
+The PowerShell tool lets Claude run PowerShell commands natively. On Windows, this means commands run in PowerShell instead of routing through Git Bash. On Windows without Git Bash, the tool is enabled automatically. On Windows with Git Bash installed, the tool is rolling out progressively. On Linux, macOS, and WSL, the tool is opt-in.
 ​
 Enable the PowerShell tool
 Set
@@ -334,7 +339,6 @@ Preview limitations
 The PowerShell tool has the following known limitations during the preview:
 PowerShell profiles are not loaded
 On Windows, sandboxing is not supported
-On Windows, Git Bash is still required to start Claude Code
 ​
 Check which tools are available
 Your exact tool set depends on your provider, platform, and settings. To check what’s loaded in a running session, ask Claude directly:

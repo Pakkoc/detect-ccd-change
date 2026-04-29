@@ -13,7 +13,6 @@ Troubleshooting
 Error reference
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -34,7 +33,8 @@ Push external events to Claude
 Run prompts on a schedule
 Programmatic usage
 Troubleshooting
-Troubleshooting
+Troubleshoot installation and login
+Troubleshoot performance and stability
 Debug configuration
 Error reference
 On this page
@@ -73,10 +73,14 @@ Thinking budget exceeds output limit
 Tool use or thinking block mismatch
 Responses seem lower quality than usual
 Report an error
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 This page lists runtime errors Claude Code displays and how to recover from each one, plus what to check when responses seem off without an error. For installation errors such as
 command not found
 or TLS failures during setup, see
-Troubleshooting
+Troubleshoot installation and login
 .
 These errors and recovery commands apply across the CLI, the
 Desktop app
@@ -407,7 +411,7 @@ Troubleshooting
 For other failures including
 403 Forbidden
 and OAuth browser issues, see
-Permissions and authentication
+Login and authentication
 ​
 OAuth scope requirement
 The stored token predates a permission scope that a newer feature needs. You see this most often from
@@ -608,13 +612,24 @@ opus
 instead of a full versioned ID. Aliases track the latest release so they do not go stale. See
 Model configuration
 .
-See
-Model not found
-to locate where a stale ID is set across
+If the wrong model keeps coming back, a stale ID is set somewhere. Check in
+priority order
+: the
 --model
-,
+flag, the
 ANTHROPIC_MODEL
-, and settings files
+environment variable, then the
+model
+field in
+.claude/settings.local.json
+, your project’s
+.claude/settings.json
+, and
+~/.claude/settings.json
+. Remove the stale value and Claude Code falls back to your account default.
+For Vertex AI deployments, see
+Vertex AI troubleshooting
+.
 ​
 Claude Opus is not available with the Claude Pro plan
 Your active subscription plan does not include the model you selected.
@@ -739,7 +754,7 @@ MCP
 Hook script failed or blocked a tool:
 Debug hooks
 Permission denied or filesystem errors during install:
-Troubleshooting
+Troubleshoot installation and login
 If an error is not listed here or the suggested fix does not help:
 Run
 /feedback

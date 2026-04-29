@@ -13,7 +13,6 @@ Interface
 Voice dictation
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -44,6 +43,10 @@ Rebind the dictation key
 Troubleshooting
 Terminal not listed in macOS Microphone settings
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Speak your prompts instead of typing them in the Claude Code CLI. Your speech is transcribed live into the prompt input, so you can mix voice and typing in the same message. Enable dictation with
 /voice
 , then either hold a key while you speak or tap once to start and again to send.
@@ -173,7 +176,11 @@ Change the dictation language
 Voice dictation uses the same
 language
 setting
-that controls Claude’s response language. If that setting is empty, dictation defaults to English.
+that controls Claude’s response language. If that setting is empty, dictation defaults to English. In the VS Code extension, if
+language
+is empty, dictation uses VS Code’s
+accessibility.voice.speechLanguage
+setting before defaulting to English.
 Supported dictation languages
 Language
 Code

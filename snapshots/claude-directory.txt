@@ -13,7 +13,6 @@ Core concepts
 Explore the .claude directory
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -45,6 +44,10 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code reads instructions, settings, skills, subagents, and memory from your project directory and from
 ~/.claude
 in your home directory. Commit project files to git to share them with your team; files in

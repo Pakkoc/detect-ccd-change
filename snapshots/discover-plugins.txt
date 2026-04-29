@@ -13,7 +13,6 @@ Tools and plugins
 Discover and install prebuilt plugins through marketplaces
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -34,7 +33,8 @@ Push external events to Claude
 Run prompts on a schedule
 Programmatic usage
 Troubleshooting
-Troubleshooting
+Troubleshoot installation and login
+Troubleshoot performance and stability
 Debug configuration
 Error reference
 On this page
@@ -65,6 +65,10 @@ Troubleshooting
 Common issues
 Code intelligence issues
 Next steps
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Plugins extend Claude Code with skills, agents, hooks, and MCP servers. Plugin marketplaces are catalogs that help you discover and install these extensions without building them yourself.
 Looking to create and distribute your own marketplace? See
 Create and distribute a plugin marketplace

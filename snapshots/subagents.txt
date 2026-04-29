@@ -13,7 +13,6 @@ Extend with tools
 Subagents in the SDK
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -82,6 +81,10 @@ Claude not delegating to subagents
 Filesystem-based agents not loading
 Windows: long prompt failures
 Related documentation
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Subagents are separate agent instances that your main agent can spawn to handle focused subtasks.
 Use subagents to isolate context for focused subtasks, run multiple analyses in parallel, and apply specialized instructions without bloating the main agent’s prompt.
 This guide explains how to define and use subagents in the SDK using the

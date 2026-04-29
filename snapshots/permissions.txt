@@ -13,7 +13,6 @@ Settings and permissions
 Configure permissions
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -60,6 +59,10 @@ Managed-only settings
 Settings precedence
 Example configurations
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Claude Code supports fine-grained permissions so that you can specify exactly what the agent is allowed to do and what it cannot. Permission settings can be checked into version control and distributed to all developers in your organization, as well as customized by individual developers.
 ​
 Permission system

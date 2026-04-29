@@ -13,7 +13,6 @@ Setup and access
 Configure auto mode
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -26,6 +25,14 @@ Advanced setup
 Authentication
 Server-managed settings
 Auto mode
+Deployment
+Overview
+Amazon Bedrock
+Google Vertex AI
+Microsoft Foundry
+Network configuration
+LLM gateway
+Development containers
 Usage and costs
 Monitoring
 Costs
@@ -37,6 +44,9 @@ Security and data
 Security
 Data usage
 Zero data retention
+Adoption
+Communications kit
+Champion kit
 On this page
 Where the classifier reads configuration
 Define trusted infrastructure
@@ -44,6 +54,10 @@ Override the block and allow rules
 Inspect the defaults and your effective config
 Review denials
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Auto mode
 lets Claude Code run without permission prompts by routing each tool call through a classifier that blocks anything irreversible, destructive, or aimed outside your environment. Use the
 autoMode
@@ -330,7 +344,7 @@ Was this page helpful?
 Yes
 No
 Server-managed settings
-Monitoring
+Overview
 ⌘
 I
 Assistant

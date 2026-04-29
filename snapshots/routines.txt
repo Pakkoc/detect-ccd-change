@@ -13,7 +13,6 @@ Claude Code on the web
 Automate work with routines
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -73,6 +72,10 @@ Connectors
 Environments
 Usage and limits
 Related resources
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Routines are in research preview. Behavior, limits, and the API surface may change.
 A routine is a saved Claude Code configuration: a prompt, one or more repositories, and a set of
 connectors

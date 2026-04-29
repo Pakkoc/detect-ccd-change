@@ -13,7 +13,6 @@ Reference
 Plugins reference
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -30,6 +29,8 @@ Checkpointing
 Hooks reference
 Plugins reference
 Channels reference
+Glossary
+Glossary
 On this page
 Plugin components reference
 Skills
@@ -59,6 +60,7 @@ File locations reference
 CLI commands reference
 plugin install
 plugin uninstall
+plugin prune
 plugin enable
 plugin disable
 plugin update
@@ -74,6 +76,10 @@ Directory structure mistakes
 Distribution and versioning reference
 Version management
 See also
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 Looking to install plugins? See
 Discover and install plugins
 . For creating plugins, see
@@ -239,6 +245,16 @@ Event
 When it fires
 SessionStart
 When a session begins or resumes
+Setup
+When you start Claude Code with
+--init-only
+, or with
+--init
+or
+--maintenance
+in
+-p
+mode. For one-time preparation in CI or scripts
 UserPromptSubmit
 When you submit a prompt, before Claude processes it
 UserPromptExpansion
@@ -805,6 +821,10 @@ Field
 Type
 Description
 Example
+$schema
+string
+JSON Schema URL for editor autocomplete and validation. Claude Code ignores this field at load time.
+"https://json.schemastore.org/claude-code-plugin-manifest.json"
 version
 string
 Optional. Semantic version. Setting this pins the plugin to that version string, so users only receive updates when you bump it. If omitted, Claude Code falls back to the git commit SHA, so every commit is treated as a new version. If also set in the marketplace entry,
@@ -1501,6 +1521,13 @@ user
 --keep-data
 Preserve the plugin’s
 persistent data directory
+--prune
+Also remove auto-installed dependencies that no other plugin requires. See
+plugin prune
+-y, --yes
+Skip the
+--prune
+confirmation prompt. Required when stdin is not a TTY
 -h, --help
 Display help for command
 Aliases:
@@ -1512,6 +1539,40 @@ ${CLAUDE_PLUGIN_DATA}
 directory. Use
 --keep-data
 to preserve it, for example when reinstalling after testing a new version.
+​
+plugin prune
+Remove auto-installed plugin dependencies that are no longer required by any installed plugin. Dependencies that Claude Code pulled in to satisfy another plugin’s
+dependencies
+field are removed; plugins you installed directly are never touched.
+claude
+plugin
+prune
+[options]
+Options:
+Option
+Description
+Default
+-s, --scope <scope>
+Prune at scope:
+user
+,
+project
+, or
+local
+user
+--dry-run
+List what would be removed without removing anything
+-y, --yes
+Skip the confirmation prompt. Required when stdin is not a TTY
+-h, --help
+Display help for command
+Aliases:
+autoremove
+The command lists orphaned dependencies and asks for confirmation before removing them. To remove a plugin and clean up its dependencies in one step, run
+claude plugin uninstall <plugin> --prune
+.
+claude plugin prune
+requires Claude Code v2.1.121 or later.
 ​
 plugin enable
 Enable a disabled plugin.

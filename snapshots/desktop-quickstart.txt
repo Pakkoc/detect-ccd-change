@@ -13,7 +13,6 @@ Claude Code on desktop
 Get started with the desktop app
 Getting started
 Build with Claude Code
-Deployment
 Administration
 Configuration
 Reference
@@ -54,6 +53,10 @@ Start your first session
 Now what?
 Coming from the CLI?
 What’s next
+Documentation Index
+Fetch the complete documentation index at:
+https://code.claude.com/docs/llms.txt
+Use this file to discover all available pages before exploring further.
 The desktop app gives you Claude Code with a graphical interface built for running multiple sessions side by side: a sidebar for managing parallel work, a drag-and-drop layout with an integrated terminal and file editor, visual diff review, live app preview, GitHub PR monitoring with auto-merge, and scheduled tasks. No terminal required.
 Download for macOS
 Universal build for Intel and Apple Silicon
