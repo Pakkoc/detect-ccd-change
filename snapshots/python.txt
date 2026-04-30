@@ -7671,17 +7671,6 @@ enableWeakerNestedSandbox
 bool
 False
 Enable a weaker nested sandbox for compatibility
-Filesystem and network access restrictions
-are NOT configured via sandbox settings. Instead, they are derived from
-permission rules
-:
-Filesystem read restrictions
-: Read deny rules
-Filesystem write restrictions
-: Edit allow/deny rules
-Network restrictions
-: WebFetch allow/deny rules
-Use sandbox settings for command execution sandboxing, and permission rules for filesystem and network access control.
 ​
 Example usage
 from
@@ -7742,13 +7731,24 @@ total
 =
 False
 ):
-allowLocalBinding:
+allowedDomains: list[
+str
+]
+deniedDomains: list[
+str
+]
+allowManagedDomainsOnly:
 bool
 allowUnixSockets: list[
 str
 ]
 allowAllUnixSockets:
 bool
+allowLocalBinding:
+bool
+allowMachLookup: list[
+str
+]
 httpProxyPort:
 int
 socksProxyPort:
@@ -7757,10 +7757,21 @@ Property
 Type
 Default
 Description
-allowLocalBinding
+allowedDomains
+list[str]
+[]
+Domain names that sandboxed processes can access
+deniedDomains
+list[str]
+[]
+Domain names that sandboxed processes cannot access. Takes precedence over
+allowedDomains
+allowManagedDomainsOnly
 bool
 False
-Allow processes to bind to local ports (e.g., for dev servers)
+Managed-settings only: when set in managed settings, ignore
+allowedDomains
+from non-managed settings sources. Has no effect when set via SDK options
 allowUnixSockets
 list[str]
 []
@@ -7769,6 +7780,14 @@ allowAllUnixSockets
 bool
 False
 Allow access to all Unix sockets
+allowLocalBinding
+bool
+False
+Allow processes to bind to local ports (e.g., for dev servers)
+allowMachLookup
+list[str]
+[]
+macOS only: XPC/Mach service names to allow. Supports a trailing wildcard
 httpProxyPort
 int
 None
@@ -7777,6 +7796,13 @@ socksProxyPort
 int
 None
 SOCKS proxy port for network requests
+The built-in sandbox proxy enforces the network allowlist based on the requested hostname and does not terminate or inspect TLS traffic, so techniques such as
+domain fronting
+can potentially bypass it. See
+Sandboxing security limitations
+for details and
+Secure deployment
+for configuring a TLS-terminating proxy.
 ​
 SandboxIgnoreViolations
 Configuration for ignoring specific sandbox violations.

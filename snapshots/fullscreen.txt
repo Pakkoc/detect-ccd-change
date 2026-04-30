@@ -41,6 +41,7 @@ Scroll the conversation
 Auto-follow
 Mouse wheel scrolling
 Search and review the conversation
+Clear the conversation
 Use with tmux
 Keep native text selection
 Research preview
@@ -317,6 +318,17 @@ Esc
 or
 q
 to return to the prompt.
+​
+Clear the conversation
+Press
+Ctrl+L
+twice within two seconds to run
+/clear
+and start a new conversation. The first press clears the input box and shows a hint; the second press clears the conversation. On macOS, double-pressing
+Cmd+K
+also runs
+/clear
+.
 ​
 Use with tmux
 Fullscreen rendering works inside tmux, with two caveats.

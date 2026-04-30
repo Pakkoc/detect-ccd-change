@@ -89,6 +89,7 @@ MCP server connection event
 Internal error event
 Plugin installed event
 Skill activated event
+At mention event
 API retries exhausted event
 Hook execution start event
 Hook execution complete event
@@ -1429,9 +1430,7 @@ model
 error
 : Error message
 status_code
-: HTTP status code as a string, or
-"undefined"
-for non-HTTP errors
+: HTTP status code as a number. Absent for non-HTTP errors such as connection failures.
 duration_ms
 : Request duration in milliseconds
 attempt
@@ -1833,6 +1832,41 @@ marketplace.name
 OTEL_LOG_TOOL_DETAILS=1
 or the plugin is from an official marketplace): Marketplace the owning plugin was installed from, when the skill is provided by a plugin
 ​
+At mention event
+Logged when Claude Code resolves an
+@
+-mention in a prompt. Not every mention emits an event: early-exit paths such as permission denials, oversized files, PDF reference attachments, and directory listing failures return without logging.
+Event Name
+:
+claude_code.at_mention
+Attributes
+:
+All
+standard attributes
+event.name
+:
+"at_mention"
+event.timestamp
+: ISO 8601 timestamp
+event.sequence
+: monotonically increasing counter for ordering events within a session
+mention_type
+: Type of mention (
+"file"
+,
+"directory"
+,
+"agent"
+,
+"mcp_resource"
+)
+success
+: Whether the mention resolved successfully (
+"true"
+or
+"false"
+)
+​
 API retries exhausted event
 Logged once when an API request fails after more than one attempt. Emitted alongside the final
 api_error
@@ -1856,7 +1890,7 @@ model
 error
 : Final error message
 status_code
-: HTTP status code as a string
+: HTTP status code as a number. Absent for non-HTTP errors.
 total_attempts
 : Total number of attempts made
 total_retry_duration_ms

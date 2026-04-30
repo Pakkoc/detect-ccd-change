@@ -1084,6 +1084,11 @@ View and manage servers in Claude Code
 In Claude Code, use the command:
 /mcp
 Claude.ai servers appear in the list with indicators showing they come from Claude.ai.
+A server you’ve added in Claude Code takes
+precedence
+over a claude.ai connector that points at the same URL. When this happens,
+/mcp
+lists the connector as hidden and shows how to remove the duplicate if you’d rather use the connector.
 To disable claude.ai MCP servers in Claude Code, set the
 ENABLE_CLAUDEAI_MCP_SERVERS
 environment variable to

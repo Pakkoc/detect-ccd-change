@@ -60,6 +60,7 @@ Map each model version to an inference profile
 Startup model checks
 IAM configuration
 1M token context window
+Service tiers
 AWS Guardrails
 Use the Mantle endpoint
 Enable Mantle
@@ -482,6 +483,27 @@ offers a 1M context option when it pins models. To enable it for a manually pinn
 to the model ID. See
 Pin models for third-party deployments
 for details.
+​
+Service tiers
+Amazon Bedrock service tiers
+let you trade off cost against latency. Set
+ANTHROPIC_BEDROCK_SERVICE_TIER
+to
+default
+,
+flex
+, or
+priority
+:
+export
+ANTHROPIC_BEDROCK_SERVICE_TIER
+=
+priority
+Claude Code sends this as the
+X-Amzn-Bedrock-Service-Tier
+header on each request. Tier availability varies by model and region. Reserved capacity uses a
+provisioned throughput
+ARN as the model ID instead of this setting.
 ​
 AWS Guardrails
 Amazon Bedrock Guardrails

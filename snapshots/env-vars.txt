@@ -75,6 +75,19 @@ Amazon Bedrock
 ANTHROPIC_BEDROCK_MANTLE_BASE_URL
 Override the Bedrock Mantle endpoint URL. See
 Mantle endpoint
+ANTHROPIC_BEDROCK_SERVICE_TIER
+Bedrock
+service tier
+(
+default
+,
+flex
+, or
+priority
+). Sent as the
+X-Amzn-Bedrock-Service-Tier
+header. See
+Amazon Bedrock
 ANTHROPIC_BETAS
 Comma-separated list of additional
 anthropic-beta
