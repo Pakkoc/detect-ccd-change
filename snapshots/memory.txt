@@ -285,11 +285,17 @@ foo/CLAUDE.md
 , and any
 CLAUDE.local.md
 files alongside them.
-All discovered files are concatenated into context rather than overriding each other. Within each directory,
+All discovered files are concatenated into context rather than overriding each other. Across the directory tree, content is ordered from the filesystem root down to your working directory. For the
+foo/bar/
+example,
+foo/CLAUDE.md
+appears in context before
+foo/bar/CLAUDE.md
+, so instructions closer to where you launched Claude are read last. Within each directory,
 CLAUDE.local.md
 is appended after
 CLAUDE.md
-, so when instructions conflict, your personal notes are the last thing Claude reads at that level.
+, so your personal notes are the last thing Claude reads at that level.
 Claude also discovers
 CLAUDE.md
 and
