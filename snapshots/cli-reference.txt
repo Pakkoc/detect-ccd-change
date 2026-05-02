@@ -123,6 +123,26 @@ claude plugins
 plugin reference
 for subcommands
 claude plugin install code-review@claude-plugins-official
+claude project purge [path]
+Delete all local Claude Code state for a project: transcripts, task lists, debug logs, file-edit history, prompt history lines, and the project’s entry in
+~/.claude.json
+. Omit
+[path]
+to pick from an interactive list. Flags:
+--dry-run
+to preview,
+-y
+/
+--yes
+to skip confirmation,
+-i
+/
+--interactive
+to confirm each item,
+--all
+for every project. See
+Clear local data
+claude project purge ~/work/repo --dry-run
 claude remote-control
 Start a
 Remote Control

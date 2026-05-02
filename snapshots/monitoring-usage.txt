@@ -1793,7 +1793,9 @@ marketplace.name
 OTEL_LOG_TOOL_DETAILS=1
 ​
 Skill activated event
-Logged when a skill is invoked.
+Logged when a skill is invoked, whether Claude calls it through the Skill tool or you run it as a
+/
+command.
 Event Name
 :
 claude_code.skill_activated
@@ -1813,6 +1815,14 @@ skill.name
 "custom_skill"
 unless
 OTEL_LOG_TOOL_DETAILS=1
+invocation_trigger
+: How the skill was triggered (
+"user-slash"
+,
+"claude-proactive"
+, or
+"nested-skill"
+)
 skill.source
 : Where the skill was loaded from (for example,
 "bundled"

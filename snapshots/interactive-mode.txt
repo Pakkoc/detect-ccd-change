@@ -118,8 +118,8 @@ to prepend Claude’s previous reply as
 #
 -commented context above your prompt; the comment block is stripped when you save
 Ctrl+L
-Clear prompt input and redraw screen
-Clears typed text and forces a full terminal redraw. Conversation history is kept. Use this to recover if the display becomes garbled or partially blank
+Redraw screen
+Forces a full terminal redraw. Input and conversation history are kept. Use this to recover if the display becomes garbled or partially blank
 Ctrl+O
 Toggle transcript viewer
 Shows detailed tool usage and execution. Also expands MCP calls, which collapse to a single line like “Called slack 3 times” by default
@@ -616,6 +616,10 @@ Navigate matches
 : press
 Ctrl+R
 again to cycle through older matches
+Change scope
+: press
+Ctrl+S
+to cycle between this session, this project, and all projects
 Accept match
 :
 Press

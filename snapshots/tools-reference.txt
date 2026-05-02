@@ -309,7 +309,7 @@ On Windows, Claude Code auto-detects
 pwsh.exe
 for PowerShell 7+ with a fallback to
 powershell.exe
-for PowerShell 5.1. The Bash tool remains registered alongside the PowerShell tool, so you may need to ask Claude to use PowerShell.
+for PowerShell 5.1. When the tool is enabled, Claude treats PowerShell as the primary shell. The Bash tool remains available for POSIX scripts when Git Bash is installed.
 ​
 Shell selection in settings, hooks, and skills
 Three additional settings control where PowerShell is used:

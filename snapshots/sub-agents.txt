@@ -486,6 +486,8 @@ dontAsk
 bypassPermissions
 , or
 plan
+. Ignored for
+plugin subagents
 maxTurns
 No
 Maximum number of agentic turns before the subagent stops
@@ -500,11 +502,13 @@ available to this subagent. Each entry is either a server name referencing an al
 "slack"
 ) or an inline definition with the server name as key and a full
 MCP server config
-as value
+as value. Ignored for
+plugin subagents
 hooks
 No
 Lifecycle hooks
-scoped to this subagent
+scoped to this subagent. Ignored for
+plugin subagents
 memory
 No
 Persistent memory scope
@@ -790,7 +794,7 @@ plan
 Plan mode (read-only exploration)
 Use
 bypassPermissions
-with caution. It skips permission prompts, allowing the subagent to execute operations without approval. Writes to
+with caution. It skips all permission prompts, allowing the subagent to execute operations without approval, including writes to
 .git
 ,
 .claude
@@ -800,13 +804,9 @@ with caution. It skips permission prompts, allowing the subagent to execute oper
 .idea
 , and
 .husky
-directories still prompt for confirmation, except for
-.claude/commands
-,
-.claude/agents
-, and
-.claude/skills
-. See
+. Root and home directory removals such as
+rm -rf /
+still prompt as a circuit breaker. See
 permission modes
 for details.
 If the parent uses

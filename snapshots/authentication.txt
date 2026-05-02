@@ -73,7 +73,7 @@ c
 to copy the login URL to your clipboard, then paste it into your browser.
 If your browser shows a login code instead of redirecting back after you sign in, paste it into the terminal at the
 Paste code here if prompted
-prompt.
+prompt. This happens when the browser can’t reach Claude Code’s local callback server, which is common in WSL2, SSH sessions, and containers.
 You can authenticate with any of these account types:
 Claude Pro or Max subscription
 : log in with your Claude.ai account. Subscribe at

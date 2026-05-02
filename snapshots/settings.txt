@@ -724,6 +724,32 @@ Customize where plan files are stored. Path is relative to project root. Default
 pluginTrustMessage
 (Managed settings only) Custom message appended to the plugin trust warning shown before installation. Use this to add organization-specific context, for example to confirm that plugins from your internal marketplace are vetted.
 "All plugins from our marketplace are approved by IT"
+preferredNotifChannel
+Method for task-complete and permission-prompt notifications:
+"auto"
+,
+"terminal_bell"
+,
+"iterm2"
+,
+"iterm2_with_bell"
+,
+"kitty"
+,
+"ghostty"
+, or
+"notifications_disabled"
+. Default:
+"auto"
+, which sends a desktop notification in iTerm2, Ghostty, and Kitty and does nothing in other terminals. Set
+"terminal_bell"
+to ring the bell character in any terminal. Appears in
+/config
+as
+Notifications
+. See
+Get a terminal bell or notification
+"terminal_bell"
 prefersReducedMotion
 Reduce or disable UI animations (spinners, shimmer, flash effects) for accessibility
 true

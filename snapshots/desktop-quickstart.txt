@@ -64,7 +64,9 @@ Download for Windows
 For x64 processors
 For Windows ARM64, download the
 ARM64 installer
-. Linux is not supported.
+. The desktop app is not available on Linux; use the
+CLI
+instead.
 Claude Code requires a
 Pro, Max, Team, or Enterprise subscription
 .

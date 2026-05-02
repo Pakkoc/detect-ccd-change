@@ -238,7 +238,7 @@ Escape
 Cancel current input
 chat:clearInput
 Ctrl+L
-Clear prompt input and force a full screen redraw. In
+Force a full screen redraw, preserving input. In
 fullscreen rendering
 , press twice within two seconds to run
 /clear
@@ -382,6 +382,9 @@ Cancel search
 historySearch:execute
 Enter
 Execute selected command
+historySearch:cycleScope
+Ctrl+S
+Cycle scope: session, project, everywhere
 ​
 Task actions
 Actions available in the

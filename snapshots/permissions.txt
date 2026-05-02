@@ -46,6 +46,7 @@ Bash
 Compound commands
 Process wrappers
 Read-only commands
+PowerShell
 Read and Edit
 WebFetch
 MCP
@@ -132,9 +133,11 @@ or
 permissions.allow
 rules
 bypassPermissions
-Skips permission prompts except for writes to protected directories (see warning below)
+Skips all permission prompts. Root and home directory removals such as
+rm -rf /
+still prompt as a circuit breaker
 bypassPermissions
-mode skips permission prompts. Writes to
+mode skips all permission prompts, including writes to
 .git
 ,
 .claude
@@ -144,13 +147,11 @@ mode skips permission prompts. Writes to
 .idea
 , and
 .husky
-directories still prompt for confirmation to prevent accidental corruption of repository state, editor configuration, and git hooks. Writes to
-.claude/commands
-,
-.claude/agents
-, and
-.claude/skills
-are exempt and do not prompt, because Claude routinely writes there when creating skills, subagents, and commands. Only use this mode in isolated environments like containers or VMs where Claude Code cannot cause damage. Administrators can prevent this mode by setting
+. Removals targeting the filesystem root or home directory, such as
+rm -rf /
+and
+rm -rf ~
+, still prompt as a circuit breaker against model error. Only use this mode in isolated environments like containers or VMs where Claude Code cannot cause damage. Administrators can prevent this mode by setting
 permissions.disableBypassPermissionsMode
 to
 "disable"
@@ -496,6 +497,58 @@ curl
 ,
 wget
 , or other tools to reach any URL.
+​
+PowerShell
+PowerShell permission rules use the same shape as Bash rules. Wildcards with
+*
+match at any position, the
+:*
+suffix is equivalent to a trailing
+*
+, and a bare
+PowerShell
+or
+PowerShell(*)
+matches every command. This configuration allows
+Get-ChildItem
+and
+git commit
+commands while blocking
+Remove-Item
+:
+{
+"permissions"
+: {
+"allow"
+: [
+"PowerShell(Get-ChildItem *)"
+,
+"PowerShell(git commit *)"
+],
+"deny"
+: [
+"PowerShell(Remove-Item *)"
+]
+}
+}
+Common aliases are canonicalized before matching. A rule written for the cmdlet name also matches its aliases, so
+PowerShell(Get-ChildItem *)
+matches
+gci
+,
+ls
+, and
+dir
+as well. Matching is case-insensitive.
+Claude Code parses the PowerShell AST and checks each command in a compound command independently. Pipeline operators
+|
+, statement separators
+;
+, and on PowerShell 7+ the chain operators
+&&
+and
+||
+split a compound command into subcommands. A rule must match every subcommand for the compound command to be allowed.
 ​
 Read and Edit
 Edit

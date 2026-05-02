@@ -92,9 +92,11 @@ dontAsk
 Only pre-approved tools
 Locked-down CI and scripts
 bypassPermissions
-Everything except protected paths
+Everything
 Isolated containers and VMs only
-Regardless of mode, writes to
+In every mode except
+bypassPermissions
+, writes to
 protected paths
 are never auto-approved, guarding repository state and Claude’s own configuration against accidental corruption.
 Modes set the baseline. Layer
@@ -274,6 +276,19 @@ additionalDirectories
 . Paths outside that scope, writes to
 protected paths
 , and all other Bash commands still prompt.
+When the
+PowerShell tool
+is enabled,
+acceptEdits
+mode also auto-approves
+Set-Content
+,
+Add-Content
+,
+Clear-Content
+, and
+Remove-Item
+on in-scope paths, along with their common aliases. The same scope and protected-path rules apply.
 Use
 acceptEdits
 when you want to review changes in your editor or via
@@ -448,9 +463,13 @@ dontAsk
 ​
 Skip all checks with bypassPermissions mode
 bypassPermissions
-mode disables permission prompts and safety checks so tool calls execute immediately. Writes to
+mode disables permission prompts and safety checks so tool calls execute immediately. As of v2.1.126 this includes writes to
 protected paths
-are the only actions that still prompt. Only use this mode in isolated environments like containers, VMs, or dev containers without internet access, where Claude Code cannot damage your host system.
+, which earlier versions still prompted for. Removals targeting the filesystem root or home directory, such as
+rm -rf /
+and
+rm -rf ~
+, still prompt as a circuit breaker against model error. Only use this mode in isolated environments like containers, VMs, or dev containers without internet access, where Claude Code cannot damage your host system.
 You cannot enter
 bypassPermissions
 from a session that was started without one of the enabling flags; restart with one to enable it:
@@ -472,19 +491,21 @@ managed settings
 .
 ​
 Protected paths
-Writes to a small set of paths are never auto-approved, in every mode. This prevents accidental corruption of repository state and Claude’s own configuration. In
+Writes to a small set of paths are never auto-approved, in every mode except
+bypassPermissions
+. This prevents accidental corruption of repository state and Claude’s own configuration. In
 default
 ,
 acceptEdits
-,
-plan
 , and
-bypassPermissions
+plan
 these writes prompt; in
 auto
 they route to the classifier; in
 dontAsk
-they are denied.
+they are denied; in
+bypassPermissions
+they are allowed.
 Protected directories:
 .git
 .vscode

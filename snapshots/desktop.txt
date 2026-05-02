@@ -132,7 +132,9 @@ Download for Windows
 For x64 processors
 For Windows ARM64, download the
 ARM64 installer
-. Linux is not supported.
+. The desktop app is not available on Linux; use the
+CLI
+instead.
 After installing, launch Claude, sign in, and click the
 Code
 tab. The first time you open it on Windows, you need
@@ -1444,7 +1446,9 @@ managed settings
 CLI
 .
 Linux
-: the desktop app is available on macOS and Windows only.
+: the desktop app is available on macOS and Windows only. On Linux, use the
+CLI
+.
 Inline code suggestions
 : Desktop does not provide autocomplete-style suggestions. It works through conversational prompts and explicit code changes.
 Agent teams

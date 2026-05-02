@@ -120,6 +120,7 @@ SDKPartialAssistantMessage
 SDKCompactBoundaryMessage
 SDKPluginInstallMessage
 SDKPermissionDenial
+SDKMessageOrigin
 Hook Types
 HookEvent
 HookCallback
@@ -2444,6 +2445,8 @@ SDKAssistantMessageError
 is one of:
 'authentication_failed'
 ,
+'oauth_org_not_allowed'
+,
 'billing_error'
 ,
 'rate_limit'
@@ -2498,6 +2501,10 @@ tool_use_result
 ?:
 unknown
 ;
+origin
+?:
+SDKMessageOrigin
+;
 };
 Set
 shouldQuery
@@ -2540,6 +2547,10 @@ boolean
 tool_use_result
 ?:
 unknown
+;
+origin
+?:
+SDKMessageOrigin
 ;
 isReplay
 :
@@ -2641,6 +2652,10 @@ string
 ,
 unknown
 > };
+origin
+?:
+SDKMessageOrigin
+;
 }
 |
 {
@@ -2715,7 +2730,20 @@ errors
 :
 string
 [];
+origin
+?:
+SDKMessageOrigin
+;
 };
+The
+origin
+field forwards the
+SDKMessageOrigin
+of the user message that triggered this result. When a background task finishes and the SDK injects a synthetic follow-up turn, the resulting
+SDKResultMessage
+carries
+origin: { kind: "task-notification" }
+. Check this field to distinguish results that answer your prompt from results emitted for background-task follow-ups, so you can route or suppress the latter. The field is absent for results emitted before any user turn, such as startup errors.
 When a
 PreToolUse
 hook returns
@@ -2975,6 +3003,88 @@ string
 unknown
 >;
 };
+​
+SDKMessageOrigin
+Provenance of a user-role message. This appears as
+origin
+on
+SDKUserMessage
+and is forwarded onto the corresponding
+SDKResultMessage
+so you can tell what triggered a given turn.
+type
+SDKMessageOrigin
+=
+|
+{
+kind
+:
+"human"
+}
+|
+{
+kind
+:
+"channel"
+;
+server
+:
+string
+}
+|
+{
+kind
+:
+"peer"
+;
+from
+:
+string
+;
+name
+?:
+string
+}
+|
+{
+kind
+:
+"task-notification"
+}
+|
+{
+kind
+:
+"coordinator"
+};
+kind
+Meaning
+human
+Direct input from the end user. On user messages, an absent
+origin
+also means human input.
+channel
+Message arriving on a
+channel
+.
+server
+is the source MCP server name.
+peer
+Message from another agent session via
+SendMessage
+.
+from
+is the sender address;
+name
+is the sender’s display name when available.
+task-notification
+Synthetic turn injected after a background task finished. See
+SDKTaskNotificationMessage
+.
+coordinator
+Message from a team coordinator in an
+agent team
+.
 ​
 Hook Types
 For a comprehensive guide on using hooks with examples and common patterns, see the

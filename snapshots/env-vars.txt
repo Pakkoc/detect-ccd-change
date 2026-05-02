@@ -703,6 +703,17 @@ on Unix or
 ;
 on Windows. Use this to bundle a pre-populated plugins directory into a container image. Claude Code registers marketplaces from these directories at startup and uses pre-cached plugins without re-cloning. See
 Pre-populate plugins for containers
+CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
+Set by host platforms that embed Claude Code and manage model provider routing on its behalf. When set, provider-selection, endpoint, and authentication variables such as
+CLAUDE_CODE_USE_BEDROCK
+,
+ANTHROPIC_BASE_URL
+, and
+ANTHROPIC_API_KEY
+in settings files are ignored so user settings cannot override the host’s routing. The automatic telemetry opt-out for Bedrock, Vertex, and Foundry is also skipped, so telemetry follows the standard
+DISABLE_TELEMETRY
+opt-out. See
+Default behaviors by API provider
 CLAUDE_CODE_PROXY_RESOLVES_HOSTS
 Set to
 1
@@ -761,9 +772,13 @@ vs
 zsh
 )
 CLAUDE_CODE_SHELL_PREFIX
-Command prefix to wrap all bash commands (for example, for logging or auditing). Example:
+Command prefix that wraps shell commands Claude Code spawns: Bash tool calls,
+hook
+commands, and stdio
+MCP server
+startup commands. Useful for logging or auditing. Example: setting
 /path/to/logger.sh
-will execute
+runs each command as
 /path/to/logger.sh <command>
 CLAUDE_CODE_SIMPLE
 Set to
@@ -923,11 +938,9 @@ myhost-graceful-unicorn
 --remote-control-session-name-prefix
 CLI flag sets the same value for a single invocation
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
-Timeout in milliseconds before the streaming idle watchdog closes a stalled connection. For the byte-level watchdog on the Anthropic API: default and minimum
+Timeout in milliseconds before the streaming idle watchdog closes a stalled connection. Default and minimum
 300000
-(5 minutes); lower values are silently clamped to absorb extended thinking pauses and proxy buffering. For the event-level watchdog: default
-90000
-(90 seconds), no minimum. For third-party providers, requires
+(5 minutes) for both the byte-level and event-level watchdogs; lower values are silently clamped to absorb extended thinking pauses and proxy buffering. For third-party providers, requires
 CLAUDE_ENABLE_STREAM_WATCHDOG=1
 DISABLE_AUTOUPDATER
 Set to
@@ -977,6 +990,12 @@ to disable the
 command. The older name
 DISABLE_BUG_COMMAND
 is also accepted
+DISABLE_GROWTHBOOK
+Set to
+1
+to disable GrowthBook feature-flag fetching and use code defaults for every flag. Telemetry event logging stays on unless
+DISABLE_TELEMETRY
+is also set
 DISABLE_INSTALLATION_CHECKS
 Set to
 1
