@@ -539,13 +539,9 @@ Set to
 "disable"
 to prevent Claude Code from registering the
 claude-cli://
-protocol handler with the operating system on startup. Deep links let external tools open a Claude Code session with a pre-filled prompt via
-claude-cli://open?q=...
-. The
-q
-parameter supports multi-line prompts using URL-encoded newlines (
-%0A
-). Useful in environments where protocol handler registration is restricted or managed separately
+protocol handler with the operating system on startup.
+Deep links
+let external tools open a Claude Code session with a pre-filled prompt. Useful in environments where protocol handler registration is restricted or managed separately
 "disable"
 disabledMcpjsonServers
 List of specific MCP servers from

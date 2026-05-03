@@ -235,7 +235,7 @@ Resume past conversations
 Click the
 Session history
 button at the top of the Claude Code panel to access your conversation history. You can search by keyword or browse by time (Today, Yesterday, Last 7 days, etc.). Click any conversation to resume it with the full message history. New sessions receive AI-generated titles based on your first message. Hover over a session to reveal rename and remove actions: rename to give it a descriptive title, or remove to delete it from the list. For more on resuming sessions, see
-Common workflows
+Manage sessions
 .
 ​
 Resume remote sessions from Claude.ai
@@ -417,14 +417,25 @@ Launch a VS Code tab from other tools
 The extension registers a URI handler at
 vscode://anthropic.claude-code/open
 . Use it to open a new Claude Code tab from your own tooling: a shell alias, a browser bookmarklet, or any script that can open a URL. If VS Code isn’t already running, opening the URL launches it first. If VS Code is already running, the URL opens in whichever window is currently focused.
-Invoke the handler with your operating system’s URL opener. On macOS:
+Invoke the handler with your operating system’s URL opener.
+macOS
+Linux
+Windows
 open
 "vscode://anthropic.claude-code/open"
-Use
 xdg-open
-on Linux or
+"vscode://anthropic.claude-code/open"
+In PowerShell:
+Start-Process
+"vscode://anthropic.claude-code/open"
+In
+cmd.exe
+,
 start
-on Windows.
+treats its first quoted argument as a window title, so pass an empty title before the URL:
+start
+""
+"vscode://anthropic.claude-code/open"
 The handler accepts two optional query parameters:
 Parameter
 Description
@@ -436,6 +447,11 @@ Continue conversations
 .
 For example, to open a tab pre-filled with “review my changes”:
 vscode://anthropic.claude-code/open?prompt=review%20my%20changes
+To launch a terminal session instead of a VS Code tab, use the CLI’s
+claude-cli://
+handler. See
+Launch sessions from links
+.
 ​
 Configure settings
 The extension has two types of settings:

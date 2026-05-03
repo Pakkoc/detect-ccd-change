@@ -209,7 +209,7 @@ is a markdown file you add to your project root that Claude Code reads at the st
 auto memory
 as it works, saving learnings like build commands and debugging insights across sessions without you writing anything.
 Create
-custom commands
+skills
 to package repeatable workflows your team can share, like
 /review-pr
 or

@@ -47,8 +47,10 @@ default model setting
 opusplan model setting
 Adjust effort level
 Choose an effort level
+Use ultrathink for one-off deep reasoning
 Set the effort level
 Adaptive reasoning and fixed thinking budgets
+Extended thinking
 Extended context
 Checking your current model
 Add a custom model option
@@ -396,7 +398,11 @@ Best results for most coding and agentic tasks. Recommended default on Opus 4.7
 max
 Can improve performance on demanding tasks but may show diminishing returns and is prone to overthinking. Test before adopting broadly
 The effort scale is calibrated per model, so the same level name does not represent the same underlying value across models.
-For one-off deep reasoning without changing your session setting, include “ultrathink” in your prompt. This adds an in-context instruction telling the model to reason more on that turn; it does not change the effort level sent to the API.
+​
+Use ultrathink for one-off deep reasoning
+Include
+ultrathink
+anywhere in your prompt to request deeper reasoning on that turn without changing your session effort setting. Claude Code recognizes the keyword and adds an in-context instruction. The effort level sent to the API is unchanged. Other phrases such as “think”, “think hard”, and “think more” are passed through as ordinary prompt text and are not recognized as keywords.
 ​
 Set the effort level
 You can change effort through any of the following:
@@ -452,6 +458,40 @@ MAX_THINKING_TOKENS
 . See
 environment variables
 .
+​
+Extended thinking
+Extended thinking is the reasoning Claude emits before responding. On models that support
+adaptive reasoning
+, the effort level is the primary control for how much thinking happens; the settings below turn thinking on or off and control how it displays.
+Control
+How to set it
+Toggle for the current session
+Press
+Option+T
+on macOS or
+Alt+T
+on Windows and Linux. May require
+terminal configuration
+for Option-key shortcuts
+Set the global default
+Run
+/config
+and toggle thinking mode. Saved as
+alwaysThinkingEnabled
+in
+~/.claude/settings.json
+Disable regardless of effort
+Set
+MAX_THINKING_TOKENS=0
+. Other values apply only with a
+fixed thinking budget
+Thinking output is collapsed by default. Press
+Ctrl+O
+to toggle verbose mode and see the reasoning as gray italic text. Interactive sessions on the Anthropic API receive redacted thinking blocks by default, so set
+showThinkingSummaries: true
+in
+settings
+if you want the full summaries available when you expand. You are charged for all thinking tokens generated, even when collapsed or redacted.
 ​
 Extended context
 Opus 4.7, Opus 4.6, and Sonnet 4.6 support a

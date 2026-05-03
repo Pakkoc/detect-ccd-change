@@ -1,4 +1,4 @@
-Best Practices for Claude Code - Claude Code Docs
+Best practices for Claude Code - Claude Code Docs
 Skip to main content
 Claude Code Docs
 home page
@@ -10,7 +10,7 @@ Ask AI
 Search...
 Navigation
 Use Claude Code
-Best Practices for Claude Code
+Best practices for Claude Code
 Getting started
 Build with Claude Code
 Administration
@@ -123,19 +123,19 @@ Your verification can also be a test suite, a linter, or a Bash command that che
 Explore first, then plan, then code
 Separate research and planning from implementation to avoid solving the wrong problem.
 Letting Claude jump straight to coding can produce code that solves the wrong problem. Use
-Plan Mode
+plan mode
 to separate exploration from execution.
 The recommended workflow has four phases:
 1
 Explore
-Enter Plan Mode. Claude reads files and answers questions without making changes.
-claude (Plan Mode)
+Enter plan mode. Claude reads files and answers questions without making changes.
+claude (plan mode)
 read /src/auth and understand how we handle sessions and login.
 also look at how we manage environment variables for secrets.
 2
 Plan
 Ask Claude to create a detailed implementation plan.
-claude (Plan Mode)
+claude (plan mode)
 I want to add Google OAuth. What files need to change?
 What's the session flow? Create a plan.
 Press
@@ -143,16 +143,16 @@ Ctrl+G
 to open the plan in your text editor for direct editing before Claude proceeds.
 3
 Implement
-Switch back to Normal Mode and let Claude code, verifying against its plan.
-claude (Normal Mode)
+Switch out of plan mode and let Claude code, verifying against its plan.
+claude (default mode)
 implement the OAuth flow from your plan. write tests for the
 callback handler, run the test suite and fix any failures.
 4
 Commit
 Ask Claude to commit with a descriptive message and create a PR.
-claude (Normal Mode)
+claude (default mode)
 commit with a descriptive message and open a PR
-Plan Mode is useful, but also adds overhead.
+Plan mode is useful, but also adds overhead.
 For tasks where the scope is clear and the fix is small (like fixing a typo, adding a log line, or renaming a variable) ask Claude to do it directly.
 Planning is most useful when you’re uncertain about the approach, when the change modifies multiple files, or when you’re unfamiliar with the code being modified. If you could describe the diff in one sentence, skip the plan.
 ​
@@ -582,25 +582,18 @@ by Claude
 , not external processes. This isn’t a replacement for git.
 ​
 Resume conversations
-Run
-claude --continue
-to pick up where you left off, or
---resume
-to choose from recent sessions.
-Claude Code saves conversations locally. When a task spans multiple sessions, you don’t have to re-explain the context:
-claude
---continue
-# Resume the most recent conversation
-claude
---resume
-# Select from recent conversations
-Use
+Name sessions with
 /rename
-to give sessions descriptive names like
-"oauth-migration"
-or
-"debugging-memory-leak"
-so you can find them later. Treat sessions like branches: different workstreams can have separate, persistent contexts.
+and treat them like branches: each workstream gets its own persistent context.
+Claude Code saves conversations locally, so when a task spans multiple sittings you don’t have to re-explain the context. Run
+claude --continue
+to pick up the most recent session, or
+claude --resume
+to choose from a list. Give sessions descriptive names like
+oauth-migration
+so you can find them later. See
+Manage sessions
+for the full set of resume, branch, and naming controls.
 ​
 Automate and scale
 Once you’re effective with one Claude, multiply your output with parallel sessions, non-interactive mode, and fan-out patterns.
@@ -614,7 +607,9 @@ in CI, pre-commit hooks, or scripts. Add
 for streaming JSON output.
 With
 claude -p "your prompt"
-, you can run Claude non-interactively, without a session. Non-interactive mode is how you integrate Claude into CI pipelines, pre-commit hooks, or any automated workflow. The output formats let you parse results programmatically: plain text, JSON, or streaming JSON.
+, you can run Claude non-interactively, without a session.
+Non-interactive mode
+is how you integrate Claude into CI pipelines, pre-commit hooks, or any automated workflow. The output formats let you parse results programmatically: plain text, JSON, or streaming JSON.
 # One-off queries
 claude
 -p
@@ -634,13 +629,15 @@ stream-json
 ​
 Run multiple Claude sessions
 Run multiple Claude sessions in parallel to speed up development, run isolated experiments, or start complex workflows.
-There are three main ways to run parallel sessions:
-Claude Code desktop app
-: Manage multiple local sessions visually. Each session gets its own isolated worktree.
+Pick the parallel approach that fits how much coordination you want to do yourself:
+Worktrees
+: run separate CLI sessions in isolated git checkouts so edits don’t collide
+Desktop app
+: manage multiple local sessions visually, each in its own worktree
 Claude Code on the web
-: Run on Anthropic’s secure cloud infrastructure in isolated VMs.
+: run sessions on Anthropic-managed cloud infrastructure in isolated VMs
 Agent teams
-: Automated coordination of multiple sessions with shared tasks, messaging, and a team lead.
+: automated coordination of multiple sessions with shared tasks, messaging, and a team lead
 Beyond parallelizing work, multiple sessions enable quality-focused workflows. A fresh context improves code review since Claude won’t be biased toward code it just wrote.
 For example, use a Writer/Reviewer pattern:
 Session A (Writer)
