@@ -616,7 +616,7 @@ brew upgrade claude-code@latest
 if you installed that cask)
 npm
 :
-npm update -g @anthropic-ai/claude-code
+npm install -g @anthropic-ai/claude-code@latest
 Native installer
 : Re-run the install command from
 Setup

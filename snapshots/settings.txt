@@ -394,11 +394,11 @@ Attribution settings
 autoMemoryDirectory
 Custom directory for
 auto memory
-storage. Accepts
+storage. Accepts an absolute path or a
 ~/
--expanded paths. Not accepted in project settings (
-.claude/settings.json
-) to prevent shared repos from redirecting memory writes to sensitive locations. Accepted from policy, local, and user settings
+-prefixed path. Accepted from policy and user settings, and from the
+--settings
+flag. Not accepted from project or local settings, since a cloned repository could supply either file to redirect memory writes to sensitive locations
 "~/my-memory-dir"
 autoMode
 Customize what the

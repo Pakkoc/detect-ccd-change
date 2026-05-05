@@ -602,8 +602,7 @@ or
 reject
 source
 Decision source, matching the
-tool_decision
-event
+Tool decision event
 claude_code.tool.execution
 Attribute
 Description
@@ -1149,7 +1148,7 @@ decision
 "reject"
 )
 source
-: Decision source -
+: Where the decision came from. One of
 "config"
 ,
 "hook"
@@ -1161,6 +1160,9 @@ source
 "user_abort"
 , or
 "user_reject"
+. See the
+Tool decision event
+for what each value means.
 language
 : Programming language of the edited file, such as
 "TypeScript"
@@ -1296,7 +1298,7 @@ decision_type
 or
 "reject"
 decision_source
-: Decision source -
+: Where the decision came from. One of
 "config"
 ,
 "hook"
@@ -1308,6 +1310,9 @@ decision_source
 "user_abort"
 , or
 "user_reject"
+. See the
+Tool decision event
+for what each value means.
 tool_input_size_bytes
 : Size of the JSON-serialized tool input in bytes
 tool_result_size_bytes
@@ -1580,18 +1585,27 @@ decision
 or
 "reject"
 source
-: Decision source -
+: Where the decision came from:
 "config"
-,
+: Decided automatically without prompting, based on project settings, enterprise managed policy,
+--allowedTools
+or
+--disallowedTools
+flags, the active permission mode, or because the tool is inherently safe.
 "hook"
-,
+: A
+PreToolUse
+or
+PermissionRequest
+hook returned the decision.
 "user_permanent"
-,
+: Emitted when the user chose “Always allow” when prompted, saving a rule to their personal settings. Also emitted for later calls that match that saved rule. Treated as an accept.
 "user_temporary"
-,
+: Emitted when the user chose “Yes” or “Yes, for this session” when prompted, without saving a rule. Also emitted for later calls in the same session that match that session-scoped allow. Treated as an accept.
 "user_abort"
-, or
+: Emitted when the user dismissed the permission prompt without answering. Treated as a reject.
 "user_reject"
+: Emitted when the user chose “No” when prompted, or a call matched a deny rule in their personal settings. Treated as a reject.
 ​
 Permission mode changed event
 Logged when the permission mode changes, for example from

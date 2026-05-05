@@ -80,6 +80,7 @@ The built-in IDE MCP server
 Fix common issues
 Extension won’t install
 Spark icon not visible
+Cmd+Esc does nothing on macOS
 Claude Code never responds
 Uninstall the extension
 Next steps
@@ -780,6 +781,21 @@ Cmd+Shift+P
 /
 Ctrl+Shift+P
 ) and type “Claude Code”.
+​
+Cmd+Esc does nothing on macOS
+On macOS Tahoe and later, the system Game Overlay shortcut is bound to
+Cmd+Esc
+by default and intercepts the keypress before it reaches VS Code. To free the shortcut:
+Open System Settings
+Go to Keyboard, then Keyboard Shortcuts, then Game Controllers
+Clear the Game Overlay checkbox
+Alternatively, rebind the extension to a different key: open the VS Code
+Keyboard Shortcuts editor
+(
+Cmd+K Cmd+S
+), search for
+Claude Code: Focus input
+, and assign a new binding.
 ​
 Claude Code never responds
 If Claude Code isn’t responding to your prompts:

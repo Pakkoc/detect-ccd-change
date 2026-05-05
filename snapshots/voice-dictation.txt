@@ -280,9 +280,12 @@ since hold detection relies on key-repeat and the letter types into the prompt d
 Space
 , or use a modifier combination like
 meta+k
-to start recording on the first keypress with no warmup. Tap mode has no warmup, so any key works. See
+to start recording on the first keypress with no warmup. Tap mode has no warmup, so most keys work.
+Some keys are not delivered to terminal applications and cannot be bound at all. For example,
+Caps Lock
+shows an error if you try to bind it. See
 customize keyboard shortcuts
-for the full keybinding syntax.
+for the full keybinding syntax and the list of reserved shortcuts.
 ​
 Troubleshooting
 Common issues when voice dictation does not activate or record:
