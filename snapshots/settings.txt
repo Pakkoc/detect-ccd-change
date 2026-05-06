@@ -168,6 +168,11 @@ CLAUDE.md
 or
 .claude/CLAUDE.md
 CLAUDE.local.md
+On Windows, paths shown as
+~/.claude
+resolve to
+%USERPROFILE%\.claude
+.
 ​
 Settings files
 The
@@ -400,6 +405,17 @@ storage. Accepts an absolute path or a
 --settings
 flag. Not accepted from project or local settings, since a cloned repository could supply either file to redirect memory writes to sensitive locations
 "~/my-memory-dir"
+autoMemoryEnabled
+Enable
+auto memory
+. When
+false
+, Claude does not read from or write to the auto memory directory. Default:
+true
+. You can also toggle this with
+/memory
+during a session
+false
 autoMode
 Customize what the
 auto mode
@@ -470,10 +486,12 @@ Managed marketplace restrictions
 channelsEnabled
 (Managed settings only) Allow
 channels
-for Team and Enterprise users. Unset or
+for the organization. On claude.ai Team and Enterprise plans, channels are blocked when this is unset or
 false
-blocks channel message delivery regardless of what users pass to
---channels
+. For
+Anthropic Console
+accounts using API key authentication, channels are allowed by default unless your organization deploys managed settings, in which case this key must be set to
+true
 true
 cleanupPeriodDays
 Session files older than this period are deleted at startup (default: 30 days, minimum 1). Setting to
@@ -548,6 +566,17 @@ List of specific MCP servers from
 .mcp.json
 files to reject
 ["filesystem"]
+disableRemoteControl
+Disable
+Remote Control
+: blocks
+claude remote-control
+, the
+--remote-control
+flag, auto-start, and the in-session toggle. Typically placed in
+managed settings
+for per-device MDM enforcement, but works from any scope. Requires Claude Code v2.1.128 or later
+true
 disableSkillShellExecution
 Disable inline shell execution for
 !`...`
@@ -1674,12 +1703,15 @@ false
 "acme-tools"
 : {
 "source"
+: {
+"source"
 :
 "github"
 ,
 "repo"
 :
 "acme-corp/claude-plugins"
+}
 }
 }
 }
@@ -1705,6 +1737,18 @@ Managed settings
 (
 managed-settings.json
 ): Organization-wide policy overrides that block installation at all scopes and hide the plugin from the marketplace
+Project settings take precedence over user settings, so setting a plugin to
+false
+in
+~/.claude/settings.json
+does not disable a plugin that the project’s
+.claude/settings.json
+enables. To opt out of a project-enabled plugin on your machine, set it to
+false
+in
+.claude/settings.local.json
+instead.
+Plugins force-enabled by managed settings cannot be disabled this way, since managed settings override local settings.
 Example
 :
 {
@@ -1863,7 +1907,9 @@ ref
 path
 for git sources), except
 hostPattern
-, which uses regex matching
+and
+pathPattern
+, which use regex matching
 Allowlist behavior
 :
 undefined
@@ -1876,7 +1922,9 @@ All supported source types
 :
 The allowlist supports multiple marketplace source types. Most sources use exact matching, while
 hostPattern
-uses regex matching against the marketplace host.
+and
+pathPattern
+use regex matching against the marketplace host and filesystem path respectively.
 GitHub repositories
 :
 {
@@ -2128,6 +2176,40 @@ file
 ,
 directory
 : not supported for host pattern matching
+Path pattern matching
+:
+{
+"source"
+:
+"pathPattern"
+,
+"pathPattern"
+:
+"^/opt/approved/"
+}
+{
+"source"
+:
+"pathPattern"
+,
+"pathPattern"
+:
+".*"
+}
+Fields:
+pathPattern
+(required: regex pattern matched against the
+path
+field of
+file
+and
+directory
+sources)
+Use path pattern matching to allow filesystem-based marketplaces alongside
+hostPattern
+restrictions for network sources. Set
+".*"
+to allow all local paths, or a narrower pattern to restrict to specific directories.
 Configuration examples
 :
 Example: allow specific marketplaces only:

@@ -1057,7 +1057,7 @@ option or in settings
 agents
 Record<string, [
 AgentDefinition
-](#agent-definition)>
+](#agentdefinition)>
 undefined
 Programmatically define subagents
 allowDangerouslySkipPermissions
@@ -1184,7 +1184,7 @@ Maximum agentic turns (tool-use round trips)
 mcpServers
 Record<string, [
 McpServerConfig
-](#mcp-server-config)>
+](#mcpserverconfig)>
 {}
 MCP server configurations
 model
@@ -2003,7 +2003,7 @@ PermissionMode
 // Bypass all permission checks
 |
 "plan"
-// Planning mode - no execution
+// Planning mode - read-only tools only
 |
 "dontAsk"
 // Don't prompt for permissions, deny if not pre-approved
@@ -2073,7 +2073,14 @@ Signaled if the operation should be aborted
 suggestions
 PermissionUpdate
 []
-Suggested permission updates so the user is not prompted again for this tool
+Suggested permission updates so the user is not prompted again for this tool. Bash prompts include a suggestion with the
+localSettings
+destination
+, so returning it in
+updatedPermissions
+writes the rule to
+.claude/settings.local.json
+and persists across sessions.
 blockedPath
 string
 The file path that triggered the permission request, if applicable

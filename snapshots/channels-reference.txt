@@ -53,7 +53,7 @@ https://code.claude.com/docs/llms.txt
 Use this file to discover all available pages before exploring further.
 Channels are in
 research preview
-and require Claude Code v2.1.80 or later. They require claude.ai login. Console and API key authentication is not supported. Team and Enterprise organizations must
+and require Claude Code v2.1.80 or later. Team and Enterprise organizations must
 explicitly enable them
 .
 A channel is an MCP server that pushes events into a Claude Code session so Claude can react to things happening outside the terminal.
@@ -332,7 +332,7 @@ server:webhook
 When Claude Code starts, it reads your MCP config, spawns your
 webhook.ts
 as a subprocess, and the HTTP listener starts automatically on the port you configured (8788 in this example). You don’t need to run the server yourself.
-If you see “blocked by org policy,” your Team or Enterprise admin needs to
+If you see “blocked by org policy,” your organization admin needs to
 enable channels
 first.
 In a separate terminal, simulate a webhook by sending an HTTP POST with a message to your server. This example sends a CI failure alert to port 8788 (or whichever port you configured):

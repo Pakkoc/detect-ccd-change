@@ -306,6 +306,8 @@ on Linux
 : the native audio module could not load and no fallback is installed. Install SoX with the command shown in the error message, for example
 sudo apt-get install sox
 .
+Voice input is failing repeatedly and has been paused
+: voice dictation hit several start-up failures in a row and stopped attempting new sessions until one succeeds. This usually means the microphone or audio stack on this host can’t capture audio, for example a headless server, a remote shell with no audio passthrough, or a denied microphone permission. Confirm a working input device, fix the underlying cause from the entries above, then trigger voice again.
 Nothing happens when holding
 Space
 in hold mode

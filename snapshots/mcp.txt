@@ -279,6 +279,12 @@ remove
 github
 # (within Claude Code) Check server status
 /mcp
+The
+/mcp
+panel shows the tool count next to each connected server and flags servers that advertise the tools capability but expose no tools.
+The server name
+workspace
+is reserved for internal use. If your configuration defines a server with that name, Claude Code skips it at load time and shows a warning asking you to rename it.
 ​
 Dynamic tool updates
 Claude Code supports MCP
@@ -1394,6 +1400,11 @@ field is available on all server types and requires Claude Code v2.1.121 or late
 in the tool’s
 _meta
 object, which has the same effect for that tool only.
+Setting
+alwaysLoad: true
+also blocks startup until the server connects, capped at the standard 5-second connect timeout. This applies even when
+MCP_CONNECTION_NONBLOCKING=1
+is set, since the tools must be present when the first prompt is built. Other servers still connect in the background when nonblocking is enabled.
 ​
 Use MCP prompts as commands
 MCP servers can expose prompts that become available as commands in Claude Code.

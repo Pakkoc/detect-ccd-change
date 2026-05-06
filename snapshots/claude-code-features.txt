@@ -177,7 +177,7 @@ Each source loads settings from a specific location, where
 <cwd>
 is the working directory you pass via the
 cwd
-option (or the process’s current directory if unset). For the full type definition, see
+option, or the process’s current directory if unset. For the full type definition, see
 SettingSource
 (TypeScript) or
 SettingSource

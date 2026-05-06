@@ -409,15 +409,13 @@ Write
 , and
 Bash
 ) run sequentially to avoid conflicts.
-Custom tools default to sequential execution. To enable parallel execution for a custom tool, mark it as read-only in its annotations:
-readOnly
-in
-TypeScript
-or
+Custom tools default to sequential execution. To enable parallel execution for a custom tool, set
 readOnlyHint
-in
+in its annotations. Both the
+TypeScript
+and
 Python
-.
+SDKs use this field name from the MCP SDK.
 ​
 Control how the loop runs
 You can limit how many turns the loop takes, how much it costs, how deeply Claude reasons, and whether tools require approval before running. All of these are fields on
@@ -495,11 +493,15 @@ effort: "low"
 with extended thinking enabled, or
 effort: "max"
 without it.
-Use lower effort for agents doing simple, well-scoped tasks (like listing files or running a single grep) to reduce cost and latency.
+Use lower effort for agents doing simple, well-scoped tasks (like listing files or running a single grep) to reduce cost and latency. Set
 effort
-is set at the top-level
+in the top-level
 query()
-options, not per-subagent.
+options for the whole session, or per subagent with the
+effort
+field on
+AgentDefinition
+to override the session level.
 ​
 Permission mode
 The permission mode option (
@@ -522,7 +524,7 @@ mv
 cp
 , etc.); other Bash commands follow default rules
 "plan"
-No tool execution; Claude produces a plan for review
+Read-only tools run; Claude explores and produces a plan without editing your source files
 "dontAsk"
 Never prompts. Tools pre-approved by
 permission rules

@@ -331,7 +331,7 @@ also runs
 .
 ​
 Use with tmux
-Fullscreen rendering works inside tmux, with two caveats.
+Fullscreen rendering works inside tmux, with three caveats.
 Mouse wheel scrolling requires tmux’s mouse mode. If your
 ~/.tmux.conf
 does not already enable it, add this line and reload your config:
@@ -351,6 +351,7 @@ tmux -CC
 sessions. Regular tmux inside iTerm2, without
 -CC
 , works fine.
+tmux does not support synchronized output, so you may see more flicker during redraws than when running Claude Code directly in your terminal. If the flicker is noticeable, especially over SSH, run Claude Code in its own terminal tab outside tmux.
 ​
 Keep native text selection
 Mouse capture is the most common friction point, especially over SSH or inside tmux. When Claude Code captures mouse events, your terminal’s native copy-on-select stops working. The selection you make with click-and-drag exists inside Claude Code, not in your terminal’s selection buffer, so tmux copy mode, Kitty hints, and similar tools don’t see it.

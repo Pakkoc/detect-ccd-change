@@ -233,7 +233,9 @@ claude remote-control
 Open
 claude.ai/code
 or the Claude app
-and find the session by name in the session list. Remote Control sessions show a computer icon with a green status dot when online.
+and find the session by name in the session list. In the Claude mobile app, tap
+Code
+in the navigation to reach the session list. Remote Control sessions show a computer icon with a green status dot when online.
 The remote session title is chosen in this order:
 The name you passed to
 --name
@@ -410,7 +412,7 @@ then
 to refresh.
 ​
 ”Remote Control is disabled by your organization’s policy”
-This error has three distinct causes. Run
+This error has four distinct causes. Run
 /status
 first to see which login method and subscription you’re using.
 You’re authenticated with an API key or Console account
@@ -424,11 +426,14 @@ Your Team or Enterprise admin hasn’t enabled it
 claude.ai/admin-settings/claude-code
 by turning on the
 Remote Control
-toggle. This is a server-side organization setting, not a
-managed settings
-key.
+toggle. This toggle is a server-side organization setting.
 The admin toggle is grayed out
 : your organization has a data retention or compliance configuration that is incompatible with Remote Control. This cannot be changed from the admin panel. Contact Anthropic support to discuss options.
+The error mentions
+disableRemoteControl
+: your IT administrator has disabled Remote Control on this device through
+managed settings
+, independent of the organization-wide toggle.
 ​
 ”Remote credentials fetch failed”
 Claude Code could not obtain a short-lived credential from the Anthropic API to establish the connection. Re-run with

@@ -2466,6 +2466,9 @@ session_store: SessionStore
 None
 =
 None
+session_store_flush: SessionStoreFlushMode
+=
+"batched"
 Property
 Type
 Default
@@ -2680,6 +2683,19 @@ SessionStore
 None
 Mirror session transcripts to an external backend so any host can resume them. See
 Persist sessions to external storage
+session_store_flush
+Literal["batched", "eager"]
+"batched"
+When to flush mirrored transcript entries to
+session_store
+.
+"batched"
+flushes once per turn or when the buffer fills;
+"eager"
+triggers a background flush after every frame. Ignored when
+session_store
+is
+None
 ​
 OutputFormat
 Configuration for structured output validation. Pass this as a
@@ -3191,7 +3207,7 @@ Literal[
 # Auto-accept file edits
 "plan"
 ,
-# Planning mode - no execution
+# Planning mode - read-only tools only
 "dontAsk"
 ,
 # Deny anything not pre-approved instead of prompting
@@ -3255,7 +3271,13 @@ Any | None
 Reserved for future abort signal support
 suggestions
 list[PermissionUpdate]
-Permission update suggestions from the CLI
+Permission update suggestions from the CLI. Bash prompts include a suggestion with the
+localSettings
+destination, so returning it in
+updated_permissions
+writes the rule to
+.claude/settings.local.json
+and persists across sessions.
 ​
 PermissionResult
 Union type for permission callback results.

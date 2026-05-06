@@ -201,9 +201,7 @@ Security
 .
 ​
 Telemetry services
-Claude Code connects from users’ machines to the Statsig service to log operational metrics such as latency, reliability, and usage patterns. This logging does not include any code or file paths. Data is encrypted in transit using TLS and at rest using 256-bit AES encryption. Read more in the
-Statsig security documentation
-. To opt out of Statsig telemetry, set the
+Claude Code connects from users’ machines to Anthropic to log operational metrics such as latency, reliability, and usage patterns. This logging does not include any code or file paths. Data is encrypted in transit and at rest. To opt out of telemetry, set the
 DISABLE_TELEMETRY
 environment variable.
 Claude Code connects from users’ machines to Sentry for operational error logging. The data is encrypted in transit using TLS and at rest using 256-bit AES encryption. Read more in the
@@ -228,7 +226,7 @@ Claude API
 Vertex API
 Bedrock API
 Foundry API
-Statsig (Metrics)
+Anthropic (Metrics)
 Default on.
 DISABLE_TELEMETRY=1
 to disable.
@@ -310,7 +308,7 @@ settings reference
 ).
 As of v2.1.126, when a host platform sets
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
-, Statsig metrics default to on for Vertex, Bedrock, and Foundry, and follow the standard
+, metrics default to on for Vertex, Bedrock, and Foundry, and follow the standard
 DISABLE_TELEMETRY
 opt-out. Sentry error reporting and
 /feedback

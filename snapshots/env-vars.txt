@@ -298,7 +298,6 @@ is the Mozilla CA set shipped with Claude Code.
 system
 is the operating system trust store. Default is
 bundled,system
-. The native binary distribution is required for system store integration. On the Node.js runtime, only the bundled set is used regardless of this value
 CLAUDE_CODE_CLIENT_CERT
 Path to client certificate file for mTLS authentication
 CLAUDE_CODE_CLIENT_KEY
@@ -1043,7 +1042,7 @@ to disable prompt caching for Sonnet models
 DISABLE_TELEMETRY
 Set to
 1
-to opt out of Statsig telemetry (note that Statsig events do not include user data like code, file paths, or bash commands)
+to opt out of telemetry. Telemetry events do not include user data like code, file paths, or bash commands
 DISABLE_UPDATES
 Set to
 1
@@ -1153,7 +1152,9 @@ in non-interactive mode (
 -p
 ) to skip the MCP connection wait entirely. Useful for scripted pipelines where MCP tools are not needed. Without this variable, the first query waits up to 5 seconds for
 --mcp-config
-server connections
+server connections. Servers configured with
+alwaysLoad: true
+always block startup regardless of this variable, since their tools must be present when the first prompt is built
 MCP_OAUTH_CALLBACK_PORT
 Fixed port for the OAuth redirect callback, as an alternative to
 --callback-port

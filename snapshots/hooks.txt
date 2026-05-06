@@ -3396,9 +3396,10 @@ Field
 Description
 decision
 "block"
-prompts Claude with the
+adds the
 reason
-. Omit to allow the action to proceed
+next to the tool result. Claude still sees the original output; to replace it, use
+updatedToolOutput
 reason
 Explanation shown to Claude when
 decision
@@ -5562,15 +5563,15 @@ Field
 Description
 ok
 true
-allows the action,
+to allow,
 false
-blocks it
+to block. See the per-event behavior below
 reason
 Required when
 ok
 is
 false
-. Explanation for the block
+. Explanation for the decision
 What happens on
 ok: false
 depends on the event:

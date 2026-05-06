@@ -304,7 +304,9 @@ Claude Code runs your script and pipes
 JSON session data
 to it via stdin. Your script reads the JSON, extracts what it needs, and prints text to stdout. Claude Code displays whatever your script prints.
 When it updates
-Your script runs after each new assistant message, when the permission mode changes, or when vim mode toggles. Updates are debounced at 300ms, meaning rapid changes batch together and your script runs once things settle. If a new update triggers while your script is still running, the in-flight execution is cancelled. If you edit your script, the changes won’t appear until your next interaction with Claude Code triggers an update.
+Your script runs after each new assistant message, after
+/compact
+finishes, when the permission mode changes, or when vim mode toggles. Updates are debounced at 300ms, meaning rapid changes batch together and your script runs once things settle. If a new update triggers while your script is still running, the in-flight execution is cancelled. If you edit your script, the changes won’t appear until your next interaction with Claude Code triggers an update.
 These triggers can go quiet when the main session is idle, for example while a coordinator waits on background subagents. To keep time-based or externally-sourced segments current during idle periods, set
 refreshInterval
 to also re-run the command on a fixed timer.
@@ -691,7 +693,9 @@ null
 context_window.current_usage
 :
 null
-before the first API call in a session
+before the first API call in a session, and again after
+/compact
+until the next API call repopulates it
 context_window.used_percentage
 ,
 context_window.remaining_percentage
@@ -741,7 +745,9 @@ The
 current_usage
 object is
 null
-before the first API call in a session.
+before the first API call in a session, and again immediately after
+/compact
+until the next API call repopulates it.
 ​
 Examples
 These examples show common status line patterns. To use any example:

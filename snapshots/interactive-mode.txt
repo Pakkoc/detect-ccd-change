@@ -415,6 +415,8 @@ k
 /
 l
 Move left/down/up/right
+Space
+Move right
 w
 Next word
 e

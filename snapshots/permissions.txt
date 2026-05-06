@@ -123,7 +123,7 @@ cp
 , etc.) for paths in the working directory or
 additionalDirectories
 plan
-Plan Mode: Claude can analyze but not modify files or execute commands
+Plan Mode: Claude reads files and runs read-only shell commands to explore but does not edit your source files
 auto
 Auto-approves tool calls with background safety checks that verify actions align with your request. Currently a research preview
 dontAsk
@@ -796,7 +796,9 @@ provides OS-level enforcement that restricts the Bash tool’s filesystem and ne
 Use both for defense-in-depth:
 Permission deny rules block Claude from even attempting to access restricted resources
 Sandbox restrictions prevent Bash commands from reaching resources outside defined boundaries, even if a prompt injection bypasses Claude’s decision-making
-Filesystem restrictions in the sandbox use Read and Edit deny rules, not separate sandbox configuration
+Filesystem restrictions in the sandbox combine the
+sandbox.filesystem
+settings with Read and Edit deny rules; both are merged into the final sandbox boundary
 Network restrictions combine WebFetch permission rules with the sandbox’s
 allowedDomains
 and
@@ -863,10 +865,9 @@ managed marketplace restrictions
 channelsEnabled
 Allow
 channels
-for Team and Enterprise users. Unset or
-false
-blocks channel message delivery regardless of what users pass to
---channels
+for the organization. See
+enterprise controls
+for the default on each plan
 forceRemoteSettingsRefresh
 When
 true
@@ -904,13 +905,15 @@ C:\Program Files\ClaudeCode\managed-settings.json
 Settings files
 disableBypassPermissionsMode
 is typically placed in managed settings to enforce organizational policy, but it works from any scope. A user can set it in their own settings to lock themselves out of bypass mode.
-Access to
+On Team and Enterprise plans, an admin enables or disables
 Remote Control
 and
 web sessions
-is not controlled by a managed settings key. On Team and Enterprise plans, an admin enables or disables these features in
+organization-wide in
 Claude Code admin settings
-.
+. Remote Control can additionally be disabled per device with the
+disableRemoteControl
+managed setting. Web sessions have no per-device managed settings key.
 ​
 Settings precedence
 Permission rules follow the same

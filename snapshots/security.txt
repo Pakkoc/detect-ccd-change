@@ -97,7 +97,19 @@ Write access restriction
 Prompt fatigue mitigation
 : Support for allowlisting frequently used safe commands per-user, per-codebase, or per-organization
 Accept Edits mode
-: Batch accept multiple edits while maintaining permission prompts for commands with side effects
+: Auto-approves file edits and a fixed set of filesystem Bash commands like
+mkdir
+,
+touch
+,
+rm
+,
+mv
+,
+cp
+, and
+sed
+for paths in the working directory. Other Bash commands and out-of-scope paths still prompt
 ​
 User responsibility
 Claude Code only has the permissions you grant it. You’re responsible for reviewing proposed code and commands for safety before approval.
