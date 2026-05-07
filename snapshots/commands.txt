@@ -390,7 +390,15 @@ List available
 skills
 . Press
 t
-to sort by token count
+to sort by token count. Press
+Space
+to
+hide a skill from Claude or the
+/
+menu
+, then
+Enter
+to save
 /stats
 Alias for
 /usage

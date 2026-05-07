@@ -619,9 +619,9 @@ Navigate matches
 Ctrl+R
 again to cycle through older matches
 Change scope
-: press
+: search defaults to prompts from all projects. Press
 Ctrl+S
-to cycle between this session, this project, and all projects
+to cycle the scope through this session, this project, and all projects
 Accept match
 :
 Press

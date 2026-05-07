@@ -443,6 +443,11 @@ Load a plugin from a directory or
 archive for this session only. Each flag takes one path. Repeat the flag for multiple plugins:
 --plugin-dir A --plugin-dir B.zip
 claude --plugin-dir ./my-plugin
+--plugin-url
+Fetch a plugin
+.zip
+archive from a URL for this session only. Each flag takes one URL. Repeat the flag for multiple plugins
+claude --plugin-url https://example.com/plugin.zip
 --print
 ,
 -p
@@ -496,7 +501,10 @@ local
 )
 claude --setting-sources user,project
 --settings
-Path to a settings JSON file or a JSON string to load additional settings from
+Path to a settings JSON file or an inline JSON string. Values you set here override the same keys in your
+settings.json
+files for this session. Keys you omit keep their file-based values. See
+settings precedence
 claude --settings ./settings.json
 --strict-mcp-config
 Only use MCP servers from

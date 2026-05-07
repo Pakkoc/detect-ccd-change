@@ -46,6 +46,7 @@ Complete schema
 Required fields
 Metadata fields
 Component path fields
+Experimental components
 User configuration
 Channels
 Path behavior rules
@@ -576,14 +577,16 @@ watches a deployment status endpoint and a local error log:
 "on-skill-invoke:debug"
 }
 ]
-To declare monitors inline, set the
-monitors
-key in
+To declare monitors inline, set
+experimental.monitors
+in
 plugin.json
 to the same array. To load from a non-default path, set
-monitors
+experimental.monitors
 to a relative path string such as
 "./config/monitors.json"
+. Monitors are an
+experimental component
 .
 Required fields:
 Field
@@ -629,7 +632,9 @@ with a
 base
 preset and a sparse
 overrides
-map of color tokens.
+map of color tokens. Themes are an
+experimental component
+.
 {
 "name"
 :
@@ -767,18 +772,20 @@ Complete schema
 :
 "./styles/"
 ,
-"themes"
-:
-"./themes/"
-,
 "lspServers"
 :
 "./.lsp.json"
 ,
+"experimental"
+: {
+"themes"
+:
+"./themes/"
+,
 "monitors"
 :
 "./monitors.json"
-,
+},
 "dependencies"
 : [
 "helper-lib"
@@ -903,19 +910,19 @@ Custom output style files/directories (replaces default
 output-styles/
 )
 "./styles/"
-themes
+lspServers
+string|array|object
+Language Server Protocol
+configs for code intelligence (go to definition, find references, etc.)
+"./.lsp.json"
+experimental.themes
 string|array
 Color theme files/directories (replaces default
 themes/
 ). See
 Themes
 "./themes/"
-lspServers
-string|array|object
-Language Server Protocol
-configs for code intelligence (go to definition, find references, etc.)
-"./.lsp.json"
-monitors
+experimental.monitors
 string|array
 Background
 Monitor
@@ -937,6 +944,19 @@ array
 Other plugins this plugin requires, optionally with semver version constraints. See
 Constrain plugin dependency versions
 [{ "name": "secrets-vault", "version": "~2.1.0" }]
+​
+Experimental components
+Components under the
+experimental
+key,
+themes
+and
+monitors
+, have a manifest schema that may change between releases while they stabilize. Where you declare them is a separate migration: the top level still works,
+claude plugin validate
+warns, and a future release will require
+experimental.*
+.
 ​
 User configuration
 The
@@ -1110,15 +1130,15 @@ agents
 ,
 outputStyles
 ,
-themes
+experimental.themes
 , and
-monitors
+experimental.monitors
 , a custom path replaces the default. If the manifest specifies
 skills
 , the default
 skills/
 directory is not scanned; if it specifies
-monitors
+experimental.monitors
 , the default
 monitors/monitors.json
 is not loaded.
@@ -1313,6 +1333,8 @@ Plugin caching and file resolution
 Plugins are specified in one of two ways:
 Through
 claude --plugin-dir
+or
+claude --plugin-url
 , for the duration of a session.
 Through a marketplace, installed for future sessions.
 For security and verification purposes, Claude Code copies

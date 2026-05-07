@@ -447,7 +447,10 @@ Release channel to follow for updates. Use
 "stable"
 for a version that is typically about one week old and skips versions with major regressions, or
 "latest"
-(default) for the most recent release
+(default) for the most recent release. To disable auto-updates entirely, set
+DISABLE_AUTOUPDATER
+in
+env
 "stable"
 availableModels
 Restrict which models users can select via
@@ -834,6 +837,25 @@ true
 as
 Show turn duration
 false
+skillOverrides
+Per-skill visibility overrides keyed by skill name. Value is
+"on"
+,
+"name-only"
+,
+"user-invocable-only"
+, or
+"off"
+. Lets you hide or collapse a skill without editing its SKILL.md. Does not apply to plugin skills, which are managed through
+/plugin
+. The
+/skills
+menu writes these to
+.claude/settings.local.json
+. See
+Override skill visibility from settings
+. Requires Claude Code v2.1.129 or later
+{"legacy-context": "name-only", "deploy": "off"}
 skipWebFetchPreflight
 Skip the
 WebFetch domain safety check
@@ -1554,7 +1576,9 @@ managed-settings.d/*.json
 managed-settings.json
 ) > HKCU registry (Windows only). Only one managed source is used; sources do not merge across tiers. Within the file-based tier, drop-in files and the base file are merged together.
 Command line arguments
-Temporary overrides for a specific session
+Temporary overrides for a specific session. JSON passed via
+--settings <file-or-json>
+merges with file-based settings using the same rules as the other layers: a key set here overrides the same key in local, project, or user settings, and omitting a key leaves the lower-layer value in place
 Local project settings
 (
 .claude/settings.local.json
