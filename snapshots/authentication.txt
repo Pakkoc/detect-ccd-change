@@ -199,6 +199,15 @@ CLAUDE_CONFIG_DIR
 environment variable on Linux or Windows, the
 .credentials.json
 file lives under that directory instead.
+Claude Code manages
+.credentials.json
+through
+/login
+and
+/logout
+. To route requests through a custom API endpoint, set the
+ANTHROPIC_BASE_URL
+environment variable instead.
 Supported authentication types
 : Claude.ai credentials, Claude API credentials, Azure Auth, Bedrock Auth, and Vertex Auth.
 Custom credential scripts

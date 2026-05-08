@@ -129,15 +129,17 @@ You are an interactive CLI tool that helps users with software engineering
 tasks. [Your custom instructions here...]
 ## Specific Behaviors
 [Define how the assistant should behave in this style...]
-You can save these files at the user level (
+You can save these files at three levels:
+User:
 ~/.claude/output-styles
-) or
-project level (
+Project:
 .claude/output-styles
-).
+Managed policy:
+.claude/output-styles
+inside the
+managed settings directory
 Plugins
-can
-also ship output styles in an
+can also ship output styles in an
 output-styles/
 directory.
 ​
@@ -156,6 +158,11 @@ picker
 None
 keep-coding-instructions
 Whether to keep the parts of Claude Code’s system prompt related to coding.
+false
+force-for-plugin
+Plugin output styles only: apply this style automatically whenever the plugin is enabled, without requiring users to select it. Overrides the user’s
+outputStyle
+setting. If multiple enabled plugins set this, the first one loaded wins.
 false
 ​
 Comparisons to related features

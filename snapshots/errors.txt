@@ -60,6 +60,7 @@ OAuth scope requirement
 Network and connection errors
 Unable to connect to API
 SSL certificate errors
+Host not allowed in a cloud session
 Request errors
 Prompt is too long
 Error during compaction: Conversation too long
@@ -132,6 +133,11 @@ Authentication
 Unable to connect to API
 Network
 SSL certificate verification failed
+Network
+403
+with
+x-deny-reason: host_not_allowed
+in a cloud or routine session
 Network
 Prompt is too long
 Request errors
@@ -425,7 +431,7 @@ Run
 to mint a new token with the current scopes. You do not need to log out first.
 ​
 Network and connection errors
-These errors mean Claude Code could not reach the API at all. They almost always originate in your local network, proxy, or firewall rather than Anthropic infrastructure.
+These errors mean a network request from Claude Code failed to reach its destination. They usually originate in your local network, proxy, or firewall, or in the cloud environment’s network policy.
 ​
 Unable to connect to API
 The TCP connection to the API failed or never completed.
@@ -486,6 +492,48 @@ for full setup instructions
 Do not set
 NODE_TLS_REJECT_UNAUTHORIZED=0
 , which disables certificate validation entirely
+​
+Host not allowed in a cloud session
+An outbound HTTP request from a cloud session or routine was blocked by the environment’s network policy.
+HTTP 403
+x-deny-reason: host_not_allowed
+You may also see a TLS certificate that doesn’t match the destination’s real certificate. The cloud environment routes outbound traffic through a proxy that enforces the network policy, so a mismatched certificate means the proxy terminated the connection, not the destination.
+This is not a client-side network problem. Cloud sessions and
+routines
+run inside a sandboxed environment whose outbound traffic is filtered to the environment’s allowlist. The
+Default
+environment uses
+Trusted
+access, which permits the
+default allowlist
+of package registries, cloud provider APIs, container registries, and common development domains but blocks everything else.
+What to do:
+Open the routine for editing, or start a cloud session. Select the cloud icon showing your environment’s name, such as
+Default
+, to open the selector. Hover over your environment and click the settings icon.
+In the
+Update cloud environment
+dialog, change
+Network access
+from
+Trusted
+to
+Custom
+, then add the blocked domain to
+Allowed domains
+. Enter one domain per line. Check
+Also include default list of common package managers
+to keep the
+default allowlist
+alongside your custom domains. Select
+Full
+instead if you want unrestricted access.
+Click
+Save changes
+. The next run uses the updated allowlist.
+See
+Network access
+for access levels and the default allowlist. Local CLI sessions are not affected by this policy.
 ​
 Request errors
 These errors mean the API received your request but rejected its content.

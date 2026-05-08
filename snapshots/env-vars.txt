@@ -190,7 +190,13 @@ LLM gateway
 . See
 Google Vertex AI
 ANTHROPIC_VERTEX_PROJECT_ID
-GCP project ID for Vertex AI. Required when using
+GCP project ID for Vertex AI requests. Overridden by
+GCLOUD_PROJECT
+,
+GOOGLE_CLOUD_PROJECT
+, or the project in your
+GOOGLE_APPLICATION_CREDENTIALS
+credential file. See
 Google Vertex AI
 API_TIMEOUT_MS
 Timeout for API requests in milliseconds (default: 600000, or 10 minutes; maximum: 2147483647). Increase this when requests time out on slow networks or when routing through a proxy. Values above the maximum overflow the underlying timer and cause requests to fail immediately
@@ -232,6 +238,10 @@ Set to
 to skip the
 mcp__<server>__
 prefix on tool names from SDK-created MCP servers. Tools use their original names. SDK usage only
+CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
+Stall timeout in milliseconds for background subagents. Default
+600000
+(10 minutes). The timer resets on each streaming progress event; if no progress arrives within the window, the subagent is aborted and the task is marked failed, surfacing any partial result to the parent
 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE
 Set the percentage of context capacity (1-100) at which auto-compaction triggers. By default, auto-compaction triggers at approximately 95% capacity. Use lower values like
 50
@@ -290,7 +300,9 @@ IDE connection
 false
 to prevent this. Set to
 true
-to force a connection attempt when auto-detection fails, such as when tmux obscures the parent terminal
+to force a connection attempt when auto-detection fails, such as when tmux obscures the parent terminal. Takes precedence over the
+autoConnectIde
+global config setting
 CLAUDE_CODE_CERT_STORE
 Comma-separated list of CA certificate sources for TLS connections.
 bundled
@@ -344,6 +356,19 @@ on Opus 4.6 and Sonnet 4.6 and fall back to the fixed thinking budget controlled
 MAX_THINKING_TOKENS
 .
 Has no effect on Opus 4.7, which always uses adaptive reasoning
+CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN
+Set to
+1
+to disable
+fullscreen rendering
+and use the classic main-screen renderer. The conversation stays in your terminal’s native scrollback so
+Cmd+f
+and tmux copy mode work as usual. Takes precedence over
+CLAUDE_CODE_NO_FLICKER
+and the
+tui
+setting. You can also switch with
+/tui default
 CLAUDE_CODE_DISABLE_ATTACHMENTS
 Set to
 1
@@ -357,7 +382,11 @@ to disable
 auto memory
 . Set to
 0
-to force auto memory on during the gradual rollout. When disabled, Claude does not create or load auto memory files
+to force auto memory on even when
+--bare
+mode or
+autoMemoryEnabled: false
+would otherwise disable it. When disabled, Claude does not create or load auto memory files
 CLAUDE_CODE_DISABLE_BACKGROUND_TASKS
 Set to
 1
@@ -408,7 +437,9 @@ to disable the “How is Claude doing?” session quality surveys. Surveys are a
 DISABLE_TELEMETRY
 or
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-is set. See
+is set. To set a sample rate instead of disabling outright, use the
+feedbackSurveyRate
+setting. See
 Session quality surveys
 CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING
 Set to
@@ -520,11 +551,17 @@ after a background install completes. Off by default because the refresh changes
 prompt caching
 for that turn
 CLAUDE_CODE_ENABLE_FINE_GRAINED_TOOL_STREAMING
-Controls whether tool call inputs stream from the API as Claude generates them. With this off, a large tool input such as a long file write arrives only after Claude finishes generating it, which can look like it’s hanging. Enabled by default for direct Anthropic API connections. Set to
+Controls whether tool call inputs stream from the API as Claude generates them. With this off, a large tool input such as a long file write arrives only after Claude finishes generating it, which can look like it’s hanging. Enabled by default on the Anthropic API. On Bedrock and Vertex, enabled per model where the deployed container supports it. Set to
 0
 to opt out. Set to
 1
-to force-enable even when the server-side default is off. Has no effect on Bedrock, Vertex, Foundry, or
+to force on when routing through a proxy via
+ANTHROPIC_BASE_URL
+,
+ANTHROPIC_VERTEX_BASE_URL
+, or
+ANTHROPIC_BEDROCK_BASE_URL
+. Off by default on Foundry and
 gateway
 connections
 CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY
@@ -782,7 +819,7 @@ fullscreen rendering
 3
 to match
 vim
-if your terminal sends one wheel event per notch without amplification
+if your terminal sends one wheel event per notch without amplification. Ignored in the JetBrains IDE terminal, where Claude Code uses its own scroll handling
 CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS
 Override the time budget in milliseconds for
 SessionEnd
@@ -793,6 +830,14 @@ hooks. Applies to session exit,
 . By default the budget is 1.5 seconds, automatically raised to the highest per-hook
 timeout
 configured in settings files, up to 60 seconds. Timeouts on plugin-provided hooks do not raise the budget
+CLAUDE_CODE_SESSION_ID
+Set automatically in Bash and PowerShell tool subprocesses to the current session ID. Matches the
+session_id
+field passed to
+hooks
+. Updated on
+/clear
+. Use to correlate scripts and external tools with the Claude Code session that launched them
 CLAUDE_CODE_SHELL
 Override automatic shell detection. Useful when your login shell differs from your preferred working shell (for example,
 bash
@@ -868,7 +913,9 @@ Timeout in milliseconds for synchronous plugin installation. When exceeded, Clau
 CLAUDE_CODE_SYNTAX_HIGHLIGHT
 Set to
 false
-to disable syntax highlighting in diff output. Useful when colors interfere with your terminal setup
+to disable syntax highlighting in diff output. Useful when colors interfere with your terminal setup. To also disable highlighting in code blocks and file previews, use the
+syntaxHighlightingDisabled
+setting
 CLAUDE_CODE_TASK_LIST_ID
 Share a task list across sessions. Set the same ID in multiple Claude Code instances to coordinate on a shared task list. See
 Task list
@@ -934,6 +981,24 @@ Override the configuration directory (default:
 ~/.claude
 ). All settings, credentials, session history, and plugins are stored under this path. Useful for running multiple accounts side by side: for example,
 alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'
+CLAUDE_EFFORT
+Set automatically in Bash tool subprocesses and hook commands to the active
+effort level
+for the turn:
+low
+,
+medium
+,
+high
+,
+xhigh
+, or
+max
+. Matches the
+effort.level
+field passed to
+hooks
+. Only set when the current model supports the effort parameter
 CLAUDE_ENABLE_BYTE_WATCHDOG
 Set to
 1
@@ -1184,6 +1249,10 @@ in non-interactive mode (
 server connections. Servers configured with
 alwaysLoad: true
 always block startup regardless of this variable, since their tools must be present when the first prompt is built
+MCP_CONNECT_TIMEOUT_MS
+How long the first query waits, in milliseconds, for the MCP connection batch before snapshotting the tool list (default: 5000). Servers still pending at the deadline keep connecting in the background but won’t appear until the next query. Distinct from
+MCP_TIMEOUT
+, which bounds an individual server’s connect attempt. Most relevant to non-interactive sessions that issue a single query and need slow-connecting servers to be visible
 MCP_OAUTH_CALLBACK_PORT
 Fixed port for the OAuth redirect callback, as an alternative to
 --callback-port

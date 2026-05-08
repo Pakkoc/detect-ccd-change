@@ -78,8 +78,6 @@ Alt+Y
 Alt+M
 ,
 Alt+P
-,
-Alt+T
 ) require configuring Option as Meta in your terminal:
 iTerm2
 : Settings → Profiles → Keys → General → set Left/Right Option key to “Esc+”
@@ -188,7 +186,8 @@ Option+T
 Alt+T
 (Windows/Linux)
 Toggle extended thinking
-Enable or disable extended thinking mode. On macOS, configure your terminal to send Option as Meta for this shortcut to work
+Enable or disable extended thinking mode.
+As of v2.1.132 this shortcut works on macOS without configuring Option as Meta
 Option+O
 (macOS) or
 Alt+O
@@ -273,14 +272,14 @@ Option as Meta
 on macOS
 Shift+Enter
 Shift+Enter
-Native in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal
+Native in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal, Windows Terminal
 Control sequence
 Ctrl+J
 Works in any terminal without configuration
 Paste mode
 Paste directly
 For code blocks, logs
-Shift+Enter works without configuration in iTerm2, WezTerm, Ghostty, Kitty, Warp, and Apple Terminal. For VS Code, Cursor, Windsurf, Alacritty, and Zed, run
+Shift+Enter works without configuration in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal, and Windows Terminal. For VS Code, Cursor, Windsurf, Alacritty, and Zed, run
 /terminal-setup
 to install the binding.
 ​

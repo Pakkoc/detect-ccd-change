@@ -1,4 +1,4 @@
-TypeScript SDK V2 interface (preview) - Claude Code Docs
+TypeScript SDK V2 session API (deprecated) - Claude Code Docs
 Skip to main content
 Claude Code Docs
 home page
@@ -10,7 +10,7 @@ Ask AI
 Search...
 Navigation
 SDK references
-TypeScript SDK V2 interface (preview)
+TypeScript SDK V2 session API (deprecated)
 Getting started
 Build with Claude Code
 Administration
@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Python SDK
 Migration Guide
 On this page
@@ -70,22 +70,27 @@ unstable_v2_resumeSession()
 unstable_v2_prompt()
 SDKSession interface
 Feature availability
-Feedback
 See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
 Use this file to discover all available pages before exploring further.
-The V2 interface is an
-unstable preview
-. APIs may change based on feedback before becoming stable. Some features like session forking are only available in the
-V1 SDK
-.
-The V2 Claude Agent TypeScript SDK removes the need for async generators and yield coordination. This makes multi-turn conversations simpler, instead of managing generator state across turns, each turn is a separate
+The V2 session API functions
+unstable_v2_createSession
+,
+unstable_v2_resumeSession
+, and
+unstable_v2_prompt
+are deprecated and will be removed in a future release. Use the
+V1
+query()
+API
+instead.
+V2 was an experimental session API that removed the need for async generators and yield coordination. Instead of managing generator state across turns, each turn was a separate
 send()
 /
 stream()
-cycle. The API surface reduces to three concepts:
+cycle. The API surface reduced to three concepts:
 createSession()
 /
 resumeSession()
@@ -746,18 +751,13 @@ void
 }
 ​
 Feature availability
-Not all V1 features are available in V2 yet. The following require using the
+The V2 session API does not support every V1 feature. The following require the
 V1 SDK
 :
 Session forking (
 forkSession
 option)
 Some advanced streaming input patterns
-​
-Feedback
-Share your feedback on the V2 interface before it becomes stable. Report issues and suggestions through
-GitHub Issues
-.
 ​
 See also
 TypeScript SDK reference (V1)

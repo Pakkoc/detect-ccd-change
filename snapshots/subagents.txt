@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Python SDK
 Migration Guide
 On this page
@@ -311,7 +311,7 @@ Model override for this agent. Accepts an alias such as
 skills
 string[]
 No
-List of skill names available to this agent
+List of skill names to preload into the agent’s context at startup. Unlisted skills remain invocable through the Skill tool
 memory
 'user' | 'project' | 'local'
 No
@@ -371,9 +371,8 @@ The parent’s conversation history or tool results
 Project CLAUDE.md (loaded via
 settingSources
 )
-Skills (unless listed in
+Preloaded skill content, unless listed in
 AgentDefinition.skills
-)
 Tool definitions (inherited from parent, or the subset in
 tools
 )

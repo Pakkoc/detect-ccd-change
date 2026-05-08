@@ -67,13 +67,13 @@ and then press Enter. Both work in every terminal with no setup.
 In most terminals you can also press Shift+Enter, but support varies by terminal emulator:
 Terminal
 Shift+Enter for newline
-Ghostty, Kitty, iTerm2, WezTerm, Warp, Apple Terminal
+Ghostty, Kitty, iTerm2, WezTerm, Warp, Apple Terminal, Windows Terminal
 Works without setup
 VS Code, Cursor, Windsurf, Alacritty, Zed
 Run
 /terminal-setup
 once
-Windows Terminal, gnome-terminal, JetBrains IDEs such as PyCharm and Android Studio
+gnome-terminal, JetBrains IDEs such as PyCharm and Android Studio
 Not available; use Ctrl+J or
 \
 then Enter

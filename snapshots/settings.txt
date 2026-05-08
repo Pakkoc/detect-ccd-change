@@ -381,7 +381,10 @@ Enable
 extended thinking
 by default for all sessions. Typically configured via the
 /config
-command rather than editing directly
+command rather than editing directly. To force thinking off regardless of this setting, set
+CLAUDE_CODE_DISABLE_THINKING
+in
+env
 true
 apiKeyHelper
 Custom script, to be executed in
@@ -390,7 +393,8 @@ Custom script, to be executed in
 X-Api-Key
 and
 Authorization: Bearer
-headers for model requests
+headers for model requests. Set the refresh interval with
+CLAUDE_CODE_API_KEY_HELPER_TTL_MS
 /bin/generate_temp_api_key.sh
 attribution
 Customize attribution for git commits and pull requests. See
@@ -414,7 +418,10 @@ false
 true
 . You can also toggle this with
 /memory
-during a session
+during a session. To disable via environment variable, set
+CLAUDE_CODE_DISABLE_AUTO_MEMORY
+in
+env
 false
 autoMode
 Customize what the
@@ -496,6 +503,13 @@ Anthropic Console
 accounts using API key authentication, channels are allowed by default unless your organization deploys managed settings, in which case this key must be set to
 true
 true
+claudeMdExcludes
+Glob patterns or absolute paths of
+CLAUDE.md
+files to skip when loading
+memory
+. Patterns match against absolute file paths. Only applies to user, project, and local memory; managed policy files cannot be excluded
+["**/vendor/**/CLAUDE.md"]
 cleanupPeriodDays
 Session files older than this period are deleted at startup (default: 30 days, minimum 1). Setting to
 0
@@ -618,7 +632,11 @@ across sessions. Accepts
 "xhigh"
 . Written automatically when you run
 /effort
-with one of those values. See
+with one of those values.
+--effort
+and
+CLAUDE_CODE_EFFORT_LEVEL
+override this for one session. See
 Adjust effort level
 for supported models
 "xhigh"
@@ -648,7 +666,11 @@ Probability (0–1) that the
 session quality survey
 appears when eligible. Set to
 0
-to suppress entirely. Useful when using Bedrock, Vertex, or Foundry where the default sample rate does not apply
+to suppress entirely, or set
+CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY
+in
+env
+. Useful when using Bedrock, Vertex, or Foundry where the default sample rate does not apply
 0.05
 fileSuggestion
 Configure a custom script for
@@ -672,6 +694,10 @@ forceRemoteSettingsRefresh
 (Managed settings only) Block CLI startup until remote managed settings are freshly fetched from the server. If the fetch fails, the CLI exits rather than continuing with cached or no settings. When not set, startup continues without waiting for remote settings. See
 fail-closed enforcement
 true
+gcpAuthRefresh
+Custom script that refreshes GCP Application Default Credentials when they expire or cannot be loaded. See
+advanced credential configuration
+gcloud auth application-default login
 hooks
 Configure custom commands to run at lifecycle events. See
 hooks documentation
@@ -728,21 +754,35 @@ managed settings
 to pin an organization-wide minimum
 "2.1.100"
 model
-Override the default model to use for Claude Code
+Override the default model to use for Claude Code.
+--model
+and
+ANTHROPIC_MODEL
+override this for one session
 "claude-sonnet-4-6"
 modelOverrides
 Map Anthropic model IDs to provider-specific model IDs such as Bedrock inference profile ARNs. Each model picker entry uses its mapped value when calling the provider API. See
 Override model IDs per version
 {"claude-opus-4-6": "arn:aws:bedrock:..."}
 otelHeadersHelper
-Script to generate dynamic OpenTelemetry headers. Runs at startup and periodically (see
+Script to generate dynamic OpenTelemetry headers. Runs at startup and periodically. Set the refresh interval with
+CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS
+. See
 Dynamic headers
-)
 /bin/generate_otel_headers.sh
 outputStyle
 Configure an output style to adjust the system prompt. See
 output styles documentation
 "Explanatory"
+parentSettingsBehavior
+(Managed settings only) Controls whether managed settings supplied programmatically by an embedding host process, such as the Agent SDK or an IDE extension, apply when an admin-deployed managed tier is also present.
+"first-wins"
+: the parent-supplied settings are dropped and only the admin tier applies.
+"merge"
+: the parent-supplied settings apply under the admin tier, filtered so they can tighten policy but not loosen it. Has no effect when no admin tier is deployed. Default:
+"first-wins"
+. Requires Claude Code v2.1.133 or later
+"merge"
 permissions
 See table below for structure of permissions.
 plansDirectory
@@ -918,6 +958,9 @@ strictKnownMarketplaces
 (Managed settings only) Allowlist of plugin marketplace sources. Undefined = no restrictions, empty array = lockdown. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "acme-corp/plugins" }]
+syntaxHighlightingDisabled
+Disable syntax highlighting in diffs, code blocks, and file previews
+true
 teammateMode
 How
 agent team
@@ -927,7 +970,9 @@ auto
 in-process
 , or
 tmux
-. See
+.
+--teammate-mode
+overrides this for one session. See
 choose a display mode
 "in-process"
 terminalProgressBarEnabled
@@ -947,6 +992,9 @@ with virtualized scrollback. Use
 "default"
 for the classic main-screen renderer. Set via
 /tui
+. You can also set the
+CLAUDE_CODE_NO_FLICKER
+environment variable
 "fullscreen"
 useAutoModeDuringPlan
 Whether plan mode uses auto mode semantics when auto mode is available. Default:
@@ -964,7 +1012,9 @@ Default transcript view mode on startup:
 "focus"
 . Overrides the sticky
 /focus
-selection when set
+selection when set. The
+--verbose
+flag overrides this for one session
 "verbose"
 voice
 Voice dictation
@@ -1030,7 +1080,9 @@ false
 /config
 as
 Auto-connect to IDE (external terminal)
-when running outside a VS Code or JetBrains terminal
+when running outside a VS Code or JetBrains terminal. The
+CLAUDE_CODE_AUTO_CONNECT_IDE
+environment variable overrides this when set
 true
 autoInstallIdeExtension
 Automatically install the Claude Code IDE extension when running from a VS Code terminal. Default:
@@ -1059,10 +1111,25 @@ true
 Worktree settings
 Configure how
 --worktree
-creates and manages git worktrees. Use these settings to reduce disk usage and startup time in large monorepos.
+creates and manages git worktrees.
 Key
 Description
 Example
+worktree.baseRef
+Which ref new worktrees branch from.
+"fresh"
+(default) branches from
+origin/<default-branch>
+for a clean tree matching the remote.
+"head"
+branches from your current local
+HEAD
+, so unpushed commits and feature-branch state are present in the worktree. Applies to
+--worktree
+, the
+EnterWorktree
+tool, and subagent isolation
+"head"
 worktree.symlinkDirectories
 Directories to symlink from the main repository into each worktree to avoid duplicating large directories on disk. No directories are symlinked by default
 ["node_modules", ".cache"]
@@ -1297,6 +1364,24 @@ with a MITM proxy and custom CA.
 Reduces security
 by opening a potential data exfiltration path. Default: false
 true
+bwrapPath
+(Managed settings only, Linux/WSL2) Absolute path to the bubblewrap (
+bwrap
+) binary. Overrides automatic detection via
+PATH
+. Only honored from
+managed settings
+, not from user or project settings. Useful when
+bwrap
+is installed at a non-standard location in managed environments.
+/opt/admin/bwrap
+socatPath
+(Managed settings only, Linux/WSL2) Absolute path to the
+socat
+binary used for the sandbox network proxy. Overrides automatic detection via
+PATH
+. Only honored from managed settings.
+/opt/admin/socat
 ​
 Sandbox path prefixes
 Paths in
@@ -1536,7 +1621,7 @@ User hooks, project hooks, and all other plugin hooks are blocked
 Restrict HTTP hook URLs:
 Limit which URLs HTTP hooks can target. Supports
 *
-as a wildcard for matching. When the array is defined, HTTP hooks targeting non-matching URLs are silently blocked.
+as a wildcard for matching. When the array is defined, HTTP hooks targeting non-matching URLs are silently blocked. Hostname matching is case-insensitive and ignores a trailing FQDN dot, matching DNS semantics.
 {
 "allowedHttpHookUrls"
 : [

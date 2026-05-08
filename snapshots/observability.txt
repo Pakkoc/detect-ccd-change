@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Python SDK
 Migration Guide
 On this page

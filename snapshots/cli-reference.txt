@@ -182,7 +182,9 @@ Add additional working directories for Claude to read and edit files. Grants fil
 .claude/
 configuration is
 not discovered
-from these directories. Validates each path exists as a directory
+from these directories. Validates each path exists as a directory. To persist these directories across sessions, set
+permissions.additionalDirectories
+in settings
 claude --add-dir ../apps ../lib
 --agent
 Specify an agent for the current session (overrides the
@@ -294,7 +296,9 @@ high
 xhigh
 ,
 max
-; available levels depend on the model. Session-scoped and does not persist to settings
+; available levels depend on the model. Overrides the
+effortLevel
+setting for this session and does not persist
 claude --effort high
 --enable-auto-mode
 Removed in v2.1.111. Auto mode is now in the
@@ -385,7 +389,10 @@ Sets the model for the current session with an alias for the latest model (
 sonnet
 or
 opus
-) or a model’s full name
+) or a model’s full name. Overrides the
+model
+setting and
+ANTHROPIC_MODEL
 claude --model claude-sonnet-4-6
 --name
 ,
@@ -404,7 +411,9 @@ Chrome browser integration
 for this session
 claude --no-chrome
 --no-session-persistence
-Disable session persistence so sessions are not saved to disk and cannot be resumed (print mode only)
+Disable session persistence so sessions are not saved to disk and cannot be resumed. Print mode only. The
+CLAUDE_CODE_SKIP_PROMPT_HISTORY
+environment variable does the same in any mode
 claude -p --no-session-persistence "query"
 --output-format
 Specify output format for print mode (options:
@@ -446,7 +455,7 @@ claude --plugin-dir ./my-plugin
 --plugin-url
 Fetch a plugin
 .zip
-archive from a URL for this session only. Each flag takes one URL. Repeat the flag for multiple plugins
+archive from a URL for this session only. Repeat the flag for multiple plugins, or pass space-separated URLs in a single quoted value
 claude --plugin-url https://example.com/plugin.zip
 --print
 ,
@@ -531,7 +540,9 @@ auto
 in-process
 , or
 tmux
-. See
+. Overrides the
+teammateMode
+setting for this session. See
 Choose a display mode
 claude --teammate-mode in-process
 --tmux
@@ -550,7 +561,9 @@ for all, or tool names like
 "Bash,Edit,Read"
 claude --tools "Bash,Edit,Read"
 --verbose
-Enable verbose logging, shows full turn-by-turn output
+Enable verbose logging, shows full turn-by-turn output. Overrides the
+viewMode
+setting for this session
 claude --verbose
 --version
 ,
@@ -564,7 +577,11 @@ Start Claude in an isolated
 git worktree
 at
 <repo>/.claude/worktrees/<name>
-. If no name is given, one is auto-generated
+. If no name is given, one is auto-generated. Pass
+#<number>
+or a GitHub pull request URL to fetch that PR from
+origin
+and branch the worktree from it
 claude -w feature-auth
 ​
 System prompt flags

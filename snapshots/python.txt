@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Python SDK
 Migration Guide
 On this page
@@ -107,6 +107,7 @@ Types
 SdkMcpTool
 Transport
 ClaudeAgentOptions
+Handle slow or stalled API responses
 OutputFormat
 SystemPromptPreset
 SettingSource
@@ -2241,6 +2242,10 @@ default_factory
 =
 dict
 )
+strict_mcp_config:
+bool
+=
+False
 permission_mode: PermissionMode
 |
 None
@@ -2404,6 +2409,10 @@ include_partial_messages:
 bool
 =
 False
+include_hook_events:
+bool
+=
+False
 fork_session:
 bool
 =
@@ -2450,6 +2459,8 @@ effort: Literal[
 "medium"
 ,
 "high"
+,
+"xhigh"
 ,
 "max"
 ]
@@ -2502,6 +2513,18 @@ mcp_servers
 dict[str, McpServerConfig] | str | Path
 {}
 MCP server configurations or path to config file
+strict_mcp_config
+bool
+False
+When
+True
+, use only the servers passed in
+mcp_servers
+and ignore project
+.mcp.json
+, user settings, and plugin-provided MCP servers. Maps to the CLI
+--strict-mcp-config
+flag
 permission_mode
 PermissionMode | None
 None
@@ -2588,7 +2611,9 @@ dict[str, str]
 {}
 Environment variables merged on top of the inherited process environment. See
 Environment variables
-for variables the underlying CLI reads
+for variables the underlying CLI reads, and
+Handle slow or stalled API responses
+for timeout-related variables
 extra_args
 dict[str, str | None]
 {}
@@ -2629,6 +2654,12 @@ False
 Include partial message streaming events. When enabled,
 StreamEvent
 messages are yielded
+include_hook_events
+bool
+False
+Include hook lifecycle events in the message stream as
+HookEventMessage
+objects
 fork_session
 bool
 False
@@ -2660,6 +2691,15 @@ Control which filesystem settings to load. Pass
 []
 to disable user, project, and local settings. Managed policy settings load regardless. See
 Use Claude Code features
+skills
+list[str] | Literal["all"] | None
+None
+Skills available to the session. Pass
+"all"
+to enable every discovered skill, or a list of skill names. When set, the SDK enables the Skill tool automatically without listing it in
+allowed_tools
+. See
+Skills
 max_thinking_tokens
 int | None
 None
@@ -2674,7 +2714,7 @@ None
 Controls extended thinking behavior. Takes precedence over
 max_thinking_tokens
 effort
-Literal["low", "medium", "high", "max"] | None
+Literal["low", "medium", "high", "xhigh", "max"] | None
 None
 Effort level for thinking depth
 session_store
@@ -2696,6 +2736,57 @@ triggers a background flush after every frame. Ignored when
 session_store
 is
 None
+​
+Handle slow or stalled API responses
+The CLI subprocess reads several environment variables that control API timeouts and stall detection. Pass them through
+ClaudeAgentOptions.env
+:
+options
+=
+ClaudeAgentOptions(
+env
+=
+{
+"API_TIMEOUT_MS"
+:
+"120000"
+,
+"CLAUDE_CODE_MAX_RETRIES"
+:
+"2"
+,
+"CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS"
+:
+"120000"
+,
+},
+)
+API_TIMEOUT_MS
+: per-request timeout on the Anthropic client, in milliseconds. Default
+600000
+. Applies to the main loop and all subagents.
+CLAUDE_CODE_MAX_RETRIES
+: maximum API retries. Default
+10
+. Each retry gets its own
+API_TIMEOUT_MS
+window, so worst-case wall time is roughly
+API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)
+plus backoff.
+CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
+: stall watchdog for subagents launched with
+run_in_background
+. Default
+600000
+. Resets on each stream event; on stall it aborts the subagent, marks the task failed, and surfaces the error to the parent with any partial result. Does not apply to synchronous subagents.
+CLAUDE_ENABLE_STREAM_WATCHDOG=1
+with
+CLAUDE_STREAM_IDLE_TIMEOUT_MS
+: aborts the request when headers have arrived but the response body stops streaming. Off by default.
+CLAUDE_STREAM_IDLE_TIMEOUT_MS
+defaults to
+300000
+and is clamped to that minimum. The aborted request goes through the normal retry path.
 ​
 OutputFormat
 Configuration for structured output validation. Pass this as a
@@ -3104,6 +3195,8 @@ effort: Literal[
 ,
 "high"
 ,
+"xhigh"
+,
 "max"
 ]
 |
@@ -3145,7 +3238,7 @@ Model override for this agent. Accepts an alias such as
 , or a full model ID. If omitted, uses the main model
 skills
 No
-List of skill names available to this agent
+List of skill names to preload into the agent’s context at startup. Unlisted skills remain invocable through the Skill tool
 memory
 No
 Memory source for this agent:
@@ -3263,6 +3356,36 @@ default_factory
 =
 list
 )
+blocked_path:
+str
+|
+None
+=
+None
+decision_reason:
+str
+|
+None
+=
+None
+title:
+str
+|
+None
+=
+None
+display_name:
+str
+|
+None
+=
+None
+description:
+str
+|
+None
+=
+None
 Field
 Type
 Description
@@ -3278,6 +3401,28 @@ updated_permissions
 writes the rule to
 .claude/settings.local.json
 and persists across sessions.
+blocked_path
+str | None
+File path that triggered the permission request, when applicable. For example, when a Bash command tries to access a path outside allowed directories
+decision_reason
+str | None
+Reason this permission request was triggered. Forwarded from a PreToolUse hook’s
+permissionDecisionReason
+when the hook returned
+"ask"
+title
+str | None
+Full permission prompt sentence, such as
+Claude wants to read foo.txt
+. Use as the primary prompt text when present
+display_name
+str | None
+Short noun phrase for the tool action, such as
+Read file
+, suitable for button labels
+description
+str | None
+Human-readable subtitle for the permission UI
 ​
 PermissionResult
 Union type for permission callback results.
@@ -4047,6 +4192,12 @@ num_turns:
 int
 session_id:
 str
+stop_reason:
+str
+|
+None
+=
+None
 total_cost_usd:
 float
 |
@@ -4066,18 +4217,41 @@ str
 None
 =
 None
-stop_reason:
-str
-|
-None
-=
-None
 structured_output: Any
 =
 None
 model_usage: dict[
 str
 , Any]
+|
+None
+=
+None
+permission_denials: list[Any]
+|
+None
+=
+None
+deferred_tool_use: DeferredToolUse
+|
+None
+=
+None
+errors: list[
+str
+]
+|
+None
+=
+None
+api_error_status:
+int
+|
+None
+=
+None
+uuid:
+str
 |
 None
 =
@@ -5369,6 +5543,8 @@ permissionDecision: NotRequired[Literal[
 "deny"
 ,
 "ask"
+,
+"defer"
 ]]
 permissionDecisionReason: NotRequired[
 str
@@ -5390,6 +5566,7 @@ hookEventName: Literal[
 additionalContext: NotRequired[
 str
 ]
+updatedToolOutput: NotRequired[Any]
 updatedMCPToolOutput: NotRequired[Any]
 class
 PostToolUseFailureHookSpecificOutput
@@ -8065,7 +8242,7 @@ Common workflows
 Was this page helpful?
 Yes
 No
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Migration Guide
 ⌘
 I

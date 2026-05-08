@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Python SDK
 Migration Guide
 On this page
@@ -70,6 +70,7 @@ Handle errors
 Return images and resources
 Images
 Resources
+Return structured data
 Example: unit converter
 Next steps
 Related documentation
@@ -135,6 +136,12 @@ resource
 blocks in the content array. See
 Return images and resources
 .
+Return a machine-readable JSON result
+Set
+structuredContent
+on the result. See
+Return structured data
+.
 Scale to many tools
 Use
 tool search
@@ -174,6 +181,12 @@ of
 . See
 Return images and resources
 for non-text blocks.
+structuredContent
+(optional): a JSON object holding the result as machine-readable data, returned alongside
+content
+. See
+Return structured data
+.
 isError
 (optional): set to
 true
@@ -984,6 +997,72 @@ CallToolResult
 type. See the
 MCP specification
 for the full definition.
+​
+Return structured data
+structuredContent
+is an optional JSON object on the result, separate from the
+content
+array. Use it to return raw values that Claude can read as exact fields instead of parsing them out of a text string or image.
+When
+structuredContent
+is set, Claude receives the JSON plus any image or resource blocks from
+content
+. Text blocks in
+content
+are not forwarded, since they are assumed to duplicate the structured data. The example below renders a chart as an image block and returns the data points behind it in
+structuredContent
+from the same handler.
+TypeScript
+return
+{
+content:
+[
+{
+type:
+"image"
+,
+data:
+chartPngBuffer
+.
+toString
+(
+"base64"
+),
+mimeType:
+"image/png"
+}
+],
+structuredContent:
+{
+series:
+"temperature_2m"
+,
+unit:
+"fahrenheit"
+,
+points:
+[
+62.1
+,
+63.4
+,
+65.0
+,
+64.2
+]
+}
+};
+The Python
+@tool
+decorator forwards only
+content
+and
+is_error
+from the handler’s return dict. To return
+structuredContent
+from Python, run a
+standalone MCP server
+instead of an in-process SDK server.
 ​
 Example: unit converter
 This tool converts values between units of length, temperature, and weight. A user can ask “convert 100 kilometers to miles” or “what is 72°F in Celsius,” and Claude picks the right unit type and units from the request.

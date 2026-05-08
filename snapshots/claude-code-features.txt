@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Python SDK
 Migration Guide
 On this page
@@ -328,15 +328,21 @@ CLAUDE.md
 (which loads every session), skills load on demand. The agent receives skill descriptions at startup and loads the full content when relevant.
 Skills are discovered from the filesystem through
 settingSources
-. With default options, user and project skills load automatically. The
-Skill
-tool is enabled by default when you don’t specify
+. When the
+skills
+option on
+query()
+is omitted, discovered user and project skills are enabled and the Skill tool is available, matching CLI behavior. To control which skills are enabled, pass
+skills
+as
+"all"
+, a list of skill names, or
+[]
+to disable all. The SDK enables the Skill tool automatically when
+skills
+is set, so you do not need to add it to
 allowedTools
-. If you are using an
-allowedTools
-allowlist, include
-"Skill"
-explicitly.
+.
 Python
 TypeScript
 from
@@ -364,11 +370,13 @@ setting_sources
 ,
 "project"
 ],
+skills
+=
+"all"
+,
 allowed_tools
 =
 [
-"Skill"
-,
 "Read"
 ,
 "Grep"
@@ -571,12 +579,14 @@ Give the agent reference material it loads when relevant
 Skills
 settingSources
 +
-allowedTools: ["Skill"]
+skills
+option
 Run a reusable workflow (deploy, review, release)
 User-invocable skills
 settingSources
 +
-allowedTools: ["Skill"]
+skills
+option
 Delegate an isolated subtask to a fresh context (research, review)
 Subagents
 agents

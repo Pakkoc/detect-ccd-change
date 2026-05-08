@@ -77,6 +77,10 @@ model name
 Bedrock: an inference profile ARN
 Foundry: a deployment name
 Vertex: a version name
+ANTHROPIC_BASE_URL
+changes where requests are sent, not which model answers them. To route Claude through an LLM gateway, see
+LLM gateway configuration
+.
 ​
 Model aliases
 Model aliases provide a convenient way to select model settings without
@@ -470,9 +474,7 @@ Press
 Option+T
 on macOS or
 Alt+T
-on Windows and Linux. May require
-terminal configuration
-for Option-key shortcuts
+on Windows and Linux
 Set the global default
 Run
 /config

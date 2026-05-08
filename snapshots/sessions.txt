@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (preview)
+TypeScript V2 (deprecated)
 Python SDK
 Migration Guide
 On this page
@@ -404,19 +404,17 @@ result
 );
 }
 }
-There’s also a
-V2 preview
-of the TypeScript SDK that provides
+The experimental
+V2 session API
+, which provided
 createSession()
 with a
 send
 /
 stream
-pattern, closer to Python’s
-ClaudeSDKClient
-in feel. V2 is unstable and its APIs may change; the rest of this documentation uses the stable V1
+pattern, is deprecated. Use the V1
 query()
-function.
+function and the session options described on this page instead.
 ​
 Use session options with
 query()
