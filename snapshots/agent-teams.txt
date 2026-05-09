@@ -491,8 +491,8 @@ Task status can lag
 : teammates sometimes fail to mark tasks as completed, which blocks dependent tasks. If a task appears stuck, check whether the work is actually done and update the task status manually or tell the lead to nudge the teammate.
 Shutdown can be slow
 : teammates finish their current request or tool call before shutting down, which can take time.
-One team per session
-: a lead can only manage one team at a time. Clean up the current team before starting a new one.
+One team at a time
+: a lead can only manage one team. Clean up the current team before creating a new one.
 No nested teams
 : teammates cannot spawn their own teams or teammates. Only the lead can manage the team.
 Lead is fixed

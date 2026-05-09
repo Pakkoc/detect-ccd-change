@@ -95,6 +95,9 @@ claude.ai/code/routines
 , or from the CLI with
 /schedule
 .
+Team and Enterprise admins can disable routines for all members with the Routines toggle at
+claude.ai/admin-settings/claude-code
+. When disabled, existing routines stop running and members cannot create new ones.
 This page covers creating a routine, configuring each trigger type, managing runs, and how usage limits apply.
 ​
 Example use cases

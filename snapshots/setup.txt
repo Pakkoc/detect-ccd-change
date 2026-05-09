@@ -667,6 +667,11 @@ win32-arm64
 . Your package manager must allow optional dependencies. See
 troubleshooting
 if the binary is missing after install.
+To upgrade an npm installation, run
+npm install -g @anthropic-ai/claude-code@latest
+. Avoid
+npm update -g
+, which respects the semver range from the original install and may not move you to the newest release.
 Do NOT use
 sudo npm install -g
 as this can lead to permission issues and security risks. If you encounter permission errors, see
