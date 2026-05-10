@@ -188,10 +188,12 @@ or
 to upgrade existing Claude API code to a newer model: Claude asks which files to scan and which model to target, then updates model IDs, thinking configuration, and other parameters that changed between versions. Run
 /claude-api managed-agents-onboard
 for an interactive walkthrough that creates a new Managed Agent from scratch
-/clear
+/clear [name]
 Start a new conversation with empty context. The previous conversation stays available in
 /resume
-. To free up context while continuing the same conversation, use
+. Pass a name to label the previous conversation in the
+/resume
+picker. To free up context while continuing the same conversation, use
 /compact
 instead. Aliases:
 /reset
@@ -229,8 +231,12 @@ interface to adjust theme, model,
 output style
 , and other preferences. Alias:
 /settings
-/context
-Visualize current context usage as a colored grid. Shows optimization suggestions for context-heavy tools, memory bloat, and capacity warnings
+/context [all]
+Visualize current context usage as a colored grid. Shows optimization suggestions for context-heavy tools, memory bloat, and capacity warnings. In
+fullscreen mode
+the per-item breakdown is collapsed to keep the grid visible. Pass
+all
+to expand it
 /copy [N]
 Copy the last assistant response to clipboard. Pass a number
 N
@@ -386,6 +392,8 @@ gh
 CLI
 /privacy-settings
 View and update your privacy settings. Only available for Pro and Max plan subscribers
+/radio
+Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available. Not available on Bedrock, Vertex, or Foundry
 /recap
 Generate a one-line summary of the current session on demand. See
 Session recap

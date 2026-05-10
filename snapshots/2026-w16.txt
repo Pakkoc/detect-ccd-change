@@ -21,6 +21,8 @@ What's New
 Resources
 What's New
 What's new
+Week 19 · May 4–8
+Week 18 · Apr 27 – May 1
 Week 17 · Apr 20–24
 Week 16 · Apr 13–17
 Week 15 · Apr 6–10
@@ -73,16 +75,17 @@ Run it any time:
 Claude Code
 > /usage
 Commands reference
-/ultrareview
-v2.1.111
-Comprehensive code review in the cloud. Ultrareview fans your branch out across parallel reviewers on Claude Code on the web, runs an adversarial critique pass over each finding, and returns a verified findings report while your terminal stays free. Call it with no arguments to review your current branch, or pass a PR number to fetch and review that PR. The launch dialog now shows a diffstat so you know what’s going up before you confirm.
-Review the branch you’re on:
+Mobile push notifications
+mobile
+With
+Remote Control
+connected, Claude can send a push notification to your phone when a long task finishes or it needs a decision to keep going. Turn it on with “Push when Claude decides” in
+/config
+, or ask for one in your prompt. Useful when you kick off a long agent run and want to step away from the terminal.
+Ask Claude to ping you when it’s done:
 Claude Code
-> /ultrareview
-Or point it at a PR:
-Claude Code
-> /ultrareview 1234
-Ultrareview guide
+> notify me when the tests pass
+Remote Control: mobile push notifications
 Native binaries
 v2.1.113
 The
@@ -99,6 +102,11 @@ claude
 --version
 Setup guide
 Other wins
+New
+/ultrareview
+: comprehensive code review in the cloud using parallel multi-agent analysis and an adversarial critique pass. Run it bare to review your current branch, or
+/ultrareview <PR#>
+for a specific PR
 Auto mode
 is now available for Max subscribers on Opus 4.7, and the
 —enable-auto-mode
@@ -117,9 +125,6 @@ Ctrl+O
 to its own
 /focus
 command
-Push notification tool: with
-Remote Control
-connected and “Push when Claude decides” enabled, Claude can ping your phone when it needs you
 Plugins can ship background watchers via a top-level
 monitors
 manifest key that auto-arms at session start or on skill invoke

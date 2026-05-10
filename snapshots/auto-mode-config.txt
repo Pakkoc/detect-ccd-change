@@ -120,9 +120,11 @@ Entries from each scope are combined. A developer can extend
 environment
 ,
 allow
-, and
+,
 soft_deny
-with personal entries but cannot remove entries that managed settings provide. Because allow rules act as exceptions to block rules inside the classifier, a developer-added
+, and
+hard_deny
+with personal entries but cannot remove entries that managed settings provide. Because allow rules act as exceptions to soft block rules inside the classifier, a developer-added
 allow
 entry can override an organization
 soft_deny
@@ -199,29 +201,39 @@ The more specific context you give, the better the classifier can distinguish ro
 You don’t need to fill everything in at once. A reasonable rollout: start with the defaults and add your source control org and key internal services, which resolves the most common false positives like pushing to your own repos. Add trusted domains and cloud buckets next. Fill the rest as blocks come up.
 ​
 Override the block and allow rules
-Two additional fields let you replace the classifier’s built-in rule lists:
+Three additional fields let you replace the classifier’s built-in rule lists:
+autoMode.hard_deny
+for unconditional security boundaries,
 autoMode.soft_deny
-controls what gets blocked, and
+for destructive actions that user intent can clear, and
 autoMode.allow
-controls which exceptions apply. Each is an array of prose descriptions, read as natural-language rules. There is no
-autoMode.deny
-field; to hard-block an action regardless of intent, use
+for exceptions. Each is an array of prose descriptions, read as natural-language rules. For tool-pattern-based hard blocks that run before the classifier, use
 permissions.deny
-, which runs before the classifier.
-Inside the classifier, precedence works in three tiers:
-soft_deny
-rules block first
+.
+Inside the classifier, precedence works in four tiers:
+hard_deny
+rules block unconditionally. User intent and
 allow
-rules then override matching blocks as exceptions
-Explicit user intent overrides both: if the user’s message directly and specifically describes the exact action Claude is about to take, the classifier allows it even when a
+exceptions do not apply.
 soft_deny
-rule matches
+rules block next. User intent and
+allow
+exceptions can override these.
+allow
+rules then override matching
+soft_deny
+rules as exceptions.
+Explicit user intent overrides the remaining soft blocks: if the user’s message directly and specifically describes the exact action Claude is about to take, the classifier allows it even when a
+soft_deny
+rule matches.
 General requests don’t count as explicit intent. Asking Claude to “clean up the repo” does not authorize force-pushing, but asking Claude to “force-push this branch” does.
 To loosen, add to
 allow
 when the classifier repeatedly flags a routine pattern the default exceptions don’t cover. To tighten, add to
 soft_deny
-for risks specific to your environment that the defaults miss. To keep the built-in rules while adding your own, include the literal string
+for destructive risks specific to your environment that the defaults miss, or to
+hard_deny
+for security boundaries that must never be crossed. To keep the built-in rules while adding your own, include the literal string
 "$defaults"
 in the array. The default rules are spliced in at that position, so your custom rules can go before or after them, and you continue to inherit updates as the built-in list changes across releases.
 {
@@ -248,6 +260,12 @@ in the array. The default rules are spliced in at that position, so your custom 
 "Never run database migrations outside the migrations CLI, even against dev databases"
 ,
 "Never modify files under infra/terraform/prod/: production infrastructure changes go through the review workflow"
+],
+"hard_deny"
+: [
+"$defaults"
+,
+"Never send repository contents to third-party code-review APIs"
 ]
 }
 }
@@ -255,28 +273,36 @@ Setting any of
 environment
 ,
 allow
-, or
+,
 soft_deny
+, or
+hard_deny
 without
 "$defaults"
-replaces the entire default list for that section. If you set
+replaces the entire default list for that section. A
 soft_deny
-with a single entry and omit
+array without
 "$defaults"
-, every built-in block rule is discarded: force push, data exfiltration,
+discards every built-in soft block rule, including force push,
 curl | bash
-, production deploys, and all other default block rules become allowed. Only omit
+, and production deploys. A
+hard_deny
+array without
 "$defaults"
-when you intend to take full ownership of the list. In that case, run
-claude auto-mode defaults
-to print the built-in rules, copy them into your settings file, then review each rule against your own pipeline and risk tolerance.
+discards the built-in data exfiltration and safety-check bypass rules.
 Each section is evaluated independently, so setting
 environment
 alone leaves the default
 allow
-and
+,
 soft_deny
-lists intact.
+, and
+hard_deny
+lists intact. Only omit
+"$defaults"
+when you intend to take full ownership of the list. To do that safely, run
+claude auto-mode defaults
+to print the built-in rules, copy them into your settings file, then review each rule against your own pipeline and risk tolerance.
 ​
 Inspect the defaults and your effective config
 Three CLI subcommands help you inspect and validate your configuration.
@@ -284,8 +310,10 @@ Print the built-in
 environment
 ,
 allow
-, and
+,
 soft_deny
+, and
+hard_deny
 rules as JSON:
 claude
 auto-mode
@@ -296,8 +324,10 @@ auto-mode
 config
 Get AI feedback on your custom
 allow
-and
+,
 soft_deny
+, and
+hard_deny
 rules:
 claude
 auto-mode

@@ -21,6 +21,8 @@ What's New
 Resources
 What's New
 What's new
+Week 19 · May 4–8
+Week 18 · Apr 27 – May 1
 Week 17 · Apr 20–24
 Week 16 · Apr 13–17
 Week 15 · Apr 6–10
@@ -33,6 +35,49 @@ Use this file to discover all available pages before exploring further.
 The weekly dev digest highlights the features most likely to change how you work. Each entry includes runnable code, a short demo, and a link to the full docs. For every bug fix and minor improvement, see the
 changelog
 .
+​
+Week 19
+v2.1.128–v2.1.136
+May 4–8, 2026
+Plugins load from
+.zip
+archives and URLs
+:
+--plugin-dir
+now accepts
+.zip
+files, and
+--plugin-url
+fetches a plugin archive for the current session.
+Also this week:
+worktree.baseRef
+chooses whether new worktrees branch from the remote default or local
+HEAD
+;
+auto mode hard deny rules
+block actions unconditionally regardless of allow exceptions; and
+hooks see the active effort level
+via
+effort.level
+and
+$CLAUDE_EFFORT
+.
+Read the Week 19 digest →
+​
+Week 18
+v2.1.120–v2.1.126
+April 27 – May 1, 2026
+Windows without Git Bash
+: Git for Windows is no longer required, and Claude Code uses PowerShell as the shell tool when Bash is absent.
+Also this week:
+claude ultrareview
+brings cloud code review to CI and scripts;
+claude project purge
+cleans up local state for a project; and pasting a
+PR URL into
+/resume
+finds the session that created it.
+Read the Week 18 digest →
 ​
 Week 17
 v2.1.114–v2.1.119
@@ -62,8 +107,8 @@ slider to dial it in.
 Also this week:
 Routines
 on Claude Code on the web fire templated cloud agents from a schedule, GitHub event, or API call;
-/ultrareview
-runs parallel multi-agent code review in the cloud;
+mobile push notifications
+ping your phone when a long task finishes or Claude needs you;
 /usage
 shows what’s driving your limits; and the CLI moves to native binaries.
 Read the Week 16 digest →
@@ -112,7 +157,7 @@ Read the Week 13 digest →
 Was this page helpful?
 Yes
 No
-Week 17 · Apr 20–24
+Week 19 · May 4–8
 ⌘
 I
 Assistant

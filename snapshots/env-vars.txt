@@ -692,6 +692,10 @@ Set to
 to spawn stdio MCP servers with only a safe baseline environment plus the server’s configured
 env
 , instead of inheriting your shell environment
+CLAUDE_CODE_NATIVE_CURSOR
+Set to
+1
+to show the terminal’s own cursor at the input caret instead of a drawn block. The cursor respects the terminal’s blink, shape, and focus settings
 CLAUDE_CODE_NEW_INIT
 Set to
 1
@@ -1153,6 +1157,13 @@ Set to
 to hide the
 /upgrade
 command
+DO_NOT_TRACK
+Set to
+1
+to opt out of telemetry. Equivalent to setting
+DISABLE_TELEMETRY
+. Honored as the
+standard cross-tool convention
 ENABLE_CLAUDEAI_MCP_SERVERS
 Set to
 false

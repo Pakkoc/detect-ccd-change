@@ -45,6 +45,7 @@ JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
 On this page
+2.1.138
 2.1.137
 2.1.136
 2.1.133
@@ -339,6 +340,10 @@ CHANGELOG.md on GitHub
 Run
 claude --version
 to check your installed version.
+​
+2.1.138
+May 9, 2026
+Internal fixes
 ​
 2.1.137
 May 9, 2026

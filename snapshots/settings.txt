@@ -50,6 +50,7 @@ Sandbox path prefixes
 Attribution settings
 File suggestion settings
 Hook configuration
+Compute managed settings with a policy helper
 Settings precedence
 Verify active settings
 Key points about the configuration system
@@ -430,8 +431,10 @@ classifier blocks and allows. Contains
 environment
 ,
 allow
-, and
+,
 soft_deny
+, and
+hard_deny
 arrays of prose rules. Include the literal string
 "$defaults"
 in an array to inherit the built-in rules at that position. See
@@ -792,6 +795,13 @@ Customize where plan files are stored. Path is relative to project root. Default
 pluginTrustMessage
 (Managed settings only) Custom message appended to the plugin trust warning shown before installation. Use this to add organization-specific context, for example to confirm that plugins from your internal marketplace are vetted.
 "All plugins from our marketplace are approved by IT"
+policyHelper
+Admin-deployed executable that computes managed settings dynamically at startup. Only honored from MDM or a system
+managed-settings.json
+file. See
+Compute managed settings with a policy helper
+. Requires Claude Code v2.1.136 or later
+{"path": "/usr/local/bin/claude-policy"}
 preferredNotifChannel
 Method for task-complete and permission-prompt notifications:
 "auto"
@@ -1642,6 +1652,63 @@ is the intersection of its own list and this setting.
 "HOOK_SECRET"
 ]
 }
+​
+Compute managed settings with a policy helper
+The
+policyHelper
+setting points at an executable that computes managed settings at startup, so admins can derive policy from device posture, identity, or a remote service instead of a static file. Configure it from MDM or a system
+managed-settings.json
+file. Claude Code ignores
+policyHelper
+when it appears in any other scope, including user settings, project settings, the HKCU registry hive, and
+server-managed settings
+.
+The setting accepts these keys:
+Key
+Type
+Description
+path
+string
+Absolute path to the helper executable
+timeoutMs
+number
+How long to wait for the helper before treating the run as failed
+refreshIntervalMs
+number
+How often to re-run the helper in the background. Set to
+0
+to disable refresh, or to at least
+60000
+The helper writes a JSON envelope to stdout. Put the settings under a
+managedSettings
+key rather than at the top level, since a bare settings object parses with
+managedSettings
+undefined and applies nothing:
+{
+"managedSettings"
+: {
+"permissions"
+: {
+"deny"
+: [
+"Read(//etc/secrets/**)"
+] }
+},
+"claudeMd"
+:
+"# Organization context
+\n
+..."
+,
+"appendSystemPrompt"
+:
+"Always cite the internal style guide."
+}
+When the helper emits
+managedSettings
+, that object replaces the file-based managed settings for the run. When the helper exits non-zero at startup, Claude Code prints the error and refuses to start, so a helper that needs outage resilience should serve from its own cache and exit
+0
+.
 ​
 Settings precedence
 Settings apply in order of precedence. From highest to lowest:

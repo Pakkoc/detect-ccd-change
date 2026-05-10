@@ -158,7 +158,9 @@ Trust verification
 : First-time codebase runs and new MCP servers require trust verification
 Note: Trust verification is disabled when running non-interactively with the
 -p
-flag
+flag. The exception is
+--worktree
+, which still requires that trust has been accepted for the directory
 Command injection detection
 : Suspicious bash commands require manual approval even if previously allowlisted
 Fail-closed matching

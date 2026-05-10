@@ -5922,12 +5922,19 @@ bool
 }
 ],
 "answers"
-:
-dict
+: dict[
+str
+,
+str
+|
+list[
+str
+]]
 |
 None
 ,
-# User answers populated by the permission system
+# User answers populated by the permission system. Multi-select
+# answers may be a list of labels or a comma-joined string
 }
 Output:
 {

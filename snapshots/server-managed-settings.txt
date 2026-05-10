@@ -111,7 +111,9 @@ Define your settings
 Add your configuration as JSON. All
 settings available in
 settings.json
-are supported, including
+are supported except those restricted to OS-level policy delivery; see
+Current limitations
+for that short list. This includes
 hooks
 ,
 environment variables
@@ -195,9 +197,13 @@ Configure auto mode
 for how the
 autoMode
 entries affect what the classifier blocks and important warnings about the
+environment
+,
 allow
-and
+,
 soft_deny
+, and
+hard_deny
 fields.
 3
 Save and deploy
@@ -228,6 +234,13 @@ Server-managed settings have the following limitations:
 Settings apply uniformly to all users in the organization. Per-group configurations are not yet supported.
 MCP server configurations
 cannot be distributed through server-managed settings.
+Settings restricted to OS-level policy sources, such as
+policyHelper
+and
+wslInheritsWindowsSettings
+, are not honored. Deploy them through MDM or a system
+managed-settings.json
+file instead.
 ​
 Settings delivery
 ​

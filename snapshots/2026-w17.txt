@@ -21,6 +21,8 @@ What's New
 Resources
 What's New
 What's new
+Week 19 · May 4–8
+Week 18 · Apr 27 – May 1
 Week 17 · Apr 20–24
 Week 16 · Apr 13–17
 Week 15 · Apr 6–10
@@ -133,7 +135,7 @@ Full changelog for v2.1.114–v2.1.119 →
 Was this page helpful?
 Yes
 No
-What's new
+Week 18 · Apr 27 – May 1
 Week 16 · Apr 13–17
 ⌘
 I

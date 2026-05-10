@@ -857,7 +857,7 @@ field (e.g.,
 "Summary"
 )
 Value
-For multi-select questions, join multiple labels with
+For multi-select questions, pass an array of labels or join them with
 ", "
 . If you
 support free-text input
@@ -880,9 +880,11 @@ updated_input
 "Summary"
 ,
 "Which sections should I include?"
-:
-"Introduction, Conclusion"
+: [
+"Introduction"
 ,
+"Conclusion"
+],
 },
 }
 )
@@ -1072,7 +1074,7 @@ questions
 Pass through the original questions array (required for tool processing)
 answers
 Object where keys are question text and values are selected labels
-For multi-select questions, join multiple labels with
+For multi-select questions, pass an array of labels or join them with
 ", "
 . For free-text input, use the user’s custom text directly.
 {
@@ -1087,8 +1089,11 @@ For multi-select questions, join multiple labels with
 "Summary"
 ,
 "Which sections should I include?"
-:
-"Introduction, Conclusion"
+: [
+"Introduction"
+,
+"Conclusion"
+]
 }
 }
 ​
