@@ -743,6 +743,19 @@ Configure Claude’s preferred response language (e.g.,
 voice dictation
 language
 "japanese"
+maxSkillDescriptionChars
+Per-skill character cap on the combined
+description
+and
+when_to_use
+text in the
+skill listing
+Claude sees each turn (default:
+1536
+). Text longer than this is truncated. Raise to keep long descriptions intact at the cost of more context per turn; lower to fit more skills under
+skillListingBudgetFraction
+. Requires Claude Code v2.1.105 or later
+2048
 minimumVersion
 Floor that prevents background auto-updates and
 claude update
@@ -887,6 +900,15 @@ true
 as
 Show turn duration
 false
+skillListingBudgetFraction
+Fraction of the model’s context window reserved for the
+skill listing
+Claude sees each turn (default:
+0.01
+= 1%). When the listing exceeds the budget, descriptions for the least-used skills are collapsed to bare names so Claude can still invoke them but won’t see why. Raise to keep more descriptions visible at the cost of more context per turn.
+/doctor
+shows the current truncation count and which skills are affected. Requires Claude Code v2.1.105 or later
+0.02
 skillOverrides
 Per-skill visibility overrides keyed by skill name. Value is
 "on"
