@@ -98,10 +98,17 @@ Show authentication status as JSON. Use
 for human-readable output. Exits with code 0 if logged in, 1 if not
 claude auth status
 claude agents
-List all configured
+Open
+agent view
+to monitor and dispatch parallel background sessions. When output is piped, lists configured
 subagents
-, grouped by source
+instead
 claude agents
+claude attach <id>
+Attach to a
+background session
+in this terminal
+claude attach 7c5dcf5d
 claude auto-mode defaults
 Print the built-in
 auto mode
@@ -109,6 +116,10 @@ classifier rules as JSON. Use
 claude auto-mode config
 to see your effective config with settings applied
 claude auto-mode defaults > rules.json
+claude logs <id>
+Print recent output from a
+background session
+claude logs 7c5dcf5d
 claude mcp
 Configure Model Context Protocol (MCP) servers
 See the
@@ -149,10 +160,28 @@ Remote Control
 server to control Claude Code from Claude.ai or the Claude app. Runs in server mode (no local interactive session). See
 Server mode flags
 claude remote-control --name "My Project"
+claude respawn <id>
+Restart a stopped
+background session
+with its conversation intact. Use
+--all
+to restart every stopped session
+claude respawn 7c5dcf5d
+claude rm <id>
+Remove a
+background session
+from the list
+claude rm 7c5dcf5d
 claude setup-token
 Generate a long-lived OAuth token for CI and scripts. Prints the token to the terminal without saving it. Requires a Claude subscription. See
 Generate a long-lived token
 claude setup-token
+claude stop <id>
+Stop a
+background session
+. Also accepts
+claude kill
+claude stop 7c5dcf5d
 claude ultrareview [target]
 Run
 ultrareview
@@ -232,6 +261,13 @@ claude --bare -p "query"
 --betas
 Beta headers to include in API requests (API key users only)
 claude --betas interleaved-thinking
+--bg
+Start the session as a
+background agent
+and return immediately. Prints the session ID and management commands. Combine with
+--agent
+to run a specific subagent
+claude --bg "investigate the flaky test"
 --channels
 (Research preview) MCP servers whose
 channel

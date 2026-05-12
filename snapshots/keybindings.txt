@@ -250,7 +250,9 @@ fullscreen rendering
 /clear
 chat:killAgents
 Ctrl+X Ctrl+K
-Kill all background agents
+Kill all running
+background subagents
+in this session
 chat:cycleMode
 Shift+Tab*
 Cycle permission modes

@@ -9,7 +9,7 @@ K
 Ask AI
 Search...
 Navigation
-Agents
+Agents and parallel work
 Orchestrate teams of Claude Code sessions
 Getting started
 Build with Claude Code
@@ -19,9 +19,12 @@ Reference
 Agent SDK
 What's New
 Resources
-Agents
+Agents and parallel work
+Overview
 Create custom subagents
+Agent view
 Run agent teams
+Isolate sessions with worktrees
 Tools and plugins
 Model Context Protocol (MCP)
 Discover and install prebuilt plugins
@@ -31,6 +34,7 @@ Automation
 Automate with hooks
 Push external events to Claude
 Run prompts on a schedule
+Goals
 Programmatic usage
 Launch sessions from links
 Troubleshooting
@@ -524,8 +528,8 @@ comparison for a side-by-side breakdown
 Was this page helpful?
 Yes
 No
-Create custom subagents
-Model Context Protocol (MCP)
+Agent view
+Isolate sessions with worktrees
 ⌘
 I
 Assistant

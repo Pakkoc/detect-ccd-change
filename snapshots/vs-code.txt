@@ -408,6 +408,13 @@ Start a new conversation. Requires Claude to be focused and
 enableNewConversationShortcut
 set to
 true
+Reopen Closed Session
+Cmd+Shift+T
+(Mac) /
+Ctrl+Shift+T
+(Windows/Linux)
+Reopen the most recently closed Claude session tab. Falls through to VS Code’s normal reopen-closed-editor when the last closed tab wasn’t a Claude session. Disable with
+enableReopenClosedSessionShortcut
 Insert @-Mention Reference
 Option+K
 (Mac) /
@@ -521,6 +528,9 @@ Use Ctrl/Cmd+Enter instead of Enter to send prompts
 enableNewConversationShortcut
 false
 Enable Cmd/Ctrl+N to start a new conversation
+enableReopenClosedSessionShortcut
+true
+Use Cmd/Ctrl+Shift+T to reopen the most recently closed Claude session tab. When the last closed tab wasn’t a Claude session, the shortcut runs VS Code’s normal reopen-closed-editor command instead.
 hideOnboarding
 false
 Hide the onboarding checklist (graduation cap icon)

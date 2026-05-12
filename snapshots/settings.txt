@@ -506,6 +506,10 @@ Anthropic Console
 accounts using API key authentication, channels are allowed by default unless your organization deploys managed settings, in which case this key must be set to
 true
 true
+claudeMd
+(Managed settings only) CLAUDE.md-style instructions injected as organization-managed memory. Only honored when set in managed or policy settings and ignored in user, project, and local settings. See
+organization-wide CLAUDE.md
+"Always run make lint before committing."
 claudeMdExcludes
 Glob patterns or absolute paths of
 CLAUDE.md
@@ -551,6 +555,24 @@ deniedMcpServers
 When set in managed-settings.json, denylist of MCP servers that are explicitly blocked. Applies to all scopes including managed servers. Denylist takes precedence over allowlist. See
 Managed MCP configuration
 [{ "serverName": "filesystem" }]
+disableAgentView
+Set to
+true
+to turn off
+background agents and agent view
+:
+claude agents
+,
+--bg
+,
+/background
+, and the on-demand supervisor. Typically set in
+managed settings
+. Equivalent to setting
+CLAUDE_CODE_DISABLE_AGENT_VIEW
+to
+1
+true
 disableAllHooks
 Disable all
 hooks

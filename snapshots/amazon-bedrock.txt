@@ -28,6 +28,7 @@ Auto mode
 Deployment
 Overview
 Amazon Bedrock
+Claude Platform on AWS
 Google Vertex AI
 Microsoft Foundry
 Network configuration
@@ -729,7 +730,7 @@ Was this page helpful?
 Yes
 No
 Overview
-Google Vertex AI
+Claude Platform on AWS
 ⌘
 I
 Assistant

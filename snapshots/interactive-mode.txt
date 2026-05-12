@@ -64,9 +64,11 @@ https://code.claude.com/docs/llms.txt
 Use this file to discover all available pages before exploring further.
 ​
 Keyboard shortcuts
-Keyboard shortcuts may vary by platform and terminal. Press
+Keyboard shortcuts may vary by platform and terminal. In
+fullscreen rendering
+, press
 ?
-to see available shortcuts for your environment.
+in the transcript viewer to see available shortcuts there.
 macOS users
 : Option/Alt key shortcuts (
 Alt+B
@@ -99,8 +101,10 @@ Ctrl+C
 Cancel current input or generation
 Standard interrupt
 Ctrl+X Ctrl+K
-Kill all background agents. Press twice within 3 seconds to confirm
-Background agent control
+Kill all running
+background subagents
+in this session. Press twice within 3 seconds to confirm
+Subagent control
 Ctrl+D
 Exit Claude Code session
 EOF signal
@@ -152,6 +156,9 @@ Ctrl+P
 Ctrl+N
 Move cursor or navigate command history
 In multiline input, first moves the cursor within the prompt. Once the cursor is already on the top or bottom edge, pressing again navigates command history
+Esc
+Interrupt Claude
+Stop the current response or tool call mid-turn so you can redirect. Claude keeps the work done so far
 Esc
 +
 Esc
@@ -305,13 +312,25 @@ Trigger file path autocomplete
 Transcript viewer
 When the transcript viewer is open (toggled with
 Ctrl+O
-), these shortcuts are available.
+), these shortcuts are available. In
+fullscreen rendering
+, press
+?
+to show the full shortcut reference panel inside the viewer.
 Ctrl+E
 can be rebound via
 transcript:toggleShowAll
 .
 Shortcut
 Description
+?
+Toggle the keyboard shortcut help panel. Requires
+fullscreen rendering
+{
+/
+}
+Jump to the previous or next user prompt, like vim paragraph motion. Requires
+fullscreen rendering
 Ctrl+E
 Toggle show all content
 [

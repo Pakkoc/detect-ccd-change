@@ -298,14 +298,14 @@ Before making changes, let Claude understand your code:
 analyze the database schema
 build a dashboard showing products that are most frequently returned by our UK customers
 Save time with shortcuts
-Press
-?
-to see all available keyboard shortcuts
-Use Tab for command completion
-Press ↑ for command history
 Type
 /
 to see all commands and skills
+Use Tab for command completion
+Press ↑ for command history
+Press
+Shift+Tab
+to cycle permission modes
 ​
 What’s next?
 Now that you’ve learned the basics, explore more advanced features:

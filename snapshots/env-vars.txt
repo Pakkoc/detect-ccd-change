@@ -59,6 +59,25 @@ Authorization
 header (the value you set here will be prefixed with
 Bearer
 )
+ANTHROPIC_AWS_API_KEY
+Workspace API key for
+Claude Platform on AWS
+, generated in the AWS Console. Sent as
+x-api-key
+and takes precedence over AWS SigV4
+ANTHROPIC_AWS_BASE_URL
+Override the
+Claude Platform on AWS
+endpoint URL. Use for custom regions or when routing through an
+LLM gateway
+. Defaults to
+https://aws-external-anthropic.{AWS_REGION}.api.aws
+ANTHROPIC_AWS_WORKSPACE_ID
+Required for
+Claude Platform on AWS
+. Sent on every request as the
+anthropic-workspace-id
+header
 ANTHROPIC_BASE_URL
 Override the API endpoint to route requests through a proxy or gateway. When set to a non-first-party host,
 MCP tool search
@@ -207,7 +226,8 @@ Bedrock API keys
 BASH_DEFAULT_TIMEOUT_MS
 Default timeout for long-running bash commands (default: 120000, or 2 minutes)
 BASH_MAX_OUTPUT_LENGTH
-Maximum number of characters in bash outputs before they are middle-truncated
+Maximum number of characters in bash outputs before the full output is saved to a file and Claude receives the path plus a short preview. See
+Bash tool behavior
 BASH_MAX_TIMEOUT_MS
 Maximum timeout the model can set for long-running bash commands (default: 600000, or 10 minutes)
 CCR_FORCE_BUNDLE
@@ -356,6 +376,20 @@ on Opus 4.6 and Sonnet 4.6 and fall back to the fixed thinking budget controlled
 MAX_THINKING_TOKENS
 .
 Has no effect on Opus 4.7, which always uses adaptive reasoning
+CLAUDE_CODE_DISABLE_AGENT_VIEW
+Set to
+1
+to turn off
+background agents and agent view
+:
+claude agents
+,
+--bg
+,
+/background
+, and the on-demand supervisor. Equivalent to the
+disableAgentView
+setting
 CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN
 Set to
 1
@@ -686,6 +720,10 @@ CLAUDE_CODE_MAX_RETRIES
 Override the number of times to retry failed API requests (default: 10)
 CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY
 Maximum number of read-only tools and subagents that can execute in parallel (default: 10). Higher values increase parallelism but consume more resources
+CLAUDE_CODE_MAX_TURNS
+Cap the number of agentic turns when no explicit limit is passed. Equivalent to passing
+--max-turns
+, which takes precedence when both are set. A value that is not a positive integer is rejected at startup with an error rather than treated as no cap
 CLAUDE_CODE_MCP_ALLOWLIST_ENV
 Set to
 1
@@ -869,6 +907,10 @@ CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT
 Set to
 1
 to use a shorter system prompt and abbreviated tool descriptions on Opus 4.7. Has no effect on other models. The full tool set, hooks, MCP servers, and CLAUDE.md discovery remain enabled
+CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH
+Skip client-side authentication for
+Claude Platform on AWS
+, for gateways that sign requests themselves
 CLAUDE_CODE_SKIP_BEDROCK_AUTH
 Skip AWS authentication for Bedrock (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_FOUNDRY_AUTH
@@ -949,6 +991,9 @@ to your
 . See
 Terminal configuration
 for other tmux settings
+CLAUDE_CODE_USE_ANTHROPIC_AWS
+Use
+Claude Platform on AWS
 CLAUDE_CODE_USE_BEDROCK
 Use
 Bedrock
@@ -1177,8 +1222,10 @@ to request a 1-hour prompt cache TTL instead of the default 5 minutes. Intended 
 Bedrock
 ,
 Vertex
-, and
+,
 Foundry
+, and
+Claude Platform on AWS
 users. Subscription users receive 1-hour TTL automatically. 1-hour cache writes are billed at a higher rate
 ENABLE_PROMPT_CACHING_1H_BEDROCK
 Deprecated. Use
@@ -1191,7 +1238,9 @@ MCP tool search
 ANTHROPIC_BASE_URL
 points to a non-first-party host. Values:
 true
-(always defer including proxies and Vertex AI),
+(always defer and send the beta header, requests fail on Vertex AI or proxies that do not support
+tool_reference
+),
 auto
 (threshold mode: load upfront if tools fit within 10% of context),
 auto:N

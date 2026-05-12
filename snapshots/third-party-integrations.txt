@@ -28,6 +28,7 @@ Auto mode
 Deployment
 Overview
 Amazon Bedrock
+Claude Platform on AWS
 Google Vertex AI
 Microsoft Foundry
 Network configuration
@@ -83,12 +84,14 @@ Feature
 Claude for Teams/Enterprise
 Anthropic Console
 Amazon Bedrock
+Claude Platform on AWS
 Google Vertex AI
 Microsoft Foundry
 Best for
 Most organizations (recommended)
 Individual developers
 AWS-native deployments
+AWS Marketplace billing with Claude API features
 GCP-native deployments
 Azure-native deployments
 Billing
@@ -98,6 +101,7 @@ Enterprise:
 Contact Sales
 PAYG
 PAYG through AWS
+PAYG through AWS Marketplace
 PAYG through GCP
 PAYG through Azure
 Regions
@@ -107,6 +111,7 @@ Supported
 countries
 Multiple AWS
 regions
+Multiple AWS regions
 Multiple GCP
 regions
 Multiple Azure
@@ -117,15 +122,18 @@ Enabled by default
 Enabled by default
 Enabled by default
 Enabled by default
+Enabled by default
 Authentication
 Claude.ai SSO or email
 API key
+API key or AWS credentials
 API key or AWS credentials
 GCP credentials
 API key or Microsoft Entra ID
 Cost tracking
 Usage dashboard
 Usage dashboard
+AWS Cost Explorer
 AWS Cost Explorer
 GCP Billing
 Azure Cost Management
@@ -135,9 +143,11 @@ No
 No
 No
 No
+No
 Enterprise features
 Team management, SSO, usage monitoring
 None
+IAM policies, CloudTrail
 IAM policies, CloudTrail
 IAM roles, Cloud Audit Logs
 RBAC policies, Azure Monitor
@@ -145,6 +155,7 @@ Select a deployment option to view setup instructions:
 Claude for Teams or Enterprise
 Anthropic Console
 Amazon Bedrock
+Claude Platform on AWS
 Google Vertex AI
 Microsoft Foundry
 ​
@@ -163,6 +174,8 @@ LLM Gateway
 ANTHROPIC_BASE_URL
 ,
 ANTHROPIC_BEDROCK_BASE_URL
+,
+ANTHROPIC_AWS_BASE_URL
 , or
 ANTHROPIC_VERTEX_BASE_URL
 environment variables. Learn more in
@@ -332,8 +345,10 @@ If you deploy through
 Bedrock
 ,
 Vertex AI
-, or
+,
 Foundry
+, or
+Claude Platform on AWS
 , pin specific model versions using
 ANTHROPIC_DEFAULT_OPUS_MODEL
 ,

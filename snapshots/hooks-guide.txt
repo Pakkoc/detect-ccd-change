@@ -19,9 +19,12 @@ Reference
 Agent SDK
 What's New
 Resources
-Agents
+Agents and parallel work
+Overview
 Create custom subagents
+Agent view
 Run agent teams
+Isolate sessions with worktrees
 Tools and plugins
 Model Context Protocol (MCP)
 Discover and install prebuilt plugins
@@ -31,6 +34,7 @@ Automation
 Automate with hooks
 Push external events to Claude
 Run prompts on a schedule
+Goals
 Programmatic usage
 Launch sessions from links
 Troubleshooting
@@ -1971,8 +1975,12 @@ echo
 $?
 # Check the exit code
 If you see “command not found”, use absolute paths or
-$CLAUDE_PROJECT_DIR
-to reference scripts
+${CLAUDE_PROJECT_DIR}
+to reference scripts. To avoid shell quoting entirely, add
+"args": []
+to switch to
+exec form
+, which spawns the script directly without a shell
 If you see “jq: command not found”, install
 jq
 or use Python/Node.js for JSON parsing
@@ -2026,13 +2034,17 @@ fi
 ​
 JSON validation failed
 Claude Code shows a JSON parsing error even though your hook script outputs valid JSON.
-When Claude Code runs a hook, it spawns a shell that sources your profile (
-~/.zshrc
-or
+When Claude Code runs a shell-form command hook (one without
+args
+), it spawns
+sh -c
+on macOS and Linux or Git Bash on Windows by default. This shell is non-interactive, but Git Bash and some configurations (such as
+BASH_ENV
+pointing at
 ~/.bashrc
-). If your profile contains unconditional
+) still source your profile. If that profile contains unconditional
 echo
-statements, that output gets prepended to your hook’s JSON:
+statements, the output gets prepended to your hook’s JSON:
 Shell ready on arm64
 {"decision": "block", "reason": "Not allowed"}
 Claude Code tries to parse this as JSON and fails. To fix this, wrap echo statements in your shell profile so they only run in interactive shells:

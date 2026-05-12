@@ -98,6 +98,15 @@ rules prevent Claude Code from using the specified tool.
 Rules are evaluated in order:
 deny -> ask -> allow
 . The first matching rule wins, so deny rules always take precedence.
+Permission rules are enforced by Claude Code, not by the model. Instructions in your prompt or
+CLAUDE.md
+shape what Claude tries to do, but they don’t change what Claude Code allows. To grant or revoke access, use
+/permissions
+, the rules described here, a
+permission mode
+, or a
+PreToolUse hook
+.
 ​
 Permission modes
 Claude Code supports several permission modes that control how tools are approved. See
@@ -491,7 +500,10 @@ WebFetch(domain:github.com)
 permission for allowed domains
 Use PreToolUse hooks
 : implement a hook that validates URLs in Bash commands and blocks disallowed domains
-Instructing Claude Code about your allowed curl patterns via CLAUDE.md
+Add CLAUDE.md guidance
+: describe your allowed curl patterns in
+CLAUDE.md
+. This shapes what Claude tries but doesn’t enforce a boundary, so pair it with one of the options above
 Note that using WebFetch alone does not prevent network access. If Bash is allowed, Claude can still use
 curl
 ,
@@ -555,11 +567,15 @@ Edit
 rules apply to all built-in tools that edit files. Claude makes a best-effort attempt to apply
 Read
 rules to all built-in tools that read files like Grep and Glob.
-Read and Edit deny rules apply to Claude’s built-in file tools, not to Bash subprocesses. A
-Read(./.env)
-deny rule blocks the Read tool but does not prevent
-cat .env
-in Bash. For OS-level enforcement that blocks all processes from accessing a path,
+Read and Edit deny rules apply to Claude’s built-in file tools and to file commands Claude Code recognizes in Bash, such as
+cat
+,
+head
+,
+tail
+, and
+sed
+. They do not apply to arbitrary subprocesses that read or write files indirectly, like a Python or Node script that opens files itself. For OS-level enforcement that blocks all processes from accessing a path,
 enable the sandbox
 .
 Read and Edit rules both follow the

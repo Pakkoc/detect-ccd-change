@@ -361,7 +361,9 @@ Run the same command with a different name in a second terminal to start an isol
 Worktrees
 for cleanup,
 .worktreeinclude
-, and non-git VCS support.
+, and non-git VCS support. To monitor parallel sessions from one screen instead of separate terminals, see
+background agents
+.
 ​
 Plan before editing
 For changes you want to review before they touch disk, switch to plan mode. Claude reads files and proposes a plan but makes no edits until you approve.

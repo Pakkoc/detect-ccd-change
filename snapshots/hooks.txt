@@ -306,11 +306,10 @@ only spawns when both filters match:
 ,
 "command"
 :
-"
-\"
-$CLAUDE_PROJECT_DIR
-\"
-/.claude/hooks/block-rm.sh"
+"${CLAUDE_PROJECT_DIR}/.claude/hooks/block-rm.sh"
+,
+"args"
+: []
 }
 ]
 }
@@ -954,7 +953,18 @@ Required
 Description
 command
 yes
-Shell command to execute
+Shell command to execute. With
+args
+, the executable to spawn directly. See
+Exec form and shell form
+args
+no
+Argument list. When present,
+command
+is resolved as an executable and spawned directly with
+args
+as the argument vector, with no shell involved. See
+Exec form and shell form
 async
 no
 If
@@ -978,7 +988,137 @@ Shell to use for this hook. Accepts
 "powershell"
 runs the command via PowerShell on Windows. Does not require
 CLAUDE_CODE_USE_POWERSHELL_TOOL
-since hooks spawn PowerShell directly
+since hooks spawn PowerShell directly. Ignored when
+args
+is set
+Exec form and shell form
+A command hook runs as exec form when
+args
+is set, and shell form when
+args
+is omitted. Set
+args
+whenever the hook references a
+path placeholder
+, since each element is passed as one argument with no quoting. Omit
+args
+when you need shell features like pipes or
+&&
+, or when neither concern applies.
+Exec form
+runs when
+args
+is present. Claude Code resolves
+command
+as an executable on
+PATH
+and spawns it directly with
+args
+as the argument vector. There is no shell, so each
+args
+element is one argument exactly as written, and path placeholders like
+${CLAUDE_PLUGIN_ROOT}
+are substituted into
+command
+and into each
+args
+element as plain strings. Special characters such as apostrophes,
+$
+, and backticks pass through verbatim because there is no shell to interpret them. No shell tokenization happens on any platform.
+Shell form
+runs when
+args
+is absent. The
+command
+string is passed to a shell:
+sh -c
+on macOS and Linux, Git Bash on Windows, or PowerShell when Git Bash isn’t installed. Set the
+shell
+field to choose explicitly. The shell tokenizes the string, expands variables, and interprets pipes,
+&&
+, redirects, and globs.
+On Windows, exec form requires
+command
+to resolve to a real executable such as a
+.exe
+. The
+.cmd
+and
+.bat
+shims that npm, npx, eslint, and other tools install in
+node_modules/.bin
+are not executables and cannot be spawned without a shell. To run them in exec form, invoke the underlying script with
+node
+directly, for example
+"command": "node", "args": ["${CLAUDE_PLUGIN_ROOT}/node_modules/eslint/bin/eslint.js"]
+. The
+node
+plus script-path pattern works on every platform because
+node.exe
+is a real binary. To run a
+.cmd
+or
+.bat
+shim by name, use shell form.
+This example runs a Node script bundled with a plugin. Exec form passes the resolved script path as one argument with no quoting:
+{
+"type"
+:
+"command"
+,
+"command"
+:
+"node"
+,
+"args"
+: [
+"${CLAUDE_PLUGIN_ROOT}/scripts/format.js"
+,
+"--fix"
+]
+}
+The equivalent shell form needs quoting to handle paths with spaces or special characters:
+{
+"type"
+:
+"command"
+,
+"command"
+:
+"node
+\"
+${CLAUDE_PLUGIN_ROOT}
+\"
+/scripts/format.js --fix"
+}
+Both forms support the same
+path placeholders
+, and both export them as the environment variables
+CLAUDE_PROJECT_DIR
+,
+CLAUDE_PLUGIN_ROOT
+, and
+CLAUDE_PLUGIN_DATA
+on the spawned process, so a script can read
+process.env.CLAUDE_PLUGIN_ROOT
+regardless of how it was launched. Plugin hooks additionally substitute
+${user_config.*}
+values; see
+User configuration
+.
+In exec form,
+command
+is the executable name or path only. If
+command
+is a bare name with no path separator and contains whitespace alongside
+args
+, Claude Code logs a warning because the spawn will fail: there is no executable named
+node script.js
+. Move the extra tokens into
+args
+. Absolute paths with spaces, such as
+C:\Program Files\nodejs\node.exe
+, are a single valid executable and do not trigger the warning.
 ​
 HTTP hook fields
 In addition to the
@@ -1156,16 +1296,18 @@ as a placeholder for the hook input JSON
 model
 no
 Model to use for evaluation. Defaults to a fast model
-All matching hooks run in parallel, and identical handlers are deduplicated automatically. Command hooks are deduplicated by command string, and HTTP hooks are deduplicated by URL. Handlers run in the current directory with Claude Code’s environment. The
+All matching hooks run in parallel, and identical handlers are deduplicated automatically. Command hooks are deduplicated by command string and
+args
+, and HTTP hooks are deduplicated by URL. Handlers run in the current directory with Claude Code’s environment. The
 $CLAUDE_CODE_REMOTE
 environment variable is set to
 "true"
 in remote web environments and not set in the local CLI.
 ​
 Reference scripts by path
-Use environment variables to reference hook scripts relative to the project or plugin root, regardless of the working directory when the hook runs:
-$CLAUDE_PROJECT_DIR
-: the project root. Wrap in quotes to handle paths with spaces.
+Use these placeholders to reference hook scripts relative to the project or plugin root, regardless of the working directory when the hook runs:
+${CLAUDE_PROJECT_DIR}
+: the project root.
 ${CLAUDE_PLUGIN_ROOT}
 : the plugin’s installation directory, for scripts bundled with a
 plugin
@@ -1174,10 +1316,15 @@ ${CLAUDE_PLUGIN_DATA}
 : the plugin’s
 persistent data directory
 , for dependencies and state that should survive plugin updates.
+Prefer
+exec form
+for any hook that references a path placeholder. Exec form passes each
+args
+element as one argument with no shell tokenization, so paths with spaces or special characters need no quoting. In shell form, wrap each placeholder in double quotes.
 Project scripts
 Plugin scripts
 This example uses
-$CLAUDE_PROJECT_DIR
+${CLAUDE_PROJECT_DIR}
 to run a style checker from the project’s
 .claude/hooks/
 directory after any
@@ -1204,11 +1351,10 @@ tool call:
 ,
 "command"
 :
-"
-\"
-$CLAUDE_PROJECT_DIR
-\"
-/.claude/hooks/check-style.sh"
+"${CLAUDE_PROJECT_DIR}/.claude/hooks/check-style.sh"
+,
+"args"
+: []
 }
 ]
 }
@@ -1246,6 +1392,8 @@ This example runs a formatting script bundled with the plugin:
 :
 "${CLAUDE_PLUGIN_ROOT}/scripts/format.sh"
 ,
+"args"
+: [],
 "timeout"
 :
 30
@@ -1434,7 +1582,22 @@ or
 --agent
 or the hook fires inside a subagent. For subagents, the subagent’s type takes precedence over the session’s
 --agent
-value.
+value. For
+custom subagents
+, this is the
+name
+field from the agent’s frontmatter, not the filename.
+Only
+SessionStart
+hooks receive a
+model
+field. There is no
+$CLAUDE_MODEL
+environment variable. A hook process inherits the parent environment, so it can read
+$ANTHROPIC_MODEL
+if you set it in your shell, but that value does not change when you switch models with
+/model
+during a session.
 For example, a
 PreToolUse
 hook for a Bash command receives this on stdin:
@@ -2822,6 +2985,45 @@ object
 Optional. Maps question text to the selected option label. Multi-select answers join labels with commas. Claude does not set this field; supply it via
 updatedInput
 to answer programmatically
+ExitPlanMode
+Presents a plan and asks the user to approve it before Claude leaves
+plan mode
+. Claude writes the plan to a file on disk before calling the tool, so the literal
+tool_input
+from the model only carries
+allowedPrompts
+. Claude Code injects the plan content and file path before passing the input to hooks.
+Field
+Type
+Example
+Description
+plan
+string
+"## Refactor auth\n1. Extract..."
+Plan content in Markdown. Injected from the plan file on disk
+planFilePath
+string
+"/Users/.../plans/refactor-auth.md"
+Path to the plan file. Injected
+allowedPrompts
+array
+[{"tool": "Bash", "prompt": "run tests"}]
+Optional. Prompt-based permissions Claude is requesting to implement the plan, each with a
+tool
+name and a
+prompt
+describing the category of action
+In
+PostToolUse
+,
+tool_response
+is an object with
+plan
+and
+filePath
+fields holding the approved plan, plus internal status flags. Read
+tool_response.plan
+for the plan content rather than re-reading the file from disk.
 ​
 PreToolUse decision control
 PreToolUse
@@ -3939,15 +4141,17 @@ systemMessage
 apply.
 ​
 SubagentStart
-Runs when a Claude Code subagent is spawned via the Agent tool. Supports matchers to filter by agent type name (built-in agents like
+Runs when a Claude Code subagent is spawned via the Agent tool. Supports matchers to filter by agent type name. For built-in agents, this is the agent name like
 general-purpose
 ,
 Explore
-,
+, or
 Plan
-, or custom agent names from
-.claude/agents/
-).
+. For
+custom subagents
+, this is the
+name
+field from the agent’s frontmatter, not the filename.
 ​
 SubagentStart input
 In addition to the
@@ -4079,7 +4283,19 @@ false
 }
 SubagentStop hooks use the same decision control format as
 Stop hooks
-.
+. They do not support
+additionalContext
+. Returning
+decision: "block"
+with a
+reason
+keeps the subagent running and delivers
+reason
+to the subagent as its next instruction. To inject context into the parent session after a subagent returns, use a
+PostToolUse
+hook on the
+Agent
+tool instead.
 ​
 TaskCreated
 Runs when a task is being created via the
@@ -4343,6 +4559,9 @@ Runs when the main Claude Code agent has finished responding. Does not run if
 the stoppage occurred due to a user interrupt. API errors fire
 StopFailure
 instead.
+The
+/goal
+command is a built-in shortcut for a session-scoped prompt-based Stop hook. Use it when you want Claude to keep working until a condition holds without writing hook configuration.
 ​
 Stop input
 In addition to the
@@ -4618,11 +4837,10 @@ This example logs all configuration changes for security auditing:
 ,
 "command"
 :
-"
-\"
-$CLAUDE_PROJECT_DIR
-\"
-/.claude/hooks/audit-config-change.sh"
+"${CLAUDE_PROJECT_DIR}/.claude/hooks/audit-config-change.sh"
+,
+"args"
+: []
 }
 ]
 }
@@ -5580,6 +5798,19 @@ Model to use for evaluation. Defaults to a fast model
 timeout
 no
 Timeout in seconds. Default: 30
+continueOnBlock
+no
+When the prompt returns
+ok: false
+, feed the reason back to Claude and continue the turn instead of stopping. Default:
+false
+. Implemented as
+continue: true
+on the resulting
+decision: "block"
+. See
+Response schema
+for per-event behavior
 ​
 Response schema
 The LLM must respond with JSON containing:
@@ -5598,15 +5829,17 @@ Field
 Description
 ok
 true
-to allow,
+to allow.
 false
-to block. See the per-event behavior below
+produces a
+decision: "block"
+. See the per-event behavior below
 reason
 Required when
 ok
 is
 false
-. Explanation for the decision
+. Used as the block reason
 What happens on
 ok: false
 depends on the event:
@@ -5618,15 +5851,18 @@ PreToolUse
 : the tool call is denied and the reason is returned to Claude as the tool error, equivalent to a command hook’s
 permissionDecision: "deny"
 PostToolUse
-,
+: by default the turn ends and the reason appears in the chat as a warning line. Set
+continueOnBlock: true
+to feed the reason back to Claude and continue the turn instead
 PostToolBatch
 ,
 UserPromptSubmit
 , and
 UserPromptExpansion
-: the turn ends and the reason appears in the chat as a warning line, equivalent to returning
-"continue": false
-from a command hook
+: the turn ends and the reason appears as a warning line. These events end the turn on
+decision: "block"
+regardless of
+continue
 PostToolUseFailure
 ,
 TaskCreated
@@ -5980,12 +6216,10 @@ flag lets Claude keep working while tests run:
 ,
 "command"
 :
-"
-\"
-$CLAUDE_PROJECT_DIR
-\"
-/.claude/hooks/run-tests-async.sh"
+"${CLAUDE_PROJECT_DIR}/.claude/hooks/run-tests-async.sh"
 ,
+"args"
+: [],
 "async"
 :
 true
@@ -6033,9 +6267,9 @@ Block path traversal
 ..
 in file paths
 Use absolute paths
-: specify full paths for scripts, using
-"$CLAUDE_PROJECT_DIR"
-for the project root
+: specify full paths for scripts. In exec form, use
+${CLAUDE_PROJECT_DIR}
+and the path needs no quoting. In shell form, wrap it in double quotes
 Skip sensitive files
 : avoid
 .env

@@ -19,9 +19,12 @@ Reference
 Agent SDK
 What's New
 Resources
-Agents
+Agents and parallel work
+Overview
 Create custom subagents
+Agent view
 Run agent teams
+Isolate sessions with worktrees
 Tools and plugins
 Model Context Protocol (MCP)
 Discover and install prebuilt plugins
@@ -31,6 +34,7 @@ Automation
 Automate with hooks
 Push external events to Claude
 Run prompts on a schedule
+Goals
 Programmatic usage
 Launch sessions from links
 Troubleshooting
@@ -223,6 +227,29 @@ https://api.company.com/sse
 ​
 Option 3: Add a local stdio server
 Stdio servers run as local processes on your machine. They’re ideal for tools that need direct system access or custom scripts.
+Claude Code sets
+CLAUDE_PROJECT_DIR
+in the spawned server’s environment to the project root, so your server can resolve project-relative paths without depending on the working directory. This is the same directory hooks receive in their
+CLAUDE_PROJECT_DIR
+variable. Read it from inside your server process, for example
+process.env.CLAUDE_PROJECT_DIR
+in Node or
+os.environ["CLAUDE_PROJECT_DIR"]
+in Python. Your server can also call the MCP
+roots/list
+request, which returns the directory Claude Code was launched from.
+This variable is set in the server’s environment, not in Claude Code’s own environment, so referencing it via
+${VAR}
+expansion in a project- or user-scoped
+.mcp.json
+command
+or
+args
+requires a default such as
+${CLAUDE_PROJECT_DIR:-.}
+. Plugin-provided MCP configurations substitute
+${CLAUDE_PROJECT_DIR}
+directly and don’t need the default.
 # Basic syntax
 claude
 mcp
@@ -436,11 +463,13 @@ to connect or disconnect its MCP servers
 Environment variables
 : use
 ${CLAUDE_PLUGIN_ROOT}
-for bundled plugin files and
+for bundled plugin files,
 ${CLAUDE_PLUGIN_DATA}
 for
 persistent state
-that survives plugin updates
+that survives plugin updates, and
+${CLAUDE_PROJECT_DIR}
+for the stable project root
 User environment access
 : Access to same environment variables as manually configured servers
 Multiple transport types
@@ -711,6 +740,13 @@ Find customers who haven't made a purchase in 90 days
 ​
 Authenticate with remote MCP servers
 Many cloud-based MCP servers require authentication. Claude Code supports OAuth 2.0 for secure connections.
+Claude Code marks a remote server as needing authentication when the server responds with
+401 Unauthorized
+and a
+WWW-Authenticate
+header pointing to its authorization server. Any custom server that returns that response gets the same
+/mcp
+authentication flow as any other remote server.
 1
 Add the server that requires authentication
 For example:
@@ -1325,9 +1361,11 @@ Tool search is enabled by default: MCP tools are deferred and discovered on dema
 ANTHROPIC_BASE_URL
 points to a non-first-party host, since most proxies do not forward
 tool_reference
-blocks. Set
+blocks. If your proxy forwards
+tool_reference
+blocks, set
 ENABLE_TOOL_SEARCH
-explicitly to opt in. This feature requires models that support
+explicitly to override the fallback. This feature requires models that support
 tool_reference
 blocks: Sonnet 4 and later, or Opus 4 and later. Haiku models do not support tool search.
 Control tool search behavior with the
@@ -1340,8 +1378,9 @@ All MCP tools deferred and loaded on demand. Falls back to loading upfront on Ve
 ANTHROPIC_BASE_URL
 is a non-first-party host
 true
-All MCP tools deferred, including on Vertex AI and for non-first-party
-ANTHROPIC_BASE_URL
+All MCP tools deferred. Claude Code sends the beta header even on Vertex AI and through proxies. Requests fail if the backend does not support
+tool_reference
+blocks
 auto
 Threshold mode: tools load upfront if they fit within 10% of the context window, deferred otherwise
 auto:<N>
@@ -1851,7 +1890,7 @@ settings still apply to filter which managed servers are actually loaded.
 Was this page helpful?
 Yes
 No
-Run agent teams
+Isolate sessions with worktrees
 Discover and install prebuilt plugins
 ⌘
 I

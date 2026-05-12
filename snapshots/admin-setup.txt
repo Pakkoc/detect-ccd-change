@@ -28,6 +28,7 @@ Auto mode
 Deployment
 Overview
 Amazon Bedrock
+Claude Platform on AWS
 Google Vertex AI
 Microsoft Foundry
 Network configuration
@@ -223,6 +224,15 @@ Only managed hooks load; restrict HTTP hook URLs
 allowManagedHooksOnly
 ,
 allowedHttpHookUrls
+Disable agent view
+Turn off
+claude agents
+,
+--bg
+,
+/background
+, and the on-demand supervisor
+disableAgentView
 Version floor
 Prevent auto-update from installing below an org-wide minimum
 minimumVersion

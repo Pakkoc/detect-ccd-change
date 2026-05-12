@@ -85,6 +85,7 @@ Surface
 T
 Teleport
 Tool
+Turn
 W
 Worktree isolation
 Deprecated and renamed terms
@@ -345,7 +346,7 @@ O
 Output style
 A configuration that modifies Claude’s system prompt to change response behavior, tone, or format. Output styles turn off the software-engineering-specific parts of the default system prompt, unlike
 CLAUDE.md
-which is delivered as a user message following the system prompt. Built-in styles include Default, Explanatory, and Learning.
+which is delivered as a user message following the system prompt. Built-in styles include Default, Proactive, Explanatory, and Learning.
 Learn more:
 Output styles
 ​
@@ -517,6 +518,19 @@ agentic loop
 .
 Learn more:
 Tools available to Claude
+​
+Turn
+One complete response from Claude within a
+session
+. A turn begins when you send a message and ends when Claude finishes responding, with any number of
+tool
+calls in between.
+Stop hooks
+fire at the end of each turn. A session consists of many turns, and the
+agentic loop
+describes what happens inside one.
+Learn more:
+How Claude Code works
 ​
 W
 ​
