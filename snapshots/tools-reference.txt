@@ -229,9 +229,25 @@ CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 is set
 No
 TodoWrite
-Manages the session task checklist. Available in non-interactive mode and the
+Manages the session task checklist. Deprecated in favor of
+TaskCreate
+,
+TaskGet
+,
+TaskList
+, and
+TaskUpdate
+. Interactive sessions already use the Task tools by default. When you run
+claude -p
+or use the
 Agent SDK
-; interactive sessions use TaskCreate, TaskGet, TaskList, and TaskUpdate instead
+,
+TodoWrite
+is still the default. Set
+CLAUDE_CODE_ENABLE_TASKS=1
+to switch those to the Task tools before
+TodoWrite
+is removed
 No
 ToolSearch
 Searches for and loads deferred tools when

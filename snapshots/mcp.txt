@@ -44,7 +44,7 @@ Debug configuration
 Error reference
 On this page
 What you can do with MCP
-Popular MCP servers
+Find and build MCP servers
 Installing MCP servers
 Option 1: Add a remote HTTP server
 Option 2: Add a remote SSE server
@@ -122,18 +122,35 @@ React to external events
 channel
 that pushes messages into your session, so Claude reacts to Telegram messages, Discord chats, or webhook events while you’re away.
 ​
-Popular MCP servers
-Here are some commonly used MCP servers you can connect to Claude Code:
-Use third party MCP servers at your own risk - Anthropic has not verified
-the correctness or security of all these servers.
-Make sure you trust MCP servers you are installing.
-Be especially careful when using MCP servers that could fetch untrusted
-content, as these can expose you to prompt injection risk.
-Need a specific integration?
-Find hundreds more MCP servers on GitHub
-, or build your own using the
-MCP SDK
+Find and build MCP servers
+Browse reviewed connectors in the
+Anthropic Directory
+. Directory connectors use the same MCP infrastructure as Claude Code, so you can add any remote server listed there with
+claude mcp add
 .
+Verify you trust each server before connecting it. Servers that fetch external content can expose you to
+prompt injection risk
+.
+To build your own server, see the
+MCP server guide
+for protocol fundamentals and the
+Claude connector building docs
+for authentication, testing, and Directory submission.
+You can also have Claude scaffold a server for you with the official
+mcp-server-dev
+plugin
+.
+1
+Install the plugin
+In a Claude Code session, run:
+/plugin install mcp-server-dev@claude-plugins-official
+Then run
+/reload-plugins
+to activate it in the current session.
+2
+Run the build skill
+/mcp-server-dev:build-mcp-server
+Claude asks about your use case and scaffolds a remote HTTP or local stdio server.
 ​
 Installing MCP servers
 MCP servers can be configured in three different ways depending on your needs:

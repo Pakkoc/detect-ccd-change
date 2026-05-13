@@ -544,6 +544,11 @@ Enable auto-update
 or
 Disable auto-update
 Official Anthropic marketplaces have auto-update enabled by default. Third-party and local development marketplaces have auto-update disabled by default.
+Administrators can also set
+"autoUpdate": true
+on each
+extraKnownMarketplaces
+entry in managed settings to enable auto-update for an organization marketplace without requiring each user to toggle it.
 To disable all automatic updates entirely for both Claude Code and all plugins, set the
 DISABLE_AUTOUPDATER
 environment variable. See

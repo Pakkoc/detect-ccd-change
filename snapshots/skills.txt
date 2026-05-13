@@ -48,7 +48,7 @@ Getting started
 Create your first skill
 Where skills live
 Live change detection
-Automatic discovery from nested directories
+Automatic discovery from parent and nested directories
 Skills from additional directories
 Configure skills
 Types of skill content
@@ -222,10 +222,12 @@ inside an
 --add-dir
 directory takes effect within the current session without restarting. Creating a top-level skills directory that did not exist when the session started requires restarting Claude Code so the new directory can be watched.
 ​
-Automatic discovery from nested directories
-When you work with files in subdirectories, Claude Code automatically discovers skills from nested
+Automatic discovery from parent and nested directories
+Project skills load from
 .claude/skills/
-directories. For example, if you’re editing a file in
+in your starting directory and in every parent directory up to the repository root, so starting Claude in a subdirectory still picks up skills defined at the root. When you work with files in subdirectories below your starting directory, Claude Code also discovers skills from nested
+.claude/skills/
+directories on demand. For example, if you’re editing a file in
 packages/frontend/
 , Claude Code also looks for skills in
 packages/frontend/.claude/skills/

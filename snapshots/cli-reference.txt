@@ -344,7 +344,7 @@ cycle by default; use
 to start in it
 claude --permission-mode auto
 --exclude-dynamic-system-prompt-sections
-Move per-machine sections from the system prompt (working directory, environment info, memory paths, git status) into the first user message. Improves prompt-cache reuse across different users and machines running the same task. Only applies with the default system prompt; ignored when
+Move per-machine sections from the system prompt (working directory, environment info, memory paths, git-repo flag) into the first user message. Improves prompt-cache reuse across different users and machines running the same task. Only applies with the default system prompt; ignored when
 --system-prompt
 or
 --system-prompt-file
@@ -641,7 +641,16 @@ claude --append-system-prompt-file ./style-rules.txt
 and
 --system-prompt-file
 are mutually exclusive. The append flags can be combined with either replacement flag.
-For most use cases, use an append flag. Appending preserves Claude Code’s built-in capabilities while adding your requirements. Use a replacement flag only when you need complete control over the system prompt.
+Choose based on whether Claude Code’s default identity still fits your task. Use an append flag when Claude should remain a coding assistant that also follows your extra rules: per-invocation instructions, output formatting, or domain context for a
+-p
+script. Appending preserves the default tool guidance, safety instructions, and coding conventions, so you only supply what differs. Use a replacement flag when the surface, identity, or permission model differs from Claude Code’s, like a non-coding agent in a pipeline that no human watches. Replacing drops all of the default prompt, including tool guidance and safety instructions, so you take responsibility for whatever your task still needs.
+These flags apply only to the current invocation. For persistent personas you can switch between and share across a project, use
+output styles
+. For project conventions Claude should always follow, use
+CLAUDE.md
+. The
+Agent SDK guide on system prompts
+covers the same decision in more depth.
 ​
 See also
 Chrome extension

@@ -191,18 +191,27 @@ Project CLAUDE.md,
 , project skills, project hooks, project
 settings.json
 <cwd>/.claude/
-and each parent directory up to the filesystem root (stopping when a
-.claude/
-is found or no more parents exist)
+for
+settings.json
+and hooks;
+<cwd>
+and every parent directory for CLAUDE.md and rules;
+<cwd>
+and every parent directory up to the repository root for skills
 "user"
 User CLAUDE.md,
 ~/.claude/rules/*.md
 , user skills, user settings
 ~/.claude/
 "local"
-CLAUDE.local.md (gitignored),
+CLAUDE.local.md,
 .claude/settings.local.json
-<cwd>/
+<cwd>/.claude/
+for
+settings.local.json
+;
+<cwd>
+and every parent directory for CLAUDE.local.md
 Omitting
 settingSources
 is equivalent to
@@ -210,11 +219,15 @@ is equivalent to
 .
 The
 cwd
-option determines where the SDK looks for project settings. If neither
-cwd
-nor any of its parent directories contains a
-.claude/
-folder, project-level features won’t load.
+option determines where the SDK looks for project-level inputs. CLAUDE.md and rules load from
+<cwd>
+and from every parent directory. Skills load from
+<cwd>
+and from every parent directory up to the repository root. Project
+settings.json
+and hooks load only from
+<cwd>/.claude/
+with no parent-directory fallback.
 ​
 What settingSources does not control
 settingSources
@@ -278,6 +291,9 @@ includes
 "project"
 Project rules
 <cwd>/.claude/rules/*.md
+and
+.claude/rules/*.md
+in every parent directory
 settingSources
 includes
 "project"
@@ -297,8 +313,11 @@ settingSources
 includes
 "project"
 , loaded on demand when the agent reads a file in that subtree
-Local (gitignored)
+Local
 <cwd>/CLAUDE.local.md
+and
+CLAUDE.local.md
+in every parent directory
 settingSources
 includes
 "local"

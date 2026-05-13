@@ -197,6 +197,10 @@ NotebookEdit
 WebFetch
 WebSearch
 TodoWrite
+TaskCreate
+TaskUpdate
+TaskGet
+TaskList
 BashOutput
 KillBash
 ExitPlanMode
@@ -2858,7 +2862,7 @@ No
 Additional instructions to append to the preset system prompt
 exclude_dynamic_sections
 No
-Move per-session context such as working directory, git status, and memory paths from the system prompt into the first user message. Improves prompt-cache reuse across users and machines. See
+Move per-session context such as working directory, the git-repo flag, and auto-memory paths from the system prompt into the first user message. Improves prompt-cache reuse across users and machines. See
 Modify system prompts
 ​
 SettingSource
@@ -6599,6 +6603,20 @@ float
 TodoWrite
 Tool name:
 TodoWrite
+TodoWrite
+is deprecated and will be removed in a future release. Use
+TaskCreate
+,
+TaskGet
+,
+TaskUpdate
+, and
+TaskList
+instead. Set
+CLAUDE_CODE_ENABLE_TASKS=1
+to opt in. See
+Migrate to Task tools
+for how monitoring code changes.
 Input:
 {
 "todos"
@@ -6651,6 +6669,247 @@ int
 :
 int
 },
+}
+​
+TaskCreate
+Tool name:
+TaskCreate
+Input:
+{
+"subject"
+:
+str
+,
+# Short task title
+"description"
+:
+str
+,
+# Detailed task body
+"activeForm"
+:
+str
+|
+None
+,
+# Present-tense label shown while in progress
+"metadata"
+:
+dict
+|
+None
+,
+# Arbitrary caller metadata
+}
+Output:
+{
+"task"
+: {
+"id"
+:
+str
+,
+"subject"
+:
+str
+},
+# Created task with assigned ID
+}
+​
+TaskUpdate
+Tool name:
+TaskUpdate
+Input:
+{
+"taskId"
+:
+str
+,
+# ID of the task to patch
+"status"
+: Literal[
+"pending"
+,
+"in_progress"
+,
+"completed"
+,
+"deleted"
+]
+|
+None
+,
+"subject"
+:
+str
+|
+None
+,
+"description"
+:
+str
+|
+None
+,
+"activeForm"
+:
+str
+|
+None
+,
+"addBlocks"
+: list[
+str
+]
+|
+None
+,
+# Task IDs this task now blocks
+"addBlockedBy"
+: list[
+str
+]
+|
+None
+,
+# Task IDs that now block this task
+"owner"
+:
+str
+|
+None
+,
+"metadata"
+:
+dict
+|
+None
+,
+}
+Output:
+{
+"success"
+:
+bool
+,
+"taskId"
+:
+str
+,
+"updatedFields"
+: list[
+str
+],
+# Names of fields that changed
+"error"
+:
+str
+|
+None
+,
+"statusChange"
+: {
+"from"
+:
+str
+,
+"to"
+:
+str
+}
+|
+None
+,
+}
+​
+TaskGet
+Tool name:
+TaskGet
+Input:
+{
+"taskId"
+:
+str
+,
+# ID of the task to read
+}
+Output:
+{
+"task"
+: {
+"id"
+:
+str
+,
+"subject"
+:
+str
+,
+"description"
+:
+str
+,
+"status"
+: Literal[
+"pending"
+,
+"in_progress"
+,
+"completed"
+],
+"blocks"
+: list[
+str
+],
+"blockedBy"
+: list[
+str
+],
+}
+|
+None
+,
+# None when the ID is not found
+}
+​
+TaskList
+Tool name:
+TaskList
+Input:
+{}
+Output:
+{
+"tasks"
+: [
+{
+"id"
+:
+str
+,
+"subject"
+:
+str
+,
+"status"
+: Literal[
+"pending"
+,
+"in_progress"
+,
+"completed"
+],
+"owner"
+:
+str
+|
+None
+,
+"blockedBy"
+: list[
+str
+],
+}
+],
 }
 ​
 BashOutput

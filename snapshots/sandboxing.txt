@@ -164,6 +164,30 @@ dnf
 install
 bubblewrap
 socat
+On Ubuntu 24.04 and later, the default AppArmor policy prevents bubblewrap from creating the user namespaces it needs for isolation. Add an AppArmor profile that grants
+bwrap
+this capability:
+sudo
+tee
+/etc/apparmor.d/bwrap
+>
+/dev/null
+<<
+'EOF'
+abi <abi/4.0>,
+include <tunables/global>
+profile bwrap /usr/bin/bwrap flags=(unconfined) {
+userns,
+include if exists <local/bwrap>
+}
+EOF
+The profile applies only to
+bwrap
+itself, not to the commands it runs inside the sandbox. Reload AppArmor to apply it:
+sudo
+systemctl
+reload
+apparmor
 WSL1 does not support sandboxing because it lacks the required Linux namespace primitives. If you see
 Sandboxing requires WSL2
 , upgrade your distribution to WSL2 or run Claude Code without sandboxing.

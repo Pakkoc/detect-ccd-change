@@ -312,7 +312,9 @@ resets to the model default. Without an argument, opens an interactive slider; u
 Enter
 to apply. Takes effect immediately without waiting for the current response to finish
 /exit
-Exit the CLI. Alias:
+Exit the CLI. In an attached
+background session
+, this detaches and the session keeps running. Alias:
 /quit
 /export [filename]
 Export the current conversation as plain text. With a filename, writes directly to that file. Without, opens a dialog to copy to clipboard or save to a file

@@ -1161,6 +1161,20 @@ false
 as
 Show last response in external editor
 true
+teammateDefaultModel
+Default model for
+agent team
+teammates when the spawn prompt doesn’t specify one. Set to a model alias such as
+"sonnet"
+, or
+null
+to inherit the lead’s current
+/model
+selection. Appears in
+/config
+as
+Default teammate model
+"sonnet"
 ​
 Worktree settings
 Configure how
@@ -1188,7 +1202,7 @@ worktree.symlinkDirectories
 Directories to symlink from the main repository into each worktree to avoid duplicating large directories on disk. No directories are symlinked by default
 ["node_modules", ".cache"]
 worktree.sparsePaths
-Directories to check out in each worktree via git sparse-checkout (cone mode). Only the listed paths are written to disk, which is faster in large monorepos
+Directories to check out in each worktree via git sparse-checkout. Only the listed directories plus root-level files are written to disk, which is faster in large monorepos
 ["packages/my-app", "shared/utils"]
 To copy gitignored files like
 .env
@@ -1771,6 +1785,13 @@ managed-settings.d/*.json
 +
 managed-settings.json
 ) > HKCU registry (Windows only). Only one managed source is used; sources do not merge across tiers. Within the file-based tier, drop-in files and the base file are merged together.
+Embedding hosts such as Claude Desktop can supply policy via the SDK
+managedSettings
+option. By default this is ignored when any managed-settings tier is present. Administrators can opt in by setting
+parentSettingsBehavior
+to
+"merge"
+. The embedder’s values are filtered so they can tighten managed policy but not loosen it.
 Command line arguments
 Temporary overrides for a specific session. JSON passed via
 --settings <file-or-json>
@@ -2054,6 +2075,19 @@ name
 and
 plugins
 )
+Each marketplace entry also accepts an optional
+autoUpdate
+Boolean. Set
+"autoUpdate": true
+alongside
+source
+to make Claude Code refresh that marketplace and update its installed plugins at startup. When omitted, official Anthropic marketplaces default to
+true
+and all other marketplaces default to
+false
+. See
+Configure auto-updates
+.
 Use
 source: 'settings'
 to declare a small set of plugins inline without setting up a hosted marketplace repository. Plugins listed here must reference external sources such as GitHub or npm. You still need to enable each plugin separately in
