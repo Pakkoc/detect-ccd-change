@@ -575,7 +575,7 @@ session, review it in your browser, then execute remotely or send it back to you
 /ultrareview [PR]
 Run a deep, multi-agent code review in a cloud sandbox with
 ultrareview
-. Includes 3 free runs on Pro and Max through May 5, 2026, then requires
+. Includes 3 free runs on Pro and Max, then requires
 extra usage
 /upgrade
 Open the upgrade page to switch to a higher plan tier

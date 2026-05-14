@@ -103,7 +103,7 @@ Data usage
 Security
 ​
 Choose your API provider
-Claude Code connects to Claude through one of several API providers. Your choice affects billing, authentication, and which compliance posture you inherit.
+Claude Code connects to Claude through one of several API providers. Your choice affects billing, authentication, which compliance posture you inherit, and which Claude Code features your developers can use.
 Provider
 Choose this when
 Claude for Teams / Enterprise
@@ -116,6 +116,17 @@ Google Vertex AI
 You want to inherit existing GCP compliance controls and billing
 Microsoft Foundry
 You want to inherit existing Azure compliance controls and billing
+Some Claude Code features require a Claude.ai account.
+Claude Code on the web
+,
+Routines
+,
+Code Review
+,
+Remote Control
+, and the
+Chrome extension
+are not available through Console API keys or cloud-provider credentials alone. If you deploy through Bedrock, Vertex, or Foundry, plan whether developers also need Claude for Teams or Enterprise seats. Each feature page lists its plan requirements.
 For the full provider comparison covering authentication, regions, and feature parity, see the
 enterprise deployment overview
 . Each provider’s auth setup is in

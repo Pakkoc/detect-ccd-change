@@ -136,7 +136,7 @@ extension overview
 covers when to use each mechanism.
 ​
 Choose where to put CLAUDE.md files
-CLAUDE.md files can live in several locations, each with a different scope. More specific locations take precedence over broader ones.
+CLAUDE.md files can live in several locations, each with a different scope. The table below lists them in load order, from broadest scope to most specific, so a project instruction appears in context after a user instruction.
 Scope
 Location
 Purpose
@@ -152,6 +152,11 @@ C:\Program Files\ClaudeCode\CLAUDE.md
 Organization-wide instructions managed by IT/DevOps
 Company coding standards, security policies, compliance requirements
 All users in organization
+User instructions
+~/.claude/CLAUDE.md
+Personal preferences for all projects
+Code styling preferences, personal tooling shortcuts
+Just you (all projects)
 Project instructions
 ./CLAUDE.md
 or
@@ -159,11 +164,6 @@ or
 Team-shared instructions for the project
 Project architecture, coding standards, common workflows
 Team members via source control
-User instructions
-~/.claude/CLAUDE.md
-Personal preferences for all projects
-Code styling preferences, personal tooling shortcuts
-Just you (all projects)
 Local instructions
 ./CLAUDE.local.md
 Personal project-specific preferences; add to
