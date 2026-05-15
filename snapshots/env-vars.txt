@@ -217,6 +217,10 @@ GOOGLE_CLOUD_PROJECT
 GOOGLE_APPLICATION_CREDENTIALS
 credential file. See
 Google Vertex AI
+ANTHROPIC_WORKSPACE_ID
+Workspace ID for
+workload identity federation
+. Set this when your federation rule is scoped to more than one workspace so the token exchange knows which workspace to target
 API_TIMEOUT_MS
 Timeout for API requests in milliseconds (default: 600000, or 10 minutes; maximum: 2147483647). Increase this when requests time out on slow networks or when routing through a proxy. Values above the maximum overflow the underlying timer and cause requests to fail immediately
 AWS_BEARER_TOKEN_BEDROCK
@@ -339,9 +343,11 @@ Passphrase for encrypted CLAUDE_CODE_CLIENT_KEY (optional)
 CLAUDE_CODE_DEBUG_LOGS_DIR
 Override the debug log file path. Despite the name, this is a file path, not a directory. Requires debug mode to be enabled separately via
 --debug
-or
+,
 /debug
-: setting this variable alone does not enable logging. The
+, or the
+DEBUG
+environment variable: setting this variable alone does not enable logging. The
 --debug-file
 flag does both at once. Defaults to
 ~/.claude/debug/<session-id>.txt
@@ -839,6 +845,13 @@ to keep the existing marketplace cache when a
 git pull
 fails instead of wiping and re-cloning. Useful in offline or airgapped environments where re-cloning would fail the same way. See
 Marketplace updates fail in offline environments
+CLAUDE_CODE_PLUGIN_PREFER_HTTPS
+Set to
+1
+to clone GitHub
+owner/repo
+plugin sources over HTTPS instead of SSH. Useful in CI runners, containers, or any environment without a configured SSH key for
+github.com
 CLAUDE_CODE_PLUGIN_SEED_DIR
 Path to one or more read-only plugin seed directories, separated by
 :
@@ -946,7 +959,15 @@ CLI flag sets this
 CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT
 Set to
 1
-to use a shorter system prompt and abbreviated tool descriptions on Opus 4.7. Has no effect on other models. The full tool set, hooks, MCP servers, and CLAUDE.md discovery remain enabled
+to use a shorter system prompt and abbreviated tool descriptions on any model. Set to
+0
+,
+false
+,
+no
+, or
+off
+to opt out even on models where the experiment or server configuration would otherwise enable it. The full tool set, hooks, MCP servers, and CLAUDE.md discovery remain enabled
 CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH
 Skip client-side authentication for
 Claude Platform on AWS
@@ -1124,6 +1145,26 @@ Timeout in milliseconds before the streaming idle watchdog closes a stalled conn
 300000
 (5 minutes) for both the byte-level and event-level watchdogs; lower values are silently clamped to absorb extended thinking pauses and proxy buffering. For third-party providers, requires
 CLAUDE_ENABLE_STREAM_WATCHDOG=1
+DEBUG
+Set to
+1
+to enable debug mode, equivalent to launching with
+--debug
+. Debug logs are written to
+~/.claude/debug/<session-id>.txt
+, or to the path set by
+CLAUDE_CODE_DEBUG_LOGS_DIR
+. Only the truthy values
+1
+,
+true
+,
+yes
+, and
+on
+enable debug mode, so namespace patterns like
+DEBUG=express:*
+set for other tools do not trigger it
 DISABLE_AUTOUPDATER
 Set to
 1

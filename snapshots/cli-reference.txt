@@ -100,9 +100,9 @@ claude auth status
 claude agents
 Open
 agent view
-to monitor and dispatch parallel background sessions. When output is piped, lists configured
-subagents
-instead
+to monitor and dispatch parallel background sessions. Use
+--cwd <path>
+to show only sessions started under that directory
 claude agents
 claude attach <id>
 Attach to a

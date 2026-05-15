@@ -41,6 +41,7 @@ Claude Code on desktop
 Get started
 Reference
 Scheduled tasks
+Desktop changelog
 Chrome extension (beta)
 Computer use (preview)
 Visual Studio Code
@@ -209,10 +210,19 @@ Review allowed permissions
 Always allowed
 panel
 Delete
-: remove the task and archive all sessions it created
+: remove the task and archive all sessions it created. An
+Also delete files on disk
+checkbox appears in the confirmation dialog; check it to also remove the task’s
+SKILL.md
+file and associated data from
+~/.claude/scheduled-tasks/
+.
 You can also list, create, edit, and pause tasks by asking Claude in any Desktop session. For example, “pause my dependency-audit task” or “show me my scheduled tasks.” To delete a task, use the
 Delete
 button on its detail page.
+A scheduled task can also modify its own schedule or prompt from within a running session using the
+update_scheduled_task
+MCP tool. This lets a task reschedule itself based on what it finds, for example, rescheduling a code review to run earlier when it detects a release branch has been created.
 To edit a task’s prompt on disk, open
 ~/.claude/scheduled-tasks/<task-name>/SKILL.md
 (or under
@@ -238,7 +248,7 @@ Was this page helpful?
 Yes
 No
 Reference
-Chrome extension (beta)
+Desktop changelog
 ⌘
 I
 Assistant

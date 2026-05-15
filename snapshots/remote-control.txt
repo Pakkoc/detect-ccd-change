@@ -277,7 +277,9 @@ to
 true
 . Set it back to
 false
-to disable.
+to disable. In the Desktop app, you can also toggle this from
+Settings → Claude Code → Enable remote control by default
+.
 With this setting on, each interactive Claude Code process registers one remote session. If you run multiple instances, each one gets its own environment and session. To run multiple concurrent sessions from a single process, use
 server mode
 instead.

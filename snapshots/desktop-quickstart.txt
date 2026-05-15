@@ -41,6 +41,7 @@ Claude Code on desktop
 Get started
 Reference
 Scheduled tasks
+Desktop changelog
 Chrome extension (beta)
 Computer use (preview)
 Visual Studio Code

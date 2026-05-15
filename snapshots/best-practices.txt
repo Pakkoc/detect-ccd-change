@@ -548,7 +548,11 @@ or
 /rewind
 , select a message checkpoint, and choose
 Summarize from here
-. This condenses messages from that point forward while keeping earlier context intact.
+or
+Summarize up to here
+. The first condenses messages from that point forward while keeping earlier context intact; the second condenses earlier messages while keeping recent ones in full. See
+Restore vs. summarize
+.
 Customize compaction behavior in CLAUDE.md with instructions like
 "When compacting, always preserve the full list of modified files and any test commands"
 to ensure critical context survives summarization
@@ -568,8 +572,8 @@ You can also use subagents for verification after Claude implements something:
 use a subagent to review this code for edge cases
 ​
 Rewind with checkpoints
-Every action Claude makes creates a checkpoint. You can restore conversation, code, or both to any previous checkpoint.
-Claude automatically checkpoints before changes. Double-tap
+Every prompt you send creates a checkpoint. You can restore conversation, code, or both to any previous checkpoint.
+Claude automatically snapshots files before each change so a checkpoint can restore them. Double-tap
 Escape
 or run
 /rewind

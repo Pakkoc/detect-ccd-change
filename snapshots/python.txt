@@ -4980,7 +4980,7 @@ decision
 "block"
 to block the action
 systemMessage
-: System message to add to the transcript
+: warning message shown to the user
 hookSpecificOutput
 : Hook-specific output data
 ​

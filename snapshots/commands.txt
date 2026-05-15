@@ -116,7 +116,7 @@ pulls a web session into this terminal, and
 lets you continue this local session from another device.
 When something is wrong.
 /rewind
-rolls code and conversation back to a checkpoint.
+rolls code and conversation back to a checkpoint, or summarizes part of the conversation.
 /doctor
 and
 /debug

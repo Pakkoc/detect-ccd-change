@@ -41,6 +41,7 @@ Claude Code on desktop
 Get started
 Reference
 Scheduled tasks
+Desktop changelog
 Chrome extension (beta)
 Computer use (preview)
 Visual Studio Code
@@ -370,7 +371,11 @@ on macOS or Windows. The terminal opens in your session’s working directory an
 npm test
 or
 git status
-see the same files Claude is editing. The terminal is available in local sessions only.
+see the same files Claude is editing. To open a second terminal tab, click
++
+in the terminal pane header or right-click a folder in the chat to choose
+Open in terminal
+. The terminal is available in local sessions only.
 ​
 Open and edit files
 Click a file path in the chat or diff viewer to open it in the file pane. HTML, PDF, image, and video paths open in the
@@ -637,6 +642,7 @@ Check usage
 to trigger summarization earlier and free up context space. See
 the context window
 for details on how compaction works.
+The desktop app sends an OS notification when a Code session finishes a task and you aren’t currently viewing that session.
 ​
 Ask a side question without derailing the session
 A side chat lets you ask Claude a question that uses your session’s context but doesn’t add anything back to the main conversation. Use it when you want to understand a piece of code, check an assumption, or explore an idea without steering the session off course.
@@ -1289,6 +1295,16 @@ sshHostAllowlist
 restrict
 SSH sessions
 to hosts whose resolved hostname matches one of these patterns. An empty array disables SSH sessions. Read from managed settings only.
+managedMcpServers
+push MCP server configurations to all users in a third-party deployment. Each entry specifies a transport of
+"http"
+,
+"sse"
+, or
+"stdio"
+, connection details, and optionally a
+toolPolicy
+map that restricts which tools in that server users can invoke. Available in third-party (3P) Desktop deployments only.
 A managed settings file deployed to disk on each machine applies to Desktop sessions. Managed settings pushed remotely through the admin console currently reach CLI and IDE sessions only, so for Desktop deployments either distribute the file via MDM or use the
 admin console controls
 above.
