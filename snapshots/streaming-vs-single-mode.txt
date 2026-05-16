@@ -107,6 +107,9 @@ Python
 import
 {
 query
+,
+type
+SDKUserMessage
 }
 from
 "@anthropic-ai/claude-agent-sdk"
@@ -121,25 +124,28 @@ from
 async
 function*
 generateMessages
-() {
+()
+:
+AsyncGenerator
+<
+SDKUserMessage
+> {
 // First message
 yield
 {
 type:
 "user"
-as
-const
 ,
 message:
 {
 role:
 "user"
-as
-const
 ,
 content:
 "Analyze this codebase for security issues"
-}
+},
+parent_tool_use_id:
+null
 };
 // Wait for conditions or user input
 await
@@ -160,15 +166,11 @@ yield
 {
 type:
 "user"
-as
-const
 ,
 message:
 {
 role:
 "user"
-as
-const
 ,
 content:
 [
@@ -202,7 +204,9 @@ readFile
 }
 }
 ]
-}
+},
+parent_tool_use_id:
+null
 };
 }
 // Process streaming responses
@@ -237,6 +241,12 @@ message
 type
 ===
 "result"
+&&
+message
+.
+subtype
+===
+"success"
 ) {
 console
 .
@@ -310,6 +320,12 @@ message
 type
 ===
 "result"
+&&
+message
+.
+subtype
+===
+"success"
 ) {
 console
 .
@@ -349,6 +365,12 @@ message
 type
 ===
 "result"
+&&
+message
+.
+subtype
+===
+"success"
 ) {
 console
 .

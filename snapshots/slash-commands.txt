@@ -179,6 +179,12 @@ message
 type
 ===
 "result"
+&&
+message
+.
+subtype
+===
+"success"
 ) {
 console
 .
@@ -509,6 +515,12 @@ message
 type
 ===
 "result"
+&&
+message
+.
+subtype
+===
+"success"
 ) {
 console
 .

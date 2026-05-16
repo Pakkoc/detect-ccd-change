@@ -305,6 +305,10 @@ backups/
 Timestamped copies of
 ~/.claude.json
 taken before config migrations
+feedback-bundles/
+Redacted transcript archives written by
+/feedback
+on third-party providers, for sending to your Anthropic account team
 ​
 Kept until you delete them
 The following paths are not covered by automatic cleanup and persist indefinitely.

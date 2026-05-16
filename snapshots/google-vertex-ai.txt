@@ -267,10 +267,11 @@ ENABLE_PROMPT_CACHING_1H=1
 and
 /logout
 commands are disabled since authentication is handled through Google Cloud credentials.
+Claude Code disables
 MCP tool search
-is disabled by default on Vertex AI because the endpoint does not accept the required beta header. All MCP tool definitions load upfront instead. Setting
+by default on Vertex AI, so MCP tool definitions load upfront. Vertex AI supports tool search for Claude Sonnet 4.5 and later and Claude Opus 4.5 and later. Set
 ENABLE_TOOL_SEARCH=true
-forces Claude Code to send the header anyway, which causes Vertex AI to reject requests.
+to enable it on those models. Earlier models on Vertex AI do not accept the required beta header, and requests fail if you enable tool search with them.
 ​
 5. Pin model versions
 Pin specific model versions when deploying to multiple users. Without pinning, model aliases such as
@@ -309,7 +310,10 @@ Default value
 Primary model
 claude-sonnet-4-5@20250929
 Small/fast model
-claude-haiku-4-5@20251001
+Same as primary model
+Background tasks such as session title generation use the small/fast model, normally a Haiku-class model. On Vertex AI, Claude Code defaults this to the primary model because Haiku may not be enabled in every project or region. To use Haiku for background tasks, set
+ANTHROPIC_DEFAULT_HAIKU_MODEL
+to a model ID that is available in your project.
 To customize models further:
 export
 ANTHROPIC_MODEL

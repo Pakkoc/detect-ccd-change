@@ -156,6 +156,9 @@ export
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 =
 'claude-haiku-4-5'
+Background tasks such as session title generation use the small/fast model, normally a Haiku-class model. On Foundry, Claude Code defaults this to the primary model because not every account has a Haiku deployment. To use Haiku for background tasks, set
+ANTHROPIC_DEFAULT_HAIKU_MODEL
+to a Haiku deployment that is available in your account, as shown above.
 For current and legacy model IDs, see
 Models overview
 . See

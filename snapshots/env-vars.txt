@@ -202,7 +202,11 @@ ANTHROPIC_SMALL_FAST_MODEL
 [DEPRECATED] Name of
 Haiku-class model for background tasks
 ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION
-Override AWS region for the Haiku-class model when using Bedrock or Bedrock Mantle
+Override AWS region for the Haiku-class model when using Bedrock or Bedrock Mantle. On Bedrock, this only takes effect when
+ANTHROPIC_DEFAULT_HAIKU_MODEL
+or the deprecated
+ANTHROPIC_SMALL_FAST_MODEL
+is also set, since Bedrock otherwise uses the primary model for background tasks
 ANTHROPIC_VERTEX_BASE_URL
 Override the Vertex AI endpoint URL. Use for custom Vertex endpoints or when routing through an
 LLM gateway
@@ -1319,7 +1323,7 @@ MCP tool search
 ANTHROPIC_BASE_URL
 points to a non-first-party host. Values:
 true
-(always defer and send the beta header, requests fail on Vertex AI or proxies that do not support
+(always defer and send the beta header; supported on Vertex AI with Sonnet 4.5 and later or Opus 4.5 and later; requests fail on earlier Vertex AI models or on proxies that do not support
 tool_reference
 ),
 auto

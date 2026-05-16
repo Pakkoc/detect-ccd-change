@@ -552,7 +552,7 @@ asyncio
 from
 claude_agent_sdk
 import
-query, ClaudeAgentOptions, AgentDefinition
+query, ClaudeAgentOptions, AgentDefinition, ToolUseBlock
 async
 def
 main
@@ -620,14 +620,8 @@ block
 in
 message.content:
 if
-getattr
-(block,
-"type"
-,
-None
-)
-==
-"tool_use"
+isinstance
+(block, ToolUseBlock)
 and
 block.name
 in
@@ -721,12 +715,18 @@ undefined
 {
 if
 (
-!
-(
-"message"
-in
 message
-))
+.
+type
+!==
+"assistant"
+&&
+message
+.
+type
+!==
+"user"
+)
 return
 undefined
 ;
