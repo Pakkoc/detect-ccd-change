@@ -443,7 +443,19 @@ auto
 Settings
 : set
 effortLevel
-in your settings file
+to
+low
+,
+medium
+,
+high
+, or
+xhigh
+in your settings file.
+max
+is
+session-only
+and is not accepted here
 Skill and subagent frontmatter
 : set
 effort
