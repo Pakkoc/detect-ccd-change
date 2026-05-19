@@ -78,9 +78,9 @@ brings back any task that hasn’t
 expired
 : a recurring task created within the last 7 days, or a one-shot whose scheduled time hasn’t passed yet. For scheduling that survives independently of any session, use
 Routines
-,
-Desktop scheduled tasks
-, or
+to create a routine on Anthropic-managed infrastructure, set up a
+Desktop scheduled task
+, or use
 GitHub Actions
 .
 ​

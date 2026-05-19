@@ -853,13 +853,9 @@ Task
 Also loads
 Skill with
 context: fork
-From agent type (
-Explore
-,
-Plan
-, etc.)
+From agent type
 SKILL.md content
-CLAUDE.md
+CLAUDE.md, except when the agent is Explore or Plan
 Subagent with
 skills
 field
@@ -868,7 +864,11 @@ Claude’s delegation message
 Preloaded skills + CLAUDE.md
 With
 context: fork
-, you write the task in your skill and pick an agent type to execute it. For the inverse (defining a custom subagent that uses skills as reference material), see
+, you write the task in your skill and pick an agent type to execute it. The built-in Explore and Plan agents
+skip CLAUDE.md and git status
+to keep their context small, so a forked skill using
+agent: Explore
+sees only the SKILL.md content and the agent’s own system prompt. For the inverse, where you define a custom subagent that uses skills as reference material, see
 Subagents
 .
 ​

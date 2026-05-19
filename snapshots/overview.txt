@@ -1,4 +1,4 @@
-Claude Code overview - Claude Code Docs
+Overview - Claude Code Docs
 Skip to main content
 Claude Code Docs
 home page
@@ -10,7 +10,7 @@ Ask AI
 Search...
 Navigation
 Getting started
-Claude Code overview
+Overview
 Getting started
 Build with Claude Code
 Administration

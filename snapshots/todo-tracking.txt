@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (deprecated)
+TypeScript V2 (removed)
 Python SDK
 Migration Guide
 On this page
@@ -69,12 +69,23 @@ Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
 Use this file to discover all available pages before exploring further.
 Todo tracking provides a structured way to manage tasks and display progress to users. The Claude Agent SDK includes built-in todo functionality that helps organize complex workflows and keep users informed about task progression.
+As of TypeScript Agent SDK 0.3.142 and Claude Code v2.1.142, sessions use the structured Task tools
+TaskCreate
+,
+TaskUpdate
+,
+TaskGet
+, and
+TaskList
+instead of
 TodoWrite
-is the current default in the Agent SDK and the examples on this page use it. The replacement Task tools are available now behind
-CLAUDE_CODE_ENABLE_TASKS=1
-and will become the default in a future release. See
+. See
 Migrate to Task tools
-for how monitoring code changes.
+for how monitoring code changes. The examples on this page set
+CLAUDE_CODE_ENABLE_TASKS=0
+to keep showing
+TodoWrite
+for sessions that have not migrated yet.
 ​
 Todo Lifecycle
 Todos follow a predictable lifecycle:
@@ -125,11 +136,23 @@ query
 prompt:
 "Optimize my React app performance and track progress with todos"
 ,
+// Re-enable TodoWrite, which this example monitors. Without it, the SDK uses
+// Task tools instead and these tool_use blocks never appear.
 options:
 {
 maxTurns:
 15
-}
+,
+env:
+{
+...
+process
+.
+env
+,
+CLAUDE_CODE_ENABLE_TASKS:
+"0"
+} }
 })) {
 // Todo updates are reflected in the message stream
 if
@@ -437,11 +460,22 @@ query
 ({
 prompt
 ,
+// Re-enable TodoWrite, which this tracker watches for.
 options:
 {
 maxTurns:
 20
-}
+,
+env:
+{
+...
+process
+.
+env
+,
+CLAUDE_CODE_ENABLE_TASKS:
+"0"
+} }
 })) {
 if
 (
@@ -524,11 +558,10 @@ and
 TaskGet
 available for the model to read back the current list. Your monitoring code still inspects
 tool_use
-blocks in the assistant stream, but maintains a map keyed by task ID instead of replacing the whole list on every call. To opt in before the Task tools become the default, set
-CLAUDE_CODE_ENABLE_TASKS=1
-in
+blocks in the assistant stream, but maintains a map keyed by task ID instead of replacing the whole list on every call.
+The Task tools are the default as of TypeScript Agent SDK 0.3.142 and Claude Code v2.1.142, so no
 options.env
-.
+change is needed.
 With
 TodoWrite
 With Task tools
@@ -607,18 +640,6 @@ query
 prompt:
 "Optimize my React app performance"
 ,
-options:
-{
-env:
-{
-...
-process
-.
-env
-,
-CLAUDE_CODE_ENABLE_TASKS:
-"1"
-} },
 })) {
 if
 (

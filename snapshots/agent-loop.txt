@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (deprecated)
+TypeScript V2 (removed)
 Python SDK
 Migration Guide
 On this page
@@ -353,7 +353,9 @@ Skill
 ,
 AskUserQuestion
 ,
-TodoWrite
+TaskCreate
+,
+TaskUpdate
 Spawn subagents, invoke skills, ask the user, track tasks
 Beyond built-in tools, you can:
 Connect external services

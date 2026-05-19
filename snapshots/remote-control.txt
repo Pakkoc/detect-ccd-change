@@ -365,7 +365,7 @@ Some commands are local-only
 ,
 /exit
 ,
-/extra-usage
+/usage-credits
 ,
 /recap
 , and

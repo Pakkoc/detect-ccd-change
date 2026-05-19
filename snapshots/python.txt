@@ -53,14 +53,14 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (deprecated)
+TypeScript V2 (removed)
 Python SDK
 Migration Guide
 On this page
 Installation
 Choosing between query() and ClaudeSDKClient
 Quick comparison
-When to use query() (new session each time)
+When to use query() (one-off tasks)
 When to use ClaudeSDKClient (continuous conversation)
 Functions
 query()
@@ -116,6 +116,7 @@ Why use setting_sources
 Settings precedence
 AgentDefinition
 PermissionMode
+EffortLevel
 CanUseTool
 ToolPermissionContext
 PermissionResult
@@ -243,7 +244,7 @@ Feature
 query()
 ClaudeSDKClient
 Session
-Creates new session each time
+Creates a new session by default
 Reuses same session
 Conversation
 Single exchange
@@ -264,15 +265,18 @@ Custom Tools
 ✅ Supported
 ✅ Supported
 Continue Chat
-❌ New session each time
-✅ Maintains conversation
+Manual via
+continue_conversation
+or
+resume
+✅ Automatic
 Use Case
 One-off tasks
 Continuous conversations
 ​
 When to use
 query()
-(new session each time)
+(one-off tasks)
 Best for:
 One-off questions where you don’t need conversation history
 Independent tasks that don’t require context from previous exchanges
@@ -297,9 +301,17 @@ Session control
 Functions
 ​
 query()
-Creates a new session for each interaction with Claude Code. Returns an async iterator that yields messages as they arrive. Each call to
+Creates a new session for each interaction with Claude Code by default. Returns an async iterator that yields messages as they arrive. Each call to
 query()
-starts fresh with no memory of previous interactions.
+starts fresh with no memory of previous interactions unless you pass
+continue_conversation=True
+or
+resume
+in
+ClaudeAgentOptions
+. See
+Sessions
+.
 async
 def
 query
@@ -2457,17 +2469,7 @@ thinking: ThinkingConfig
 None
 =
 None
-effort: Literal[
-"low"
-,
-"medium"
-,
-"high"
-,
-"xhigh"
-,
-"max"
-]
+effort: EffortLevel
 |
 None
 =
@@ -2718,7 +2720,8 @@ None
 Controls extended thinking behavior. Takes precedence over
 max_thinking_tokens
 effort
-Literal["low", "medium", "high", "xhigh", "max"] | None
+EffortLevel
+| None
 None
 Effort level for thinking depth
 session_store
@@ -3192,17 +3195,7 @@ bool
 None
 =
 None
-effort: Literal[
-"low"
-,
-"medium"
-,
-"high"
-,
-"xhigh"
-,
-"max"
-]
+effort: EffortLevel
 |
 int
 |
@@ -3267,7 +3260,8 @@ No
 Run this agent as a non-blocking background task when invoked
 effort
 No
-Reasoning effort level for this agent. Accepts a named level or an integer
+Reasoning effort level for this agent. Accepts a named level or an integer. See
+EffortLevel
 permissionMode
 No
 Permission mode for tool execution within this agent. See
@@ -3311,6 +3305,28 @@ Literal[
 "bypassPermissions"
 ,
 # Bypass all permission checks (use with caution)
+]
+​
+EffortLevel
+Effort levels for guiding thinking depth.
+EffortLevel
+=
+Literal[
+"low"
+,
+# Minimal thinking, fastest responses
+"medium"
+,
+# Moderate thinking
+"high"
+,
+# Deep reasoning
+"xhigh"
+,
+# Extended reasoning (Opus 4.7 only; falls back to "high" on other models)
+"max"
+,
+# Maximum effort
 ]
 ​
 CanUseTool
@@ -3630,6 +3646,13 @@ preset: Literal[
 ​
 ThinkingConfig
 Controls extended thinking behavior. A union of three configurations:
+ThinkingDisplay
+=
+Literal[
+"summarized"
+,
+"omitted"
+]
 class
 ThinkingConfigAdaptive
 (
@@ -3639,6 +3662,7 @@ type
 : Literal[
 "adaptive"
 ]
+display: NotRequired[ThinkingDisplay]
 class
 ThinkingConfigEnabled
 (
@@ -3650,6 +3674,7 @@ type
 ]
 budget_tokens:
 int
+display: NotRequired[ThinkingDisplay]
 class
 ThinkingConfigDisabled
 (
@@ -3671,15 +3696,32 @@ Fields
 Description
 adaptive
 type
+,
+display
 Claude adaptively decides when to think
 enabled
 type
 ,
 budget_tokens
+,
+display
 Enable thinking with a specific token budget
 disabled
 type
 Disable thinking
+The optional
+display
+field controls whether thinking text is returned
+"summarized"
+or
+"omitted"
+. On Claude Opus 4.7 and later, the API default is
+"omitted"
+, so set
+"summarized"
+to receive thinking content in
+ThinkingBlock
+outputs.
 Because these are
 TypedDict
 classes, they’re plain dicts at runtime. Either construct them as dict literals or call the class like a constructor; both produce a
@@ -5572,6 +5614,7 @@ str
 ]
 updatedToolOutput: NotRequired[Any]
 updatedMCPToolOutput: NotRequired[Any]
+# Deprecated: use updatedToolOutput, which works for all tools
 class
 PostToolUseFailureHookSpecificOutput
 (
@@ -6603,8 +6646,9 @@ float
 TodoWrite
 Tool name:
 TodoWrite
+As of Claude Code v2.1.142,
 TodoWrite
-is deprecated and will be removed in a future release. Use
+is disabled by default. Use
 TaskCreate
 ,
 TaskGet
@@ -6612,11 +6656,13 @@ TaskGet
 TaskUpdate
 , and
 TaskList
-instead. Set
-CLAUDE_CODE_ENABLE_TASKS=1
-to opt in. See
+instead. See
 Migrate to Task tools
-for how monitoring code changes.
+to update your monitoring code, or set
+CLAUDE_CODE_ENABLE_TASKS=0
+to revert to
+TodoWrite
+.
 Input:
 {
 "todos"
@@ -8515,7 +8561,7 @@ Common workflows
 Was this page helpful?
 Yes
 No
-TypeScript V2 (deprecated)
+TypeScript V2 (removed)
 Migration Guide
 ⌘
 I

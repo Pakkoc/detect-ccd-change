@@ -4780,7 +4780,8 @@ last_assistant_message
 stop_hook_active
 field is
 true
-when Claude Code is already continuing as a result of a stop hook. Check this value or process the transcript to prevent Claude Code from running indefinitely. The
+when Claude Code is already continuing as a result of a stop hook. Check this value or process the transcript to avoid blocking on a condition that will never resolve. Claude Code overrides the hook and ends the turn after 8 consecutive blocks.
+The
 last_assistant_message
 field contains the text content of Claude’s final response, so hooks can access it without parsing the transcript file.
 {
@@ -6537,7 +6538,7 @@ flag does not print to the terminal.
 For more granular hook matching details, set
 CLAUDE_CODE_DEBUG_LOG_LEVEL=verbose
 to see additional log lines such as hook matcher counts and query matching.
-For troubleshooting common issues like hooks not firing, infinite Stop hook loops, or configuration errors, see
+For troubleshooting common issues like hooks not firing, Stop hooks that keep blocking, or configuration errors, see
 Limitations and troubleshooting
 in the guide. For a broader diagnostic walkthrough covering
 /context

@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (deprecated)
+TypeScript V2 (removed)
 Python SDK
 Migration Guide
 On this page
@@ -1452,7 +1452,11 @@ Callback for stderr output
 strictMcpConfig
 boolean
 false
-Enforce strict MCP validation
+Use only the servers passed in
+mcpServers
+and ignore project
+.mcp.json
+, user settings, and plugin-provided MCP servers
 systemPrompt
 string | { type: 'preset'; preset: 'claude_code'; append?: string; excludeDynamicSections?: boolean }
 undefined
@@ -4994,8 +4998,9 @@ string
 }>;
 };
 Creates and manages a structured task list for tracking progress.
+As of TypeScript Agent SDK 0.3.142,
 TodoWrite
-is deprecated and will be removed in a future release. Use
+is disabled by default. Use
 TaskCreate
 ,
 TaskGet
@@ -5003,11 +5008,13 @@ TaskGet
 TaskUpdate
 , and
 TaskList
-instead. Set
-CLAUDE_CODE_ENABLE_TASKS=1
-to opt in. See
+instead. See
 Migrate to Task tools
-for how monitoring code changes.
+to update your monitoring code, or set
+CLAUDE_CODE_ENABLE_TASKS=0
+to revert to
+TodoWrite
+.
 ​
 TaskCreate
 Tool name:
@@ -6170,8 +6177,9 @@ string
 }>;
 };
 Returns the previous and updated task lists.
+As of TypeScript Agent SDK 0.3.142,
 TodoWrite
-is deprecated and will be removed in a future release. Use
+is disabled by default. Use
 TaskCreate
 ,
 TaskGet
@@ -6179,11 +6187,13 @@ TaskGet
 TaskUpdate
 , and
 TaskList
-instead. Set
-CLAUDE_CODE_ENABLE_TASKS=1
-to opt in. See
+instead. See
 Migrate to Task tools
-for how monitoring code changes.
+to update your monitoring code, or set
+CLAUDE_CODE_ENABLE_TASKS=0
+to revert to
+TodoWrite
+.
 ​
 TaskCreate
 Tool name:
@@ -7028,6 +7038,13 @@ Controls Claude’s thinking/reasoning behavior. Takes precedence over the depre
 maxThinkingTokens
 .
 type
+ThinkingDisplay
+=
+"summarized"
+|
+"omitted"
+;
+type
 ThinkingConfig
 =
 |
@@ -7035,6 +7052,10 @@ ThinkingConfig
 type
 :
 "adaptive"
+;
+display
+?:
+ThinkingDisplay
 }
 // The model determines when and how much to reason (Opus 4.6+)
 |
@@ -7046,6 +7067,10 @@ type
 budgetTokens
 ?:
 number
+;
+display
+?:
+ThinkingDisplay
 }
 // Fixed thinking token budget
 |
@@ -7055,6 +7080,19 @@ type
 "disabled"
 };
 // No extended thinking
+The optional
+display
+field controls whether thinking text is returned
+"summarized"
+or
+"omitted"
+. On Claude Opus 4.7 and later, the API default is
+"omitted"
+, so set
+"summarized"
+to receive thinking content in
+thinking
+blocks.
 ​
 SpawnedProcess
 Interface for custom process spawning (used with
@@ -8237,8 +8275,11 @@ allowedDomains
 allowManagedDomainsOnly
 boolean
 false
-Restrict network access to only the domains in
+Managed-settings only. When set in
+managed settings
+, only
 allowedDomains
+entries from managed settings are honored and entries from user, project, or local settings are ignored. Has no effect when set via SDK options
 allowLocalBinding
 boolean
 false
@@ -8482,7 +8523,7 @@ Was this page helpful?
 Yes
 No
 Securely deploying AI agents
-TypeScript V2 (deprecated)
+TypeScript V2 (removed)
 ⌘
 I
 Assistant

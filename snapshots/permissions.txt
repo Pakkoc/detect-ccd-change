@@ -572,7 +572,11 @@ Read and Edit
 Edit
 rules apply to all built-in tools that edit files. Claude makes a best-effort attempt to apply
 Read
-rules to all built-in tools that read files like Grep and Glob.
+rules to all built-in tools that read files like Grep and Glob, to
+@file
+mentions in your prompts, and to the selection and open-file context that a connected
+IDE
+shares with Claude.
 Read and Edit deny rules apply to Claude’s built-in file tools and to file commands Claude Code recognizes in Bash, such as
 cat
 ,

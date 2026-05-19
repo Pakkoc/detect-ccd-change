@@ -53,7 +53,7 @@ Hosting the Agent SDK
 Securely deploying AI agents
 SDK references
 TypeScript SDK
-TypeScript V2 (deprecated)
+TypeScript V2 (removed)
 Python SDK
 Migration Guide
 On this page
@@ -150,7 +150,7 @@ handles session IDs internally. Each call to
 client.query()
 automatically continues the same session. Call
 client.receive_response()
-to iterate over the messages for the current query. The client must be used as an async context manager.
+to iterate over the messages for the current query. The client is typically used as an async context manager.
 This example runs two queries against the same
 client
 . The first asks the agent to analyze a module; the second asks it to refactor that module. Because both calls go through the same client instance, the second query has full context from the first without any explicit
@@ -280,9 +280,7 @@ function.
 ​
 TypeScript:
 continue: true
-The stable TypeScript SDK (the
-query()
-function used throughout these docs, sometimes called V1) doesn’t have a session-holding client object like Python’s
+The TypeScript SDK doesn’t have a session-holding client object like Python’s
 ClaudeSDKClient
 . Instead, pass
 continue: true
@@ -412,7 +410,7 @@ with a
 send
 /
 stream
-pattern, is deprecated. Use the V1
+pattern, was removed in TypeScript Agent SDK 0.3.142. Use the
 query()
 function and the session options described on this page instead.
 ​

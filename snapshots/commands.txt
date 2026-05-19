@@ -318,8 +318,6 @@ background session
 /quit
 /export [filename]
 Export the current conversation as plain text. With a filename, writes directly to that file. Without, opens a dialog to copy to clipboard or save to a file
-/extra-usage
-Configure extra usage to keep working when rate limits are hit
 /fast [on|off]
 Toggle
 fast mode
@@ -576,7 +574,7 @@ session, review it in your browser, then execute remotely or send it back to you
 Run a deep, multi-agent code review in a cloud sandbox with
 ultrareview
 . Includes 3 free runs on Pro and Max, then requires
-extra usage
+usage credits
 /upgrade
 Open the upgrade page to switch to a higher plan tier
 /usage
@@ -587,6 +585,9 @@ for subscription-specific details.
 and
 /stats
 are aliases
+/usage-credits
+Configure usage credits to keep working when you hit a limit. Previously
+/extra-usage
 /vim
 Removed in v2.1.92. To toggle between Vim and Normal editing modes, use
 /config

@@ -102,8 +102,26 @@ Open
 agent view
 to monitor and dispatch parallel background sessions. Use
 --cwd <path>
-to show only sessions started under that directory
-claude agents
+to show only sessions started under that directory. Pass
+--permission-mode
+,
+--model
+, or
+--effort
+to set
+defaults for dispatched sessions
+. Accepts
+--settings
+,
+--add-dir
+,
+--plugin-dir
+, and
+--mcp-config
+like the top-level
+claude
+command. Requires an interactive terminal
+claude agents --cwd ~/projects/my-app
 claude attach <id>
 Attach to a
 background session
@@ -116,6 +134,11 @@ classifier rules as JSON. Use
 claude auto-mode config
 to see your effective config with settings applied
 claude auto-mode defaults > rules.json
+claude daemon status
+Print the background-session
+supervisor’s
+state, version, socket directory, and worker count for diagnostics. Exits 1 if the supervisor isn’t running
+claude daemon status
 claude logs <id>
 Print recent output from a
 background session
@@ -161,11 +184,11 @@ server to control Claude Code from Claude.ai or the Claude app. Runs in server m
 Server mode flags
 claude remote-control --name "My Project"
 claude respawn <id>
-Restart a stopped
+Restart a
 background session
-with its conversation intact. Use
+, running or stopped, with its conversation intact. Use
 --all
-to restart every stopped session
+to restart every running session, e.g. to pick up an updated Claude Code binary
 claude respawn 7c5dcf5d
 claude rm <id>
 Remove a
@@ -353,7 +376,11 @@ is set. Use with
 for scripted, multi-user workloads
 claude -p --exclude-dynamic-system-prompt-sections "query"
 --fallback-model
-Enable automatic fallback to specified model when default model is overloaded (print mode only)
+Enable automatic fallback to a specified model when the default model is overloaded. Takes effect in print mode (
+-p
+) and in
+background sessions
+, which run non-interactively; ignored in an interactive session
 claude -p --fallback-model sonnet "query"
 --fork-session
 When resuming, create a new session ID instead of reusing the original (use with

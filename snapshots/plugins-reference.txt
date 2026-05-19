@@ -105,7 +105,9 @@ Location
 skills/
 or
 commands/
-directory in plugin root
+directory in plugin root, or a single
+SKILL.md
+file at the plugin root
 File format
 : Skills are directories with
 SKILL.md
@@ -719,6 +721,10 @@ Complete schema
 :
 "plugin-name"
 ,
+"displayName"
+:
+"Plugin Name"
+,
 "version"
 :
 "1.2.0"
@@ -843,6 +849,16 @@ $schema
 string
 JSON Schema URL for editor autocomplete and validation. Claude Code ignores this field at load time.
 "https://json.schemastore.org/claude-code-plugin-manifest.json"
+displayName
+string
+Human-readable name shown in the
+/plugin
+picker and other UI surfaces. Falls back to
+name
+when omitted. Unlike
+name
+, may contain spaces and any casing. Not used for namespacing or lookup. Requires Claude Code v2.1.143 or later.
+"Deployment Tools"
 version
 string
 Optional. Semantic version. Setting this pins the plugin to that version string, so users only receive updates when you bump it. If omitted, Claude Code falls back to the git commit SHA, so every commit is treated as a new version. If also set in the marketplace entry,
@@ -1191,6 +1207,19 @@ SKILL.md
 determines the skill’s invocation name. This gives a stable name regardless of the install directory. If
 name
 is not set in the frontmatter, the directory basename is used as a fallback.
+A plugin that has a
+SKILL.md
+at its root, no
+skills/
+subdirectory, and no
+skills
+manifest field is automatically loaded as a single-skill plugin in Claude Code v2.1.142 and later. You do not need to set
+"skills": ["./"]
+in
+plugin.json
+for this layout. The skill’s invocation name follows the same rule as above: the frontmatter
+name
+field, or the directory basename as a fallback.
 Path examples
 :
 {
@@ -1663,7 +1692,9 @@ claude plugin prune
 requires Claude Code v2.1.121 or later.
 ​
 plugin enable
-Enable a disabled plugin.
+Enable a disabled plugin. If the plugin declares
+dependencies
+, Claude Code enables them transitively at the same scope, and the command fails when a dependency is not installed.
 claude
 plugin
 enable
@@ -1692,7 +1723,9 @@ user
 Display help for command
 ​
 plugin disable
-Disable a plugin without uninstalling it.
+Disable a plugin without uninstalling it. Fails when another enabled plugin
+depends on
+the target. The error message includes a chained command that disables every dependent first.
 claude
 plugin
 disable
@@ -1770,7 +1803,11 @@ Include available plugins from marketplaces. Requires
 Display help for command
 ​
 plugin details
-Show a plugin’s component inventory and projected token cost. The output lists all components the plugin contributes, grouped as Skills (skills and commands), Agents, Hooks, and MCP servers, along with an estimate of how many tokens it adds to each session.
+Show a plugin’s component inventory and projected token cost. The output lists all components the plugin contributes, grouped as Skills, Agents, Hooks, MCP servers, and LSP servers, along with an estimate of how many tokens it adds to each session. The Skills group includes both
+skills/
+and
+commands/
+entries.
 claude
 plugin
 details
@@ -1802,6 +1839,7 @@ Skills (2)  scan-dependencies, review-changes
 Agents (0)
 Hooks (1)  (harness-only — no model context cost)
 MCP servers (0)
+LSP servers (0)
 Projected token cost
 Always-on:   ~180 tok   added to every session
 Per-component (rounded)

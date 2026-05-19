@@ -322,9 +322,11 @@ how CLAUDE.md files load
 Subagent ignores
 CLAUDE.md
 instructions
-Subagents don’t always inherit project memory
-Put critical rules in the agent file body, which becomes the subagent’s system prompt. See
-subagent configuration
+The built-in Explore and Plan agents skip
+CLAUDE.md
+. Custom subagents load it the same way the main conversation does
+For Explore or Plan, restate the instruction in your delegating prompt. For a custom subagent, put critical instructions in the agent file body, which becomes the agent’s system prompt. See
+what loads at startup
 .
 Cleanup logic never runs at session end
 No

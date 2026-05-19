@@ -639,15 +639,11 @@ points at an Anthropic-compatible gateway such as LiteLLM, Kong, or an internal 
 availableModels
 allowlist
 CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE
-Set to
-1
-to run
-fast mode
-on Claude Opus 4.7 instead of Opus 4.6. With the variable set,
-/fast
-switches to Opus 4.7; without it,
-/fast
-continues to use Opus 4.6
+Removed in v2.1.142.
+Fast mode
+defaults to Opus 4.7. Set
+CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1
+to keep Opus 4.6 instead
 CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
 Set to
 false
@@ -656,12 +652,25 @@ to disable prompt suggestions (the “Prompt suggestions” toggle in
 ). These are the grayed-out predictions that appear in your prompt input after Claude responds. See
 Prompt suggestions
 CLAUDE_CODE_ENABLE_TASKS
-Set to
-1
-to enable the task tracking system in non-interactive mode (the
--p
-flag). Tasks are on by default in interactive mode. See
+Controls whether sessions use the structured Task tools (
+TaskCreate
+,
+TaskUpdate
+,
+TaskGet
+,
+TaskList
+) or the legacy
+TodoWrite
+tool.
+As of Claude Code v2.1.142, Task tools are the default in all modes. Set to
+0
+to revert to
+TodoWrite
+. See
 Task list
+and
+Migrate to Task tools
 CLAUDE_CODE_ENABLE_TELEMETRY
 Set to
 1
@@ -809,11 +818,13 @@ claude setup-token
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE
 Set to
 1
-to keep
+to pin
 fast mode
-on Claude Opus 4.6. Takes precedence over
-CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE
-, so set this if you need to pin Opus 4.6 regardless of how the default changes
+to Claude Opus 4.6 instead of the default Opus 4.7. With the variable set,
+/fast
+runs on Opus 4.6. Without it,
+/fast
+runs on Opus 4.7
 CLAUDE_CODE_OTEL_FLUSH_TIMEOUT_MS
 Timeout in milliseconds for flushing pending OpenTelemetry spans (default: 5000). See
 Monitoring
@@ -863,6 +874,18 @@ on Unix or
 ;
 on Windows. Use this to bundle a pre-populated plugins directory into a container image. Claude Code registers marketplaces from these directories at startup and uses pre-cached plugins without re-cloning. See
 Pre-populate plugins for containers
+CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY
+Set to
+1
+to stop Claude Code from passing
+-ExecutionPolicy Bypass
+when spawning PowerShell for tool calls, hooks, and status line commands, and respect the machine’s effective execution policy instead. By default Claude Code bypasses execution policy at process scope so
+.ps1
+scripts and module imports work on default-Restricted Windows installs. Process-scope bypass never overrides Group Policy
+MachinePolicy
+or
+UserPolicy
+regardless of this setting
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
 Set by host platforms that embed Claude Code and manage model provider routing on its behalf. When set, provider-selection, endpoint, and authentication variables such as
 CLAUDE_CODE_USE_BEDROCK
@@ -957,9 +980,14 @@ Set to
 1
 to run with a minimal system prompt and only the Bash, file read, and file edit tools. MCP tools from
 --mcp-config
-are still available. Disables auto-discovery of hooks, skills, plugins, MCP servers, auto memory, and CLAUDE.md. The
+are still available. Disables auto-discovery of hooks, skills, plugins, MCP servers, auto memory, and CLAUDE.md. OAuth tokens and keychain credentials are not read, so Anthropic authentication must come from
+ANTHROPIC_API_KEY
+or an
+apiKeyHelper
+in
+--settings
+. Equivalent to passing
 --bare
-CLI flag sets this
 CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT
 Set to
 1
@@ -992,6 +1020,14 @@ to skip writing prompt history and session transcripts to disk. Sessions started
 , or up-arrow history. Useful for ephemeral scripted sessions
 CLAUDE_CODE_SKIP_VERTEX_AUTH
 Skip Google authentication for Vertex (for example, when using an LLM gateway)
+CLAUDE_CODE_STOP_HOOK_BLOCK_CAP
+Maximum number of consecutive times a
+Stop
+or
+SubagentStop
+hook may block the turn from ending before Claude Code overrides it and ends the turn anyway (default: 8). Set to
+0
+to disable the cap. Raise this if your hook legitimately needs more iterations to resolve
 CLAUDE_CODE_SUBAGENT_MODEL
 See
 Model configuration
@@ -1121,10 +1157,19 @@ to force-enable the byte-level streaming idle watchdog, or set to
 to force-disable it. When unset, the watchdog is enabled by default for Anthropic API connections. The byte watchdog aborts a connection when no bytes arrive on the wire for the duration set by
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 , with a minimum of 5 minutes, independent of the event-level watchdog
+CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK
+Set to
+1
+to enable the byte-level streaming idle watchdog on Amazon Bedrock
+vnd.amazon.eventstream
+responses. Off by default. Configure the timeout with
+CLAUDE_STREAM_IDLE_TIMEOUT_MS
 CLAUDE_ENABLE_STREAM_WATCHDOG
 Set to
 1
-to enable the event-level streaming idle watchdog. Off by default. For Bedrock, Vertex, and Foundry, this is the only idle watchdog available. Configure the timeout with
+to enable the event-level streaming idle watchdog. Off by default. Applies to all providers, including Bedrock. For Vertex and Foundry, this is the only idle watchdog available. On Bedrock, you can also enable the independent byte-level watchdog with
+CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK
+; the two run together when both are set. Configure the timeout with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 CLAUDE_ENV_FILE
 Path to a shell script whose contents Claude Code runs before each Bash command in the same shell process, so exports in the file are visible to the command. Use to persist virtualenv or conda activation across commands. Also populated dynamically by
@@ -1149,6 +1194,8 @@ Timeout in milliseconds before the streaming idle watchdog closes a stalled conn
 300000
 (5 minutes) for both the byte-level and event-level watchdogs; lower values are silently clamped to absorb extended thinking pauses and proxy buffering. For third-party providers, requires
 CLAUDE_ENABLE_STREAM_WATCHDOG=1
+. On Bedrock, also applies when
+CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1
 DEBUG
 Set to
 1
@@ -1207,7 +1254,7 @@ DISABLE_EXTRA_USAGE_COMMAND
 Set to
 1
 to hide the
-/extra-usage
+/usage-credits
 command that lets users purchase additional usage beyond rate limits
 DISABLE_FEEDBACK_COMMAND
 Set to
@@ -1323,7 +1370,7 @@ MCP tool search
 ANTHROPIC_BASE_URL
 points to a non-first-party host. Values:
 true
-(always defer and send the beta header; supported on Vertex AI with Sonnet 4.5 and later or Opus 4.5 and later; requests fail on earlier Vertex AI models or on proxies that do not support
+(always defer and send the beta header, requests fail on Vertex AI models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that do not support
 tool_reference
 ),
 auto
@@ -1385,19 +1432,20 @@ pre-configured credentials
 . Avoids the interactive prompt when adding a server with
 --client-secret
 MCP_CONNECTION_NONBLOCKING
-Set to
-true
-in non-interactive mode (
--p
-) to skip the MCP connection wait entirely. Useful for scripted pipelines where MCP tools are not needed. Without this variable, the first query waits up to 5 seconds for
---mcp-config
-server connections. Servers configured with
+Controls whether startup waits for MCP servers to connect before the first query.
+As of Claude Code v2.1.142, MCP startup is non-blocking by default: servers connect in the background and their tools become available as they finish. Set to
+0
+to restore the blocking 5-second connection wait. Servers configured with
 alwaysLoad: true
-always block startup regardless of this variable, since their tools must be present when the first prompt is built
+still block startup regardless, since their tools must be present when the first prompt is built
 MCP_CONNECT_TIMEOUT_MS
-How long the first query waits, in milliseconds, for the MCP connection batch before snapshotting the tool list (default: 5000). Servers still pending at the deadline keep connecting in the background but won’t appear until the next query. Distinct from
+How long blocking MCP startup waits, in milliseconds, for the connection batch before snapshotting the tool list (default: 5000). Applies when
+MCP_CONNECTION_NONBLOCKING=0
+or for servers marked
+alwaysLoad: true
+. Servers still pending at the deadline keep connecting in the background but won’t appear until the next query. Distinct from
 MCP_TIMEOUT
-, which bounds an individual server’s connect attempt. Most relevant to non-interactive sessions that issue a single query and need slow-connecting servers to be visible
+, which bounds an individual server’s connect attempt
 MCP_OAUTH_CALLBACK_PORT
 Fixed port for the OAuth redirect callback, as an alternative to
 --callback-port

@@ -292,9 +292,9 @@ Run
 /usage
 to see your plan limits and when they reset
 Run
-/extra-usage
+/usage-credits
 to buy additional usage on Pro and Max, or to request it from your admin on Team and Enterprise. See
-Extra usage for paid plans
+usage credits for paid plans
 for how this is billed.
 To upgrade your plan for higher base limits, see
 claude.com/pricing
@@ -320,7 +320,8 @@ if it persists
 ​
 Request rejected (429)
 You have hit the rate limit configured for your API key, Amazon Bedrock project, or Google Vertex AI project.
-API Error: Request rejected (429) · this may be a temporary capacity issue
+API Error: Request rejected (429) · this may be a temporary capacity issue. If it persists, check status.claude.com.
+The trailing sentence names where to check service health and varies by provider. Bedrock and Vertex AI configurations name that provider’s service status instead of the Anthropic status page.
 What to do:
 Run
 /status

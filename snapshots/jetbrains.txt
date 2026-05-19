@@ -92,7 +92,10 @@ Ctrl+Esc
 Diff viewing
 : code changes can be displayed directly in the IDE diff viewer instead of the terminal
 Selection context
-: the current selection or tab in the IDE is automatically shared with Claude Code
+: the current selection or tab in the IDE is automatically shared with Claude Code.
+Read
+deny rules
+block this sharing for matching files
 File reference shortcuts
 : use
 Cmd+Option+K

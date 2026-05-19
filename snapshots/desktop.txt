@@ -1,4 +1,4 @@
-Use Claude Code Desktop - Claude Code Docs
+Desktop application - Claude Code Docs
 Skip to main content
 Claude Code Docs
 home page
@@ -10,7 +10,7 @@ Ask AI
 Search...
 Navigation
 Claude Code on desktop
-Use Claude Code Desktop
+Desktop application
 Getting started
 Build with Claude Code
 Administration
@@ -1528,6 +1528,20 @@ CLI
 and
 Agent SDK
 , not in Desktop.
+Terminal-dialog commands
+: built-in commands that open an interactive panel in the terminal, such as
+/permissions
+,
+/config
+,
+/agents
+, and
+/doctor
+, are not available in the Code tab and reply with
+isn't available in this environment
+. Edit
+settings files
+directly to manage permission rules and configuration, or run the command from the standalone CLI.
 ​
 Troubleshooting
 The sections below cover issues specific to the desktop app. For runtime API errors that appear in the chat such as
