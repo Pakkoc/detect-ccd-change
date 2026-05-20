@@ -373,9 +373,11 @@ Ctrl+X
 again within two seconds to delete it. Pressing
 Ctrl+X
 on a group header deletes every session in that group after confirmation.
-Deleting removes the session from agent view and removes its conversation transcript. If Claude
+Deleting removes the session from agent view. If Claude
 created a worktree
-for the session, deleting removes that worktree too, including any uncommitted changes in it, so push or commit work you want to keep first. A worktree you created yourself and started the session inside is left in place.
+for the session, deleting removes that worktree too, including any uncommitted changes in it, so push or commit work you want to keep first. A worktree you created yourself and started the session inside is left in place. The conversation transcript stays on your local machine and remains available through
+claude --resume
+.
 Older completed sessions fold into a
 … N more
 row to keep the list short. Failures and sessions with an open pull request always stay visible.
@@ -520,6 +522,9 @@ and
 --plugin-dir
 --fallback-model
 --allow-dangerously-skip-permissions
+Directories you added during the session with
+/add-dir
+also carry through.
 Carrying
 --allow-dangerously-skip-permissions
 through keeps
@@ -553,8 +558,10 @@ claude
 --name
 "flaky-test-fix"
 "investigate the flaky SettingsChangeDetector test"
-After backgrounding, Claude prints the session’s short ID and the commands for managing it:
-backgrounded · 7c5dcf5d
+After backgrounding, Claude prints the session’s short ID and the commands for managing it. When you pass
+--name
+, the name appears after the short ID:
+backgrounded · 7c5dcf5d · flaky-test-fix
 claude agents             list sessions
 claude attach 7c5dcf5d    open in this terminal
 claude logs 7c5dcf5d      show recent output
@@ -576,7 +583,10 @@ The session is already inside a linked git worktree, whether Claude created it u
 or you created it with
 git worktree add
 somewhere else
-The working directory isn’t a git repository
+The working directory isn’t a git repository and no
+WorktreeCreate
+hook
+is configured
 The write is outside the working directory
 To turn off worktree isolation for a repository where git worktrees are impractical, set
 worktree.bgIsolation
@@ -596,7 +606,10 @@ to
 The
 worktree.bgIsolation
 setting requires Claude Code v2.1.143 or later.
-Outside a git repository, sessions write to the working directory directly and aren’t isolated from each other, so avoid dispatching parallel sessions that edit the same files.
+Outside a git repository, sessions write to the working directory directly and aren’t isolated from each other, so avoid dispatching parallel sessions that edit the same files. If you use a different version control system, configure a
+WorktreeCreate
+hook
+and Claude isolates edits the same way it does for git.
 Deleting a session in agent view (
 Ctrl+X
 twice) removes a worktree Claude created for it, including any uncommitted changes, so merge or push the changes you want to keep first. Deleting from the shell with
@@ -608,9 +621,15 @@ isolation: worktree
 in its frontmatter.
 ​
 Set the model
-The model name shown in the agent view header is the dispatch default. New sessions you start from the input use this model, which is the same setting
+The model name shown in the agent view header is the dispatch default. New sessions you start from the input use this model, which comes from the
+model
+setting
+in your user settings. Set it by pressing
+d
+on a model in the
 /model
-controls in any session. To override it for the whole agent view session, pass
+picker
+, or edit the setting directly. To override it for the whole agent view session, pass
 --model
 when opening agent view. See
 Permission mode, model, and effort
@@ -792,7 +811,8 @@ Restart a session, running or stopped, with its conversation intact, e.g. to pic
 claude respawn --all
 Restart every running session, e.g. to move all sessions onto an updated Claude Code binary at once
 claude rm <id>
-Remove a session and its transcript. Removes a worktree Claude created for the session if it has no uncommitted changes; otherwise prints the worktree path so you can clean it up. Leaves a worktree you created yourself in place
+Remove a session from the list. Removes a worktree Claude created for the session if it has no uncommitted changes; otherwise prints the worktree path so you can clean it up. Leaves a worktree you created yourself in place. The conversation transcript stays on your local machine and remains available through
+claude --resume
 claude daemon status
 Print the
 supervisor’s
@@ -808,7 +828,7 @@ send it to the background
 The supervisor process
 Background sessions are hosted by a per-user supervisor process, separate from your terminal and from agent view. The supervisor starts automatically the first time you background a session or open agent view, and you don’t manage it directly.
 The supervisor and its sessions authenticate with the same credentials as your interactive sessions and make no additional network connections beyond the model API.
-Each background session is its own Claude Code process, managed by the supervisor rather than tied to your terminal. A session that’s actively working, waiting for your input, or has a terminal attached keeps its process running.
+Each background session is its own Claude Code process, managed by the supervisor rather than tied to your terminal. A session that’s actively working, waiting for your input, or has a terminal attached keeps its process running. A running background shell command, subagent, workflow, or monitor counts as active work, so a long-running process such as a dev server keeps the session alive.
 Once a session finishes and sits unattached for about an hour, the supervisor stops its process to free resources. The transcript and state stay on disk, and the next time you attach, peek, or reply, the supervisor starts a fresh process from where it left off. When every session has finished and no terminal is connected, the supervisor itself exits and starts again the next time you need it.
 The supervisor watches the installed Claude Code binary on disk and restarts into the new version after the regular
 auto-updater

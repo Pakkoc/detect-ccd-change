@@ -21,6 +21,7 @@ What's New
 Resources
 What's New
 What's new
+Week 20 · May 11–15
 Week 19 · May 4–8
 Week 18 · Apr 27 – May 1
 Week 17 · Apr 20–24
@@ -41,7 +42,7 @@ Auto mode hands your permission prompts to a classifier. Safe edits and commands
 —dangerously-skip-permissions
 .
 Cycle to auto with Shift+Tab, or set it as your default:
-.claude/settings.json
+~/.claude/settings.json
 {
 "permissions"
 : {

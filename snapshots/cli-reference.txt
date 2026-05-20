@@ -193,7 +193,8 @@ claude respawn 7c5dcf5d
 claude rm <id>
 Remove a
 background session
-from the list
+from the list. The conversation transcript stays on your local machine, available through
+claude --resume
 claude rm 7c5dcf5d
 claude setup-token
 Generate a long-lived OAuth token for CI and scripts. Prints the token to the terminal without saving it. Requires a Claude subscription. See
@@ -340,7 +341,9 @@ claude --debug-file /tmp/claude-debug.log
 Disable all skills and commands for this session
 claude --disable-slash-commands
 --disallowedTools
-Tools that are removed from the model’s context and cannot be used
+Deny rules. A bare tool name removes that tool from the model’s context. A scoped rule such as
+Bash(rm *)
+leaves the tool available and denies only matching calls
 "Bash(git log *)" "Bash(git diff *)" "Edit"
 --effort
 Set the
@@ -559,6 +562,10 @@ claude -p --input-format stream-json --output-format stream-json --replay-user-m
 -r
 Resume a specific session by ID or name, or show an interactive picker to choose a session. Includes sessions that added this directory with
 /add-dir
+. As of v2.1.144,
+background sessions
+appear in the picker marked with
+bg
 claude --resume auth-refactor
 --session-id
 Use a specific session ID for the conversation (must be a valid UUID)

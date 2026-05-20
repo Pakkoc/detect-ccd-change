@@ -40,6 +40,7 @@ When to use each scope
 How scopes interact
 What uses scopes
 Settings files
+When edits take effect
 Available settings
 Global config settings
 Worktree settings
@@ -334,6 +335,27 @@ for Claude Code settings. Adding it to your
 settings.json
 enables autocomplete and inline validation in VS Code, Cursor, and any other editor that supports JSON schema validation.
 The published schema is updated periodically and may not include settings added in the most recent CLI releases, so a validation warning on a recently documented field does not necessarily mean your configuration is invalid.
+​
+When edits take effect
+Claude Code watches your settings files and reloads them when they change, so edits to most keys apply to the running session without a restart. This includes
+permissions
+,
+hooks
+, and credential helpers like
+apiKeyHelper
+. The reload covers user, project, local, and managed settings, and the
+ConfigChange
+hook
+fires for each detected change.
+A few keys are read once at session start and apply on the next restart instead:
+model
+: use
+/model
+to switch mid-session
+outputStyle
+: part of the system prompt, which is rebuilt on
+/clear
+or restart
 ​
 Available settings
 settings.json
@@ -684,7 +706,14 @@ List of specific MCP servers from
 files to approve
 ["memory", "github"]
 env
-Environment variables that will be applied to every session
+Environment variables applied to every session and to subprocesses Claude Code spawns from it.
+As of v2.1.143,
+NO_COLOR
+and
+FORCE_COLOR
+set here are passed to subprocesses but do not change Claude Code’s own interface colors. Set those in your shell before launching
+claude
+to change interface colors
 {"FOO": "bar"}
 fastModePerSessionOptIn
 When
@@ -986,7 +1015,7 @@ false
 or absent, custom tips are merged with built-in tips
 { "excludeDefault": true, "tips": ["Use our internal tool X"] }
 spinnerVerbs
-Customize the action verbs shown in the spinner and turn duration messages. Set
+Customize the action verbs shown while a turn is in progress. Set
 mode
 to
 "replace"

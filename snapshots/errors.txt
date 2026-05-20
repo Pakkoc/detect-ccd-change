@@ -59,6 +59,7 @@ Authentication errors
 Not logged in
 Invalid API key
 This organization has been disabled
+Your organization has disabled Claude subscription access
 Routines are disabled by your organization’s policy
 OAuth token revoked or expired
 OAuth scope requirement
@@ -78,6 +79,7 @@ Claude Opus is not available with the Claude Pro plan
 thinking.type.enabled is not supported for this model
 Thinking budget exceeds output limit
 Tool use or thinking block mismatch
+Usage Policy refusal
 Responses seem lower quality than usual
 Report an error
 Documentation Index
@@ -133,6 +135,8 @@ Invalid API key
 Authentication
 This organization has been disabled
 Authentication
+Your organization has disabled Claude subscription access
+Authentication
 Routines are disabled by your organization's policy
 Authentication
 OAuth token revoked
@@ -173,6 +177,8 @@ Request errors
 max_tokens must be greater than thinking.budget_tokens
 Request errors
 API Error: 400 due to tool use concurrency issues
+Request errors
+Claude Code is unable to respond to this request, which appears to violate our Usage Policy
 Request errors
 Responses seem lower quality than usual
 Response quality
@@ -429,6 +435,24 @@ afterward to confirm the active credential is your subscription
 If no environment variable is set and the error persists, the disabled organization is the one tied to your
 /login
 . Contact support or sign in with a different account.
+​
+Your organization has disabled Claude subscription access
+Your Claude organization does not allow signing in to Claude Code with a subscription login. Running
+/login
+again with the same account returns the same error.
+Your organization has disabled Claude subscription access for Claude Code · Use an Anthropic API key instead, or ask your admin to enable access
+This is a server-side organization setting, so it cannot be overridden from local settings, environment variables, or CLI flags. The Agent SDK and
+-p
+non-interactive mode surface this as the
+oauth_org_not_allowed
+error code.
+What to do:
+Ask your admin to enable Claude Code access for your organization
+Authenticate with a Console API key instead of your subscription. See
+Claude Console authentication
+for setup.
+If you are the admin and do not see an option to enable access, contact
+Anthropic support
 ​
 Routines are disabled by your organization’s policy
 Your Team or Enterprise admin has turned off routines at the organization level. The error appears when you try to create or run a routine, including from
@@ -789,6 +813,35 @@ Run
 , or press Esc twice, to step back to a checkpoint before the corrupted turn and continue from there. See
 Checkpointing
 for how checkpoints are created and restored.
+​
+Usage Policy refusal
+The API declined to respond because content in the conversation triggered a
+Usage Policy
+check. The message includes a Request ID you can quote to support if you believe the refusal is incorrect.
+API Error: Claude Code is unable to respond to this request, which appears to violate our Usage Policy (https://www.anthropic.com/legal/aup). Please double press esc to edit your last message or start a new session for Claude Code to assist with a different task.
+The check evaluates the full conversation, not only your latest prompt, so sending a new message in the same session usually re-triggers the same refusal. The same applies after exiting and reopening the session with
+--continue
+or
+--resume
+, since the transcript on disk still contains the triggering content.
+What to do:
+Press Esc twice or run
+/rewind
+to step back to a checkpoint before the turn that triggered the refusal, then rephrase or take a different approach. See
+Checkpointing
+.
+If you cannot identify which turn caused it, run
+/clear
+to start a fresh conversation in the same project. Your previous conversation is preserved on disk and remains available in
+/resume
+.
+In
+non-interactive mode
+(
+-p
+), where rewind is unavailable, retry with a rephrased prompt or start a new session without
+--continue
+.
 ​
 Responses seem lower quality than usual
 If Claude’s answers seem less capable than you expect but no error is shown, the cause is usually conversation state rather than the model itself. Claude Code does not silently change model versions. It can switch to a fallback model in specific cases such as an Opus quota being reached or a Bedrock or Vertex AI region lacking your model; the Model selection check below catches both, and

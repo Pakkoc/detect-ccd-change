@@ -343,8 +343,12 @@ export
 ENABLE_PROMPT_CACHING_1H
 =
 1
-Prompt caching
-may not be available in all regions. Cache writes with a 1-hour TTL are billed at a higher rate than 5-minute writes.
+The 1-hour cache TTL is billed at a higher rate than the 5-minute default. See
+cache lifetime
+.
+Prompt caching may not be available in all Bedrock regions. If cache token counts stay at zero, check
+supported models, regions, and limits
+in the Bedrock documentation.
 ​
 Map each model version to an inference profile
 The

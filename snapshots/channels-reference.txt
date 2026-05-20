@@ -2391,9 +2391,12 @@ A channel published to your own marketplace still needs
 --dangerously-load-development-channels
 to run, since it isn’t on the
 approved allowlist
-. To get it added,
-submit it to the official marketplace
-. Channel plugins go through security review before being approved. On Team and Enterprise plans, an admin can instead include your plugin in the organization’s own
+. The default allowlist is the channel plugins in
+claude-plugins-official
+, which Anthropic curates at its discretion. The
+in-app submission forms
+add plugins to the community marketplace, which is not on the channel allowlist.
+If you are working with an Anthropic partner contact, reach out to them to coordinate an official-marketplace listing. On Team and Enterprise plans, an admin can instead include your plugin in the organization’s own
 allowedChannelPlugins
 list, which replaces the default Anthropic allowlist.
 ​

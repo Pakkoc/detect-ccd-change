@@ -28,6 +28,7 @@ How Claude Code works
 Extend Claude Code
 Explore the .claude directory
 Explore the context window
+Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes

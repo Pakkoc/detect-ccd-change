@@ -459,14 +459,14 @@ must appear exactly once. When it appears more than once, Claude either supplies
 replace_all: true
 to replace them all.
 Viewing a file with Bash also satisfies the read-before-edit requirement when the command is
-cat path/to/file
-or
-sed -n 'X,Yp' path/to/file
-on a single file with no pipes or redirects. Other Bash commands such as
+cat
+,
 head
 ,
 tail
-, or piped output do not count, and Claude must use Read before editing in those cases.
+, or
+sed -n 'X,Yp'
+on a single file with no pipes, redirects, or other flags. Piped output and other Bash commands do not count, and Claude must use Read before editing in those cases.
 This affects edit eligibility only, not permissions.
 Read and Edit deny rules
 also apply to file commands Claude Code recognizes in Bash, such as
@@ -749,11 +749,7 @@ WebSearch is available on the Claude API and Microsoft Foundry. On Google Cloud 
 Write tool behavior
 The Write tool creates a new file or overwrites an existing one with the full content provided. It does not append or merge.
 If the target path already exists, Claude must have read that file at least once in the current conversation before overwriting it. A Write to an unread existing file fails with an error. This constraint does not apply to new files.
-Viewing the file with Bash
-cat
-or
-sed -n
-also satisfies this requirement, as described in
+Viewing the file with Bash also satisfies this requirement under the same rules described in
 Edit tool behavior
 .
 For partial changes to an existing file, Claude uses Edit instead of Write.

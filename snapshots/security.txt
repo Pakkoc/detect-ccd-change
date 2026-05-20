@@ -162,6 +162,7 @@ Note: Trust verification is disabled when running non-interactively with the
 flag. The exception is
 --worktree
 , which still requires that trust has been accepted for the directory
+Note: When you start Claude Code directly in your home directory, trust acceptance is held for the current session only and is not written to disk, so the prompt reappears on each launch. There is no setting to persist it. Start Claude Code from a project subdirectory instead, where trust acceptance is saved per directory
 Command injection detection
 : Suspicious bash commands require manual approval even if previously allowlisted
 Fail-closed matching

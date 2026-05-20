@@ -57,7 +57,7 @@ Organize complex plugins
 Test your plugins locally
 Debug plugin issues
 Share your plugins
-Submit your plugin to the official marketplace
+Submit your plugin to the community marketplace
 Convert existing configurations to plugins
 Migration steps
 What changes when migrating
@@ -578,15 +578,37 @@ Discover and install plugins
 private repository
 .
 ​
-Submit your plugin to the official marketplace
-To submit a plugin to the official Anthropic marketplace, use one of the in-app submission forms:
+Submit your plugin to the community marketplace
+Anthropic maintains two public marketplaces for Claude Code plugins:
+claude-plugins-official
+: a curated set of plugins maintained by Anthropic. Available automatically in every Claude Code installation.
+claude-community
+: the public community marketplace where third-party submissions land after review. Users add it with
+/plugin marketplace add anthropics/claude-plugins-community
+and install from it as
+@claude-community
+.
+To submit your plugin for community-marketplace review, use one of the in-app forms:
 Claude.ai
 :
 claude.ai/settings/plugins/submit
 Console
 :
 platform.claude.com/plugins/submit
-Once your plugin is listed, you can have your own CLI prompt Claude Code users to install it. See
+Run
+claude plugin validate
+locally before you submit. The review pipeline runs the same check on every submission, along with automated safety screening.
+Approved plugins are pinned to a specific commit SHA in the
+anthropics/claude-plugins-community
+catalog, and CI bumps the pin automatically as you push new commits to your repository. The public catalog syncs nightly from the review pipeline, so there can be a delay between approval and your plugin appearing in
+marketplace.json
+. To check whether your plugin is installable yet, search for its name in the
+community catalog
+.
+The official marketplace,
+claude-plugins-official
+, is curated separately. Anthropic decides which plugins to include at its discretion. There is no application process, and the submission form does not add plugins to the official marketplace.
+If Anthropic lists your plugin in the official marketplace, your CLI can prompt Claude Code users to install it. See
 Recommend your plugin from your CLI
 .
 For complete technical specifications, debugging techniques, and distribution strategies, see

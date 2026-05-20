@@ -275,9 +275,13 @@ null
 }
 ]
 }
-Setting
+The
+voice:pushToTalk
+action uses one key at a time. When you bind a custom key, it replaces the default
+Space
+binding rather than adding a second trigger, so the
 "space": null
-removes the default binding. Omit it if you want both keys active.
+line in this example is for clarity and can be omitted without changing behavior.
 In hold mode, avoid binding a bare letter key like
 v
 since hold detection relies on key-repeat and the letter types into the prompt during warmup. Use

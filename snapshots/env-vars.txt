@@ -32,18 +32,138 @@ Channels reference
 Glossary
 Glossary
 On this page
+Set environment variables
+In your shell
+In settings files
+Precedence
+Variables
 See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
 Use this file to discover all available pages before exploring further.
-Claude Code supports the following environment variables to control its behavior. Set them in your shell before launching
+Environment variables can control Claude Code behavior such as model selection, authentication, request routing, and feature toggles. Many of the same behaviors can also be configured through a
+settings file
+field, a
+CLI flag
+, or an in-session command like
+/model
+.
+This page covers how to:
+Set environment variables
+in your shell or in a settings file
+Check which value applies
+when a behavior can be set more than one way
+Look up the variables Claude Code reads
+​
+Set environment variables
+A variable you set in your shell lasts for that terminal session, while a variable in a settings file applies every time
 claude
-, or configure them in
-settings.json
-under the
+runs.
+​
+In your shell
+Set the variable before launching
+claude
+:
+macOS, Linux, WSL
+Windows PowerShell
+Windows CMD
+export
+API_TIMEOUT_MS
+=
+"1200000"
+claude
+To set it for every session, add the
+export
+line to
+~/.bashrc
+,
+~/.zshrc
+, or your shell’s profile file.
+$
+env:
+API_TIMEOUT_MS
+=
+"1200000"
+claude
+To set it for every session, run
+[Environment]::SetEnvironmentVariable("API_TIMEOUT_MS", "1200000", "User")
+and open a new terminal.
+set
+API_TIMEOUT_MS
+=
+1200000
+claude
+To set it for every session, run
+setx API_TIMEOUT_MS "1200000"
+and open a new terminal.
+​
+In settings files
+Add variables under the
 env
-key to apply them to every session or roll them out across your team.
+key in a
+settings.json
+file. Claude Code reads them directly from the file at startup, so they take effect no matter how
+claude
+was launched.
+~/.claude/settings.json
+{
+"env"
+: {
+"API_TIMEOUT_MS"
+:
+"1200000"
+,
+"BASH_DEFAULT_TIMEOUT_MS"
+:
+"300000"
+}
+}
+The file you choose controls who the variables apply to:
+File
+Applies to
+~/.claude/settings.json
+You, in every project
+.claude/settings.json
+Everyone working in the project, checked into source control
+.claude/settings.local.json
+You, in this project only, not checked in
+Managed settings
+Everyone in your organization, deployed by an admin
+See
+Settings files
+for where each file lives and
+Settings precedence
+for how they combine when more than one sets the same variable.
+​
+Precedence
+Where the same behavior has both an environment variable and a settings field, the environment variable takes precedence. For example,
+ANTHROPIC_MODEL
+overrides the
+model
+setting, and
+CLAUDE_CODE_AUTO_CONNECT_IDE
+overrides
+autoConnectIde
+. The settings field applies when the environment variable is not set.
+How an environment variable interacts with CLI flags and in-session commands varies per feature:
+--model
+and
+/model
+override
+ANTHROPIC_MODEL
+, while
+CLAUDE_CODE_EFFORT_LEVEL
+overrides
+/effort
+. When a variable interacts with another configuration source, its row in the
+Variables
+list states the precedence or links to the page that documents it.
+Claude Code reads environment variables at startup, so changes take effect the next time you launch
+claude
+.
+​
+Variables
 Variable
 Purpose
 ANTHROPIC_API_KEY
@@ -301,6 +421,12 @@ CLAUDE.md
 , and
 CLAUDE.local.md
 . By default, additional directories do not load memory files
+CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT
+Set to
+1
+to repaint the entire screen on every frame in
+fullscreen rendering
+instead of sending incremental updates. Use this if fullscreen mode shows stale or misplaced text fragments. Claude Code enables this automatically for background sessions on Windows
 CLAUDE_CODE_API_KEY_HELPER_TTL_MS
 Interval in milliseconds at which credentials should be refreshed (when using
 apiKeyHelper
@@ -865,7 +991,11 @@ Set to
 1
 to clone GitHub
 owner/repo
-plugin sources over HTTPS instead of SSH. Useful in CI runners, containers, or any environment without a configured SSH key for
+shorthand sources over HTTPS instead of SSH. Applies to plugin install and update, and to
+/plugin marketplace add
+and
+update
+. Useful in CI runners, containers, or any environment without a configured SSH key for
 github.com
 CLAUDE_CODE_PLUGIN_SEED_DIR
 Path to one or more read-only plugin seed directories, separated by
@@ -1301,7 +1431,9 @@ command
 DISABLE_PROMPT_CACHING
 Set to
 1
-to disable prompt caching for all models (takes precedence over per-model settings)
+to disable
+prompt caching
+for all models (takes precedence over per-model settings)
 DISABLE_PROMPT_CACHING_HAIKU
 Set to
 1
@@ -1317,7 +1449,9 @@ to disable prompt caching for Sonnet models
 DISABLE_TELEMETRY
 Set to
 1
-to opt out of telemetry. Telemetry events do not include user data like code, file paths, or bash commands. Also disables feature flags, so some features that are still rolling out may not be available
+to opt out of telemetry. Telemetry events do not include user data like code, file paths, or bash commands. Also disables feature-flag fetching with the same effect as
+DISABLE_GROWTHBOOK
+, so some flagged features may be unavailable
 DISABLE_UPDATES
 Set to
 1
@@ -1350,7 +1484,9 @@ in Claude Code. Enabled by default for logged-in users
 ENABLE_PROMPT_CACHING_1H
 Set to
 1
-to request a 1-hour prompt cache TTL instead of the default 5 minutes. Intended for API key,
+to request a 1-hour
+prompt cache TTL
+instead of the default 5 minutes. Intended for API key,
 Bedrock
 ,
 Vertex
@@ -1358,7 +1494,7 @@ Vertex
 Foundry
 , and
 Claude Platform on AWS
-users. Subscription users receive 1-hour TTL automatically. 1-hour cache writes are billed at a higher rate
+users. Subscription users within included usage receive 1-hour TTL automatically. 1-hour cache writes are billed at a higher rate
 ENABLE_PROMPT_CACHING_1H_BEDROCK
 Deprecated. Use
 ENABLE_PROMPT_CACHING_1H
@@ -1564,9 +1700,11 @@ for configuration details.
 ​
 See also
 Settings
-: configure environment variables in
+: all
 settings.json
-so they apply to every session
+configuration, including the
+env
+key
 CLI reference
 : launch-time flags
 Network configuration

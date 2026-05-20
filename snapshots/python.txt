@@ -2558,13 +2558,14 @@ for accuracy caveats
 disallowed_tools
 list[str]
 []
-Tools to always deny. Deny rules are checked first and override
-allowed_tools
-and
-permission_mode
-(including
+Tools to deny. A bare name such as
+"Bash"
+removes the tool from Claude’s context. A scoped rule such as
+"Bash(rm *)"
+leaves the tool available and denies matching calls in every permission mode, including
 bypassPermissions
-)
+. See
+Permissions
 enable_file_checkpointing
 bool
 False

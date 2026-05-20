@@ -193,9 +193,11 @@ Models overview
 Model configuration
 .
 Prompt caching
-is enabled automatically. 1-hour cache writes are billed at a higher rate than 5-minute writes. To request a 1-hour cache TTL instead of the 5-minute default, set
+is enabled automatically. To request a 1-hour cache TTL instead of the 5-minute default, set
 ENABLE_PROMPT_CACHING_1H=1
-.
+. The API bills 1-hour cache writes at a higher rate. See
+prompt caching pricing
+for the rates.
 ​
 Use the Agent SDK
 The

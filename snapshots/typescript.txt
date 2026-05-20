@@ -835,8 +835,14 @@ message
 unknown
 Raw message payload from the transcript
 parent_tool_use_id
+string | null
+For subagent messages, the
+tool_use_id
+of the spawning
+Agent
+tool call.
 null
-Reserved
+for main-session messages and older sessions
 ​
 Example
 import
@@ -1202,6 +1208,16 @@ AgentDefinition
 ](#agentdefinition)>
 undefined
 Programmatically define subagents
+agentProgressSummaries
+boolean
+false
+When
+true
+, generate one-line progress summaries for subagents and forward them on
+task_progress
+events via the
+summary
+field. Applies to foreground and background subagents
 allowDangerouslySkipPermissions
 boolean
 false
@@ -1246,13 +1262,14 @@ Write debug logs to a specific file path. Implicitly enables debug mode
 disallowedTools
 string[]
 []
-Tools to always deny. Deny rules are checked first and override
-allowedTools
-and
-permissionMode
-(including
+Tools to deny. A bare name such as
+"Bash"
+removes the tool from Claude’s context. A scoped rule such as
+"Bash(rm *)"
+leaves the tool available and denies matching calls in every permission mode, including
 bypassPermissions
-)
+. See
+Permissions
 effort
 'low' | 'medium' | 'high' | 'xhigh' | 'max'
 'high'
@@ -1294,6 +1311,16 @@ false
 When resuming with
 resume
 , fork to a new session ID instead of continuing the original session
+forwardSubagentText
+boolean
+false
+Forward subagent text and thinking blocks as assistant and user messages with
+parent_tool_use_id
+set, so consumers can render a nested transcript. By default only
+tool_use
+and
+tool_result
+blocks from subagents are emitted
 hooks
 Partial<Record<
 HookEvent
@@ -1315,6 +1342,23 @@ includePartialMessages
 boolean
 false
 Include partial message events
+loadTimeoutMs
+number
+60000
+Alpha.
+Timeout in milliseconds for each
+sessionStore.load()
+and
+sessionStore.listSubkeys()
+call during resume materialization. If the adapter doesn’t settle within this window, the query fails instead of hanging. Ignored when
+sessionStore
+is not set
+managedSettings
+Settings
+undefined
+Policy-tier settings supplied by the spawning parent process. Dropped when an IT-controlled managed-settings tier already exists on the machine, unless that admin opts in with
+parentSettingsBehavior: 'merge'
+. Filtered to restrictive-only keys regardless
 maxBudgetUsd
 number
 undefined
@@ -1344,6 +1388,10 @@ model
 string
 Default from CLI
 Claude model to use
+onElicitation
+(request: ElicitationRequest, options: { signal: AbortSignal }) => Promise<ElicitationResult>
+undefined
+Callback for handling MCP elicitation requests. Called when an MCP server requests user input and no hook handles it first. When not provided, unhandled elicitation requests are declined automatically
 outputFormat
 { type: 'json_schema', schema: JSONSchema }
 undefined
@@ -1353,13 +1401,13 @@ for details
 outputStyle
 string
 undefined
-Name of an
-output style
-to activate for the session. The style must exist in a loaded
-settingSources
-location, such as
-.claude/output-styles/
-. See
+Not an
+Options
+field. Set
+outputStyle
+in the inline
+settings
+object or a settings file instead. See
 Activate an output style
 pathToClaudeCodeExecutable
 string
@@ -1379,6 +1427,14 @@ true
 When
 false
 , disables session persistence to disk. Sessions cannot be resumed later
+planModeInstructions
+string
+undefined
+Custom workflow instructions for plan mode. When
+permissionMode
+is
+'plan'
+, this string replaces the default plan-mode workflow body. The CLI still wraps it with the read-only enforcement preamble and the ExitPlanMode protocol footer
 plugins
 SdkPluginConfig
 []
@@ -1415,6 +1471,15 @@ SessionStore
 undefined
 Mirror session transcripts to an external backend so any host can resume them. See
 Persist sessions to external storage
+sessionStoreFlush
+'batched' | 'eager'
+'batched'
+Alpha.
+Flush mode for
+sessionStore
+. Ignored when
+sessionStore
+is not set
 settings
 string | Settings
 undefined
@@ -1469,6 +1534,11 @@ to extend it with additional instructions, and set
 excludeDynamicSections: true
 to move per-session context into the first user message for
 better prompt-cache reuse across machines
+taskBudget
+{ total: number }
+undefined
+Alpha.
+API-side task budget in tokens. When set, the model is told its remaining token budget so it can pace tool use and wrap up before the limit
 thinking
 ThinkingConfig
 { type: 'adaptive' }
@@ -1476,6 +1546,21 @@ for supported models
 Controls Claude’s thinking/reasoning behavior. See
 ThinkingConfig
 for options
+title
+string
+undefined
+Display title for the session. When resuming via
+resume
+or
+continue
+, the resumed session’s persisted title takes precedence; use
+renameSession()
+to retitle an existing session
+toolAliases
+Record<string, string>
+undefined
+Map built-in tool names to MCP tool names so Claude calls your MCP implementation in place of the built-in. For example,
+{ Bash: 'mcp__workspace__bash' }
 toolConfig
 ToolConfig
 undefined
@@ -2737,15 +2822,27 @@ SDKTaskProgressMessage
 |
 SDKTaskUpdatedMessage
 |
+SDKSessionStateChangedMessage
+|
+SDKNotificationMessage
+|
 SDKFilesPersistedEvent
 |
 SDKToolUseSummaryMessage
 |
+SDKMemoryRecallMessage
+|
 SDKRateLimitEvent
+|
+SDKElicitationCompleteMessage
 |
 SDKPermissionDeniedMessage
 |
 SDKPromptSuggestionMessage
+|
+SDKAPIRetryMessage
+|
+SDKMirrorErrorMessage
 ;
 ​
 SDKAssistantMessage
@@ -2809,12 +2906,16 @@ is one of:
 ,
 'invalid_request'
 ,
+'model_not_found'
+,
 'server_error'
 ,
 'max_output_tokens'
 , or
 'unknown'
 .
+'model_not_found'
+means the selected model doesn’t exist or isn’t available to your account or deployment.
 ​
 SDKUserMessage
 User input message.
@@ -2949,6 +3050,12 @@ is_error
 :
 boolean
 ;
+api_error_status
+?:
+number
+|
+null
+;
 num_turns
 :
 number
@@ -2962,6 +3069,10 @@ stop_reason
 string
 |
 null
+;
+ttft_ms
+?:
+number
 ;
 total_cost_usd
 :
@@ -3008,6 +3119,14 @@ string
 ,
 unknown
 > };
+terminal_reason
+?:
+TerminalReason
+;
+fast_mode_state
+?:
+FastModeState
+;
 origin
 ?:
 SDKMessageOrigin
@@ -3086,11 +3205,62 @@ errors
 :
 string
 [];
+terminal_reason
+?:
+TerminalReason
+;
+fast_mode_state
+?:
+FastModeState
+;
 origin
 ?:
 SDKMessageOrigin
 ;
 };
+Several fields on the result carry diagnostic detail beyond
+subtype
+:
+api_error_status
+: the HTTP status code of the API error that terminated the conversation. Absent or
+null
+when the turn ended without an API error.
+ttft_ms
+: time to first token in milliseconds. Present on the success arm only.
+terminal_reason
+: why the loop ended. One of
+"completed"
+,
+"max_turns"
+,
+"tool_deferred"
+,
+"aborted_streaming"
+,
+"aborted_tools"
+,
+"hook_stopped"
+,
+"stop_hook_prevented"
+,
+"blocking_limit"
+,
+"rapid_refill_breaker"
+,
+"prompt_too_long"
+,
+"image_error"
+, or
+"model_error"
+.
+fast_mode_state
+: one of
+"on"
+,
+"off"
+, or
+"cooldown"
+.
 The
 origin
 field forwards the
@@ -6958,9 +7128,11 @@ K
 };
 ​
 Usage
-Token usage statistics (from
+Token usage statistics. This is the
+BetaUsage
+type from
 @anthropic-ai/sdk
-).
+.
 type
 Usage
 =
@@ -6968,28 +7140,81 @@ Usage
 input_tokens
 :
 number
-|
-null
 ;
 output_tokens
+:
+number
+;
+cache_creation_input_tokens
 :
 number
 |
 null
 ;
-cache_creation_input_tokens
-?:
+cache_read_input_tokens
+:
 number
 |
 null
 ;
-cache_read_input_tokens
-?:
+cache_creation
+:
+{
+ephemeral_5m_input_tokens
+:
 number
+;
+ephemeral_1h_input_tokens
+:
+number
+;
+}
+|
+null
+;
+server_tool_use
+:
+BetaServerToolUsage
+|
+null
+;
+service_tier
+:
+"standard"
+|
+"priority"
+|
+"batch"
+|
+null
+;
+speed
+:
+"standard"
+|
+"fast"
+|
+null
+;
+inference_geo
+:
+string
+|
+null
+;
+iterations
+:
+BetaIterationsUsage
 |
 null
 ;
 };
+BetaServerToolUsage
+and
+BetaIterationsUsage
+are defined in
+@anthropic-ai/sdk
+.
 ​
 CallToolResult
 MCP tool result type (from
@@ -7768,7 +7993,11 @@ string
 };
 ​
 SDKTaskProgressMessage
-Emitted periodically while a background task is running.
+Emitted periodically while a subagent or background task is running. The
+summary
+field is populated only when
+agentProgressSummaries
+is enabled.
 type
 SDKTaskProgressMessage
 =
@@ -7793,6 +8022,10 @@ description
 :
 string
 ;
+subagent_type
+?:
+string
+;
 usage
 :
 {
@@ -7810,6 +8043,10 @@ number
 ;
 };
 last_tool_name
+?:
+string
+;
+summary
 ?:
 string
 ;

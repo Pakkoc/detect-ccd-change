@@ -323,8 +323,10 @@ Toggle
 fast mode
 on or off
 /feedback [report]
-Submit feedback about Claude Code. Alias:
+Submit feedback, report a bug, or share your conversation. Aliases:
 /bug
+,
+/share
 /fewer-permission-prompts
 Skill
 .
@@ -410,9 +412,11 @@ Show QR code to download the Claude mobile app. Aliases:
 ,
 /android
 /model [model]
-Select or change the AI model. For models that support it, use left/right arrows to
+Set the AI model for the current session. For models that support it, use left/right arrows to
 adjust effort level
-. With no argument, opens a picker that asks for confirmation when the conversation has prior output, since the next response re-reads the full history without cached context. Once confirmed, the change applies without waiting for the current response to finish
+. With no argument, opens a picker; press
+d
+on a row to also save that model as the default for new sessions. The picker asks for confirmation when the conversation has prior output, since the next response re-reads the full history without cached context. Once confirmed, the change applies without waiting for the current response to finish
 /passes
 Share a free week of Claude Code with friends. Only visible if your account is eligible
 /permissions
@@ -458,7 +462,11 @@ web sessions started with
 /rename [name]
 Rename the current session and show the name on the prompt bar. Without a name, auto-generates one from conversation history
 /resume [session]
-Resume a conversation by ID or name, or open the session picker. Alias:
+Resume a conversation by ID or name, or open the session picker. As of v2.1.144,
+background sessions
+appear in the picker marked with
+bg
+. Alias:
 /continue
 /review [PR]
 Review a pull request locally in your current session. For a deeper cloud-based review, see

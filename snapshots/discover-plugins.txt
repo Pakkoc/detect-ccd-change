@@ -50,6 +50,7 @@ What Claude gains from code intelligence plugins
 External integrations
 Development workflows
 Output styles
+Community marketplace
 Try it: add the demo marketplace
 Add marketplaces
 Add from GitHub
@@ -110,14 +111,9 @@ If Claude Code reports that the plugin is not found in any marketplace, your mar
 to refresh it, or
 /plugin marketplace add anthropics/claude-plugins-official
 if you haven’t added it before. Then retry the install.
-The official marketplace is maintained by Anthropic. To submit a plugin to the official marketplace, use one of the in-app submission forms:
-Claude.ai
-:
-claude.ai/settings/plugins/submit
-Console
-:
-platform.claude.com/plugins/submit
-To distribute plugins independently,
+The official marketplace is curated by Anthropic, and inclusion is at Anthropic’s discretion. The in-app submission forms add plugins to the
+community marketplace
+, not the official one. To distribute plugins independently,
 create your own marketplace
 and share it with users.
 The official marketplace includes several categories of plugins:
@@ -237,6 +233,28 @@ explanatory-output-style
 learning-output-style
 : Interactive learning mode for skill building
 ​
+Community marketplace
+The community marketplace at
+anthropics/claude-plugins-community
+hosts third-party plugins that have passed Anthropic’s automated validation and safety screening. Each plugin is pinned to a specific commit SHA in the catalog. Unlike the official marketplace, you add it manually:
+/plugin
+marketplace
+add
+anthropics/claude-plugins-community
+Then install plugins from it using the
+claude-community
+marketplace name:
+/plugin
+install
+<
+plugin-nam
+e
+>
+@claude-community
+To submit your own plugin to the community marketplace, see
+Submit your plugin to the community marketplace
+in the create-plugins guide.
+​
 Try it: add the demo marketplace
 Anthropic also maintains a
 demo plugins marketplace
@@ -283,6 +301,9 @@ Context cost
 estimate so you can see how many tokens the plugin will add to your
 context window
 every turn before you install it.
+On v2.1.144 and later, the pane also shows the plugin’s
+Last updated
+date.
 Choose an installation scope:
 User scope
 : install for yourself across all projects

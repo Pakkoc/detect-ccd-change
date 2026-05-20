@@ -650,6 +650,8 @@ billing_error
 ,
 invalid_request
 ,
+model_not_found
+,
 server_error
 ,
 max_output_tokens
@@ -4330,7 +4332,7 @@ indicating which type fired.
 ,
 "message"
 :
-"Claude needs your permission to use Bash"
+"Claude needs your permission"
 ,
 "title"
 :
@@ -4872,6 +4874,8 @@ oauth_org_not_allowed
 billing_error
 ,
 invalid_request
+,
+model_not_found
 ,
 server_error
 ,

@@ -28,6 +28,7 @@ How Claude Code works
 Extend Claude Code
 Explore the .claude directory
 Explore the context window
+Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
@@ -78,6 +79,8 @@ CLAUDE.md
 adds persistent context Claude sees every session
 Skills
 add reusable knowledge and invocable workflows
+Code intelligence
+connects Claude to a language server for symbol-level navigation and live type errors
 MCP
 connects Claude to external services and tools
 Subagents
@@ -118,6 +121,10 @@ Agent teams
 Coordinate multiple independent Claude Code sessions
 Parallel research, new feature development, debugging with competing hypotheses
 Spawn reviewers to check security, performance, and tests simultaneously
+Code intelligence
+Language-server navigation and diagnostics
+Typed languages, large codebases where grep is slow or imprecise
+Jump to a symbol’s definition instead of reading the whole file
 MCP
 Connect to external services
 External data or actions
@@ -149,6 +156,10 @@ skill
 You keep copying data from a browser tab Claude can’t see
 Connect that system as an
 MCP server
+Claude reads many files to find where a symbol is defined or used
+Install a
+code intelligence plugin
+for your language
 A side task floods your conversation with output you won’t reference again
 Route it through a
 subagent
@@ -429,6 +440,10 @@ MCP servers
 Session start
 Tool names; full schemas on demand
 Low until a tool is used
+Code intelligence
+After file edits and on demand
+Diagnostics after edits; symbol locations on lookup
+Low; reduces file reads elsewhere
 Subagents
 When spawned
 Fresh context with specified skills
@@ -448,6 +463,7 @@ Each feature loads at different points in your session. The tabs below explain w
 CLAUDE.md
 Skills
 MCP servers
+Code intelligence
 Subagents
 Hooks
 When:
@@ -509,6 +525,15 @@ MCP connections can fail silently mid-session. If a server disconnects, its tool
 Run
 /mcp
 to see token costs per server. Disconnect servers you’re not actively using.
+When:
+After file edits, and on demand when Claude navigates code.
+What loads:
+Type errors and warnings after each file edit. Definition, reference, and type information when Claude looks up a symbol.
+Context cost:
+Low. Symbol lookups often replace broad file reads, so net context use can go down.
+The LSP tool is inactive until you install a
+code intelligence plugin
+for your language.
 When:
 On demand, when you or Claude spawns one for a task.
 What loads:
