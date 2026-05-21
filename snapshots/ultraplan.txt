@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -50,13 +52,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Launch ultraplan from the CLI
-Review and revise the plan in your browser
-Choose where to execute
-Execute on the web
-Send the plan back to your terminal
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

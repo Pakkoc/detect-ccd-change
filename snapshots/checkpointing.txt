@@ -31,17 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-How checkpoints work
-Automatic tracking
-Rewind and summarize
-Restore vs. summarize
-Common use cases
-Limitations
-Bash command changes not tracked
-External changes not tracked
-Not a replacement for version control
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -58,15 +47,17 @@ Checkpoints persist across sessions, so you can access them in resumed conversat
 Automatically cleaned up along with sessions after 30 days (configurable)
 ​
 Rewind and summarize
-Press
-Esc
-twice (
-Esc
-+
-Esc
-) or use the
+Run
 /rewind
-command to open the rewind menu. A scrollable list shows each of your prompts from the session. Select the point you want to act on, then choose an action:
+, or press
+Esc
+twice when the prompt input is empty, to open the rewind menu.
+If the prompt input contains text, double
+Esc
+clears it instead of opening the menu. The cleared text is saved to your input history, so press
+Up
+to recall it after you finish in the rewind menu.
+The rewind menu lists each prompt you sent during the session. Select the point you want to act on, then choose an action:
 Restore code and conversation
 : revert both code and conversation to that point
 Restore conversation

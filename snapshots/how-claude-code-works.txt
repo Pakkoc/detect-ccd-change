@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,32 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-The agentic loop
-Models
-Tools
-What Claude can access
-Environments and interfaces
-Execution environments
-Interfaces
-Work with sessions
-Work across branches
-Resume or fork sessions
-The context window
-When context fills up
-Manage context with skills and subagents
-Stay safe with checkpoints and permissions
-Undo changes with checkpoints
-Control what Claude can do
-Work effectively with Claude Code
-Ask Claude Code for help
-It’s a conversation
-Interrupt and steer
-Be specific upfront
-Give Claude something to verify against
-Explore before implementing
-Delegate, don’t dictate
-What’s next
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -370,7 +346,13 @@ That's not quite right. The issue is in the session handling.
 When the first attempt isn’t right, you don’t start over. You iterate.
 ​
 Interrupt and steer
-You can interrupt Claude at any point. If it’s going down the wrong path, just type your correction and press Enter. Claude will stop what it’s doing and adjust its approach based on your input. You don’t have to wait for it to finish or start over.
+You can redirect Claude at any point without waiting for the turn to finish or starting over:
+Press
+Esc
+to stop Claude immediately. The running tool call is canceled and Claude waits for your next instruction.
+Type a correction and press
+Enter
+to send it without stopping the running tool. Claude reads it as soon as the current action completes and adjusts before deciding its next step.
 ​
 Be specific upfront
 The more precise your initial prompt, the fewer corrections you’ll need. Reference specific files, mention constraints, and point to example patterns.

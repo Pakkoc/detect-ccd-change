@@ -33,40 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Configuration scopes
-Available scopes
-When to use each scope
-How scopes interact
-What uses scopes
-Settings files
-When edits take effect
-Available settings
-Global config settings
-Worktree settings
-Permission settings
-Permission rule syntax
-Sandbox settings
-Sandbox path prefixes
-Attribution settings
-File suggestion settings
-Hook configuration
-Compute managed settings with a policy helper
-Settings precedence
-Verify active settings
-Key points about the configuration system
-System prompt
-Excluding sensitive files
-Subagent configuration
-Plugin configuration
-Plugin settings
-enabledPlugins
-extraKnownMarketplaces
-strictKnownMarketplaces
-Managing plugins
-Environment variables
-Tools available to Claude
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

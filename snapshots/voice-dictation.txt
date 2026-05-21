@@ -33,16 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Requirements
-Enable voice dictation
-Hold to record
-Tap to record and send
-Change the dictation language
-Rebind the dictation key
-Troubleshooting
-Terminal not listed in macOS Microphone settings
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

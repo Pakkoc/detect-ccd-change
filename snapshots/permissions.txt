@@ -33,33 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Permission system
-Manage permissions
-Permission modes
-Permission rule syntax
-Match all uses of a tool
-Use specifiers for fine-grained control
-Wildcard patterns
-Tool-specific permission rules
-Bash
-Compound commands
-Process wrappers
-Read-only commands
-PowerShell
-Read and Edit
-WebFetch
-MCP
-Agent (subagents)
-Extend permissions with hooks
-Working directories
-Additional directories grant file access, not configuration
-How permissions interact with sandboxing
-Managed settings
-Managed-only settings
-Settings precedence
-Example configurations
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

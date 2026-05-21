@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,34 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Use cases
-Prerequisites
-Setting up Claude Code in Slack
-How it works
-Automatic detection
-Context gathering
-Session flow
-User interface elements
-App Home
-Message actions
-Repository selection
-Access and permissions
-User-level access
-Workspace-level access
-Channel-based access control
-What’s accessible where
-Best practices
-Writing effective requests
-When to use Slack vs. web
-Troubleshooting
-Sessions not starting
-Repository not showing
-Wrong repository selected
-Authentication errors
-Session expiration
-Current limitations
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

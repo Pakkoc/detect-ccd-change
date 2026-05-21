@@ -42,60 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-What you can do with MCP
-Find and build MCP servers
-Installing MCP servers
-Option 1: Add a remote HTTP server
-Option 2: Add a remote SSE server
-Option 3: Add a local stdio server
-Managing your servers
-Dynamic tool updates
-Automatic reconnection
-Push messages with channels
-Plugin-provided MCP servers
-MCP installation scopes
-Local scope
-Project scope
-User scope
-Scope hierarchy and precedence
-Environment variable expansion in .mcp.json
-Practical examples
-Example: Monitor errors with Sentry
-Example: Connect to GitHub for code reviews
-Example: Query your PostgreSQL database
-Authenticate with remote MCP servers
-Use a fixed OAuth callback port
-Use pre-configured OAuth credentials
-Override OAuth metadata discovery
-Restrict OAuth scopes
-Use dynamic headers for custom authentication
-Add MCP servers from JSON configuration
-Import MCP servers from Claude Desktop
-Use MCP servers from Claude.ai
-Use Claude Code as an MCP server
-MCP output limits and warnings
-Raise the limit for a specific tool
-Respond to MCP elicitation requests
-Use MCP resources
-Reference MCP resources
-Scale with MCP Tool Search
-How it works
-For MCP server authors
-Configure tool search
-Exempt a server from deferral
-Use MCP prompts as commands
-Execute MCP prompts
-Managed MCP configuration
-Option 1: Exclusive control with managed-mcp.json
-Option 2: Policy-based control with allowlists and denylists
-Restriction options
-Example configuration
-How command-based restrictions work
-How URL-based restrictions work
-Allowlist behavior (allowedMcpServers)
-Denylist behavior (deniedMcpServers)
-Important notes
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

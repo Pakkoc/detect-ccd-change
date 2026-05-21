@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,23 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-Requirements
-Choose between server-managed and endpoint-managed settings
-Configure server-managed settings
-Verify settings delivery
-Access control
-Managed-only settings
-Current limitations
-Settings delivery
-Settings precedence
-Fetch and caching behavior
-Enforce fail-closed startup
-Security approval dialogs
-Platform availability
-Audit logging
-Security considerations
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

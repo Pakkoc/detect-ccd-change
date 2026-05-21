@@ -26,6 +26,7 @@ Core concepts
 How the agent loop works
 Use Claude Code features
 Work with sessions
+Persist sessions to external storage
 Input and output
 Streaming Input
 Handle approvals and user input
@@ -56,31 +57,6 @@ TypeScript SDK
 TypeScript V2 (removed)
 Python SDK
 Migration Guide
-On this page
-Overview
-Benefits of using subagents
-Context isolation
-Parallelization
-Specialized instructions and knowledge
-Tool restrictions
-Creating subagents
-Programmatic definition (recommended)
-AgentDefinition configuration
-Filesystem-based definition (alternative)
-What subagents inherit
-Invoking subagents
-Automatic invocation
-Explicit invocation
-Dynamic agent configuration
-Detecting subagent invocation
-Resuming subagents
-Tool restrictions
-Common tool combinations
-Troubleshooting
-Claude not delegating to subagents
-Filesystem-based agents not loading
-Windows: long prompt failures
-Related documentation
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

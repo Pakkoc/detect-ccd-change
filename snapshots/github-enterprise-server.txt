@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -49,23 +51,6 @@ GitHub Actions
 GitHub Enterprise Server
 GitLab CI/CD
 Claude Code in Slack
-On this page
-What works with GitHub Enterprise Server
-Admin setup
-GitHub App permissions
-Manual setup
-Network requirements
-Developer workflow
-Teleport sessions to your terminal
-Plugin marketplaces on GHES
-Add a GHES marketplace
-Allowlist GHES marketplaces in managed settings
-Limitations
-Troubleshooting
-Web session fails to clone repository
-Marketplace add fails with a policy error
-GHES instance not reachable
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

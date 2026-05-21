@@ -31,13 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-Set environment variables
-In your shell
-In settings files
-Precedence
-Variables
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -367,11 +360,11 @@ to bundle and upload your local repository even when GitHub access is available
 CLAUDECODE
 Set to
 1
-in shell environments Claude Code spawns (Bash tool, tmux sessions). Not set in
-hooks
-or
+in subprocesses Claude Code spawns (Bash and PowerShell tools, tmux sessions,
+hook
+commands,
 status line
-commands. Use to detect when a script is running inside a shell spawned by Claude Code
+commands). Use to detect when a script is running inside a subprocess spawned by Claude Code
 CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS
 Set to
 1
@@ -1083,11 +1076,11 @@ hooks. Applies to session exit,
 timeout
 configured in settings files, up to 60 seconds. Timeouts on plugin-provided hooks do not raise the budget
 CLAUDE_CODE_SESSION_ID
-Set automatically in Bash and PowerShell tool subprocesses to the current session ID. Matches the
+Set automatically in Bash and PowerShell tool subprocesses and in
+hook command
+subprocesses to the current session ID. Matches the
 session_id
-field passed to
-hooks
-. Updated on
+field in the hook JSON input. Updated on
 /clear
 . Use to correlate scripts and external tools with the Claude Code session that launched them
 CLAUDE_CODE_SHELL

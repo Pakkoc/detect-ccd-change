@@ -31,26 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-Configure tools with permission rules and hooks
-Agent tool behavior
-Bash tool behavior
-Edit tool behavior
-Glob tool behavior
-Grep tool behavior
-LSP tool behavior
-Monitor tool
-NotebookEdit tool behavior
-PowerShell tool
-Enable the PowerShell tool
-Shell selection in settings, hooks, and skills
-Preview limitations
-Read tool behavior
-WebFetch tool behavior
-WebSearch tool behavior
-Write tool behavior
-Check which tools are available
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -174,6 +154,19 @@ on claude.ai. Backs the
 /schedule
 command.
 Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
+No
+ScheduleWakeup
+Reschedules the next iteration of a
+self-paced
+/loop
+. Claude calls this at the end of each iteration to pick when the next one runs, between one minute and one hour out; you don’t call it directly. The pending wakeup appears in
+session_crons
+in
+Stop hook input
+.
+Not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry, where a
+/loop
+prompt with no interval runs on a fixed schedule instead
 No
 SendMessage
 Sends a message to an
@@ -669,11 +662,17 @@ On Windows, sandboxing is not supported
 ​
 Read tool behavior
 The Read tool takes a file path and returns the contents with line numbers. Claude is instructed to always pass absolute paths.
-By default, Read returns the file from the start. Files over a size threshold return an error rather than partial content, prompting Claude to retry with
+By default, Read returns the file from the start. When a whole-file read exceeds the token limit, Read returns the first page with a
+PARTIAL view
+notice that tells Claude how much of the file it received and how to read more with
 offset
 and
 limit
-to read a specific range.
+. A read that passes an explicit
+offset
+or
+limit
+and still exceeds the token limit returns an error.
 Read handles several file types beyond plain text:
 Images
 : PNG, JPG, and other image formats are returned as visual content that Claude can see, not as raw bytes. Claude Code resizes and recompresses large images to fit the model’s image size limits before sending them, so Claude may see a downscaled version of a large screenshot. If Claude misses fine pixel-level detail in a large image, ask it to crop the region of interest first, for example with ImageMagick via Bash.

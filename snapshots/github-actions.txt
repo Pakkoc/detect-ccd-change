@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -49,44 +51,6 @@ GitHub Actions
 GitHub Enterprise Server
 GitLab CI/CD
 Claude Code in Slack
-On this page
-Why use Claude Code GitHub Actions?
-What can Claude do?
-Claude Code Action
-Setup
-Quick setup
-Manual setup
-Upgrading from Beta
-Essential changes
-Breaking Changes Reference
-Before and After Example
-Example use cases
-Basic workflow
-Using skills
-Custom automation with prompts
-Common use cases
-Best practices
-CLAUDE.md configuration
-Security considerations
-Optimizing performance
-CI costs
-Configuration examples
-Using with Amazon Bedrock & Google Vertex AI
-Prerequisites
-For Google Cloud Vertex AI:
-For Amazon Bedrock:
-For Claude API (Direct):
-For Google Cloud Vertex AI
-For Amazon Bedrock
-Troubleshooting
-Claude not responding to @claude commands
-CI not running on Claude’s commits
-Authentication errors
-Advanced configuration
-Action parameters
-Pass CLI arguments
-Alternative integration methods
-Customizing Claude’s behavior
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

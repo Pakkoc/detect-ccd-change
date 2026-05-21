@@ -26,6 +26,7 @@ Core concepts
 How the agent loop works
 Use Claude Code features
 Work with sessions
+Persist sessions to external storage
 Input and output
 Streaming Input
 Handle approvals and user input
@@ -56,202 +57,6 @@ TypeScript SDK
 TypeScript V2 (removed)
 Python SDK
 Migration Guide
-On this page
-Installation
-Functions
-query()
-Parameters
-Returns
-startup()
-Parameters
-Returns
-Example
-tool()
-Parameters
-ToolAnnotations
-createSdkMcpServer()
-Parameters
-listSessions()
-Parameters
-Return type: SDKSessionInfo
-Example
-getSessionMessages()
-Parameters
-Return type: SessionMessage
-Example
-getSessionInfo()
-Parameters
-renameSession()
-Parameters
-tagSession()
-Parameters
-resolveSettings()
-Parameters
-Return type: ResolvedSettings
-Example
-Types
-Options
-Handle slow or stalled API responses
-Query object
-Methods
-applyFlagSettings()
-WarmQuery
-Methods
-SDKControlInitializeResponse
-AgentDefinition
-AgentMcpServerSpec
-SettingSource
-Default behavior
-Why use settingSources
-Settings precedence
-PermissionMode
-CanUseTool
-PermissionResult
-ToolConfig
-McpServerConfig
-McpStdioServerConfig
-McpSSEServerConfig
-McpHttpServerConfig
-McpSdkServerConfigWithInstance
-McpClaudeAIProxyServerConfig
-SdkPluginConfig
-Message Types
-SDKMessage
-SDKAssistantMessage
-SDKUserMessage
-SDKUserMessageReplay
-SDKResultMessage
-SDKSystemMessage
-SDKPartialAssistantMessage
-SDKCompactBoundaryMessage
-SDKPluginInstallMessage
-SDKPermissionDeniedMessage
-SDKPermissionDenial
-SDKMessageOrigin
-Hook Types
-HookEvent
-HookCallback
-HookCallbackMatcher
-HookInput
-BaseHookInput
-PreToolUseHookInput
-PostToolUseHookInput
-PostToolUseFailureHookInput
-PostToolBatchHookInput
-NotificationHookInput
-UserPromptSubmitHookInput
-SessionStartHookInput
-SessionEndHookInput
-StopHookInput
-SubagentStartHookInput
-SubagentStopHookInput
-PreCompactHookInput
-PermissionRequestHookInput
-SetupHookInput
-TeammateIdleHookInput
-TaskCompletedHookInput
-ConfigChangeHookInput
-WorktreeCreateHookInput
-WorktreeRemoveHookInput
-HookJSONOutput
-AsyncHookJSONOutput
-SyncHookJSONOutput
-Tool Input Types
-ToolInputSchemas
-Agent
-AskUserQuestion
-Bash
-Monitor
-TaskOutput
-Edit
-Read
-Write
-Glob
-Grep
-TaskStop
-NotebookEdit
-WebFetch
-WebSearch
-TodoWrite
-TaskCreate
-TaskUpdate
-TaskGet
-TaskList
-ExitPlanMode
-ListMcpResources
-ReadMcpResource
-EnterWorktree
-Tool Output Types
-ToolOutputSchemas
-Agent
-AskUserQuestion
-Bash
-Monitor
-Edit
-Read
-Write
-Glob
-Grep
-TaskStop
-NotebookEdit
-WebFetch
-WebSearch
-TodoWrite
-TaskCreate
-TaskUpdate
-TaskGet
-TaskList
-ExitPlanMode
-ListMcpResources
-ReadMcpResource
-EnterWorktree
-Permission Types
-PermissionUpdate
-PermissionBehavior
-PermissionUpdateDestination
-PermissionRuleValue
-Other Types
-ApiKeySource
-SdkBeta
-SlashCommand
-ModelInfo
-AgentInfo
-McpServerStatus
-McpServerStatusConfig
-AccountInfo
-ModelUsage
-ConfigScope
-NonNullableUsage
-Usage
-CallToolResult
-ThinkingConfig
-SpawnedProcess
-SpawnOptions
-McpSetServersResult
-RewindFilesResult
-SDKStatusMessage
-SDKTaskNotificationMessage
-SDKToolUseSummaryMessage
-SDKHookStartedMessage
-SDKHookProgressMessage
-SDKHookResponseMessage
-SDKToolProgressMessage
-SDKAuthStatusMessage
-SDKTaskStartedMessage
-SDKTaskProgressMessage
-SDKTaskUpdatedMessage
-SDKFilesPersistedEvent
-SDKRateLimitEvent
-SDKLocalCommandOutputMessage
-SDKPromptSuggestionMessage
-AbortError
-Sandbox Configuration
-SandboxSettings
-Example usage
-SandboxNetworkConfig
-SandboxFilesystemConfig
-Permissions Fallback for Unsandboxed Commands
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -270,6 +75,95 @@ pathToClaudeCodeExecutable
 to a separately installed
 claude
 binary instead.
+​
+Compile to a single executable
+When you compile your application into a single-file executable with
+bun build --compile
+, the SDK cannot resolve the bundled CLI binary at runtime.
+require.resolve
+does not work inside the compiled executable’s
+$bunfs
+virtual filesystem, so the SDK throws
+Native CLI binary for <platform> not found
+.
+To work around this, embed the platform binary as a file asset, extract it to a real path at startup with
+extractFromBunfs()
+, and pass that path to
+pathToClaudeCodeExecutable
+.
+The
+extractFromBunfs()
+helper requires
+@anthropic-ai/claude-agent-sdk
+v0.3.144 or later. The example below builds for macOS on Apple Silicon:
+import
+binPath
+from
+"@anthropic-ai/claude-agent-sdk-darwin-arm64/claude"
+with
+{
+type
+:
+"file"
+};
+import
+{
+extractFromBunfs
+}
+from
+"@anthropic-ai/claude-agent-sdk/extract"
+;
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+const
+cliPath
+=
+extractFromBunfs
+(
+binPath
+);
+for
+await
+(
+const
+message
+of
+query
+({
+prompt:
+"Hello"
+,
+options:
+{
+pathToClaudeCodeExecutable:
+cliPath
+},
+})) {
+console
+.
+log
+(
+message
+);
+}
+extractFromBunfs()
+copies the embedded binary out of the compiled executable’s virtual filesystem to a per-user temp directory and returns the real path. Outside a compiled executable it returns the input path unchanged, so the same code runs in development without modification.
+Each compiled executable embeds a single platform’s binary. Match the platform package in the import to your
+--target
+:
+To cross-compile, install the non-matching platform package, for example
+npm install @anthropic-ai/claude-agent-sdk-linux-x64 --force
+.
+On Windows, the binary subpath is
+claude.exe
+, for example
+@anthropic-ai/claude-agent-sdk-win32-x64/claude.exe
+.
 ​
 Functions
 ​
@@ -4137,6 +4031,14 @@ last_assistant_message
 ?:
 string
 ;
+background_tasks
+?:
+BackgroundTaskSummary
+[];
+session_crons
+?:
+SessionCronSummary
+[];
 };
 ​
 SubagentStartHookInput
@@ -4189,6 +4091,76 @@ string
 ;
 last_assistant_message
 ?:
+string
+;
+background_tasks
+?:
+BackgroundTaskSummary
+[];
+session_crons
+?:
+SessionCronSummary
+[];
+};
+type
+BackgroundTaskSummary
+=
+{
+id
+:
+string
+;
+type
+:
+string
+;
+status
+:
+string
+;
+description
+:
+string
+;
+command
+?:
+string
+;
+agent_type
+?:
+string
+;
+server
+?:
+string
+;
+tool
+?:
+string
+;
+name
+?:
+string
+;
+};
+type
+SessionCronSummary
+=
+{
+id
+:
+string
+;
+schedule
+:
+string
+;
+recurring
+:
+boolean
+;
+prompt
+:
 string
 ;
 };

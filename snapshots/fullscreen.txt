@@ -33,19 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Enable fullscreen rendering
-What changes
-Use the mouse
-Scroll the conversation
-Auto-follow
-Mouse wheel scrolling
-Scroll in the JetBrains IDE terminal
-Search and review the conversation
-Clear the conversation
-Use with tmux
-Keep native text selection
-Research preview
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -121,6 +108,12 @@ Use the mouse
 Fullscreen rendering captures mouse events and handles them inside Claude Code:
 Click in the prompt input
 to position your cursor anywhere in the text you’re typing.
+Click a suggestion in the
+/
+command or
+@
+file list
+to accept it. Hovering highlights the row under your cursor.
 Click a collapsed tool result
 to expand it and see the full output. Click again to collapse. The tool call and its result expand together. Only messages that have more to show are clickable.
 Click a URL or file path

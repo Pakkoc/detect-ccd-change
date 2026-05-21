@@ -42,19 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Basic usage
-Start faster with bare mode
-Examples
-Pipe data through Claude
-Add Claude to a build script
-Get structured output
-Stream responses
-Auto-approve tools
-Create a commit
-Customize the system prompt
-Continue conversations
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

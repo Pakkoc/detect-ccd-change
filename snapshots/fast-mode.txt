@@ -33,17 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Toggle fast mode
-Understand the cost tradeoff
-Decide when to use fast mode
-Fast mode vs effort level
-Requirements
-Enable fast mode for your organization
-Require per-session opt-in
-Handle rate limits
-Research preview
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

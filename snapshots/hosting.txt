@@ -26,6 +26,7 @@ Core concepts
 How the agent loop works
 Use Claude Code features
 Work with sessions
+Persist sessions to external storage
 Input and output
 Streaming Input
 Handle approvals and user input
@@ -56,25 +57,6 @@ TypeScript SDK
 TypeScript V2 (removed)
 Python SDK
 Migration Guide
-On this page
-Hosting Requirements
-Container-Based Sandboxing
-System Requirements
-Understanding the SDK Architecture
-Sandbox Provider Options
-Production Deployment Patterns
-Pattern 1: Ephemeral Sessions
-Pattern 2: Long-Running Sessions
-Pattern 3: Hybrid Sessions
-Pattern 4: Single Containers
-FAQ
-How do I communicate with my sandboxes?
-What is the cost of hosting a container?
-When should I shut down idle containers vs. keeping them warm?
-How often should I update the Claude Code CLI?
-How do I monitor container health and agent performance?
-How long can an agent session run before timing out?
-Next Steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

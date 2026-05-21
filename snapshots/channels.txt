@@ -42,16 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Supported channels
-Quickstart
-Security
-Enterprise controls
-Enable channels for your organization
-Restrict which channel plugins can run
-Research preview
-How channels compare
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

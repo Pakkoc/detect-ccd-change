@@ -33,33 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Overview
-Why sandboxing matters
-How it works
-Filesystem isolation
-Network isolation
-OS-level enforcement
-Getting started
-Prerequisites
-Enable sandboxing
-Sandbox modes
-Configure sandboxing
-Granting subprocess write access to specific paths
-Security benefits
-Protection against prompt injection
-Reduced attack surface
-Transparent operation
-Security Limitations
-How sandboxing relates to permissions
-Advanced usage
-Custom proxy configuration
-Integration with existing security tools
-Best practices
-Open source
-Limitations
-What sandboxing does not cover
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

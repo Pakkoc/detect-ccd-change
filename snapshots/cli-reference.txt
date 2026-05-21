@@ -31,11 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-CLI commands
-CLI flags
-System prompt flags
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -102,7 +97,9 @@ Open
 agent view
 to monitor and dispatch parallel background sessions. Use
 --cwd <path>
-to show only sessions started under that directory. Pass
+to show only sessions started under that directory, or
+--json
+to print live sessions as a JSON array for scripting. Pass
 --permission-mode
 ,
 --model
@@ -120,8 +117,8 @@ defaults for dispatched sessions
 --mcp-config
 like the top-level
 claude
-command. Requires an interactive terminal
-claude agents --cwd ~/projects/my-app
+command. Opening agent view requires an interactive terminal
+claude agents --json
 claude attach <id>
 Attach to a
 background session

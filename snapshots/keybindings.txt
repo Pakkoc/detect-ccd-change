@@ -33,43 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Configuration file
-Contexts
-Available actions
-App actions
-History actions
-Chat actions
-Autocomplete actions
-Confirmation actions
-Permission actions
-Transcript actions
-History search actions
-Task actions
-Theme actions
-Help actions
-Tabs actions
-Attachments actions
-Footer actions
-Message selector actions
-Diff actions
-Model picker actions
-Select actions
-Plugin actions
-Settings actions
-Doctor actions
-Voice actions
-Scroll actions
-Keystroke syntax
-Modifiers
-Uppercase letters
-Chords
-Special keys
-Unbind default shortcuts
-Reserved shortcuts
-Terminal conflicts
-Vim mode interaction
-Validation
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

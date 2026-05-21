@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -49,12 +51,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Install
-Start your first session
-Now what?
-Coming from the CLI?
-What’s next
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -157,9 +153,9 @@ You’ve made your first edit. For the full reference on everything Desktop can 
 Use Claude Code Desktop
 . Here are some things to try next.
 Interrupt and steer.
-You can interrupt Claude at any point. If it’s going down the wrong path, click the stop button or type your correction and press
+You can redirect Claude at any point. Click the stop button to interrupt immediately, or type a correction and press
 Enter
-. Claude stops what it’s doing and adjusts based on your input. You don’t have to wait for it to finish or start over.
+to send it without stopping the running action. Either way, you don’t have to wait for it to finish or start over.
 Give Claude more context.
 Type
 @filename

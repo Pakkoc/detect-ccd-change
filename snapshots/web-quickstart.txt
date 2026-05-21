@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -50,24 +52,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-How sessions run
-Compare ways to run Claude Code
-Connect GitHub and create an environment
-Connect from your terminal
-Start a task
-Pre-fill sessions
-Review and iterate
-Troubleshoot setup
-No repositories appear after connecting GitHub
-The page only shows a GitHub login button
-”Not available for the selected organization”
-/web-setup returns “Unknown command”
-”Could not create a cloud environment” or “No cloud environment available” when using --remote or ultraplan
-Setup script failed
-New sessions hang or time out during setup
-Session keeps running after closing the tab
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

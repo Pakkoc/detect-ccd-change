@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,46 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Prerequisites
-Install the extension
-Get started
-Use the prompt box
-Reference files and folders
-Resume past conversations
-Resume remote sessions from Claude.ai
-Customize your workflow
-Choose where Claude lives
-Run multiple conversations
-Switch to terminal mode
-Manage plugins
-Install plugins
-Manage marketplaces
-Automate browser tasks with Chrome
-VS Code commands and shortcuts
-Launch a VS Code tab from other tools
-Configure settings
-Extension settings
-VS Code extension vs. Claude Code CLI
-Rewind with checkpoints
-Run CLI in VS Code
-Switch between extension and CLI
-Include terminal output in prompts
-Monitor background processes
-Connect to external tools with MCP
-Work with git
-Create commits and pull requests
-Use git worktrees for parallel tasks
-Use third-party providers
-Security and privacy
-The built-in IDE MCP server
-Fix common issues
-Extension won’t install
-Spark icon not visible
-Cmd+Esc does nothing on macOS
-Claude Code never responds
-Uninstall the extension
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

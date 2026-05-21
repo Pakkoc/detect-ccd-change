@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,26 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-Track your costs
-Using the /usage command
-Managing costs for teams
-Rate limit recommendations
-Agent team token costs
-Reduce token usage
-Manage context proactively
-Choose the right model
-Reduce MCP server overhead
-Install code intelligence plugins for typed languages
-Offload processing to hooks and skills
-Move instructions from CLAUDE.md to skills
-Adjust extended thinking
-Delegate verbose operations to subagents
-Manage agent team costs
-Write specific prompts
-Work efficiently on complex tasks
-Background token usage
-Understanding changes in Claude Code behavior
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

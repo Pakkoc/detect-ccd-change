@@ -42,41 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Quick start
-Monitor sessions with agent view
-Read session state
-Row summaries
-Pull request status
-Peek and reply
-Attach to a session
-Organize the list
-Filter sessions
-Keyboard shortcuts
-Dispatch new agents
-From agent view
-Dispatch to a specific directory
-From inside a session
-From your shell
-How file edits are isolated
-Set the model
-Permission mode, model, and effort
-Settings, plugins, and MCP servers
-Manage sessions from the shell
-How background sessions are hosted
-The supervisor process
-Where state is stored
-Turn off agent view
-Troubleshooting
-claude agents lists subagents instead of opening agent view
-Agent view opens with no sessions
-Cannot open agents because background tasks are running
-Prompt rejected as too short
-Sessions show as failed after shutdown
-A session is slow to respond after attaching
-.claude/worktrees/ is filling up
-Limitations
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -244,6 +209,11 @@ The
 that can appear at the right edge of a row is the
 pull request status
 indicator, not part of the state icon. A number before it is the count of pull requests the session has opened.
+The terminal tab title shows the awaiting-input count while agent view is open:
+2 awaiting input · claude agents
+when sessions need input, or
+claude agents
+when none do.
 Background sessions don’t need any terminal open to keep working. A separate
 supervisor process
 runs them, so you can close agent view, close your shell, or start a new interactive session and your dispatched work keeps going.
@@ -799,6 +769,24 @@ Open agent view
 claude agents --cwd <path>
 Open agent view scoped to sessions started under
 <path>
+claude agents --json
+Print live sessions as a JSON array and exit. Each entry has
+pid
+,
+cwd
+,
+kind
+, and
+startedAt
+, plus
+sessionId
+,
+name
+, and
+status
+when set. Combine with
+--cwd <path>
+to filter
 claude attach <id>
 Attach to a session in this terminal
 claude logs <id>

@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,27 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Capabilities
-Prerequisites
-Get started in the CLI
-Enable Chrome by default
-Manage site permissions
-Example workflows
-Test a local web application
-Debug with console logs
-Automate form filling
-Draft content in Google Docs
-Extract data from web pages
-Run multi-site workflows
-Record a demo GIF
-Troubleshooting
-Extension not detected
-Browser not responding
-Connection drops during long sessions
-Windows-specific issues
-Common error messages
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

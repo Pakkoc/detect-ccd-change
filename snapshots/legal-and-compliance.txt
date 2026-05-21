@@ -21,18 +21,6 @@ What's New
 Resources
 Resources
 Legal and compliance
-On this page
-Legal agreements
-License
-Commercial agreements
-Compliance
-Healthcare compliance (BAA)
-Usage policy
-Acceptable use
-Authentication and credential use
-Security and trust
-Trust and safety
-Security vulnerability reporting
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

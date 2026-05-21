@@ -33,32 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Available models
-Model aliases
-Setting your model
-Restrict model selection
-Default model behavior
-Control the model users run on
-Merge behavior
-Mantle model IDs
-Special model behavior
-default model setting
-opusplan model setting
-Adjust effort level
-Choose an effort level
-Use ultrathink for one-off deep reasoning
-Set the effort level
-Adaptive reasoning and fixed thinking budgets
-Extended thinking
-Extended context
-Checking your current model
-Add a custom model option
-Environment variables
-Pin models for third-party deployments
-Customize pinned model display and capabilities
-Override model IDs per version
-Prompt caching configuration
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

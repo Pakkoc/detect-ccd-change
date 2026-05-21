@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -49,14 +51,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-1.7196.0
-1.6889.0
-1.6608.0
-1.6259.0
-1.5354.0
-1.5220.0
-1.5186.0
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

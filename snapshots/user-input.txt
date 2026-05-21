@@ -26,6 +26,7 @@ Core concepts
 How the agent loop works
 Use Claude Code features
 Work with sessions
+Persist sessions to external storage
 Input and output
 Streaming Input
 Handle approvals and user input
@@ -56,21 +57,6 @@ TypeScript SDK
 TypeScript V2 (removed)
 Python SDK
 Migration Guide
-On this page
-Detect when Claude needs input
-Handle tool approval requests
-Respond to tool requests
-Handle clarifying questions
-Question format
-Option previews (TypeScript)
-Response format
-Support free-text input
-Complete example
-Limitations
-Other ways to get user input
-Streaming input
-Custom tools
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

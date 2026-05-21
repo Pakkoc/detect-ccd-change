@@ -33,27 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Set up a status line
-Use the /statusline command
-Manually configure a status line
-Disable the status line
-Build a status line step by step
-How status lines work
-Available data
-Context window fields
-Examples
-Context window usage
-Git status with colors
-Cost and duration tracking
-Display multiple lines
-Clickable links
-Rate limit usage
-Cache expensive operations
-Windows configuration
-Subagent status lines
-Tips
-Troubleshooting
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -369,6 +348,22 @@ worktree.*
 which applies only to
 --worktree
 sessions
+workspace.repo.host
+,
+workspace.repo.owner
+,
+workspace.repo.name
+Repository identity parsed from the
+origin
+remote, for example
+"github.com"
+,
+"anthropics"
+,
+"claude-code"
+. Absent outside a git repository or when no
+origin
+remote is configured
 cost.total_cost_usd
 Estimated session cost in USD, computed client-side. May differ from your actual bill
 cost.total_duration_ms
@@ -449,6 +444,22 @@ agent.name
 Agent name when running with the
 --agent
 flag or agent settings configured
+pr.number
+,
+pr.url
+Open pull request for the current branch. Mirrors the PR badge in the bottom status bar. Absent until a PR is found, when not in a git repository, or once the PR merges or closes
+pr.review_state
+Review status of the open PR:
+approved
+,
+pending
+,
+changes_requested
+, or
+draft
+. May be independently absent even when
+pr
+is present
 worktree.name
 Name of the active worktree. Present only during
 --worktree
@@ -507,6 +518,21 @@ Your status line command receives this JSON structure via stdin:
 "git_worktree"
 :
 "feature-xyz"
+,
+"repo"
+: {
+"host"
+:
+"github.com"
+,
+"owner"
+:
+"anthropics"
+,
+"name"
+:
+"claude-code"
+}
 },
 "version"
 :
@@ -632,6 +658,20 @@ true
 :
 "security-reviewer"
 },
+"pr"
+: {
+"number"
+:
+1234
+,
+"url"
+:
+"https://github.com/anthropics/claude-code/pull/1234"
+,
+"review_state"
+:
+"pending"
+},
 "worktree"
 : {
 "name"
@@ -664,6 +704,10 @@ or
 /rename
 workspace.git_worktree
 : appears only when the current directory is inside a linked git worktree
+workspace.repo
+: appears only inside a git repository with an
+origin
+remote configured
 effort
 : appears only when the current model supports the reasoning effort parameter
 vim
@@ -672,6 +716,10 @@ agent
 : appears only when running with the
 --agent
 flag or agent settings configured
+pr
+: appears only while an open PR is found for the current branch, and is removed once the PR merges or closes.
+pr.review_state
+may be independently absent
 worktree
 : appears only during
 --worktree

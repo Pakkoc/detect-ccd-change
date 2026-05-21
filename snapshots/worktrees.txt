@@ -42,15 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Start Claude in a worktree
-Choose the base branch
-Copy gitignored files into worktrees
-Isolate subagents with worktrees
-Clean up worktrees
-Manage worktrees manually
-Non-git version control
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

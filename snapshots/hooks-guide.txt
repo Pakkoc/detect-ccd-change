@@ -42,38 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Set up your first hook
-What you can automate
-Get notified when Claude needs input
-Auto-format code after edits
-Block edits to protected files
-Re-inject context after compaction
-Audit configuration changes
-Reload environment when directory or files change
-Auto-approve specific permission prompts
-How hooks work
-Combine results from multiple hooks
-Read input and return output
-Hook input
-Hook output
-Structured JSON output
-Filter hooks with matchers
-Filter by tool name and arguments with the if field
-Configure hook location
-Prompt-based hooks
-Agent-based hooks
-HTTP hooks
-Limitations and troubleshooting
-Limitations
-Hooks and permission modes
-Hook not firing
-Hook error in output
-/hooks shows no hooks configured
-Stop hook hits the block cap
-JSON validation failed
-Debug techniques
-Learn more
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

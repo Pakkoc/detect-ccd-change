@@ -42,50 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Built-in subagents
-Quickstart: create your first subagent
-Configure subagents
-Use the /agents command
-Choose the subagent scope
-Write subagent files
-Supported frontmatter fields
-Choose a model
-Control subagent capabilities
-Available tools
-Restrict which subagents can be spawned
-Scope MCP servers to a subagent
-Permission modes
-Preload skills into subagents
-Enable persistent memory
-Conditional rules with hooks
-Disable specific subagents
-Define hooks for subagents
-Hooks in subagent frontmatter
-Project-level hooks for subagent events
-Work with subagents
-Understand automatic delegation
-Invoke subagents explicitly
-Run subagents in foreground or background
-Common patterns
-Isolate high-volume operations
-Run parallel research
-Chain subagents
-Choose between subagents and main conversation
-Manage subagent context
-What loads at startup
-Resume subagents
-Auto-compaction
-Fork the current conversation
-Observe and steer running forks
-How forks differ from named subagents
-Limitations
-Example subagents
-Code reviewer
-Debugger
-Data scientist
-Database query validator
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

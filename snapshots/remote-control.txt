@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,24 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Requirements
-Start a Remote Control session
-Connect from another device
-Enable Remote Control for all sessions
-Connection and security
-Remote Control vs Claude Code on the web
-Mobile push notifications
-Limitations
-Troubleshooting
-”Remote Control requires a claude.ai subscription”
-”Remote Control requires a full-scope login token”
-”Unable to determine your organization for Remote Control eligibility”
-”Remote Control is not yet enabled for your account”
-”Remote Control is disabled by your organization’s policy”
-”Remote credentials fetch failed”
-Choose the right approach
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

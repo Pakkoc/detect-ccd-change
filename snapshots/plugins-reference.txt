@@ -31,53 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-Plugin components reference
-Skills
-Agents
-Hooks
-MCP servers
-LSP servers
-Monitors
-Themes
-Plugin installation scopes
-Plugin manifest schema
-Complete schema
-Required fields
-Metadata fields
-Component path fields
-Experimental components
-User configuration
-Channels
-Path behavior rules
-Environment variables
-Persistent data directory
-Plugin caching and file resolution
-Path traversal limitations
-Share files within a marketplace with symlinks
-Plugin directory structure
-Standard plugin layout
-File locations reference
-CLI commands reference
-plugin install
-plugin uninstall
-plugin prune
-plugin enable
-plugin disable
-plugin update
-plugin list
-plugin details
-plugin tag
-Debugging and development tools
-Debugging commands
-Common issues
-Example error messages
-Hook troubleshooting
-MCP server troubleshooting
-Directory structure mistakes
-Distribution and versioning reference
-Version management
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -839,6 +792,38 @@ plugin-dev
 will appear as
 plugin-dev:agent-creator
 .
+​
+Unrecognized fields
+Claude Code ignores top-level fields it does not recognize. You can keep
+metadata from another ecosystem in
+plugin.json
+and the plugin still loads.
+This makes it practical to maintain one manifest that doubles as a VS Code or
+Cursor extension manifest, an npm
+package.json
+, or an MCPB/DXT bundle
+manifest.
+claude plugin validate
+reports unrecognized fields as warnings, not errors.
+If a field is one or two characters off from a recognized one, the warning
+suggests the likely intended name. A plugin with only unrecognized-field
+warnings still passes validation and loads at runtime.
+Fields with the wrong type still fail. For example, a
+keywords
+value that is
+a string instead of an array is a load error, and
+claude plugin validate
+reports it as one.
+Pass
+--strict
+to treat warnings as errors. Use it in CI to catch a misspelled
+field name or a field left over from another tool’s manifest before publishing,
+even though the plugin would load at runtime.
+claude
+plugin
+validate
+./my-plugin
+--strict
 ​
 Metadata fields
 Field

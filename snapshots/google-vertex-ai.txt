@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,22 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-Prerequisites
-Sign in with Vertex AI
-Region configuration
-Set up manually
-1. Enable Vertex AI API
-2. Request model access
-3. Configure GCP credentials
-Advanced credential configuration
-4. Configure Claude Code
-5. Pin model versions
-Startup model checks
-IAM configuration
-1M token context window
-Troubleshooting
-Additional resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

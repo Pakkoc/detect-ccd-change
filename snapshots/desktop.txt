@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -49,73 +51,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Start a session
-Work with code
-Use the prompt box
-Add files and context to prompts
-Choose a permission mode
-Preview your app
-Review changes with diff view
-Review your code
-Monitor pull request status
-Arrange your workspace
-Run commands in the terminal
-Open and edit files
-Open files in other apps
-Switch view modes
-Keyboard shortcuts
-Check usage
-Let Claude use your computer
-When computer use applies
-Enable computer use
-App permissions
-Manage sessions
-Work in parallel with sessions
-Ask a side question without derailing the session
-Watch background tasks
-Run long-running tasks remotely
-Continue in another surface
-Sessions from Dispatch
-Extend Claude Code
-Connect external tools
-Use skills
-Install plugins
-Configure preview servers
-Auto-verify changes
-Configuration fields
-Port conflicts
-Examples
-Environment configuration
-Local sessions
-Remote sessions
-SSH sessions
-Pre-configure SSH connections for your team
-Restrict which SSH hosts users can connect to
-Enterprise configuration
-Admin console controls
-Managed settings
-Device management policies
-Authentication and SSO
-Data handling
-Deployment
-Coming from the CLI?
-CLI flag equivalents
-Shared configuration
-Feature comparison
-What’s not available in Desktop
-Troubleshooting
-Check your version
-403 or authentication errors in the Code tab
-Blank or stuck screen on launch
-”Failed to load session”
-Session not finding installed tools
-Git and Git LFS errors
-MCP servers not working on Windows
-App won’t quit
-Windows-specific issues
-”Branch doesn’t exist yet” when opening in CLI
-Still stuck?
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -212,9 +147,9 @@ Type what you want Claude to do and press
 Enter
 to send. Claude reads your project files, makes changes, and runs commands based on your
 permission mode
-. You can interrupt Claude at any point: click the stop button or type your correction and press
+. You can redirect Claude at any point: click the stop button to interrupt immediately, or type a correction and press
 Enter
-. Claude stops what it’s doing and adjusts based on your input.
+to send it without stopping the running action. Claude reads the correction as soon as the current action completes and adjusts before its next step.
 The
 +
 button next to the prompt box gives you access to file attachments,
@@ -1371,7 +1306,7 @@ Coming from the CLI?
 If you already use the Claude Code CLI, Desktop runs the same underlying engine with a graphical interface. You can run both simultaneously on the same machine, even on the same project. Each maintains separate session history, but they share configuration and project memory via CLAUDE.md files.
 To move a CLI session into Desktop, run
 /desktop
-in the terminal. Claude saves your session and opens it in the desktop app, then exits the CLI. This command is available on macOS and Windows only.
+in the terminal. Claude saves your session and opens it in the desktop app, then exits the CLI. This command is available on macOS and Windows when you are signed in with a Claude subscription. It is not available with API key authentication or on Bedrock, Vertex, or Foundry.
 When to use Desktop vs CLI: use Desktop when you want to manage parallel sessions in one window, arrange panes side by side, or review changes visually. Use the CLI when you need scripting, automation, or prefer a terminal workflow.
 ​
 CLI flag equivalents

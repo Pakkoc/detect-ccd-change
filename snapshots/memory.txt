@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,37 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-CLAUDE.md vs auto memory
-CLAUDE.md files
-When to add to CLAUDE.md
-Choose where to put CLAUDE.md files
-Set up a project CLAUDE.md
-Write effective instructions
-Import additional files
-AGENTS.md
-How CLAUDE.md files load
-Load from additional directories
-Organize rules with .claude/rules/
-Set up rules
-Path-specific rules
-Share rules across projects with symlinks
-User-level rules
-Manage CLAUDE.md for large teams
-Deploy organization-wide CLAUDE.md
-Exclude specific CLAUDE.md files
-Auto memory
-Enable or disable auto memory
-Storage location
-How it works
-Audit and edit your memory
-View and edit with /memory
-Troubleshoot memory issues
-Claude isn’t following my CLAUDE.md
-I don’t know what auto memory saved
-My CLAUDE.md is too large
-Instructions seem lost after /compact
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

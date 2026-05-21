@@ -42,46 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-When to use agent teams
-Compare with subagents
-Enable agent teams
-Start your first agent team
-Control your agent team
-Choose a display mode
-Specify teammates and models
-Require plan approval for teammates
-Talk to teammates directly
-Assign and claim tasks
-Shut down teammates
-Clean up the team
-Enforce quality gates with hooks
-How agent teams work
-How Claude starts agent teams
-Architecture
-Use subagent definitions for teammates
-Permissions
-Context and communication
-Token usage
-Use case examples
-Run a parallel code review
-Investigate with competing hypotheses
-Best practices
-Give teammates enough context
-Choose an appropriate team size
-Size tasks appropriately
-Wait for teammates to finish
-Start with research and review
-Avoid file conflicts
-Monitor and steer
-Troubleshooting
-Teammates not appearing
-Too many permission prompts
-Teammates stopping on errors
-Lead shuts down before work is done
-Orphaned tmux sessions
-Limitations
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

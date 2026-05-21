@@ -42,28 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-When to use plugins vs standalone configuration
-Quickstart
-Prerequisites
-Create your first plugin
-Plugin structure overview
-Develop more complex plugins
-Add Skills to your plugin
-Add LSP servers to your plugin
-Add background monitors to your plugin
-Ship default settings with your plugin
-Organize complex plugins
-Test your plugins locally
-Debug plugin issues
-Share your plugins
-Submit your plugin to the community marketplace
-Convert existing configurations to plugins
-Migration steps
-What changes when migrating
-Next steps
-For plugin users
-For plugin developers
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

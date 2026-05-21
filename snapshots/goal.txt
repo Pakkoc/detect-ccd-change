@@ -42,18 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Compare to other autonomous workflows
-Use /goal
-Set a goal
-Write an effective condition
-Check status
-Clear a goal
-Resume with an active goal
-Run non-interactively
-How evaluation works
-Requirements
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

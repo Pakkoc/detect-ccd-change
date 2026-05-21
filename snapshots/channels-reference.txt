@@ -31,22 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-Overview
-What you need
-Example: build a webhook receiver
-Test during the research preview
-Server options
-Notification format
-Expose a reply tool
-Gate inbound messages
-Relay permission prompts
-How relay works
-Permission request fields
-Add relay to a chat bridge
-Full example
-Package as a plugin
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

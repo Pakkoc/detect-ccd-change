@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,54 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-Overview
-Walkthrough: create a local marketplace
-Create the marketplace file
-Marketplace schema
-Required fields
-Owner fields
-Optional fields
-Plugin entries
-Required fields
-Optional plugin fields
-Plugin sources
-Relative paths
-GitHub repositories
-Git repositories
-Git subdirectories
-npm packages
-Advanced plugin entries
-Strict mode
-Host and distribute marketplaces
-Host on GitHub (recommended)
-Host on other git services
-Private repositories
-Test locally before distribution
-Require marketplaces for your team
-Pre-populate plugins for containers
-Managed marketplace restrictions
-Common configurations
-How restrictions work
-Version resolution and release channels
-Set up release channels
-Pin dependency versions
-Validation and testing
-Manage marketplaces from the CLI
-Plugin marketplace add
-Plugin marketplace list
-Plugin marketplace remove
-Plugin marketplace update
-Troubleshooting
-Marketplace not loading
-Marketplace validation errors
-Plugin installation failures
-Private repository authentication fails
-Marketplace updates fail in offline environments
-Git operations time out
-Plugins with relative paths fail in URL-based marketplaces
-Files not found after installation
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -1813,10 +1766,11 @@ Verify the marketplace URL is accessible
 Check that
 .claude-plugin/marketplace.json
 exists at the specified path
-Ensure JSON syntax is valid and frontmatter is well-formed using
+Ensure JSON syntax is valid using
 claude plugin validate
 or
 /plugin validate
+. To check skill, agent, and command frontmatter, run the command against each plugin directory
 For private repositories, confirm you have access permissions
 ​
 Marketplace validation errors
@@ -1824,11 +1778,16 @@ Run
 claude plugin validate .
 or
 /plugin validate .
-from your marketplace directory to check for issues. The validator checks
+from your marketplace directory to check for issues. When pointed at a marketplace directory, the validator checks
+marketplace.json
+only: schema, duplicate plugin names, source path traversal, and version mismatches against each referenced
 plugin.json
-, skill/agent/command frontmatter, and
-hooks/hooks.json
-for syntax and schema errors. Common errors:
+.
+To validate an individual plugin’s
+plugin.json
+and its skill, agent, command, and hook files, run the command against the plugin directory itself, for example
+claude plugin validate ./plugins/my-plugin
+. Common errors:
 Error
 Cause
 Solution
@@ -1854,14 +1813,14 @@ Use paths relative to the marketplace root without
 Relative paths
 YAML frontmatter failed to parse: ...
 Invalid YAML in a skill, agent, or command file
-Fix the YAML syntax in the frontmatter block. At runtime this file loads with no metadata.
+Fix the YAML syntax in the frontmatter block. At runtime this file loads with no metadata. Reported only when validating a plugin directory
 Invalid JSON syntax: ...
 (hooks.json)
 Malformed
 hooks/hooks.json
 Fix JSON syntax. A malformed
 hooks/hooks.json
-prevents the entire plugin from loading.
+prevents the entire plugin from loading. Reported only when validating a plugin directory
 Warnings
 (non-blocking):
 Marketplace has no plugins defined

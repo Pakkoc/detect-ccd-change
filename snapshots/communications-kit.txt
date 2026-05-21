@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,25 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-Launch communications
-Before you send
-The announcement
-Executive sponsor variant
-Pilot group variant
-Champion recruitment DM
-Tips and tricks campaign
-Get started
-Project memory
-Control and safety
-Connect your tools
-Automate your workflows
-Day-to-day development
-Share and scale
-Security and admin
-Quick reference
-FAQ responses
-Prompt templates
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

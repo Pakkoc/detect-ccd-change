@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,29 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Supported IDEs
-Features
-Installation
-Marketplace installation
-Usage
-From your IDE
-From external terminals
-Configuration
-Claude Code settings
-Plugin settings
-General settings
-ESC key configuration
-Special configurations
-Remote development
-WSL configuration
-Allow WSL2 traffic through Windows Firewall
-Switch WSL2 to mirrored networking
-Troubleshooting
-Plugin not working
-IDE not detected
-Command not found
-Security considerations
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,17 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Overview
-Match features to your goal
-Build your setup over time
-Compare similar features
-Understand how features layer
-Combine features
-Understand context costs
-Context cost by feature
-Understand how features load
-Learn more
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

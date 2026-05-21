@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,77 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-Quick start
-Administrator configuration
-Configuration details
-Common configuration variables
-mTLS authentication
-Metrics cardinality control
-Traces (beta)
-Span hierarchy
-Span attributes
-Dynamic headers
-Settings configuration
-Script requirements
-Refresh behavior
-Multi-team organization support
-Example configurations
-Available metrics and events
-Standard attributes
-Metrics
-Metric details
-Session counter
-Lines of code counter
-Pull request counter
-Commit counter
-Cost counter
-Token counter
-Code edit tool decision counter
-Active time counter
-Events
-Event correlation attributes
-User prompt event
-Tool result event
-API request event
-API error event
-API request body event
-API response body event
-Tool decision event
-Permission mode changed event
-Auth event
-MCP server connection event
-Internal error event
-Plugin installed event
-Plugin loaded event
-Skill activated event
-At mention event
-API retries exhausted event
-Hook registered event
-Hook execution start event
-Hook execution complete event
-Hook plugin metrics event
-Compaction event
-Feedback survey event
-Interpret metrics and events data
-Usage monitoring
-Cost monitoring
-Alerting and segmentation
-Detect retry exhaustion
-Event analysis
-Audit security events
-Attribute actions to users
-Audit MCP activity
-Map security questions to events
-Send events to a SIEM
-Backend considerations
-For metrics
-For events/logs
-For traces
-Service information
-ROI measurement resources
-Security and privacy
-Monitor Claude Code on Amazon Bedrock
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -624,6 +554,10 @@ duration_ms
 Wall-clock duration including permission wait and execution
 result_tokens
 Approximate token size of the tool result
+agent_id
+Identifier of the subagent or teammate that ran the tool. Absent on the main session
+parent_agent_id
+Identifier of the agent that spawned this one. Absent for the main session and for agents spawned directly from it
 file_path
 Target file path for Read, Edit, and Write tools
 OTEL_LOG_TOOL_DETAILS

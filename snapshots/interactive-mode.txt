@@ -31,33 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-Keyboard shortcuts
-General controls
-Text editing
-Theme and display
-Multiline input
-Quick commands
-Transcript viewer
-Voice input
-Commands
-Vim editor mode
-Mode switching
-Navigation (NORMAL mode)
-Editing (NORMAL mode)
-Text objects (NORMAL mode)
-Visual mode
-Command history
-Reverse search with Ctrl+R
-Background bash commands
-How backgrounding works
-Shell mode with ! prefix
-Prompt suggestions
-Side questions with /btw
-Task list
-Session recap
-PR review status
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -98,8 +71,8 @@ Shortcut
 Description
 Context
 Ctrl+C
-Cancel current input or generation
-Standard interrupt
+Interrupt, or clear input
+Interrupts a running operation. If nothing is running, the first press clears the prompt input and a second press exits Claude Code
 Ctrl+X Ctrl+K
 Kill all running
 background subagents
@@ -162,8 +135,16 @@ Stop the current response or tool call mid-turn so you can redirect. Claude keep
 Esc
 +
 Esc
-Rewind or summarize
-Restore code and/or conversation to a previous point, or summarize from a selected message
+Clear input draft, or rewind
+When the prompt input contains text, double
+Esc
+clears it and saves the draft to history so
+Up
+recalls it. When the input is empty, double
+Esc
+opens the
+rewind menu
+to restore or summarize code and conversation from a previous point
 Shift+Tab
 or
 Alt+M
@@ -810,11 +791,15 @@ Green: approved
 Yellow: pending review
 Red: changes requested
 Gray: draft
-Purple: merged
+The badge disappears once the pull request merges or closes.
 Cmd+click
 (Mac) or
 Ctrl+click
-(Windows/Linux) the link to open the pull request in your browser. The status updates automatically every 60 seconds.
+(Windows/Linux) the link to open the pull request in your browser. The status refreshes every 60 seconds, and immediately after a
+gh pr
+or
+git push
+command runs in the session.
 PR status requires the
 gh
 CLI to be installed and authenticated (

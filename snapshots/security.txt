@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,24 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-How we approach security
-Security foundation
-Permission-based architecture
-Built-in protections
-User responsibility
-Protect against prompt injection
-Core protections
-Privacy safeguards
-Additional safeguards
-MCP security
-IDE security
-Cloud execution security
-Security best practices
-Working with sensitive code
-Team security
-Reporting security issues
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -270,7 +253,7 @@ Anthropic Trust Center
 Was this page helpful?
 Yes
 No
-Plugin dependency versions
+Recommend your plugin from your CLI
 Data usage
 ⌘
 I

@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -49,27 +51,6 @@ GitHub Actions
 GitHub Enterprise Server
 GitLab CI/CD
 Claude Code in Slack
-On this page
-How reviews work
-Severity levels
-Rate and reply to findings
-Check run output
-What Code Review checks
-Set up Code Review
-Manually trigger reviews
-Customize reviews
-CLAUDE.md
-REVIEW.md
-What you can tune
-Example
-Keep it focused
-View usage
-Pricing
-Troubleshooting
-Retrigger a failed or timed-out review
-Review didn’t run and the PR shows a spend-cap message
-Find issues that aren’t showing as inline comments
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

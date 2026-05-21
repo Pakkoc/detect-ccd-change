@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,20 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Before you begin
-Step 1: Install Claude Code
-Step 2: Log in to your account
-Step 3: Start your first session
-Step 4: Ask your first question
-Step 5: Make your first code change
-Step 6: Use Git with Claude Code
-Step 7: Fix a bug or add a feature
-Step 8: Test out other common workflows
-Essential commands
-Pro tips for beginners
-What’s next?
-Getting help
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

@@ -42,22 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-How it works
-What a launched session shows
-Build a link
-Choose between cwd and repo
-Examples
-Embed a link in a runbook
-Open a link from the shell
-Registration and supported platforms
-Open a VS Code tab instead of a terminal
-Troubleshooting
-Clicking the link does nothing
-The link renders as plain text instead of being clickable
-The session opens in my home directory instead of the repo
-The link opens the wrong terminal
-Learn more
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

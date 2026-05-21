@@ -26,6 +26,7 @@ Core concepts
 How the agent loop works
 Use Claude Code features
 Work with sessions
+Persist sessions to external storage
 Input and output
 Streaming Input
 Handle approvals and user input
@@ -56,20 +57,6 @@ TypeScript SDK
 TypeScript V2 (removed)
 Python SDK
 Migration Guide
-On this page
-How checkpointing works
-Implement checkpointing
-Common patterns
-Checkpoint before risky operations
-Multiple restore points
-Try it out
-Limitations
-Troubleshooting
-Checkpointing options not recognized
-User messages don’t have UUIDs
-”No file checkpoint found for message” error
-”ProcessTransport is not ready for writing” error
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

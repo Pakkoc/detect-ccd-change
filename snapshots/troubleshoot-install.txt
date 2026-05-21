@@ -42,43 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Find your error
-Run diagnostic checks
-Check network connectivity
-Verify your PATH
-Check for conflicting installations
-Check directory permissions
-Verify the binary works
-Common installation issues
-Install script returns HTML instead of a shell script
-command not found: claude after installation
-curl: (56) Failure writing output to destination
-TLS or SSL connection errors
-Failed to fetch version from downloads.claude.ai
-Wrong install command on Windows
-The process cannot access the file during Windows install
-Install killed on low-memory Linux servers
-Install hangs in Docker
-Claude Desktop overrides the claude command on Windows
-Claude Code on Windows requires either Git for Windows (for bash) or PowerShell
-Claude Code does not support 32-bit Windows
-Linux musl or glibc binary mismatch
-Illegal instruction
-dyld: cannot load on macOS
-Exec format error on WSL1
-npm install errors in WSL
-Permission errors during installation
-Native binary not found after npm install
-Login and authentication
-Reset your login
-OAuth error: Invalid code
-403 Forbidden after login
-This organization has been disabled with an active subscription
-OAuth login fails in WSL2, SSH, or containers
-Not logged in or token expired
-Bedrock, Vertex, or Foundry credentials not loading
-Still stuck
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,28 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Prompt recipes
-Understand new codebases
-Get a quick codebase overview
-Find relevant code
-Fix bugs efficiently
-Refactor code
-Work with tests
-Create pull requests
-Handle documentation
-Work in notes and non-code folders
-Work with images
-Reference files and directories
-Run Claude on a schedule
-Ask Claude about its capabilities
-Example questions
-Resume previous conversations
-Run parallel sessions with worktrees
-Plan before editing
-Delegate research to subagents
-Pipe Claude into scripts
-Next steps
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -410,8 +390,8 @@ Add skills, hooks, MCP, subagents, and plugins
 Was this page helpful?
 Yes
 No
-Permission modes
-Best practices
+Manage sessions
+Prompt library
 ⌘
 I
 Assistant

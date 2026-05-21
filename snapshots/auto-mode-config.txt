@@ -41,6 +41,7 @@ Track team usage with analytics
 Plugin distribution
 Create and distribute a plugin marketplace
 Plugin dependency versions
+Recommend your plugin from your CLI
 Security and data
 Security
 Data usage
@@ -48,13 +49,6 @@ Zero data retention
 Adoption
 Communications kit
 Champion kit
-On this page
-Where the classifier reads configuration
-Define trusted infrastructure
-Override the block and allow rules
-Inspect the defaults and your effective config
-Review denials
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

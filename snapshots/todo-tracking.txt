@@ -26,6 +26,7 @@ Core concepts
 How the agent loop works
 Use Claude Code features
 Work with sessions
+Persist sessions to external storage
 Input and output
 Streaming Input
 Handle approvals and user input
@@ -56,14 +57,6 @@ TypeScript SDK
 TypeScript V2 (removed)
 Python SDK
 Migration Guide
-On this page
-Todo Lifecycle
-When Todos Are Used
-Examples
-Monitoring Todo Changes
-Real-time Progress Display
-Migrate to Task tools
-Related Documentation
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

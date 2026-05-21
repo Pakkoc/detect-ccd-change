@@ -42,46 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-Find your error
-Automatic retries
-Server errors
-API Error: 500 Internal server error
-API Error: Repeated 529 Overloaded errors
-Request timed out
-Auto mode cannot determine the safety of an action
-Usage limits
-You’ve hit your session limit
-Server is temporarily limiting requests
-Request rejected (429)
-Credit balance is too low
-Authentication errors
-Not logged in
-Invalid API key
-This organization has been disabled
-Your organization has disabled Claude subscription access
-Routines are disabled by your organization’s policy
-OAuth token revoked or expired
-OAuth scope requirement
-Network and connection errors
-Unable to connect to API
-SSL certificate errors
-Host not allowed in a cloud session
-Request errors
-Prompt is too long
-Error during compaction: Conversation too long
-Request too large
-Image was too large
-PDF errors
-Extra inputs are not permitted
-There’s an issue with the selected model
-Claude Opus is not available with the Claude Pro plan
-thinking.type.enabled is not supported for this model
-Thinking budget exceeds output limit
-Tool use or thinking block mismatch
-Usage Policy refusal
-Responses seem lower quality than usual
-Report an error
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

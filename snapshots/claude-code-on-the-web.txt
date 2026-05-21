@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -50,50 +52,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-GitHub authentication options
-The cloud environment
-What’s available in cloud sessions
-Installed tools
-Work with GitHub issues and pull requests
-Link artifacts back to the session
-Run tests, start services, and add packages
-Resource limits
-Configure your environment
-Setup scripts
-Environment caching
-Setup scripts vs. SessionStart hooks
-Install dependencies with a SessionStart hook
-Network access
-Access levels
-Allow specific domains
-GitHub proxy
-Security proxy
-Default allowed domains
-Move tasks between web and terminal
-From terminal to web
-Tips for cloud tasks
-Send local repositories without GitHub
-From web to terminal
-Teleport requirements
---teleport is unavailable
-Work with sessions
-Manage context
-Review changes
-Share sessions
-Share from an Enterprise or Team account
-Share from a Max or Pro account
-Archive sessions
-Delete sessions
-Auto-fix pull requests
-How Claude responds to PR activity
-Security and isolation
-Troubleshooting
-Session creation failed
-Remote Control session expired or access denied
-Environment expired
-Limitations
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

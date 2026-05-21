@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -45,21 +47,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Available modes
-Switch permission modes
-Auto-approve file edits with acceptEdits mode
-Analyze before you edit with plan mode
-Review and approve a plan
-Set plan mode as the default
-Eliminate prompts with auto mode
-What the classifier blocks by default
-Boundaries you state in conversation
-When auto mode falls back
-Allow only pre-approved tools with dontAsk mode
-Skip all checks with bypassPermissions mode
-Protected paths
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -362,7 +349,7 @@ in
 Eliminate prompts with auto mode
 Auto mode requires Claude Code v2.1.83 or later.
 Auto mode lets Claude execute without permission prompts. A separate classifier model reviews actions before they run, blocking anything that escalates beyond your request, targets unrecognized infrastructure, or appears driven by hostile content Claude read.
-Auto mode also instructs Claude to execute immediately and minimize clarifying questions. To get that behavior while keeping permission prompts, set the
+Auto mode also nudges Claude to keep working without stopping for clarifying questions. For stronger autonomous behavior while keeping permission prompts, set the
 Proactive output style
 instead.
 Auto mode is a research preview. It reduces prompts but does not guarantee safety. Use it for tasks where you trust the general direction, not as a replacement for review on sensitive operations.
@@ -625,7 +612,7 @@ Was this page helpful?
 Yes
 No
 Store instructions and memories
-Common workflows
+Manage sessions
 ⌘
 I
 Assistant

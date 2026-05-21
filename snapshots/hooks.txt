@@ -31,133 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-Hook lifecycle
-How a hook resolves
-Configuration
-Hook locations
-Matcher patterns
-Match MCP tools
-Hook handler fields
-Common fields
-Command hook fields
-HTTP hook fields
-MCP tool hook fields
-Prompt and agent hook fields
-Reference scripts by path
-Hooks in skills and agents
-The /hooks menu
-Disable or remove hooks
-Hook input and output
-Common input fields
-Exit code output
-Exit code 2 behavior per event
-HTTP response handling
-JSON output
-Emit terminal notifications
-Add context for Claude
-Decision control
-Hook events
-SessionStart
-SessionStart input
-SessionStart decision control
-Persist environment variables
-Setup
-Setup input
-Setup decision control
-InstructionsLoaded
-InstructionsLoaded input
-InstructionsLoaded decision control
-UserPromptSubmit
-UserPromptSubmit input
-UserPromptSubmit decision control
-UserPromptExpansion
-UserPromptExpansion input
-UserPromptExpansion decision control
-PreToolUse
-PreToolUse input
-PreToolUse decision control
-Defer a tool call for later
-PermissionRequest
-PermissionRequest input
-PermissionRequest decision control
-Permission update entries
-PostToolUse
-PostToolUse input
-PostToolUse decision control
-PostToolUseFailure
-PostToolUseFailure input
-PostToolUseFailure decision control
-PostToolBatch
-PostToolBatch input
-PostToolBatch decision control
-PermissionDenied
-PermissionDenied input
-PermissionDenied decision control
-Notification
-Notification input
-SubagentStart
-SubagentStart input
-SubagentStop
-SubagentStop input
-TaskCreated
-TaskCreated input
-TaskCreated decision control
-TaskCompleted
-TaskCompleted input
-TaskCompleted decision control
-Stop
-Stop input
-Stop decision control
-StopFailure
-StopFailure input
-TeammateIdle
-TeammateIdle input
-TeammateIdle decision control
-ConfigChange
-ConfigChange input
-ConfigChange decision control
-CwdChanged
-CwdChanged input
-CwdChanged output
-FileChanged
-FileChanged input
-FileChanged output
-WorktreeCreate
-WorktreeCreate input
-WorktreeCreate output
-WorktreeRemove
-WorktreeRemove input
-PreCompact
-PreCompact input
-PostCompact
-PostCompact input
-SessionEnd
-SessionEnd input
-Elicitation
-Elicitation input
-Elicitation output
-ElicitationResult
-ElicitationResult input
-ElicitationResult output
-Prompt-based hooks
-How prompt-based hooks work
-Prompt hook configuration
-Response schema
-Example: Multi-criteria Stop hook
-Agent-based hooks
-How agent hooks work
-Agent hook configuration
-Run hooks in the background
-Configure an async hook
-How async hooks execute
-Example: run tests after file changes
-Limitations
-Security considerations
-Disclaimer
-Security best practices
-Windows PowerShell tool
-Debug hooks
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -4448,6 +4321,13 @@ subagents/
 folder. The
 last_assistant_message
 field contains the text content of the subagent’s final response, so hooks can access it without parsing the transcript file.
+SubagentStop hooks also receive the
+background_tasks
+and
+session_crons
+arrays described under
+Stop input
+, available in Claude Code v2.1.145 or later. Both arrays are scoped to the parent session, not the subagent.
 {
 "session_id"
 :
@@ -4488,6 +4368,11 @@ false
 "last_assistant_message"
 :
 "Analysis complete. Found 3 potential issues..."
+,
+"background_tasks"
+: [],
+"session_crons"
+: []
 }
 SubagentStop hooks use the same decision control format as
 Stop hooks
@@ -4776,8 +4661,12 @@ In addition to the
 common input fields
 , Stop hooks receive
 stop_hook_active
-and
+,
 last_assistant_message
+,
+background_tasks
+, and
+session_crons
 . The
 stop_hook_active
 field is
@@ -4786,6 +4675,90 @@ when Claude Code is already continuing as a result of a stop hook. Check this va
 The
 last_assistant_message
 field contains the text content of Claude’s final response, so hooks can access it without parsing the transcript file.
+The
+background_tasks
+and
+session_crons
+arrays, available in Claude Code v2.1.145 or later, let hooks distinguish “session is done” from “session is paused waiting for background work to wake it back up”. Both arrays are present when the task registry is reachable and are empty when nothing is in flight or scheduled.
+Each entry in
+background_tasks
+describes one in-flight task and uses these fields:
+Field
+Description
+id
+Task identifier
+type
+Friendly task-type label such as
+shell
+,
+subagent
+,
+monitor
+,
+workflow
+,
+teammate
+,
+cloud session
+, or
+MCP task
+. Each label identifies which Claude Code feature created the task. Falls back to the raw discriminant for unrecognized types
+status
+Current task status
+description
+Free-text description, capped at 1000 characters with an in-string
+… [+N chars]
+marker when clipped
+command
+Shell command line, capped at 1000 characters. Present only for
+shell
+tasks
+agent_type
+Subagent type name. Present only for
+subagent
+tasks
+server
+MCP server name. Present only for
+monitor
+and
+MCP task
+tasks
+tool
+MCP tool name. Present only for
+monitor
+and
+MCP task
+tasks
+name
+Workflow name. Present only for
+workflow
+tasks
+Each entry in
+session_crons
+describes one session-scoped scheduled wakeup, sourced from
+CronCreate
+,
+ScheduleWakeup
+, and
+/loop
+:
+Field
+Description
+id
+Cron task identifier
+schedule
+Cron expression, for example
+0 9 * * 1-5
+recurring
+false
+for one-shot wakeups whose schedule encodes a single fire time,
+true
+for tasks that re-fire on every match
+prompt
+Prompt submitted when the cron fires, capped at 1000 characters with the same
+… [+N chars]
+marker
+This example shows a Stop input with one in-flight shell task and one recurring cron:
 {
 "session_id"
 :
@@ -4814,6 +4787,51 @@ true
 "last_assistant_message"
 :
 "I've completed the refactoring. Here's a summary..."
+,
+"background_tasks"
+: [
+{
+"id"
+:
+"task-001"
+,
+"type"
+:
+"shell"
+,
+"status"
+:
+"running"
+,
+"description"
+:
+"tail logs"
+,
+"command"
+:
+"tail -f /var/log/syslog"
+}
+],
+"session_crons"
+: [
+{
+"id"
+:
+"cron-001"
+,
+"schedule"
+:
+"0 9 * * 1-5"
+,
+"recurring"
+:
+true
+,
+"prompt"
+:
+"check the build"
+}
+]
 }
 ​
 Stop decision control

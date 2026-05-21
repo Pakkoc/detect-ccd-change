@@ -42,14 +42,6 @@ Troubleshoot installation and login
 Troubleshoot performance and stability
 Debug configuration
 Error reference
-On this page
-See what loaded into context
-Check resolved settings
-Check MCP servers
-Check hooks
-Test against a clean configuration
-Check common causes
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

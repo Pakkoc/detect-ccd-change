@@ -32,7 +32,9 @@ Prompt caching
 Use Claude Code
 Store instructions and memories
 Permission modes
+Manage sessions
 Common workflows
+Prompt library
 Best practices
 Platforms and integrations
 Overview
@@ -50,32 +52,6 @@ Visual Studio Code
 JetBrains IDEs
 Code review & CI/CD
 Claude Code in Slack
-On this page
-Example use cases
-Create a routine
-Create from the web
-Create from the CLI
-Configure triggers
-Add a schedule trigger
-Schedule a one-off run
-Add an API trigger
-Trigger a routine
-API reference
-Add a GitHub trigger
-Supported events
-Filter pull requests
-How sessions map to events
-Manage routines
-View and interact with runs
-Edit and control routines
-Repositories and branch permissions
-Connectors
-Environments and network access
-Usage and limits
-Troubleshooting
-/schedule returns “Unknown command”
-”Routines are disabled by your organization’s policy”
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

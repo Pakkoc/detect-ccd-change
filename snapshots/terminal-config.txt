@@ -33,18 +33,6 @@ Fullscreen rendering
 Voice dictation
 Customize status line
 Customize keyboard shortcuts
-On this page
-Enter multiline prompts
-Enable Option key shortcuts on macOS
-Get a terminal bell or notification
-Play a sound with a Notification hook
-Configure tmux
-Match the color theme
-Create a custom theme
-Switch to fullscreen rendering
-Paste large content
-Edit prompts with Vim keybindings
-Related resources
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

@@ -26,6 +26,7 @@ Core concepts
 How the agent loop works
 Use Claude Code features
 Work with sessions
+Persist sessions to external storage
 Input and output
 Streaming Input
 Handle approvals and user input
@@ -56,27 +57,6 @@ TypeScript SDK
 TypeScript V2 (removed)
 Python SDK
 Migration Guide
-On this page
-How system prompts work
-Decide on a starting point
-Customize agent behavior
-CLAUDE.md files for project-level instructions
-Load CLAUDE.md with the SDK
-Output styles for persistent configurations
-Create an output style
-Activate an output style
-Append to the claude_code preset
-Improve prompt caching across users and machines
-Custom system prompts
-Compare the four approaches
-Use cases and best practices
-When to use CLAUDE.md
-When to use output styles
-When to use systemPrompt with append
-When to use custom systemPrompt
-Combine approaches
-Combine an output style with session-specific additions
-See also
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt

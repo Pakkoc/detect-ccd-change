@@ -31,64 +31,6 @@ Plugins reference
 Channels reference
 Glossary
 Glossary
-On this page
-A
-Agent teams
-Agentic coding
-Agentic harness
-Agentic loop
-Auto memory
-Auto mode
-B
-Bare mode
-Bundled skills
-C
-Channel
-Checkpoint
-.claude directory
-CLAUDE.md
-Command
-Compaction
-Context window
-D
-Dispatch
-E
-Effort level
-Extended thinking
-H
-Hook
-M
-Managed settings
-MCP (Model Context Protocol)
-MCP Tool Search
-N
-Non-interactive mode
-O
-Output style
-P
-Permission mode
-Permission rule
-Plan mode
-Plugin
-Project trust
-Prompt injection
-R
-Remote Control
-Rules
-S
-Sandboxing
-Session
-Settings layers
-Skill
-Subagent
-Surface
-T
-Teleport
-Tool
-Turn
-W
-Worktree isolation
-Deprecated and renamed terms
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
