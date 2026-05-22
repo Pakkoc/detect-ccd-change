@@ -24,6 +24,7 @@ Administration overview
 Advanced setup
 Authentication
 Server-managed settings
+Managed MCP configuration
 Auto mode
 Deployment
 Overview
@@ -75,9 +76,7 @@ Network
 network configuration
 .
 Shell
-: Bash, Zsh, PowerShell, or CMD. On native Windows,
-Git for Windows
-is recommended; Claude Code falls back to PowerShell when Git Bash is absent. WSL setups do not require Git for Windows.
+: Bash, Zsh, PowerShell, or CMD.
 Location
 :
 Anthropic supported countries
@@ -172,8 +171,9 @@ Requires
 Sandboxing
 When to use
 Native Windows
+None;
 Git for Windows
-recommended; PowerShell used if absent
+is optional
 Not supported
 Windows-native projects and tools
 WSL 2
@@ -184,10 +184,12 @@ WSL 1
 WSL 1 enabled
 Not supported
 If WSL 2 is unavailable
-Option 1: Native Windows with Git Bash
-Install
+Option 1: Native Windows
+Run the install command from PowerShell or CMD. You do not need to run as Administrator. Installing
 Git for Windows
-, then run the install command from PowerShell or CMD. You do not need to run as Administrator.
+is optional. It enables the
+Bash tool
+by providing Git Bash.
 Whether you install from PowerShell or CMD only affects which install command you run. Your prompt shows
 PS C:\Users\YourName>
 in PowerShell and
@@ -199,7 +201,15 @@ terminal guide
 walks through each step.
 After installation, launch
 claude
-from PowerShell, CMD, or Git Bash. When Git Bash is installed, Claude Code uses it internally to execute commands regardless of where you launched it. If Claude Code can’t find your Git Bash installation, set the path in your
+from any terminal.
+Without Git for Windows
+, Claude Code runs shell commands via the
+PowerShell tool
+.
+With Git for Windows
+, Claude Code uses Git Bash for the
+Bash tool
+. If Claude Code can’t find Git Bash, set the path in your
 settings.json file
 :
 {
@@ -218,7 +228,7 @@ bin
 bash.exe"
 }
 }
-Claude Code can also run PowerShell natively on Windows. When Git Bash is installed, the PowerShell tool is rolling out progressively as an additional option: set
+When Git for Windows is installed, the PowerShell tool is rolling out progressively as an additional option alongside Bash. Set
 CLAUDE_CODE_USE_POWERSHELL_TOOL=1
 to opt in or
 0

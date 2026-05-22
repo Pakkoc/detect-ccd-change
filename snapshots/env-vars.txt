@@ -419,7 +419,9 @@ Set to
 1
 to repaint the entire screen on every frame in
 fullscreen rendering
-instead of sending incremental updates. Use this if fullscreen mode shows stale or misplaced text fragments. Claude Code enables this automatically for background sessions on Windows
+instead of sending incremental updates. Use this if fullscreen mode shows stale or misplaced text fragments. Claude Code enables this automatically for background sessions and
+agent view
+on Windows
 CLAUDE_CODE_API_KEY_HELPER_TTL_MS
 Interval in milliseconds at which credentials should be refreshed (when using
 apiKeyHelper
@@ -1587,7 +1589,11 @@ Maximum number of local MCP servers (stdio) to connect in parallel during startu
 MCP_TIMEOUT
 Timeout in milliseconds for MCP server startup (default: 30000, or 30 seconds)
 MCP_TOOL_TIMEOUT
-Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hours)
+Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hours). A per-server
+timeout
+field in
+.mcp.json
+overrides this for that server. Values below 1000 are floored to one second
 NO_PROXY
 List of domains and IPs to which requests will be directly issued, bypassing proxy
 OTEL_LOG_RAW_API_BODIES

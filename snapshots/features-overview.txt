@@ -473,7 +473,7 @@ Skills are extra capabilities in Claude’s toolkit. They can be reference mater
 ). Claude Code includes
 bundled skills
 like
-/simplify
+/code-review
 ,
 /batch
 , and

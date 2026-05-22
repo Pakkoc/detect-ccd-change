@@ -24,6 +24,7 @@ Administration overview
 Advanced setup
 Authentication
 Server-managed settings
+Managed MCP configuration
 Auto mode
 Deployment
 Overview
@@ -327,6 +328,12 @@ anthropic-agent-skills
 knowledge-work-plugins
 ,
 life-sciences
+,
+claude-for-legal
+,
+claude-for-financial-services
+,
+financial-services-plugins
 . Names that impersonate official marketplaces, such as
 official-claude-plugins
 or

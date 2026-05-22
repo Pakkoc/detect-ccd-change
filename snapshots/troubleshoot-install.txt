@@ -62,6 +62,10 @@ or
 Fix your PATH
 syntax error near unexpected token '<'
 Install script returns HTML
+curl: (22) The requested URL returned error: 403
+Install script returned 403
+curl: (23)
+or
 curl: (56) Failure writing output to destination
 Check connectivity or use an alternative installer
 Killed
@@ -500,9 +504,14 @@ bash: line 1: syntax error near unexpected token `<'
 bash: line 1: `<!DOCTYPE html>'
 On PowerShell, the same problem appears as:
 Invoke-Expression: Missing argument in parameter list.
-This means the install URL returned an HTML page instead of the install script. If the HTML page says “App unavailable in region,” Claude Code is not available in your country. See
+Depending on how the request was routed, you may instead see a 403 with no HTML body:
+curl: (22) The requested URL returned error: 403
+These all mean the install URL returned an HTML page or an error status instead of the install script. If the HTML page says “App unavailable in region,” Claude Code is not available in your country. See
 supported countries
 .
+A bare 403 with no body often has the same cause, but it can also come from a corporate proxy or firewall blocking the download. If you are in a supported country and still see the 403, work through
+Check network connectivity
+before trying the alternative installers below, since those reach the same hosts.
 Otherwise, this can happen due to network issues, regional routing, or a temporary service disruption.
 Solutions:
 Use an alternative install method
@@ -539,7 +548,9 @@ for the fix on each platform.
 curl: (56) Failure writing output to destination
 The
 curl ... | bash
-command downloads the script and pipes it to Bash for execution. This error means the connection broke before the script finished downloading. Common causes include network interruptions, the download being blocked mid-stream, or system resource limits.
+command downloads the script and pipes it to Bash for execution. This error, and the related
+curl: (23) Failure writing output to destination
+, means Bash did not receive the complete script. Exit code 56 indicates the download itself was interrupted, and exit code 23 indicates curl could not write what it received to the pipe, usually because Bash exited early.
 Solutions:
 Check network stability
 : Claude Code binaries are hosted at
@@ -837,17 +848,23 @@ opens the Desktop app instead of the CLI.
 Update Claude Desktop to the latest version to fix this issue.
 ​
 Claude Code on Windows requires either Git for Windows (for bash) or PowerShell
-Claude Code on native Windows needs at least one shell: either
-Git for Windows
-for Bash, or PowerShell. When neither is found, this error appears at startup. If only PowerShell is found, Claude Code uses the PowerShell tool instead of Bash.
-If neither is installed
-, install one:
-Git for Windows: download from
-git-scm.com/downloads/win
-. During setup, select “Add to PATH.” Restart your terminal after installing.
-PowerShell 7: download from
-aka.ms/powershell
+Git for Windows is optional. Claude Code uses the
+PowerShell tool
+when Git Bash is absent, so this error means neither shell was found.
+If PowerShell is missing from your PATH
+, its default location is
+C:\Windows\System32\WindowsPowerShell\v1.0\
+. Add that directory to your
+PATH
+, or install
+PowerShell 7
+, which provides
+pwsh
 .
+To install Git for Windows instead
+, download it from
+git-scm.com/downloads/win
+. During setup, select “Add to PATH.” Restart your terminal after installing. Installing it enables the Bash tool, useful when working with Bash-based scripts and tooling.
 If Git is already installed
 but Claude Code can’t find it, set the path in your
 settings.json file

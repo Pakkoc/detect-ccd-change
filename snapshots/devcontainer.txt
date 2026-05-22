@@ -24,6 +24,7 @@ Administration overview
 Advanced setup
 Authentication
 Server-managed settings
+Managed MCP configuration
 Auto mode
 Deployment
 Overview
@@ -356,6 +357,8 @@ Explore the
 .claude
 directory
 : what the volume mount holds, including credentials, settings, and session history
+Sandbox environments
+: compare dev containers with the built-in Bash sandbox, custom containers, and VMs
 Security model
 : how Claude Code’s permission system, sandboxing, and prompt-injection protections fit together
 Permission modes

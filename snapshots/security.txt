@@ -24,6 +24,7 @@ Administration overview
 Advanced setup
 Authentication
 Server-managed settings
+Managed MCP configuration
 Auto mode
 Deployment
 Overview
@@ -240,16 +241,18 @@ Include detailed reproduction steps
 Allow time for us to address the issue before public disclosure
 ​
 Related resources
+Sandbox environments
+: compare isolation approaches and choose one for your threat model
 Sandboxing
-- Filesystem and network isolation for bash commands
+: filesystem and network isolation for Bash commands
 Permissions
-- Configure permissions and access controls
+: configure permissions and access controls
 Monitoring usage
-- Track and audit Claude Code activity
+: track and audit Claude Code activity
 Development containers
-- Secure, isolated environments
+: secure, isolated environments
 Anthropic Trust Center
-- Security certifications and compliance
+: security certifications and compliance
 Was this page helpful?
 Yes
 No

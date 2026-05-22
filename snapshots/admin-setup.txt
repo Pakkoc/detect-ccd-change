@@ -24,6 +24,7 @@ Administration overview
 Advanced setup
 Authentication
 Server-managed settings
+Managed MCP configuration
 Auto mode
 Deployment
 Overview
@@ -212,17 +213,23 @@ Managed policy CLAUDE.md
 Org-wide instructions loaded in every session, cannot be excluded
 File at the managed policy path
 MCP server control
-Restrict which MCP servers users can add or connect to
+Restrict which MCP servers users can add or connect to, or deploy a fixed set
 allowedMcpServers
 ,
 deniedMcpServers
 ,
 allowManagedMcpServersOnly
+, or a deployed
+managed-mcp.json
+file
 Plugin marketplace control
 Restrict which marketplace sources users can add and install from
 strictKnownMarketplaces
 ,
 blockedMarketplaces
+Customization lockdown
+Block skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings
+strictPluginOnlyCustomization
 Hook restrictions
 Only managed hooks load; restrict HTTP hook URLs
 allowManagedHooksOnly

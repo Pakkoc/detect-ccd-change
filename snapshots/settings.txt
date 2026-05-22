@@ -22,7 +22,8 @@ Resources
 Settings and permissions
 Settings
 Permissions
-Sandboxing
+Sandbox environments
+Bash sandbox
 Model and responses
 Model configuration
 Speed up responses with fast mode
@@ -711,10 +712,14 @@ Use
 claudeai
 to restrict login to Claude.ai accounts,
 console
-to restrict login to Claude Console (API usage billing) accounts
+to restrict login to Claude Console (API usage billing) accounts. When set in managed settings, sessions authenticated by API key,
+apiKeyHelper
+, or a third-party provider are blocked at startup, since neither value can be satisfied without first-party OAuth
 claudeai
 forceLoginOrgUUID
-Require login to belong to a specific organization. Accepts a single UUID string, which also pre-selects that organization during login, or an array of UUIDs where any listed organization is accepted without pre-selection. When set in managed settings, login fails if the authenticated account does not belong to a listed organization; an empty array fails closed and blocks login with a misconfiguration message
+Require login to belong to a specific organization. Accepts a single UUID string, which also pre-selects that organization during login, or an array of UUIDs where any listed organization is accepted without pre-selection. When set in managed settings, login fails if the authenticated account does not belong to a listed organization, and sessions authenticated by API key,
+apiKeyHelper
+, or a third-party provider are blocked at startup since organization membership cannot be verified for them. An empty array fails closed and blocks login with a misconfiguration message
 "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 or
 ["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"]
@@ -1015,6 +1020,12 @@ strictKnownMarketplaces
 (Managed settings only) Allowlist of plugin marketplace sources. Undefined = no restrictions, empty array = lockdown. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "acme-corp/plugins" }]
+strictPluginOnlyCustomization
+(Managed settings only) Block skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings.
+true
+locks all four surfaces; an array locks only the named ones. See
+strictPluginOnlyCustomization
+["skills", "hooks"]
 syntaxHighlightingDisabled
 Disable syntax highlighting in diffs, code blocks, and file previews
 true
@@ -2765,6 +2776,52 @@ Managed settings have the highest precedence and cannot be overridden
 See
 Managed marketplace restrictions
 for user-facing documentation.
+​
+strictPluginOnlyCustomization
+Managed settings only
+: blocks skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings. Combine it with
+strictKnownMarketplaces
+to control the full customization supply chain: the marketplace allowlist controls which plugins users can install, and this setting blocks everything that doesn’t come from a plugin or from managed settings.
+strictPluginOnlyCustomization
+requires Claude Code v2.1.82 or later. Earlier versions ignore the key and keep loading user and project customizations, so the lockdown isn’t enforced until clients update.
+The value is either
+true
+to lock all four surfaces, or an array naming the surfaces to lock:
+{
+"strictPluginOnlyCustomization"
+: [
+"skills"
+,
+"hooks"
+]
+}
+For each locked surface, Claude Code skips user-level and project-level sources and loads only plugin-provided and managed sources:
+Surface
+Blocked when locked
+Still loads
+skills
+~/.claude/skills/
+,
+.claude/skills/
+Plugin skills, bundled skills, skills in the managed policy directory
+agents
+~/.claude/agents/
+,
+.claude/agents/
+Plugin agents, built-in agents, agents in the managed policy directory
+hooks
+Hooks in user, project, and local
+settings.json
+Plugin hooks, hooks in managed settings
+mcp
+Servers in
+~/.claude.json
+and
+.mcp.json
+Plugin MCP servers,
+managed-mcp.json
+servers
+Surface names that a Claude Code version doesn’t recognize are ignored rather than failing the settings file, so you can add new surface names before all clients have updated.
 ​
 Managing plugins
 Use the

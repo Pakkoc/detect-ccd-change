@@ -22,7 +22,8 @@ Resources
 Settings and permissions
 Settings
 Permissions
-Sandboxing
+Sandbox environments
+Bash sandbox
 Model and responses
 Model configuration
 Speed up responses with fast mode
@@ -311,8 +312,9 @@ Action
 Default
 Description
 permission:toggleDebug
-Ctrl+D
-Toggle permission debug info
+(unbound)
+Toggle permission debug info. The previous default of Ctrl+D was removed in v2.1.146 because it shadowed
+app:exit
 ​
 Transcript actions
 Actions available in the

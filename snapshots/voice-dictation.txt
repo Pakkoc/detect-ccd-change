@@ -22,7 +22,8 @@ Resources
 Settings and permissions
 Settings
 Permissions
-Sandboxing
+Sandbox environments
+Bash sandbox
 Model and responses
 Model configuration
 Speed up responses with fast mode

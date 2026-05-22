@@ -24,6 +24,7 @@ Administration overview
 Advanced setup
 Authentication
 Server-managed settings
+Managed MCP configuration
 Auto mode
 Deployment
 Overview
@@ -217,8 +218,13 @@ for the full list. Any setting not on that list can still be placed in managed s
 Current limitations
 Server-managed settings have the following limitations:
 Settings apply uniformly to all users in the organization. Per-group configurations are not yet supported.
-MCP server configurations
-cannot be distributed through server-managed settings.
+A
+managed-mcp.json
+file cannot be distributed through server-managed settings. Deliver the
+allowedMcpServers
+and
+deniedMcpServers
+policy keys there instead.
 Settings restricted to OS-level policy sources, such as
 policyHelper
 and
@@ -353,7 +359,7 @@ Was this page helpful?
 Yes
 No
 Authentication
-Auto mode
+Managed MCP configuration
 ⌘
 I
 Assistant

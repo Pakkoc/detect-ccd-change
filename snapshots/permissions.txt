@@ -22,7 +22,8 @@ Resources
 Settings and permissions
 Settings
 Permissions
-Sandboxing
+Sandbox environments
+Bash sandbox
 Model and responses
 Model configuration
 Speed up responses with fast mode
@@ -889,7 +890,8 @@ allow
 ask
 , or
 deny
-permission rules. Only rules in managed settings apply
+permission rules. Only rules in managed settings apply. Does not affect the MCP server allowlist; for that, set
+allowManagedMcpServersOnly
 blockedMarketplaces
 Blocklist of marketplace sources. Blocked sources are checked before downloading, so they never touch the filesystem. See
 managed marketplace restrictions
@@ -925,6 +927,13 @@ allow rules from managed settings are respected. Non-allowed domains are blocked
 strictKnownMarketplaces
 Controls which plugin marketplace sources users can add and install plugins from. See
 managed marketplace restrictions
+strictPluginOnlyCustomization
+Block skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings.
+true
+locks all four surfaces; an array such as
+["skills", "hooks"]
+locks only the named ones. See
+strictPluginOnlyCustomization
 wslInheritsWindowsSettings
 When
 true
@@ -1002,7 +1011,7 @@ Was this page helpful?
 Yes
 No
 Settings
-Sandboxing
+Sandbox environments
 ⌘
 I
 Assistant

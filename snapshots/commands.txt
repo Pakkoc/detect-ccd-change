@@ -92,8 +92,8 @@ for how these approaches relate.
 Before you ship.
 /diff
 shows what changed,
-/simplify
-reviews recent files and applies quality and efficiency fixes, and
+/code-review
+checks the diff for correctness bugs, and
 /review
 or
 /security-review
@@ -220,6 +220,20 @@ instead. Aliases:
 /reset
 ,
 /new
+/code-review [low|medium|high|xhigh|max] [--comment] [target]
+Skill
+.
+Review the current diff for correctness bugs and report findings without editing files. Lower
+effort levels
+return fewer, higher-confidence findings, while
+high
+through
+max
+give broader coverage and may include uncertain findings. Without an effort argument, the review uses the session’s current effort. Pass
+--comment
+to post findings as inline comments on the current GitHub PR. Pass a path or PR reference to review a specific target. Formerly
+/simplify
+, which still works as an alias
 /color [color|default]
 Set the prompt bar color for the current session. Available colors:
 red
@@ -522,11 +536,6 @@ Google Vertex AI
 authentication, project, region, and model pins through an interactive wizard. Only visible when
 CLAUDE_CODE_USE_VERTEX=1
 is set. First-time Vertex AI users can also access this wizard from the login screen
-/simplify [focus]
-Skill
-.
-Review your recently changed files for code reuse, quality, and efficiency issues, then fix them. Spawns three review agents in parallel, aggregates their findings, and applies fixes. Pass text to focus on specific concerns:
-/simplify focus on memory efficiency
 /skills
 List available
 skills

@@ -206,9 +206,9 @@ dynamically chosen interval
 , to run it on a fixed schedule instead. To replace the built-in prompt with your own default, see
 Customize the default prompt with loop.md
 .
-The built-in maintenance prompt isn’t available to everyone yet, and isn’t supported on Bedrock, Vertex AI, or Microsoft Foundry. Where it isn’t active,
+On Bedrock, Vertex AI, and Microsoft Foundry,
 /loop
-with no prompt prints the usage message instead.
+with no prompt prints the usage message instead of running the maintenance prompt.
 ​
 Customize the default prompt with loop.md
 A
@@ -242,12 +242,11 @@ loop.md
 take effect on the next iteration, so you can refine the instructions while a loop is running. When no
 loop.md
 exists in either location, the loop falls back to the built-in maintenance prompt. Keep the file concise: content beyond 25,000 bytes is truncated.
+On Bedrock, Vertex AI, and Microsoft Foundry,
 loop.md
-follows the same availability as the
-built-in maintenance prompt
-. Where the maintenance prompt isn’t active,
+isn’t read and
 /loop
-with no prompt prints the usage message and the file isn’t read.
+with no prompt prints the usage message instead.
 ​
 Stop a loop
 To stop a

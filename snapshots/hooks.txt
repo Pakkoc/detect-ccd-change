@@ -229,7 +229,7 @@ permissionDecisionReason: "Destructive command blocked by hook"
 else
 exit
 0
-# allow the command
+# no decision; normal permission flow applies
 fi
 Now suppose Claude Code decides to run
 Bash "rm -rf /tmp/build"
@@ -305,7 +305,9 @@ variant like
 rm file.txt
 , the script would hit
 exit 0
-instead, which tells Claude Code to allow the tool call with no further action.
+instead. Exit code 0 with no output means the hook has no decision to report, so the tool call continues through the normal
+permission flow
+. The hook can deny the call, but staying silent doesn’t approve it.
 5
 Claude Code acts on the result
 Claude Code reads the JSON decision, blocks the tool call, and shows Claude the reason.
@@ -1601,7 +1603,7 @@ exit
 fi
 exit
 0
-# Success: tool call proceeds
+# No decision: the normal permission flow applies
 For most hook events, only exit code 2 blocks the action. Claude Code treats exit code 1 as a non-blocking error and proceeds with the action, even though 1 is the conventional Unix failure code. If your hook is meant to enforce a policy, use
 exit 2
 . The exception is
@@ -1722,7 +1724,7 @@ Connection failure or timeout
 Unlike command hooks, HTTP hooks cannot signal a blocking error through status codes alone. To block a tool call or deny a permission, return a 2xx response with a JSON body containing the appropriate decision fields.
 ​
 JSON output
-Exit codes let you allow or block, but JSON output gives you finer-grained control. Instead of exiting with code 2 to block, exit 0 and print a JSON object to stdout. Claude Code reads specific fields from that JSON to control behavior, including
+Exit codes only let you block or stay silent, but JSON output gives you finer-grained control. Instead of exiting with code 2 to block, exit 0 and print a JSON object to stdout. Claude Code reads specific fields from that JSON to control behavior, including
 decision control
 for blocking, allowing, or escalating to the user.
 You must choose one approach per hook, not both: either use exit codes alone for signaling, or exit 0 and print JSON for structured control. Claude Code only processes JSON on exit 0. If you exit 2, any JSON is ignored.
@@ -1767,7 +1769,7 @@ suppressOutput
 false
 If
 true
-, omits stdout from the debug log
+, hides the hook’s stdout from the transcript. Stdout still appears in the debug log
 systemMessage
 none
 Warning message shown to the user
@@ -2010,6 +2012,14 @@ action
 (accept/decline/cancel),
 content
 (form field values override)
+SessionStart, Setup, SubagentStart
+Context only
+hookSpecificOutput.additionalContext
+adds context for Claude. SessionStart also accepts
+initialUserMessage
+and
+watchPaths
+. No blocking or decision control
 WorktreeRemove, Notification, SessionEnd, PostCompact, InstructionsLoaded, StopFailure, CwdChanged, FileChanged
 None
 No decision control. Used for side effects like logging or cleanup
@@ -2195,6 +2205,18 @@ additionalContext
 String added to Claude’s context at the start of the conversation, before the first prompt. See
 Add context for Claude
 for how the text is delivered and what to put in it
+initialUserMessage
+String used as the first user message of the session. Applies in
+non-interactive mode
+(
+-p
+), where it becomes the first turn even if no prompt is provided. If a prompt is provided, it follows as the next turn. Unlike
+additionalContext
+, which attaches to an existing turn, this creates the turn
+watchPaths
+Array of absolute paths to watch for
+FileChanged
+events during this session
 {
 "hookSpecificOutput"
 : {
@@ -2602,6 +2624,14 @@ String added to Claude’s context alongside the submitted prompt. See
 Add context for Claude
 sessionTitle
 Sets the session title. Use to name sessions automatically based on the prompt content
+suppressOriginalPrompt
+If
+true
+when
+decision
+is
+"block"
+, omits the original prompt text from the block message shown to the user
 {
 "decision"
 :
@@ -3577,6 +3607,8 @@ mode
 destination
 Changes the permission mode. Valid modes are
 default
+,
+auto
 ,
 acceptEdits
 ,
@@ -5911,6 +5943,7 @@ prompt
 , and
 agent
 ):
+PermissionDenied
 PermissionRequest
 PostToolBatch
 PostToolUse
@@ -5920,6 +5953,7 @@ Stop
 SubagentStop
 TaskCompleted
 TaskCreated
+TeammateIdle
 UserPromptExpansion
 UserPromptSubmit
 Events that support
@@ -5940,13 +5974,11 @@ ElicitationResult
 FileChanged
 InstructionsLoaded
 Notification
-PermissionDenied
 PostCompact
 PreCompact
 SessionEnd
 StopFailure
 SubagentStart
-TeammateIdle
 WorktreeCreate
 WorktreeRemove
 SessionStart
@@ -6099,6 +6131,10 @@ TaskCreated
 TaskCompleted
 : the reason is returned to Claude as a tool error, similar to
 PreToolUse
+TeammateIdle
+: by default the teammate stops and the reason appears as a warning line. Set
+continueOnBlock: true
+to feed the reason back to the teammate and keep it working instead
 PermissionRequest
 :
 ok: false
@@ -6106,6 +6142,15 @@ has no effect. To deny an approval from a hook, use a
 command hook
 returning
 hookSpecificOutput.decision.behavior: "deny"
+PermissionDenied
+:
+ok: false
+has no effect because the denial already happened. The only output this event reads is
+hookSpecificOutput.retry
+, which prompt and agent hooks cannot set — they run on this event, but their output is discarded. Use a
+command hook
+to return
+retry
 If you need finer control on any event, use a
 command hook
 with the per-event fields described in

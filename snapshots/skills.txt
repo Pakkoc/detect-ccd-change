@@ -59,7 +59,7 @@ and
 , and bundled skills like
 /debug
 and
-/simplify
+/code-review
 , see the
 commands reference
 .
@@ -87,7 +87,7 @@ dynamic context injection
 ​
 Bundled skills
 Claude Code includes a set of bundled skills that are available in every session, including
-/simplify
+/code-review
 ,
 /batch
 ,

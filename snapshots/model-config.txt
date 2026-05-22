@@ -22,7 +22,8 @@ Resources
 Settings and permissions
 Settings
 Permissions
-Sandboxing
+Sandbox environments
+Bash sandbox
 Model and responses
 Model configuration
 Speed up responses with fast mode
@@ -620,11 +621,15 @@ background functionality
 CLAUDE_CODE_SUBAGENT_MODEL
 The model to use for all
 subagents
-. Overrides both the per-invocation
+and
+agent teams
+. Overrides the per-invocation
 model
 parameter and the subagent definition’s
 model
-frontmatter
+frontmatter. Set to
+inherit
+to use normal model resolution instead
 Note:
 ANTHROPIC_SMALL_FAST_MODEL
 is deprecated in favor of
@@ -874,7 +879,7 @@ How Claude Code uses prompt caching
 Was this page helpful?
 Yes
 No
-Sandboxing
+Bash sandbox
 Speed up responses with fast mode
 ⌘
 I
