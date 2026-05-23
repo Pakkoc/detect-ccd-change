@@ -565,7 +565,11 @@ Set to
 worktree
 to run the subagent in a temporary
 git worktree
-, giving it an isolated copy of the repository. The worktree is automatically cleaned up if the subagent makes no changes
+, giving it an isolated copy of the repository branched by default from your
+default branch
+rather than the parent session’s
+HEAD
+. The worktree is automatically cleaned up if the subagent makes no changes
 color
 No
 Display color for the subagent in the task list and transcript. Accepts

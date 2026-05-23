@@ -135,11 +135,13 @@ Creating subagents
 Programmatic definition (recommended)
 Define subagents directly in your code using the
 agents
-parameter. This example creates two subagents: a code reviewer with read-only access and a test runner that can execute commands. The
+parameter. This example creates two subagents: a code reviewer with read-only access and a test runner that can execute commands. Claude invokes subagents through the
 Agent
-tool must be included in
+tool, so include
+Agent
+in
 allowedTools
-since Claude invokes subagents through the Agent tool.
+to auto-approve subagent invocations without a permission prompt.
 Python
 TypeScript
 import
@@ -164,7 +166,7 @@ prompt
 options
 =
 ClaudeAgentOptions(
-# Agent tool is required for subagent invocation
+# Auto-approve these tools, including Agent for subagent invocation
 allowed_tools
 =
 [
@@ -330,11 +332,11 @@ Claude Code subagents documentation
 for details on this approach. Programmatically defined agents take precedence over filesystem-based agents with the same name.
 Even without defining custom subagents, Claude can spawn the built-in
 general-purpose
-subagent when
+subagent. This is useful for delegating research or exploration tasks without creating specialized agents. Include
 Agent
-is in your
+in
 allowedTools
-. This is useful for delegating research or exploration tasks without creating specialized agents.
+so these invocations auto-approve without a permission prompt.
 ​
 What subagents inherit
 A subagent’s context window starts fresh (no parent conversation) but isn’t empty. The only channel from parent to subagent is the Agent tool’s prompt string, so include any file paths, error messages, or decisions the subagent needs directly in that prompt.
@@ -1012,9 +1014,16 @@ Troubleshooting
 ​
 Claude not delegating to subagents
 If Claude completes tasks directly instead of delegating to your subagent:
-Include the Agent tool
-: subagents are invoked via the Agent tool, so it must be in
+Check Agent invocations are approved
+: include
+Agent
+in
 allowedTools
+to auto-approve subagent calls. Without it, Agent invocations fall through to your
+canUseTool
+callback or, in
+dontAsk
+mode, are denied
 Use explicit prompting
 : mention the subagent by name in your prompt (for example, “Use the code-reviewer agent to…”)
 Write a clear description

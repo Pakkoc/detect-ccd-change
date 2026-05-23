@@ -190,6 +190,15 @@ custom subagent
 by adding
 isolation: worktree
 to the frontmatter. Each subagent gets a temporary worktree that is removed automatically when the subagent finishes without changes.
+Subagent worktrees use the same
+base branch
+as
+--worktree
+, so they branch from your repository’s default branch unless
+worktree.baseRef
+is set to
+"head"
+.
 ​
 Clean up worktrees
 When you exit a worktree session, cleanup depends on whether you made changes:
