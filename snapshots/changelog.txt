@@ -58,6 +58,10 @@ Run
 claude --version
 to check your installed version.
 ​
+2.1.150
+May 23, 2026
+Internal infrastructure improvements (no user-facing changes)
+​
 2.1.149
 May 22, 2026
 /usage
