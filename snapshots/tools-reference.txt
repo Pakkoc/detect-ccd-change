@@ -408,6 +408,13 @@ CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1
 Environment variables do not persist. An
 export
 in one command will not be available in the next.
+Aliases and shell functions defined in your shell startup file are available. At session start, Claude Code sources
+~/.zshrc
+,
+~/.bashrc
+, or
+~/.profile
+depending on your shell, captures the resulting aliases, functions, and shell options, and applies them to every Bash command.
 Activate your virtualenv or conda environment before launching Claude Code. To make environment variables persist across Bash commands, set
 CLAUDE_ENV_FILE
 to a shell script before launching Claude Code, or use a

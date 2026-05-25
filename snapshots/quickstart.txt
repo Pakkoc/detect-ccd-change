@@ -146,13 +146,14 @@ apt, dnf, or apk
 on Debian, Fedora, RHEL, and Alpine.
 ​
 Step 2: Log in to your account
-Claude Code requires an account to use. When you start an interactive session with the
+Claude Code requires an account to use. Start an interactive session with the
 claude
-command, you’ll need to log in:
+command and you’ll be prompted to log in on first use:
 claude
-# You'll be prompted to log in on first use
+For Claude subscription or Console accounts, follow the prompts to complete authentication in your browser. To switch accounts later or re-authenticate, type
 /login
-# Follow the prompts to log in with your account
+inside the running session:
+/login
 You can log in using any of these account types:
 Claude Pro, Max, Team, or Enterprise
 (recommended)
@@ -160,9 +161,7 @@ Claude Console
 (API access with pre-paid credits). On first login, a “Claude Code” workspace is automatically created in the Console for centralized cost tracking.
 Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
 (enterprise cloud providers)
-Once logged in, your credentials are stored and you won’t need to log in again. To switch accounts later, use the
-/login
-command.
+Once logged in, your credentials are stored and you won’t need to log in again.
 ​
 Step 3: Start your first session
 Open your terminal in any project directory and start Claude Code:

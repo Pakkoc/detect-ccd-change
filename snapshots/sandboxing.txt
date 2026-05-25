@@ -365,6 +365,18 @@ Blocked access
 ~/.bashrc
 and system binaries in
 /bin/
+Git worktrees
+: when the working directory is a
+linked git worktree
+, the sandbox also allows writes to the main repository’s shared
+.git
+directory so commands such as
+git commit
+can update refs and the index. Writes to
+hooks/
+and
+config
+inside that directory remain denied.
 Configurable
 : define custom allowed and denied paths through settings
 You can grant write access to additional paths using
