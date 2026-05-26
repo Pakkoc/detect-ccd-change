@@ -1176,11 +1176,17 @@ File checkpointing
 env
 Record<string, string | undefined>
 process.env
-Environment variables. See
-Environment variables
-for variables the underlying CLI reads, and
+Environment variables. When set, this replaces the subprocess environment instead of merging with
+process.env
+, so pass
+{ ...process.env, YOUR_VAR: 'value' }
+to keep inherited variables like
+PATH
+. See
 Handle slow or stalled API responses
-for timeout-related variables. Set
+for an example of this pattern, and
+Environment variables
+for variables the underlying CLI reads. Set
 CLAUDE_AGENT_SDK_CLIENT_APP
 to identify your app in the User-Agent header
 executable

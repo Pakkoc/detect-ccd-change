@@ -682,6 +682,7 @@ Add to your
 :
 "/bin/generate_opentelemetry_headers.sh"
 }
+The value can be the path to an executable file, including a path that contains spaces, or a shell command line with arguments. On Windows, the value always runs through the shell, so quote a path that contains spaces inside the JSON value.
 ​
 Script requirements
 The script must output valid JSON with string key-value pairs representing HTTP headers:
@@ -709,6 +710,16 @@ get-api-key.sh
 )
 \"
 }"
+If the helper fails or prints output that doesn’t meet these requirements, Claude Code reports the error in:
+/doctor
+output
+The debug log, when running with
+--debug
+or after running
+/debug
+in the session
+stderr, in non-interactive sessions started with
+-p
 ​
 Refresh behavior
 The headers helper script runs at startup and periodically thereafter to support token refresh. By default, the script runs every 29 minutes. Customize the interval with the
@@ -1275,7 +1286,9 @@ mcp
 custom
 ​
 Tool result event
-Logged when a tool completes execution.
+Logged when a tool completes execution. Not emitted if the tool call was rejected; see the
+Tool decision event
+for rejections.
 Event Name
 :
 claude_code.tool_result
@@ -1313,26 +1326,25 @@ error
 OTEL_LOG_TOOL_DETAILS=1
 ): Full error message when the tool failed
 decision_type
-: Either
+: Always
 "accept"
-or
-"reject"
+, since this event is only emitted after the tool runs (rejected calls don’t produce a tool result)
 decision_source
-: Where the decision came from. One of
+: Where the permission decision came from. One of
 "config"
 ,
 "hook"
 ,
 "user_permanent"
-,
-"user_temporary"
-,
-"user_abort"
 , or
-"user_reject"
+"user_temporary"
 . See the
 Tool decision event
-for what each value means.
+for what each value means. The reject-only sources
+"user_abort"
+and
+"user_reject"
+never appear on this event.
 tool_input_size_bytes
 : Size of the JSON-serialized tool input in bytes
 tool_result_size_bytes
@@ -1607,7 +1619,7 @@ or
 source
 : Where the decision came from:
 "config"
-: Decided automatically without prompting, based on project settings, allow rules in the user’s personal settings, enterprise managed policy,
+: Decided automatically without prompting, based on project settings, allow or deny rules in the user’s personal settings, enterprise managed policy,
 --allowedTools
 or
 --disallowedTools
@@ -1637,7 +1649,13 @@ sessions, both the choice and later matches emit
 "user_abort"
 : Emitted when the user dismissed the permission prompt without answering. Treated as a reject.
 "user_reject"
-: Emitted when the user chose “No” when prompted, or a call matched a deny rule in their personal settings. Treated as a reject.
+: Emitted when the user chose “No” when prompted. In the interactive CLI this is emitted only for that choice itself; calls that match a deny rule in the user’s personal settings emit
+"config"
+instead. In Agent SDK or non-interactive
+-p
+sessions, calls that match a deny rule in personal settings emit
+"user_reject"
+. Treated as a reject.
 ​
 Permission mode changed event
 Logged when the permission mode changes, for example from

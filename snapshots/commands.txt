@@ -610,9 +610,9 @@ usage credits
 /upgrade
 Open the upgrade page to switch to a higher plan tier
 /usage
-Show session cost, plan usage limits, and activity stats. See the
+Show session cost, plan usage limits, and activity stats. On a Pro, Max, Team, or Enterprise plan, includes a breakdown of usage by skill, subagent, plugin, and MCP server. See the
 cost tracking guide
-for subscription-specific details.
+for details.
 /cost
 and
 /stats

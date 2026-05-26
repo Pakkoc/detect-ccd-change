@@ -334,6 +334,12 @@ agent
 Run the main thread as a named subagent. Applies that subagent’s system prompt, tool restrictions, and model. See
 Invoke subagents explicitly
 "code-reviewer"
+allowAllClaudeAiMcps
+(Managed settings only) Load claude.ai connectors alongside a deployed
+managed-mcp.json
+, which otherwise takes exclusive control and suppresses them. See
+Managed MCP configuration
+true
 allowedChannelPlugins
 (Managed settings only) Allowlist of channel plugins that may push messages. Replaces the default Anthropic allowlist when set. Undefined = fall back to the default, empty array = block all channel plugins. Requires
 channelsEnabled: true

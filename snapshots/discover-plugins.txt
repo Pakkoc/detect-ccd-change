@@ -291,7 +291,7 @@ commit-commands
 You can also install directly from the command line:
 /plugin
 install
-commit-commands@anthropics-claude-code
+commit-commands@claude-code-plugins
 See
 Configuration scopes
 to learn more about scopes.

@@ -80,6 +80,10 @@ as usual
 Code Review
 ✅ Supported
 Same automated PR reviews as github.com
+Claude Security
+✅ Supported
+Available in public beta for Enterprise plans at
+claude.ai/security
 Teleport sessions
 ✅ Supported
 Move sessions between web and terminal with
@@ -135,12 +139,12 @@ Return to
 claude.ai/admin-settings/claude-code
 and enable
 Code Review
-and
+, Claude Security, and
 contribution metrics
 for your GHES repositories using the same configuration as github.com.
 ​
 GitHub App permissions
-The manifest configures the GitHub App with the permissions and webhook events Claude needs across web sessions, Code Review, and contribution metrics:
+The manifest configures the GitHub App with the permissions and webhook events Claude needs across web sessions, Code Review, Claude Security, and contribution metrics:
 Permission
 Access
 Used for

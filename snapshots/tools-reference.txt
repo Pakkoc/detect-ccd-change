@@ -95,13 +95,15 @@ Creates an isolated
 git worktree
 and switches into it. Pass a
 path
-to switch into an existing worktree of the current repository instead of creating a new one. Not available to subagents
+to switch into an existing worktree of the current repository instead of creating a new one. Not available to subagents that already run in their own working directory, such as with
+isolation: worktree
 No
 ExitPlanMode
 Presents a plan for approval and exits plan mode
 Yes
 ExitWorktree
-Exits a worktree session and returns to the original directory. Not available to subagents
+Exits a worktree session and returns to the original directory. Not available to subagents that already run in their own working directory, such as with
+isolation: worktree
 No
 Glob
 Finds files based on pattern matching. See

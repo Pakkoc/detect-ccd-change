@@ -280,16 +280,22 @@ on an empty prompt to detach and return to agent view. If a dialog has focus and
 , press
 Ctrl+Z
 to detach immediately.
+Ctrl+C
+keeps its standard interrupt behavior while attached: it cancels a running response or
+!
+shell command rather than detaching. Pressing
+Ctrl+C
+twice on an empty prompt detaches, the same as in any session.
 Detaching never stops a background session:
 ←
 ,
-Ctrl+C
-,
-Ctrl+D
-,
 Ctrl+Z
-, and
+,
 /exit
+, and double
+Ctrl+C
+or double
+Ctrl+D
 all leave it running. To end a session from inside it, run
 /stop
 .

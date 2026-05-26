@@ -70,6 +70,13 @@ to pick a style from a menu. Your selection is saved to
 at the
 local project level
 .
+The standalone
+/output-style
+command was deprecated in v2.1.73 and removed in v2.1.91. Use
+/config
+or edit the
+outputStyle
+setting directly.
 To set a style without the menu, edit the
 outputStyle
 field directly in a settings file:
