@@ -1,36 +1,3 @@
-CLI reference - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Reference
-CLI reference
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Reference
-CLI reference
-Commands
-Environment variables
-Tools reference
-Interactive mode
-Checkpointing
-Hooks reference
-Plugins reference
-Channels reference
-Glossary
-Glossary
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -412,13 +379,13 @@ claude --init-only
 --include-hook-events
 Include all hook lifecycle events in the output stream. Requires
 --output-format stream-json
-claude -p --output-format stream-json --include-hook-events "query"
+claude -p --output-format stream-json --verbose --include-hook-events "query"
 --include-partial-messages
 Include partial streaming events in output. Requires
 --print
 and
 --output-format stream-json
-claude -p --output-format stream-json --include-partial-messages "query"
+claude -p --output-format stream-json --verbose --include-partial-messages "query"
 --input-format
 Specify input format for print mode (options:
 text
@@ -553,7 +520,7 @@ Re-emit user messages from stdin back on stdout for acknowledgment. Requires
 --input-format stream-json
 and
 --output-format stream-json
-claude -p --input-format stream-json --output-format stream-json --replay-user-messages
+claude -p --input-format stream-json --output-format stream-json --verbose --replay-user-messages
 --resume
 ,
 -r
@@ -702,5 +669,3 @@ No
 Commands
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

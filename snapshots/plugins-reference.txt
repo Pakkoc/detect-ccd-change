@@ -1,36 +1,3 @@
-Plugins reference - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Reference
-Plugins reference
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Reference
-CLI reference
-Commands
-Environment variables
-Tools reference
-Interactive mode
-Checkpointing
-Hooks reference
-Plugins reference
-Channels reference
-Glossary
-Glossary
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -1816,9 +1783,9 @@ tokens added to every session by the plugin’s listing text, such as skill desc
 On-invoke:
 tokens a component costs when it fires. Shown per component, not as a plugin total, because a typical session invokes only a subset of components.
 This example shows what the output looks like for a plugin with two skills:
-security-guidance 1.2.0
-Real-time security analysis for Claude Code sessions
-Source: security-guidance@claude-code-marketplace
+dependency-guard 1.2.0
+Dependency analysis for Claude Code sessions
+Source: dependency-guard@example-marketplace
 Component inventory
 Skills (2)  scan-dependencies, review-changes
 Agents (0)
@@ -2103,5 +2070,3 @@ Hooks reference
 Channels reference
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

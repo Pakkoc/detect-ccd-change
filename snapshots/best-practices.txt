@@ -1,52 +1,3 @@
-Best practices for Claude Code - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Use Claude Code
-Best practices for Claude Code
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Getting started
-Overview
-Quickstart
-Changelog
-Core concepts
-How Claude Code works
-Extend Claude Code
-Explore the .claude directory
-Explore the context window
-Prompt caching
-Use Claude Code
-Store instructions and memories
-Permission modes
-Manage sessions
-Common workflows
-Prompt library
-Best practices
-Platforms and integrations
-Overview
-Remote Control
-Claude Code on the web
-Claude Code on desktop
-Chrome extension (beta)
-Computer use (preview)
-Visual Studio Code
-JetBrains IDEs
-Code review & CI/CD
-Claude Code in Slack
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -91,6 +42,7 @@ UI changes can be verified using the
 Claude in Chrome extension
 . It opens new tabs in your browser, tests the UI, and iterates until the code works.
 Your verification can also be a test suite, a linter, or a Bash command that checks output. Invest in making your verification rock-solid.
+Have Claude show evidence rather than asserting success: the test output, the command it ran and what it returned, or a screenshot of the result. Reviewing evidence is faster than re-running the verification yourself, and it works for sessions you weren’t watching.
 ​
 Explore first, then plan, then code
 Separate research and planning from implementation to avoid solving the wrong problem.
@@ -256,7 +208,7 @@ and
 root/foo/CLAUDE.md
 are pulled in automatically
 Child directories
-: Claude pulls in child CLAUDE.md files on demand when working with files in those directories
+: Claude pulls in child CLAUDE.md files on demand when it reads a file in those directories
 ​
 Configure permissions
 Use
@@ -473,6 +425,7 @@ I want to build [brief description]. Interview me in detail using the AskUserQue
 Ask about technical implementation, UI/UX, edge cases, concerns, and tradeoffs. Don't ask obvious questions, dig into the hard parts I might not have considered.
 Keep interviewing until we've covered everything, then write a complete spec to SPEC.md.
 Once the spec is complete, start a fresh session to execute it. The new session has clean context focused entirely on implementation, and you have a written spec to reference.
+The most useful specs are self-contained: they name the files and interfaces involved, state what is out of scope, and end with an end-to-end verification step that proves the feature works. Time spent making the spec precise pays off more than time spent watching the implementation.
 ​
 Manage your session
 Conversations are persistent and reversible. Use this to your advantage!
@@ -579,7 +532,7 @@ Run non-interactive mode
 Use
 claude -p "prompt"
 in CI, pre-commit hooks, or scripts. Add
---output-format stream-json
+--output-format stream-json --verbose
 for streaming JSON output.
 With
 claude -p "your prompt"
@@ -602,6 +555,7 @@ claude
 "Analyze this log file"
 --output-format
 stream-json
+--verbose
 ​
 Run multiple Claude sessions
 Run multiple Claude sessions in parallel to speed up development, run isolated experiments, or start complex workflows.
@@ -686,6 +640,23 @@ flag, auto mode aborts if the classifier repeatedly blocks actions, since there 
 when auto mode falls back
 for thresholds.
 ​
+Add an adversarial review step
+Before treating a task as done, have a subagent review the diff in a fresh context and report gaps.
+The longer Claude works unattended, the more an independent check matters before you count the work as done. A reviewer running in a fresh
+subagent
+context sees only the diff and the criteria you give it, not the reasoning that produced the change, so it evaluates the result on its own terms.
+For a correctness check, run the bundled
+/code-review
+skill
+, which reviews the current diff for bugs in a fresh subagent and returns findings to the session. To check the diff against your plan instead, write the review prompt yourself. Name the work to check, the plan to check it against, and what counts as a finding:
+Use a subagent to review the rate limiter diff against PLAN.md. Check that
+every requirement is implemented, the listed edge cases have tests, and
+nothing outside the task's scope changed. Report gaps, not style preferences.
+Because the reviewer runs as a subagent, the implementing session receives the gaps directly and can fix them and re-review without you copying findings between windows. For longer autonomous runs, an
+agent team
+can keep this loop going across many tasks while you spot-check the recorded findings.
+A reviewer prompted to find gaps will usually report some, even when the work is sound, because that is what it was asked to do. Chasing every finding leads to over-engineering: extra abstraction layers, defensive code, and tests for cases that can’t happen. Tell the reviewer to flag only gaps that affect correctness or the stated requirements, and treat the rest as optional.
+​
 Avoid common failure patterns
 These are common mistakes. Recognizing them early saves time:
 The kitchen sink session.
@@ -737,5 +708,3 @@ Prompt library
 Overview
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

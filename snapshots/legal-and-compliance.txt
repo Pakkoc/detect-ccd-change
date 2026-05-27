@@ -1,26 +1,3 @@
-Legal and compliance - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Resources
-Legal and compliance
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Resources
-Legal and compliance
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -93,5 +70,3 @@ Yes
 No
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

@@ -1,47 +1,3 @@
-Keep Claude working toward a goal - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Automation
-Keep Claude working toward a goal
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Agents and parallel work
-Overview
-Create custom subagents
-Agent view
-Run agent teams
-Isolate sessions with worktrees
-Tools and plugins
-Model Context Protocol (MCP)
-Discover and install prebuilt plugins
-Create plugins
-Extend Claude with skills
-Automation
-Automate with hooks
-Push external events to Claude
-Run prompts on a schedule
-Goals
-Programmatic usage
-Launch sessions from links
-Troubleshooting
-Troubleshoot installation and login
-Troubleshoot performance and stability
-Debug configuration
-Error reference
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -236,5 +192,3 @@ Run prompts on a schedule
 Programmatic usage
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

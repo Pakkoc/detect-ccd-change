@@ -1,52 +1,3 @@
-How Claude remembers your project - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Use Claude Code
-How Claude remembers your project
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Getting started
-Overview
-Quickstart
-Changelog
-Core concepts
-How Claude Code works
-Extend Claude Code
-Explore the .claude directory
-Explore the context window
-Prompt caching
-Use Claude Code
-Store instructions and memories
-Permission modes
-Manage sessions
-Common workflows
-Prompt library
-Best practices
-Platforms and integrations
-Overview
-Remote Control
-Claude Code on the web
-Claude Code on desktop
-Chrome extension (beta)
-Computer use (preview)
-Visual Studio Code
-JetBrains IDEs
-Code review & CI/CD
-Claude Code in Slack
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -67,7 +18,9 @@ Troubleshoot
 when instructions aren’t being followed
 ​
 CLAUDE.md vs auto memory
-Claude Code has two complementary memory systems. Both are loaded at the start of every conversation. Claude treats them as context, not enforced configuration. The more specific and concise your instructions, the more consistently Claude follows them.
+Claude Code has two complementary memory systems. Both are loaded at the start of every conversation. Claude treats them as context, not enforced configuration. To block an action regardless of what Claude decides, use a
+PreToolUse hook
+instead. The more specific and concise your instructions, the more consistently Claude follows them.
 CLAUDE.md files
 Auto memory
 Who writes it
@@ -198,7 +151,7 @@ Import additional files
 CLAUDE.md files can import additional files using
 @path/to/import
 syntax. Imported files are expanded and loaded into context at launch alongside the CLAUDE.md that references them.
-Both relative and absolute paths are allowed. Relative paths resolve relative to the file containing the import, not the working directory. Imported files can recursively import other files, with a maximum depth of five hops.
+Both relative and absolute paths are allowed. Relative paths resolve relative to the file containing the import, not the working directory. Imported files can recursively import other files, with a maximum depth of four hops.
 To pull in a README, package.json, and a workflow guide, reference them with
 @
 syntax anywhere in your CLAUDE.md:
@@ -294,7 +247,9 @@ CLAUDE.local.md
 files in subdirectories under your current working directory. Instead of loading them at launch, they are included when Claude reads files in those subdirectories.
 If you work in a large monorepo where other teams’ CLAUDE.md files get picked up, use
 claudeMdExcludes
-to skip them.
+to skip them. For the full layout of root and per-directory CLAUDE.md files and rules, see
+Monorepos and large repos
+.
 Block-level HTML comments (
 <!-- maintainer notes -->
 ) in CLAUDE.md files are stripped before the content is injected into Claude’s context. Use them to leave notes for human maintainers without spending context tokens on them. Comments inside code blocks are preserved. When you open a CLAUDE.md file directly with the Read tool, comments remain visible.
@@ -679,5 +634,3 @@ Prompt caching
 Permission modes
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

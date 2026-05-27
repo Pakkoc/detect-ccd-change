@@ -1,52 +1,3 @@
-Use Claude Code with Chrome (beta) - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Platforms and integrations
-Use Claude Code with Chrome (beta)
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Getting started
-Overview
-Quickstart
-Changelog
-Core concepts
-How Claude Code works
-Extend Claude Code
-Explore the .claude directory
-Explore the context window
-Prompt caching
-Use Claude Code
-Store instructions and memories
-Permission modes
-Manage sessions
-Common workflows
-Prompt library
-Best practices
-Platforms and integrations
-Overview
-Remote Control
-Claude Code on the web
-Claude Code on desktop
-Chrome extension (beta)
-Computer use (preview)
-Visual Studio Code
-JetBrains IDEs
-Code review & CI/CD
-Claude Code in Slack
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -277,9 +228,7 @@ Getting started with Claude in Chrome
 Was this page helpful?
 Yes
 No
-Desktop changelog
+Scheduled tasks
 Computer use (preview)
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

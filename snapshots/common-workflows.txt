@@ -1,52 +1,3 @@
-Common workflows - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Use Claude Code
-Common workflows
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Getting started
-Overview
-Quickstart
-Changelog
-Core concepts
-How Claude Code works
-Extend Claude Code
-Explore the .claude directory
-Explore the context window
-Prompt caching
-Use Claude Code
-Store instructions and memories
-Permission modes
-Manage sessions
-Common workflows
-Prompt library
-Best practices
-Platforms and integrations
-Overview
-Remote Control
-Claude Code on the web
-Claude Code on desktop
-Chrome extension (beta)
-Computer use (preview)
-Visual Studio Code
-JetBrains IDEs
-Code review & CI/CD
-Claude Code in Slack
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -72,6 +23,9 @@ Prompt recipes
 These are prompt patterns for everyday tasks like exploring unfamiliar code, debugging, refactoring, writing tests, and creating PRs. Each works in any Claude Code surface; adapt the wording to your project.
 ​
 Understand new codebases
+For configuring Claude Code in a monorepo or large codebase, see
+Monorepos and large repos
+.
 ​
 Get a quick codebase overview
 Suppose you’ve just joined a new project and need to understand its structure quickly.
@@ -394,5 +348,3 @@ Manage sessions
 Prompt library
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

@@ -1,55 +1,3 @@
-Configure server-managed settings - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Setup and access
-Configure server-managed settings
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Setup and access
-Administration overview
-Advanced setup
-Authentication
-Server-managed settings
-Managed MCP configuration
-Auto mode
-Deployment
-Overview
-Amazon Bedrock
-Claude Platform on AWS
-Google Vertex AI
-Microsoft Foundry
-Network configuration
-LLM gateway
-Development containers
-Usage and costs
-Monitoring
-Costs
-Track team usage with analytics
-Plugin distribution
-Create and distribute a plugin marketplace
-Plugin dependency versions
-Recommend your plugin from your CLI
-Security and data
-Security
-Data usage
-Zero data retention
-Adoption
-Communications kit
-Champion kit
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -362,5 +310,3 @@ Authentication
 Managed MCP configuration
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.

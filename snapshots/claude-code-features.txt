@@ -1,62 +1,3 @@
-Use Claude Code features in the SDK - Claude Code Docs
-Skip to main content
-Claude Code Docs
-home page
-English
-Search...
-⌘
-K
-Ask AI
-Search...
-Navigation
-Core concepts
-Use Claude Code features in the SDK
-Getting started
-Build with Claude Code
-Administration
-Configuration
-Reference
-Agent SDK
-What's New
-Resources
-Agent SDK
-Overview
-Quickstart
-Core concepts
-How the agent loop works
-Use Claude Code features
-Work with sessions
-Persist sessions to external storage
-Input and output
-Streaming Input
-Handle approvals and user input
-Stream responses in real-time
-Get structured output from agents
-Extend with tools
-Give Claude custom tools
-Connect to external tools with MCP
-Scale to many tools with tool search
-Subagents in the SDK
-Customize behavior
-Modifying system prompts
-Slash Commands in the SDK
-Agent Skills in the SDK
-Plugins in the SDK
-Control and observability
-Configure permissions
-Intercept and control agent behavior with hooks
-Rewind file changes with checkpointing
-Track cost and usage
-Observability with OpenTelemetry
-Todo Lists
-Deployment
-Hosting the Agent SDK
-Securely deploying AI agents
-SDK references
-TypeScript SDK
-TypeScript V2 (removed)
-Python SDK
-Migration Guide
 Documentation Index
 Fetch the complete documentation index at:
 https://code.claude.com/docs/llms.txt
@@ -644,5 +585,3 @@ How the agent loop works
 Work with sessions
 ⌘
 I
-Assistant
-Responses are generated using AI and may contain mistakes.
