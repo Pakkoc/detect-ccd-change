@@ -978,6 +978,17 @@ MachinePolicy
 or
 UserPolicy
 regardless of this setting
+CLAUDE_CODE_PROPAGATE_TRACEPARENT
+Set to
+1
+to propagate W3C trace context when
+ANTHROPIC_BASE_URL
+points at a custom proxy. Propagation covers the
+traceparent
+header on model and HTTP MCP requests and the
+TRACEPARENT
+environment variable for Bash, PowerShell, and hook subprocesses. By default, propagation is enabled only when connected directly to the Anthropic API. See
+Traces (beta)
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
 Set by host platforms that embed Claude Code and manage model provider routing on its behalf. When set, provider-selection, endpoint, and authentication variables such as
 CLAUDE_CODE_USE_BEDROCK
@@ -1449,8 +1460,7 @@ Set to
 1
 to opt out of telemetry. Equivalent to setting
 DISABLE_TELEMETRY
-. Honored as the
-standard cross-tool convention
+. Claude Code honors this as the cross-tool convention recognized by many developer CLIs
 ENABLE_CLAUDEAI_MCP_SERVERS
 Set to
 false
@@ -1609,6 +1619,11 @@ OTEL_METRICS_INCLUDE_ACCOUNT_UUID
 Set to
 false
 to exclude account UUID from metrics attributes (default: included). See
+Monitoring
+OTEL_METRICS_INCLUDE_ENTRYPOINT
+Set to
+true
+to include the session entrypoint in metrics attributes (default: excluded). See
 Monitoring
 OTEL_METRICS_INCLUDE_SESSION_ID
 Set to

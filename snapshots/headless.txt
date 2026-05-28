@@ -449,7 +449,7 @@ git diff-index
 User-invoked
 skills
 like
-/commit
+/code-review
 and
 built-in commands
 are only available in interactive mode. In

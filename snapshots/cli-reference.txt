@@ -343,7 +343,7 @@ is set. Use with
 for scripted, multi-user workloads
 claude -p --exclude-dynamic-system-prompt-sections "query"
 --fallback-model
-Enable automatic fallback to a specified model when the default model is overloaded. Takes effect in print mode (
+Enable automatic fallback to a specified model when the default model is overloaded or not available, for example a retired model. Takes effect in print mode (
 -p
 ) and in
 background sessions

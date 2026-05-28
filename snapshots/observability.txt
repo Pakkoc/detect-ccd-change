@@ -239,7 +239,7 @@ TRACESTATE
 into the child process environment, and the CLI reads them so its
 claude_code.interaction
 span becomes a child of your span. The agent run then appears inside your application’s trace instead of as a disconnected root.
-The CLI also forwards
+When trace-context propagation is enabled, the CLI also forwards
 TRACEPARENT
 to every Bash and PowerShell command it runs. If a command launched through the Bash tool emits its own OpenTelemetry spans, those spans nest under the
 claude_code.tool.execution

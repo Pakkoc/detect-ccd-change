@@ -870,6 +870,8 @@ PostToolBatch
 After a full batch of parallel tool calls resolves, before the next model call
 Notification
 When Claude Code sends a notification
+MessageDisplay
+While assistant message text is displayed
 SubagentStart
 When a subagent is spawned
 SubagentStop
@@ -1418,6 +1420,8 @@ WorktreeCreate
 WorktreeRemove
 ,
 CwdChanged
+,
+MessageDisplay
 no matcher support
 always fires on every occurrence
 A few more examples showing matchers on different event types:

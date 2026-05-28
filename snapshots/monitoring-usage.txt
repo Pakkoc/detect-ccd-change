@@ -267,6 +267,10 @@ OTEL_METRICS_INCLUDE_ACCOUNT_UUID
 Include user.account_uuid and user.account_id attributes in metrics
 true
 false
+OTEL_METRICS_INCLUDE_ENTRYPOINT
+Include app.entrypoint attribute in metrics
+false
+true
 These variables help control the cardinality of metrics, which affects storage requirements and query performance in your metrics backend. Lower cardinality generally means better performance and lower storage costs but less granular data for analysis.
 ​
 Traces (beta)
@@ -334,7 +338,20 @@ header set to the
 claude_code.llm_request
 span’s context, and the API’s
 traceresponse
-header is recorded as a span link. Together these connect Claude Code’s client-side spans to the server-side trace through any compliant intermediary. The header is not sent to third-party providers.
+header is recorded as a span link. Together these connect Claude Code’s client-side spans to the server-side trace through any compliant intermediary. Outbound HTTP MCP requests carry
+traceparent
+the same way. The header is not sent to third-party providers.
+By default, the
+traceparent
+header on model and HTTP MCP requests is sent only when
+ANTHROPIC_BASE_URL
+is unset or points at the Anthropic API, since some proxies reject unrecognized headers. The subprocess
+TRACEPARENT
+variable is controlled by the same switch for consistency. If you run Claude Code through a custom
+ANTHROPIC_BASE_URL
+proxy and want trace context propagated, set
+CLAUDE_CODE_PROPAGATE_TRACEPARENT=1
+.
 In Agent SDK and non-interactive sessions started with
 -p
 , Claude Code also reads
@@ -900,6 +917,19 @@ app.version
 Current Claude Code version
 OTEL_METRICS_INCLUDE_VERSION
 (default: false)
+app.entrypoint
+How the session was launched, such as
+cli
+,
+sdk-cli
+,
+sdk-ts
+,
+sdk-py
+, or
+claude-vscode
+OTEL_METRICS_INCLUDE_ENTRYPOINT
+(default: false)
 organization.id
 Organization UUID (when authenticated)
 Always included when available
@@ -1059,6 +1089,14 @@ plugin.name
 . Absent when neither the skill nor the subagent has an owning plugin.
 marketplace.name
 : Marketplace the owning plugin was installed from. Only emitted for official-marketplace plugins. Absent otherwise.
+mcp_server.name
+: MCP server whose tool ran in the turn that produced this request. Built-in, claude.ai-proxied, and official-registry server names appear verbatim. User-configured server names are replaced with
+"custom"
+. Absent when no MCP tool ran.
+mcp_tool.name
+: MCP tool that ran in the turn that produced this request, with the same redaction as
+mcp_server.name
+. Absent when no MCP tool ran.
 ​
 Token counter
 Incremented after each API request.
@@ -1102,7 +1140,11 @@ skill.name
 plugin.name
 ,
 marketplace.name
-: Skill, plugin, and agent attribution for the request. See
+,
+mcp_server.name
+,
+mcp_tool.name
+: Skill, plugin, agent, and MCP attribution for the request. See
 Cost counter
 for definitions and redaction behavior.
 ​
@@ -1393,6 +1435,20 @@ applied to the request:
 , or
 "max"
 . Absent when the model does not support effort.
+agent.name
+,
+skill.name
+,
+plugin.name
+,
+marketplace.name
+,
+mcp_server.name
+,
+mcp_tool.name
+: Skill, plugin, agent, and MCP attribution for the request. See
+Cost counter
+for definitions and redaction behavior.
 ​
 API error event
 Logged when an API request to Claude fails.
@@ -1444,6 +1500,20 @@ effort
 :
 Effort level
 applied to the request. Absent when the model does not support effort.
+agent.name
+,
+skill.name
+,
+plugin.name
+,
+marketplace.name
+,
+mcp_server.name
+,
+mcp_tool.name
+: Skill, plugin, agent, and MCP attribution for the request. See
+Cost counter
+for definitions and redaction behavior.
 ​
 API request body event
 Logged for each API request attempt when

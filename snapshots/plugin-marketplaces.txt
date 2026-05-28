@@ -1676,6 +1676,7 @@ remove
 nam
 e
 >
+[options]
 Arguments:
 <name>
 : marketplace name to remove, as shown by
@@ -1686,7 +1687,22 @@ from
 marketplace.json
 , not the source you passed to
 add
-Removing a marketplace also uninstalls any plugins you installed from it. To refresh a marketplace without losing installed plugins, use
+Options:
+Option
+Description
+Default
+--scope <scope>
+Restrict removal to a single settings scope:
+user
+,
+project
+, or
+local
+. See
+Plugin installation scopes
+. When omitted, the declaration is removed from every editable scope. When given, only that scope’s declaration is removed; the shared state, cache, and installed plugin data are preserved when the marketplace is still declared in another scope
+(all scopes)
+Removing a marketplace from its last remaining scope also uninstalls any plugins you installed from it. To refresh a marketplace without losing installed plugins, use
 claude plugin marketplace update
 instead.
 ​

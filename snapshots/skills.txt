@@ -388,7 +388,12 @@ true
 .
 allowed-tools
 No
-Tools Claude can use without asking permission when this skill is active. Accepts a space-separated string or a YAML list.
+Tools Claude can use without asking permission when this skill is active. Accepts a space- or comma-separated string, or a YAML list.
+disallowed-tools
+No
+Tools removed from Claude’s available pool while this skill is active. Use for autonomous skills that should never call certain tools, such as
+AskUserQuestion
+for a background loop. Accepts a space- or comma-separated string, or a YAML list. The restriction clears when you send your next message.
 model
 No
 Model to use when this skill is active. The override applies for the rest of the current turn and is not saved to settings; the session model resumes on your next prompt. Accepts the same values as

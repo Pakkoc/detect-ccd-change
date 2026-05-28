@@ -833,6 +833,9 @@ Most Ctrl+key shortcuts pass through vim mode to the keybinding system
 In vim NORMAL mode,
 ?
 shows the help menu (vim behavior)
+In vim NORMAL mode,
+/
+opens history search, the same as Ctrl+R in standard mode
 ​
 Validation
 Claude Code validates your keybindings and shows warnings for:

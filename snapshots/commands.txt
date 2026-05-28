@@ -60,11 +60,15 @@ Before you ship.
 /diff
 shows what changed,
 /code-review
-checks the diff for correctness bugs, and
+checks the diff for correctness bugs and cleanups and can apply the findings with
+--fix
+, and
 /review
 or
 /security-review
 give a deeper read-only pass.
+/code-review ultra
+runs a multi-agent review in the cloud.
 Between sessions.
 /clear
 starts fresh on a new task while keeping project memory.
@@ -187,20 +191,24 @@ instead. Aliases:
 /reset
 ,
 /new
-/code-review [low|medium|high|xhigh|max] [--comment] [target]
+/code-review [low|medium|high|xhigh|max|ultra] [--fix] [--comment] [target]
 Skill
 .
-Review the current diff for correctness bugs and report findings without editing files. Lower
-effort levels
-return fewer, higher-confidence findings, while
-high
-through
-max
-give broader coverage and may include uncertain findings. Without an effort argument, the review uses the session’s current effort. Pass
+Review the current diff for correctness bugs and for reuse, simplification, and efficiency cleanups. Pass
+--fix
+to apply findings to your working tree,
 --comment
-to post findings as inline comments on the current GitHub PR. Pass a path or PR reference to review a specific target. Formerly
+to post them as inline GitHub PR comments, or
+ultra
+to run a deep
+cloud review
+.
 /simplify
-, which still works as an alias
+is equivalent to
+/code-review --fix
+. See
+Review a diff locally
+for effort levels and targeting
 /color [color|default]
 Set the prompt bar color for the current session. Available colors:
 red
@@ -428,6 +436,10 @@ View the changelog in an interactive version picker. Select a specific version t
 Reload all active
 plugins
 to apply pending changes without restarting. Reports counts for each reloaded component and flags any load errors
+/reload-skills
+Re-scan
+skill
+and command directories so skills added or changed on disk during the session become available without restarting. Reports how many skills are available and how many were added or removed
 /remote-control
 Make this session available for
 remote control
@@ -448,7 +460,7 @@ bg
 /continue
 /review [PR]
 Review a pull request locally in your current session. For a deeper cloud-based review, see
-/ultrareview
+/code-review ultra
 /rewind
 Rewind the conversation and/or code to a previous point, or summarize from a selected message. See
 checkpointing
@@ -572,7 +584,11 @@ session, review it in your browser, then execute remotely or send it back to you
 /ultrareview [PR]
 Run a deep, multi-agent code review in a cloud sandbox with
 ultrareview
-. Includes 3 free runs on Pro and Max, then requires
+. The preferred invocation is now
+/code-review ultra
+, and
+/ultrareview
+remains as an alias. Includes 3 free runs on Pro and Max, then requires
 usage credits
 /upgrade
 Open the upgrade page to switch to a higher plan tier
