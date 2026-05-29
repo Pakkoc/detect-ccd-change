@@ -218,11 +218,11 @@ Without
 ANTHROPIC_DEFAULT_OPUS_MODEL
 , the
 opus
-alias on Vertex resolves to Opus 4.6. Set it to the Opus 4.7 ID to use the latest model:
+alias on Vertex resolves to Opus 4.6. Set it to the Opus 4.8 ID to use the latest model:
 export
 ANTHROPIC_DEFAULT_OPUS_MODEL
 =
-'claude-opus-4-7'
+'claude-opus-4-8'
 export
 ANTHROPIC_DEFAULT_SONNET_MODEL
 =
@@ -250,7 +250,7 @@ To customize models further:
 export
 ANTHROPIC_MODEL
 =
-'claude-opus-4-7'
+'claude-opus-4-8'
 export
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 =
@@ -281,7 +281,7 @@ Vertex IAM documentation
 Create a dedicated GCP project for Claude Code to simplify cost tracking and access control.
 ​
 1M token context window
-Claude Opus 4.7, Opus 4.6, and Sonnet 4.6 support the
+Claude Opus 4.6 and later, and Sonnet 4.6, support the
 1M token context window
 on Vertex AI. Claude Code automatically enables the extended context window when you select a 1M model variant.
 The

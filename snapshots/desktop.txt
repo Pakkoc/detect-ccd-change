@@ -151,7 +151,7 @@ dontAsk
 permission mode is available only in the
 CLI
 .
-Auto mode is a research preview available to all users on the Anthropic API. It is not available on third-party providers. It requires Claude Sonnet 4.6, Opus 4.6, or Opus 4.7.
+Auto mode is a research preview available to all users on the Anthropic API. It is not available on third-party providers. It requires Claude Opus 4.6 or later, or Sonnet 4.6.
 Start complex tasks in Plan mode so Claude maps out an approach before making changes. Once you approve the plan, switch to Auto accept edits or Ask permissions to execute it. See
 explore first, then plan, then code
 for more on this workflow.
@@ -538,7 +538,7 @@ on Windows to open a side chat, or type
 in the prompt box. The side chat can read everything in the main thread up to that point. When you’re done, close the side chat and continue the main session where you left off. Side chats are available in local and SSH sessions.
 ​
 Watch background tasks
-The tasks pane shows the background work running inside the current session: subagents, background shell commands, and workflows. Open it from the
+The tasks pane shows the background work running inside the current session: subagents, background shell commands, and dynamic workflows. Open it from the
 Views
 menu or drag it into your layout.
 Click any entry to see its output in the subagent pane or stop it. To see what other sessions are doing, use the
@@ -997,7 +997,7 @@ value is ignored because adaptive reasoning controls thinking depth instead. On 
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 to
 1
-to use a fixed thinking budget; Opus 4.7 always uses adaptive reasoning and has no fixed-budget mode.
+to use a fixed thinking budget; Opus 4.7 and later always use adaptive reasoning and have no fixed-budget mode.
 ​
 Remote sessions
 Remote sessions continue in the background even if you close the app. Usage counts toward your

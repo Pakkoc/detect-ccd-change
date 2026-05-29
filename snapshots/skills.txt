@@ -545,9 +545,13 @@ medium
 high
 ,
 xhigh
-, or
+,
 max
-. Use this to adapt skill instructions to the active effort setting.
+, or
+ultra
+. The
+ultra
+value is the stored value for ultracode. Use this to adapt skill instructions to the active effort setting.
 ${CLAUDE_SKILL_DIR}
 The directory containing the skill’s
 SKILL.md

@@ -227,6 +227,9 @@ Errors
 Go to the
 Discover
 tab to see plugins from the marketplace you just added.
+Plugins marked as relevant to your current working directory are pinned at the top with a
+suggested for this directory
+label.
 3
 Install a plugin
 Select a plugin to view its details. The details pane shows what the plugin contains and what it costs:

@@ -262,6 +262,14 @@ installations require manual updates by default.
 ​
 Auto-updates
 Claude Code checks for updates on startup and periodically while running. Updates download and install in the background, then take effect the next time you start Claude Code.
+Run
+claude doctor
+to see the result of the most recent update attempt.
+If an npm global install can’t auto-update because the npm global directory isn’t writable, Claude Code shows a one-time notice at startup, and
+claude doctor
+lists the available fixes. See
+permission errors during installation
+for details.
 Homebrew, WinGet, apt, dnf, and apk installations do not auto-update by default; see below to opt in for Homebrew and WinGet. To upgrade Homebrew manually, run
 brew upgrade claude-code
 or

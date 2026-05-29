@@ -253,6 +253,8 @@ claude --betas interleaved-thinking
 Start the session as a
 background agent
 and return immediately. Prints the session ID and management commands. Combine with
+--exec
+to run a shell command as a background job instead of a Claude session, or with
 --agent
 to run a specific subagent
 claude --bg "investigate the flaky test"
@@ -342,6 +344,11 @@ is set. Use with
 -p
 for scripted, multi-user workloads
 claude -p --exclude-dynamic-system-prompt-sections "query"
+--exec
+Run a shell command as a PTY-backed background job instead of starting a Claude session. Use with
+--bg
+to launch from the shell
+claude --bg --exec 'pytest -x'
 --fallback-model
 Enable automatic fallback to a specified model when the default model is overloaded or not available, for example a retired model. Takes effect in print mode (
 -p
@@ -494,6 +501,18 @@ Print response without interactive mode (see
 Agent SDK documentation
 for programmatic usage details)
 claude -p "query"
+--prompt-suggestions
+Emit a
+prompt_suggestion
+message after each turn with a predicted next user prompt. Requires
+--print
+,
+--output-format stream-json
+, and
+--verbose
+. See
+Prompt suggestions
+claude -p --prompt-suggestions --output-format stream-json --verbose "query"
 --remote
 Create a new
 web session

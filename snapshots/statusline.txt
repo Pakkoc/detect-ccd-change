@@ -277,6 +277,15 @@ OSC 8 escape sequences
 to make text clickable (Cmd+click on macOS, Ctrl+click on Windows/Linux). Requires a terminal that supports hyperlinks like iTerm2, Kitty, or WezTerm. See the
 clickable links example
 .
+Sizing output to the terminal
+Claude Code captures your script’s output instead of connecting it directly to the terminal, so
+tput cols
+and language-level width detection cannot read the terminal size from inside the script.
+Read the
+COLUMNS
+and
+LINES
+environment variables instead. Claude Code sets these to the current terminal dimensions before running your script. Requires Claude Code v2.1.153 or later.
 The status line runs locally and does not consume API tokens. It temporarily hides during certain UI interactions, including autocomplete suggestions, the help menu, and permission prompts.
 ​
 Available data
@@ -364,9 +373,15 @@ medium
 high
 ,
 xhigh
-, or
+,
 max
-). Reflects the live session value, including mid-session
+, or
+ultra
+). The
+ultra
+value corresponds to ultracode in
+/effort
+; the field reports the stored value, not the display label. Reflects the live session value, including mid-session
 /effort
 changes. Absent when the current model does not support the effort parameter
 thinking.enabled
@@ -462,7 +477,7 @@ Your status line command receives this JSON structure via stdin:
 : {
 "id"
 :
-"claude-opus-4-7"
+"claude-opus-4-8"
 ,
 "display_name"
 :

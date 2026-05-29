@@ -94,6 +94,10 @@ Define a specialized subagent with its own tools
 agents/*.md
 project or global
 Subagents
+Orchestrate many subagents from a script
+workflows/*.js
+project or global
+Dynamic workflows
 Connect external tools over MCP
 .mcp.json
 project only
@@ -188,6 +192,15 @@ Project and global
 ✓
 Subagent definitions with their own prompt and tools
 Subagents
+workflows/*.js
+Project and global
+✓
+Dynamic workflow scripts written by Claude and saved from
+/workflows
+; each file becomes a
+/<name>
+command
+Dynamic workflows
 agent-memory/<name>/
 Project and global
 ✓

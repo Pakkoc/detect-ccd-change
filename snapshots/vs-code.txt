@@ -462,11 +462,7 @@ false
 Skip authentication prompts (for third-party provider setups)
 allowDangerouslySkipPermissions
 false
-Adds
-Auto mode
-and Bypass permissions to the mode selector. Auto mode has
-plan, admin, model, and provider requirements
-, so it may remain unavailable even with this toggle on. Use Bypass permissions only in sandboxes with no internet access.
+Adds Bypass permissions to the mode selector. Use it only in sandboxes with no internet access.
 claudeProcessWrapper
 -
 Executable used to launch the Claude process. The bundled binary path is passed as an argument when present. Set this to a separately installed

@@ -2269,6 +2269,23 @@ post_tokens
 : Approximate token count after compaction
 error
 : Error message when compaction failed
+precompute_reuse
+: Only set when
+trigger
+is
+"manual"
+. Auto-compaction can prepare a summary in the background before the context window fills, and this attribute records whether
+/compact
+reused that prepared summary.
+"hit"
+means it was reused;
+"miss_custom_instructions"
+,
+"miss_hook"
+, and
+"miss_not_ready"
+give the reason a fresh summary was computed instead.
+Requires Claude Code v2.1.153 or later
 ​
 Feedback survey event
 Logged when a session quality survey is shown or answered. See

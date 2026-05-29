@@ -599,6 +599,16 @@ instead of being run. Bundled and managed skills are not affected. Most useful i
 managed settings
 where users cannot override it
 true
+disableWorkflows
+Disable
+dynamic workflows
+and the bundled workflow commands. Default:
+false
+. Equivalent to setting
+CLAUDE_CODE_DISABLE_WORKFLOWS
+to
+1
+true
 editorMode
 Key binding mode for the input prompt:
 "normal"
@@ -1043,6 +1053,17 @@ for the classic main-screen renderer. Set via
 CLAUDE_CODE_NO_FLICKER
 environment variable
 "fullscreen"
+ultracode
+Turn on
+ultracode
+for the session. Session-only and not read from
+settings.json
+. Set through
+/effort ultracode
+,
+--settings
+, or an Agent SDK control request
+true
 useAutoModeDuringPlan
 Whether plan mode uses auto mode semantics when auto mode is available. Default:
 true
@@ -1994,6 +2015,9 @@ false
 enabledPlugins
 Controls which plugins are enabled. Format:
 "plugin-name@marketplace-name": true/false
+. A plugin with no entry at any scope falls back to its
+defaultEnabled
+value.
 Scopes
 :
 User settings
@@ -2109,6 +2133,20 @@ name
 and
 plugins
 )
+For
+github
+and
+git
+sources, set
+"skipLfs": true
+inside the
+source
+object (alongside
+repo
+or
+url
+) to skip Git LFS downloads when Claude Code clones or updates the marketplace repository. LFS pointer files remain as pointers instead of downloading their content. Use this when the repository contains large LFS objects unrelated to plugin content.
+Requires Claude Code v2.1.153 or later.
 Each marketplace entry also accepts an optional
 autoUpdate
 Boolean. Set

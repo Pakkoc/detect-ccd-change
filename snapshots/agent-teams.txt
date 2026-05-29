@@ -454,6 +454,6 @@ Was this page helpful?
 Yes
 No
 Agent view
-Isolate sessions with worktrees
+Dynamic workflows
 ⌘
 I

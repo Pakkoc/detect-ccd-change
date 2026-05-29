@@ -277,7 +277,7 @@ Desktop parallel sessions
 Was this page helpful?
 Yes
 No
-Run agent teams
+Dynamic workflows
 Model Context Protocol (MCP)
 ⌘
 I

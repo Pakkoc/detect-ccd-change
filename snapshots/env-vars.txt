@@ -331,7 +331,9 @@ in subprocesses Claude Code spawns (Bash and PowerShell tools, tmux sessions,
 hook
 commands,
 status line
-commands). Use to detect when a script is running inside a subprocess spawned by Claude Code
+commands, stdio
+MCP server
+subprocesses). Use to detect when a script is running inside a subprocess spawned by Claude Code
 CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS
 Set to
 1
@@ -473,7 +475,7 @@ adaptive reasoning
 on Opus 4.6 and Sonnet 4.6 and fall back to the fixed thinking budget controlled by
 MAX_THINKING_TOKENS
 .
-Has no effect on Opus 4.7, which always uses adaptive reasoning
+Has no effect on Opus 4.7 and later, which always use adaptive reasoning
 CLAUDE_CODE_DISABLE_AGENT_VIEW
 Set to
 1
@@ -643,6 +645,14 @@ Set to
 to disable virtual scrolling in
 fullscreen rendering
 and render every message in the transcript. Use this if scrolling in fullscreen mode shows blank regions where messages should appear
+CLAUDE_CODE_DISABLE_WORKFLOWS
+Set to
+1
+to disable
+workflows
+. Equivalent to the
+disableWorkflows
+setting
 CLAUDE_CODE_EFFORT_LEVEL
 Set the effort level for supported models. Values:
 low
@@ -727,9 +737,9 @@ points at an Anthropic-compatible gateway such as LiteLLM, Kong, or an internal 
 availableModels
 allowlist
 CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE
-Removed in v2.1.142.
-Fast mode
-defaults to Opus 4.7. Set
+Removed in v2.1.142, when the
+fast mode
+default moved from Opus 4.6 to Opus 4.7. Set
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1
 to keep Opus 4.6 instead
 CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
@@ -906,13 +916,11 @@ claude setup-token
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE
 Set to
 1
-to pin
-fast mode
-to Claude Opus 4.6 instead of the default Opus 4.7. With the variable set,
+to pin fast mode to Claude Opus 4.6 instead of the
+current fast mode default
+, which depends on your Claude Code version. With the variable set,
 /fast
-runs on Opus 4.6. Without it,
-/fast
-runs on Opus 4.7
+runs on Opus 4.6. Fast mode for Opus 4.6 is deprecated, and this variable will be removed when it is retired
 CLAUDE_CODE_OTEL_FLUSH_TIMEOUT_MS
 Timeout in milliseconds for flushing pending OpenTelemetry spans (default: 5000). See
 Monitoring
@@ -1056,12 +1064,18 @@ hooks. Applies to session exit,
 timeout
 configured in settings files, up to 60 seconds. Timeouts on plugin-provided hooks do not raise the budget
 CLAUDE_CODE_SESSION_ID
-Set automatically in Bash and PowerShell tool subprocesses and in
+Set automatically to the current session ID in Bash and PowerShell tool subprocesses,
 hook command
-subprocesses to the current session ID. Matches the
+subprocesses, and stdio
+MCP server
+subprocesses. For Bash, PowerShell, and hooks this matches the
 session_id
-field in the hook JSON input. Updated on
+field in the hook JSON input and is updated on
 /clear
+. An MCP server subprocess retains the ID it was spawned with, and may receive the initial startup ID rather than the resumed ID when launched via
+--resume
+or
+--continue
 . Use to correlate scripts and external tools with the Claude Code session that launched them
 CLAUDE_CODE_SHELL
 Override automatic shell detection. Useful when your login shell differs from your preferred working shell (for example,
@@ -1259,9 +1273,15 @@ medium
 high
 ,
 xhigh
-, or
+,
 max
-. Matches the
+, or
+ultra
+. The
+ultra
+value corresponds to ultracode in
+/effort
+; the variable reports the stored value, not the display label. Matches the
 effort.level
 field passed to
 hooks

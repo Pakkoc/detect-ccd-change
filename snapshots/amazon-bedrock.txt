@@ -210,11 +210,11 @@ Without
 ANTHROPIC_DEFAULT_OPUS_MODEL
 , the
 opus
-alias on Bedrock resolves to Opus 4.6. Set it to the Opus 4.7 ID to use the latest model:
+alias on Bedrock resolves to Opus 4.6. Set it to the Opus 4.8 ID to use the latest model:
 export
 ANTHROPIC_DEFAULT_OPUS_MODEL
 =
-'us.anthropic.claude-opus-4-7'
+'us.anthropic.claude-opus-4-8'
 export
 ANTHROPIC_DEFAULT_SONNET_MODEL
 =
@@ -404,7 +404,7 @@ Bedrock IAM documentation
 Create a dedicated AWS account for Claude Code to simplify cost tracking and access control.
 ​
 1M token context window
-Claude Opus 4.7, Opus 4.6, and Sonnet 4.6 support the
+Claude Opus 4.6 and later, and Sonnet 4.6, support the
 1M token context window
 on Amazon Bedrock. Claude Code automatically enables the extended context window when you select a 1M model variant.
 The
