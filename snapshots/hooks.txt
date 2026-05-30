@@ -1426,14 +1426,10 @@ for the turn:
 "high"
 ,
 "xhigh"
-,
-"max"
 , or
-"ultra"
-. If the requested model effort exceeds what the current model supports, this is the downgraded level the model actually used.
-"ultra"
-is the stored value for ultracode and is reported here even though the model receives
-xhigh
+"max"
+. If the requested model effort exceeds what the current model supports, this is the downgraded level the model actually used. Ultracode is not a distinct level and reports as
+"xhigh"
 . The object matches the
 status line
 effort

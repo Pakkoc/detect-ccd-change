@@ -97,8 +97,10 @@ mode skips all permission prompts, including writes to
 .vscode
 ,
 .idea
-, and
+,
 .husky
+, and
+.cargo
 . Removals targeting the filesystem root or home directory, such as
 rm -rf /
 and

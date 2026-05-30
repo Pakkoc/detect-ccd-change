@@ -508,6 +508,7 @@ Protected directories:
 .vscode
 .idea
 .husky
+.cargo
 .claude
 , except for
 .claude/commands

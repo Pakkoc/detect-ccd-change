@@ -365,7 +365,7 @@ to avoid accidentally inheriting ambient values from CI or container environment
 Span hierarchy
 Each user prompt starts a
 claude_code.interaction
-root span. API calls, tool calls, and hook executions are recorded as its children. Tool spans have two child spans of their own: one for the time spent waiting on a permission decision and one for the execution itself. When the Task tool spawns a subagent, the subagent’s API and tool spans nest under the parent’s
+root span. API calls, tool calls, and hook executions are recorded as its children. Tool spans have two child spans of their own: one for the time spent waiting on a permission decision and one for the execution itself. When the Agent tool, or legacy Task tool, spawns a subagent, the subagent’s API and tool spans nest under the parent’s
 claude_code.tool
 span.
 claude_code.interaction
@@ -374,7 +374,7 @@ claude_code.interaction
 └── claude_code.tool
 ├── claude_code.tool.blocked_on_user
 ├── claude_code.tool.execution
-└── (Task tool) subagent claude_code.llm_request / claude_code.tool spans
+└── (Agent tool) subagent claude_code.llm_request / claude_code.tool spans
 In Agent SDK and
 claude -p
 sessions,
@@ -534,7 +534,7 @@ skill_name
 Skill name for the Skill tool
 OTEL_LOG_TOOL_DETAILS
 subagent_type
-Subagent type for the Task tool
+Subagent type for the Agent tool or legacy Task tool
 OTEL_LOG_TOOL_DETAILS
 When
 OTEL_LOG_TOOL_CONTENT=1
@@ -1360,13 +1360,19 @@ git_commit_id
 (the commit SHA, when a
 git commit
 command succeeds)
+For WorkspaceBash tool: includes
+bash_command
+,
+full_command
+,
+timeout
 For MCP tools: includes
 mcp_server_name
 ,
 mcp_tool_name
 For Skill tool: includes
 skill_name
-For Task tool: includes
+For Agent tool or legacy Task tool: includes
 subagent_type
 tool_input
 (when
@@ -1674,6 +1680,46 @@ instead. In Agent SDK or non-interactive
 sessions, calls that match a deny rule in personal settings emit
 "user_reject"
 . Treated as a reject.
+tool_parameters
+(when
+OTEL_LOG_TOOL_DETAILS=1
+): JSON string containing tool-specific parameters. Same shape as the
+Tool result event
+, minus post-execution fields such as
+git_commit_id
+. Values may differ from
+tool_result
+for an accepted call if the permission decision rewrites the tool input via
+updatedInput
+. Use this attribute to see which command was rejected when
+decision
+is
+"reject"
+.
+For Bash tool: includes
+bash_command
+,
+full_command
+,
+timeout
+,
+description
+,
+dangerouslyDisableSandbox
+For WorkspaceBash tool: includes
+bash_command
+,
+full_command
+,
+timeout
+For MCP tools: includes
+mcp_server_name
+,
+mcp_tool_name
+For Skill tool: includes
+skill_name
+For Agent tool or legacy Task tool: includes
+subagent_type
 ​
 Permission mode changed event
 Logged when the permission mode changes, for example from
@@ -2482,24 +2528,34 @@ mcp_tool_name
 tool_input
 payload containing the call arguments
 tool_decision
-Whether the call was allowed or denied, and whether the decision came from config, a hook, or the user
+Whether the call was allowed or denied, whether the decision came from config, a hook, or the user, and a
+tool_parameters
+payload containing
+mcp_server_name
+and
+mcp_tool_name
 Without
 OTEL_LOG_TOOL_DETAILS
-,
+, these events drop the identifying detail:
 tool_result
-events still carry
+: keeps
 tool_name
 and
 mcp_server_scope
-but omit the
+, omits
 mcp_server_name
-/
+,
 mcp_tool_name
-breakdown and the arguments, and
+, and arguments
+tool_decision
+: keeps
+tool_name
+, omits
+tool_parameters
 mcp_server_connection
-events omit
+: omits
 server_name
-and the error message.
+and the error message
 ​
 Map security questions to events
 When building detection rules, look up the signal you want to monitor and query your backend for the corresponding event and attributes:
@@ -2513,6 +2569,8 @@ decision
 source
 ,
 tool_name
+,
+tool_parameters
 Permission mode escalation
 permission_mode_changed
 from_mode
@@ -2548,11 +2606,16 @@ marketplace.name
 marketplace.is_official
 Commands run and files touched
 tool_result
-with
+(executed) or
+tool_decision
+(rejected) with
 OTEL_LOG_TOOL_DETAILS=1
 tool_parameters
-,
+;
 tool_input
+(
+tool_result
+only)
 Claude Code emits the raw event stream only. Anomaly detection, baselining, correlation across sessions, and alerting are the responsibility of your SIEM or observability backend.
 ​
 Send events to a SIEM
@@ -2661,21 +2724,29 @@ User prompt content is not collected by default. Only prompt length is recorded.
 OTEL_LOG_USER_PROMPTS=1
 Tool input arguments and parameters are not logged by default. To include them, set
 OTEL_LOG_TOOL_DETAILS=1
-. When enabled,
+. This data is sent only to the OTEL endpoint you configure, never to Anthropic. Arguments may still contain sensitive values, so configure your telemetry backend to filter or redact these attributes as needed. When enabled:
 tool_result
+and
+tool_decision
 events include a
 tool_parameters
-attribute with Bash commands, MCP server and tool names, and skill names, plus a
+attribute with Bash commands, MCP server and tool names, and skill names. Fields such as
+full_command
+are emitted untruncated
+tool_result
+events additionally include a
 tool_input
-attribute with file paths, URLs, search patterns, and other arguments.
+attribute with file paths, URLs, search patterns, and other arguments. Individual values over 512 characters are truncated and the total is bounded to ~4 K characters
 user_prompt
 events include the verbatim
 command_name
-for custom, plugin, and MCP commands. Trace spans include the same
+for custom, plugin, and MCP commands
+Trace spans include the same
 tool_input
 attribute and input-derived attributes such as
 file_path
-. Individual values over 512 characters are truncated and the total is bounded to ~4 K characters, but the arguments may still contain sensitive values. Configure your telemetry backend to filter or redact these attributes as needed
+, with the same truncation as
+tool_input
 Tool input and output content is not logged in trace spans by default. To include it, set
 OTEL_LOG_TOOL_CONTENT=1
 . When enabled, span events include full tool input and output content truncated at 60 KB per span. This can include raw file contents from Read tool results and Bash command output. Configure your telemetry backend to filter or redact these attributes as needed

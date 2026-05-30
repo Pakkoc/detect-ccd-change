@@ -295,7 +295,9 @@ Key
 Description
 Example
 agent
-Run the main thread as a named subagent. Applies that subagent’s system prompt, tool restrictions, and model. See
+Run the main thread as a named subagent, and set the default agent for sessions dispatched from
+claude agents
+. Applies that subagent’s system prompt, tool restrictions, and model. See
 Invoke subagents explicitly
 "code-reviewer"
 allowAllClaudeAiMcps
@@ -373,9 +375,7 @@ Custom directory for
 auto memory
 storage. Accepts an absolute path or a
 ~/
--prefixed path. Accepted from policy and user settings, and from the
---settings
-flag. Not accepted from project or local settings, since a cloned repository could supply either file to redirect memory writes to sensitive locations
+-prefixed path. From project or local settings, this is honored only after you accept the workspace trust dialog, since a cloned repository can supply this file
 "~/my-memory-dir"
 autoMemoryEnabled
 Enable
@@ -1107,6 +1107,22 @@ voice.enabled
 voice
 object
 true
+workflowKeywordTriggerEnabled
+Whether the word
+workflow
+in a prompt triggers a
+dynamic workflow
+. Set to
+false
+to type the word without triggering one. Ultracode,
+/workflows
+, and saved workflow commands are unaffected. Default:
+true
+. Appears in
+/config
+as
+Workflow keyword trigger
+false
 wslInheritsWindowsSettings
 (Windows managed settings only) When
 true

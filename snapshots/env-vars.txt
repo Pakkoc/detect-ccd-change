@@ -631,7 +631,9 @@ to skip loading skills from the system-wide managed skills directory. Useful for
 CLAUDE_CODE_DISABLE_TERMINAL_TITLE
 Set to
 1
-to disable automatic terminal title updates based on conversation context
+to disable automatic terminal title updates based on conversation context. In Agent SDK and
+claude -p
+sessions, this also skips the background Haiku request that generates the session title
 CLAUDE_CODE_DISABLE_THINKING
 Set to
 1
@@ -1273,15 +1275,11 @@ medium
 high
 ,
 xhigh
-,
-max
 , or
-ultra
-. The
-ultra
-value corresponds to ultracode in
-/effort
-; the variable reports the stored value, not the display label. Matches the
+max
+. Ultracode is not a distinct level and reports as
+xhigh
+. Matches the
 effort.level
 field passed to
 hooks

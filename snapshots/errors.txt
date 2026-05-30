@@ -742,6 +742,11 @@ tool_result
 thinking
 blocks in history no longer matches what the API expects.
 What to do:
+If you are using Opus 4.7 or Opus 4.8, run
+claude update
+first. Versions before v2.1.156 can trigger this error during normal tool use, and
+/rewind
+does not clear it.
 Run
 /rewind
 , or press Esc twice, to step back to a checkpoint before the corrupted turn and continue from there. See

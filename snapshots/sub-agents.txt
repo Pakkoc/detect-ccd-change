@@ -810,8 +810,10 @@ with caution. It skips all permission prompts, allowing the subagent to execute 
 .vscode
 ,
 .idea
-, and
+,
 .husky
+, and
+.cargo
 . Root and home directory removals such as
 rm -rf /
 still prompt as a circuit breaker. See

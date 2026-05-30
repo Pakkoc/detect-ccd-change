@@ -73,11 +73,18 @@ or
 Cmd+V
 (iTerm2) or
 Alt+V
-(Windows)
+(Windows and WSL)
 Paste image from clipboard
 Inserts an
 [Image #N]
-chip at the cursor so you can reference it positionally in your prompt
+chip at the cursor so you can reference it positionally in your prompt. On WSL, both
+Ctrl+V
+and
+Alt+V
+are bound; use
+Alt+V
+if your terminal intercepts
+Ctrl+V
 Ctrl+B
 Background running tasks
 Backgrounds bash commands and agents. Tmux users press twice

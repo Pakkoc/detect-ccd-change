@@ -373,17 +373,13 @@ medium
 high
 ,
 xhigh
-,
-max
 , or
-ultra
-). The
-ultra
-value corresponds to ultracode in
+max
+). Reflects the live session value, including mid-session
 /effort
-; the field reports the stored value, not the display label. Reflects the live session value, including mid-session
-/effort
-changes. Absent when the current model does not support the effort parameter
+changes. Ultracode is not a distinct level and reports as
+xhigh
+. Absent when the current model does not support the effort parameter
 thinking.enabled
 Whether extended thinking is enabled for the session
 rate_limits.five_hour.used_percentage

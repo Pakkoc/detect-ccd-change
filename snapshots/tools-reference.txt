@@ -62,8 +62,12 @@ Creates an isolated
 git worktree
 and switches into it. Pass a
 path
-to switch into an existing worktree of the current repository instead of creating a new one. Not available to subagents that already run in their own working directory, such as with
+to switch into an existing worktree of the current repository instead of creating a new one. From within a worktree session, or from a subagent with a pinned working directory such as
 isolation: worktree
+, only the
+path
+form is available and the target must be under
+.claude/worktrees/
 No
 ExitPlanMode
 Presents a plan for approval and exits plan mode
@@ -224,6 +228,11 @@ Yes
 WebSearch
 Performs web searches. See
 WebSearch tool behavior
+Yes
+Workflow
+Runs a
+dynamic workflow
+: a script that orchestrates many subagents in the background and returns one consolidated result
 Yes
 Write
 Creates or overwrites files. See

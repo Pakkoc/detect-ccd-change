@@ -538,7 +538,9 @@ on Windows to open a side chat, or type
 in the prompt box. The side chat can read everything in the main thread up to that point. When you’re done, close the side chat and continue the main session where you left off. Side chats are available in local and SSH sessions.
 ​
 Watch background tasks
-The tasks pane shows the background work running inside the current session: subagents, background shell commands, and dynamic workflows. Open it from the
+The tasks pane shows the background work running inside the current session: subagents, background shell commands, and
+dynamic workflows
+. Open it from the
 Views
 menu or drag it into your layout.
 Click any entry to see its output in the subagent pane or stop it. To see what other sessions are doing, use the
@@ -1406,11 +1408,11 @@ CLI
 Inline code suggestions
 : Desktop does not provide autocomplete-style suggestions. It works through conversational prompts and explicit code changes.
 Agent teams
-: multi-agent orchestration is available via the
+: parallel Claude Code sessions that message each other are available in the
 CLI
-and
-Agent SDK
-, not in Desktop.
+, not in Desktop. For multi-agent work inside one session, use
+dynamic workflows
+, which run in Desktop.
 Terminal-dialog commands
 : built-in commands that open an interactive panel in the terminal, such as
 /permissions
