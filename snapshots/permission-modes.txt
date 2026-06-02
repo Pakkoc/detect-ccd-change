@@ -400,7 +400,9 @@ How the classifier evaluates actions
 Each action goes through a fixed decision order. The first matching step wins:
 Actions matching your
 allow or deny rules
-resolve immediately
+resolve immediately, except writes to
+protected paths
+, which route to the classifier even when an allow rule matches
 Read-only actions and file edits in your working directory are auto-approved, except writes to
 protected paths
 Everything else goes to the classifier

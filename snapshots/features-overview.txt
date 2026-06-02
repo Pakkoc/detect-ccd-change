@@ -511,7 +511,7 @@ Coordinate multiple sessions working in parallel
 MCP
 Connect Claude to external services
 Hooks
-Automate workflows with hooks
+Automate actions with hooks
 Plugins
 Bundle and share feature sets
 Marketplaces

@@ -13,7 +13,7 @@ Implementing a design doc until all acceptance criteria hold
 Splitting a large file into focused modules until each is under a size budget
 Working through a labeled issue backlog until the queue is empty
 This page covers how to:
-Compare autonomous workflow approaches
+Compare ways to keep a session running
 :
 /loop
 , Stop hooks, and auto mode
@@ -30,7 +30,7 @@ how evaluation works
 and
 requirements
 ​
-Compare to other autonomous workflows
+Compare ways to keep a session running
 Three approaches keep the current session running between prompts. Pick based on what should start the next turn:
 Approach
 Next turn starts when

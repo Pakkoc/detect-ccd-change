@@ -185,7 +185,9 @@ Haiku-class model
 so the row can tell you what the session is doing, what it needs, or what it produced without opening the transcript. While a session is actively working, the summary refreshes at most once every 15 seconds, plus once when each turn ends.
 Each refresh is one short Haiku-class request through your normal provider, billed and handled under the same
 data usage terms
-as the session itself.
+as the session itself. On third-party providers such as Bedrock, Vertex AI, Microsoft Foundry, and custom gateways, the request falls back to the session’s main model when no Haiku model is configured. Set
+ANTHROPIC_DEFAULT_HAIKU_MODEL
+to choose the model for these summaries on those providers.
 ​
 Pull request status
 When a session opens a pull request, a
@@ -220,6 +222,9 @@ Tab
 to fill the input with a suggested reply you can edit before sending. Prefix a reply with
 !
 to send a Bash command instead.
+With
+voice dictation
+enabled, hold or tap your push-to-talk key while the reply input is focused to dictate a reply instead of typing it. The same works in the dispatch input at the bottom of agent view.
 Use
 ↑
 and
@@ -424,6 +429,13 @@ or a pull request URL
 If a session is already working on that PR, select it instead of dispatching
 Shift+Enter
 Dispatch and immediately attach to the new session
+A small set of commands run in agent view itself instead of dispatching:
+/exit
+and
+/quit
+close agent view, and
+/logout
+signs you out. Every other command and skill is sent to a new background session as its first prompt.
 Packaging a recurring task as a
 skill
 lets you start the same workflow from agent view repeatedly without retyping the prompt.
@@ -591,9 +603,13 @@ twice) removes a worktree Claude created for it, including any uncommitted chang
 claude rm
 keeps a worktree that has uncommitted changes and prints its path so you can clean it up yourself. A worktree you created yourself and started the session inside is left in place either way.
 To find a session’s worktree path, peek the session or attach and check its working directory.
-To make a subagent always run in its own worktree regardless of how it was started, set
+A
+subagent
+the background session spawns inherits the session’s working directory, so its file edits land in the session’s worktree rather than your working copy. To give a subagent its own separate worktree instead, set
 isolation: worktree
-in its frontmatter.
+in its frontmatter or pass
+isolation: "worktree"
+when spawning it.
 ​
 Set the model
 The model name shown in the agent view header is the dispatch default. New sessions you start from the input use this model, which comes from the
@@ -649,9 +665,11 @@ permissionMode
 from the dispatched
 subagent’s frontmatter
 .
-The permission mode you start a background session with persists when the supervisor later
+The permission mode, model, and effort a background session was started with, along with the
+configuration flags it carries
+, all persist when the supervisor later
 stops and restarts
-the session’s process. A session you launched with
+its process. A session you launched with
 claude --bg --dangerously-skip-permissions
 or
 claude --bg --permission-mode bypassPermissions
@@ -659,7 +677,11 @@ stays in
 bypassPermissions
 after that restart instead of falling back to the directory’s
 defaultMode
-.
+, and a model or effort you changed mid-session with
+/model
+or
+/effort
+is kept.
 To set defaults for every session you dispatch from agent view, pass any of
 --permission-mode
 ,
@@ -831,6 +853,14 @@ claude daemon status
 Print the
 supervisor’s
 state, version, socket directory, and worker count
+claude daemon stop --any
+Stop the supervisor process and the background sessions it hosts. Pass
+--keep-workers
+to leave background sessions running so the next supervisor reconnects to them. The next
+claude agents
+or
+claude --bg
+starts a fresh supervisor
 ​
 How background sessions are hosted
 Every session listed in agent view is considered a background session, whether or not you’re currently attached to it. By contrast, a session started by running
@@ -848,6 +878,11 @@ pinned
 with
 Ctrl+T
 is exempt and keeps its process running while idle. The transcript and state stay on disk either way, and the next time you attach, peek, or reply to a stopped session, the supervisor starts a fresh process from where it left off. When every session has finished and no terminal is connected, the supervisor itself exits and starts again the next time you need it.
+An empty row left over from pressing
+←
+that was never given a prompt is removed entirely after about five minutes so the list clears on its own. Sessions started with
+claude --bg
+and sessions waiting on a setup prompt such as a trust dialog are not removed this way.
 When the host runs low on memory, the supervisor stops idle non-pinned sessions first and stops idle pinned ones only if that freed nothing.
 The supervisor watches the installed Claude Code binary on disk and restarts into the new version after the regular
 auto-updater
@@ -867,6 +902,15 @@ Supervisor log
 List of running background sessions, used to reconnect after a restart
 ~/.claude/jobs/<id>/state.json
 Per-session state shown in agent view
+~/.claude/jobs/<id>/tmp/
+Per-session scratch directory. Writes here don’t prompt for permission. Removed when the session is deleted
+Each background session has the
+CLAUDE_JOB_DIR
+environment variable set to its
+~/.claude/jobs/<id>
+directory, so shell commands the session runs can write temporary files to
+$CLAUDE_JOB_DIR/tmp
+without colliding with parallel sessions.
 To inspect this state without reading the files directly, run
 claude daemon status
 . It reports whether the supervisor is reachable, its process ID and version, the socket directory, and how many background sessions are live.
@@ -928,6 +972,42 @@ investigate the flaky checkout test
 Sessions show as failed after shutdown
 Shutting down or restarting your machine stops running background sessions, so they show as failed when you next open agent view. Attach, peek, or reply to any of them and the session restarts from where it left off.
 Sleep alone does not cause this. Sessions are preserved across sleep and the supervisor reconnects to them on wake.
+​
+Agent view says the background service did not respond
+If attaching, peeking, or
+claude logs
+reports that the background service did not respond, the supervisor process has likely stalled. Stop it and let the next
+claude agents
+start a fresh one. To keep your background sessions running through the restart, pass
+--keep-workers
+:
+claude
+daemon
+stop
+--any
+--keep-workers
+The new supervisor reconnects to the running sessions. Without
+--keep-workers
+, the command ends the background sessions too. The
+--any
+flag confirms you want to stop a supervisor that started on demand rather than as an installed service, which is the default.
+On Windows, if the supervisor does not respond to the stop request, the command prints its process ID. End that process with
+taskkill /PID <pid>
+to finish the recovery. Background sessions are still preserved when you passed
+--keep-workers
+.
+​
+Background sessions cannot read Desktop, Documents, or Downloads on macOS
+On macOS, the background session host runs as its own process and requests access to protected folders separately from your terminal. If a background session reports
+Operation not permitted
+when reading
+~/Desktop
+,
+~/Documents
+,
+~/Downloads
+, or another protected location, grant access in System Settings under Privacy & Security > Files and Folders, or enable Full Disk Access for the entry.
+With the native installer, the entry appears as Claude Code and the grant persists across updates. With other install methods such as Homebrew or npm, the entry shows the binary path and may need to be granted again after updating.
 ​
 A session is slow to respond after attaching
 Once a session has finished and sat unattached for about an hour, the supervisor stops its process to free resources. Attaching starts a fresh process from where it left off, which takes a moment. Sessions that are working, waiting on you, or

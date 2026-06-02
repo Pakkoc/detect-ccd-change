@@ -105,6 +105,16 @@ Print the background-session
 supervisor’s
 state, version, socket directory, and worker count for diagnostics. Exits 1 if the supervisor isn’t running
 claude daemon status
+claude daemon stop --any
+Stop the background-session
+supervisor
+and the sessions it hosts. Pass
+--keep-workers
+to leave background sessions running so the next supervisor reconnects to them.
+--any
+confirms stopping an on-demand supervisor, which is the default. Use this to recover from an
+unresponsive supervisor
+claude daemon stop --any --keep-workers
 claude logs <id>
 Print recent output from a
 background session

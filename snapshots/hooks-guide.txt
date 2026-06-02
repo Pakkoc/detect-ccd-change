@@ -1863,7 +1863,9 @@ http
 mcp_tool
 : 10 minutes.
 UserPromptSubmit
-lowers these to 30 seconds.
+lowers these to 30 seconds, and
+MessageDisplay
+lowers them to 10 seconds.
 prompt
 : 30 seconds.
 agent
@@ -2047,7 +2049,7 @@ Bash command validator example
 Was this page helpful?
 Yes
 No
-Extend Claude with skills
+Create plugins
 Push external events to Claude
 ⌘
 I

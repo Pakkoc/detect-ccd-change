@@ -1343,9 +1343,13 @@ string[] | 'all'
 undefined
 Skills available to the session. Pass
 'all'
-to enable every discovered skill, or a list of skill names. When set, the SDK enables the Skill tool automatically without listing it in
+to enable every discovered skill, or a list of skill names. When set, the SDK adds the Skill tool to
 allowedTools
-. See
+automatically. If you also pass
+tools
+, include
+'Skill'
+in that list. See
 Skills
 spawnClaudeCodeProcess
 (options: SpawnOptions) => SpawnedProcess
@@ -1362,7 +1366,8 @@ Use only the servers passed in
 mcpServers
 and ignore project
 .mcp.json
-, user settings, and plugin-provided MCP servers
+, user settings, plugin-provided MCP servers, and
+claude.ai connectors
 systemPrompt
 string | { type: 'preset'; preset: 'claude_code'; append?: string; excludeDynamicSections?: boolean }
 undefined
@@ -5387,7 +5392,7 @@ Exits planning mode. Optionally specifies prompt-based permissions needed to imp
 ​
 ListMcpResources
 Tool name:
-ListMcpResources
+ListMcpResourcesTool
 type
 ListMcpResourcesInput
 =
@@ -5401,7 +5406,7 @@ Lists available MCP resources from connected servers.
 ​
 ReadMcpResource
 Tool name:
-ReadMcpResource
+ReadMcpResourceTool
 type
 ReadMcpResourceInput
 =
@@ -6692,7 +6697,7 @@ Returns the plan state after exiting plan mode.
 ​
 ListMcpResources
 Tool name:
-ListMcpResources
+ListMcpResourcesTool
 type
 ListMcpResourcesOutput
 =
@@ -6723,7 +6728,7 @@ Returns an array of available MCP resources.
 ​
 ReadMcpResource
 Tool name:
-ReadMcpResource
+ReadMcpResourceTool
 type
 ReadMcpResourceOutput
 =
@@ -8649,7 +8654,15 @@ option can grant access to powerful system services. For example, allowing
 effectively grants full host system access through the Docker API, bypassing sandbox isolation. Only allow Unix sockets that are strictly necessary and understand the security implications of each.
 ​
 SandboxNetworkConfig
-Network-specific configuration for sandbox mode.
+Network-specific configuration for sandbox mode. These settings apply to sandboxed Bash commands when
+enabled
+is
+true
+in the parent
+SandboxSettings
+. They do not restrict the WebFetch tool, which uses
+permission rules
+instead.
 type
 SandboxNetworkConfig
 =

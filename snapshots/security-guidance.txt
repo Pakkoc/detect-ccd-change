@@ -378,7 +378,7 @@ Related resources
 To go deeper on the pieces this page touches:
 Code Review
 : set up the PR-time multi-agent review
-Automate workflows with hooks
+Automate actions with hooks
 : build your own checks at the same lifecycle points
 Discover and install plugins
 : browse other official plugins

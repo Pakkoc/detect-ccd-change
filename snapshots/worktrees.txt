@@ -284,6 +284,6 @@ Was this page helpful?
 Yes
 No
 Dynamic workflows
-Model Context Protocol (MCP)
+Quickstart
 ⌘
 I

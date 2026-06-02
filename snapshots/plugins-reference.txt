@@ -427,10 +427,6 @@ workspaceFolder
 Workspace folder path for the server
 startupTimeout
 Max time to wait for server startup (milliseconds)
-shutdownTimeout
-Max time to wait for graceful shutdown (milliseconds)
-restartOnCrash
-Whether to automatically restart the server if it crashes
 maxRestarts
 Maximum number of restart attempts before giving up
 You must install the language server binary separately.

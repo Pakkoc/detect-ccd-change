@@ -1827,7 +1827,7 @@ Permissions
 Was this page helpful?
 Yes
 No
-Create plugins
-Automate with hooks
+Reference
+Discover and install prebuilt plugins
 ⌘
 I

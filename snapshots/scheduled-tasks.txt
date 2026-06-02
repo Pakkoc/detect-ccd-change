@@ -104,7 +104,7 @@ loop.md
 if one exists
 You can also pass another command as the prompt, for example
 /loop 20m /review-pr 1234
-, to re-run a packaged workflow each iteration.
+, to re-run a saved skill or command each iteration.
 ​
 Run on a fixed interval
 When you supply an interval, Claude converts it to a cron expression, schedules the job, and confirms the cadence and job ID.

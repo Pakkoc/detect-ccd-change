@@ -2303,7 +2303,9 @@ True
 mcp_servers
 and ignore project
 .mcp.json
-, user settings, and plugin-provided MCP servers. Maps to the CLI
+, user settings, plugin-provided MCP servers, and
+claude.ai connectors
+. Maps to the CLI
 --strict-mcp-config
 flag
 permission_mode
@@ -2478,9 +2480,13 @@ list[str] | Literal["all"] | None
 None
 Skills available to the session. Pass
 "all"
-to enable every discovered skill, or a list of skill names. When set, the SDK enables the Skill tool automatically without listing it in
+to enable every discovered skill, or a list of skill names. When set, the SDK adds the Skill tool to
 allowed_tools
-. See
+automatically. If you also pass
+tools
+, include
+"Skill"
+in that list. See
 Skills
 max_thinking_tokens
 int | None
@@ -6831,7 +6837,7 @@ None
 ​
 ListMcpResources
 Tool name:
-ListMcpResources
+ListMcpResourcesTool
 Input:
 {
 "server"
@@ -6880,7 +6886,7 @@ int
 ​
 ReadMcpResource
 Tool name:
-ReadMcpResource
+ReadMcpResourceTool
 Input:
 {
 "server"
@@ -8045,7 +8051,15 @@ option can grant access to powerful system services. For example, allowing
 effectively grants full host system access through the Docker API, bypassing sandbox isolation. Only allow Unix sockets that are strictly necessary and understand the security implications of each.
 ​
 SandboxNetworkConfig
-Network-specific configuration for sandbox mode.
+Network-specific configuration for sandbox mode. These settings apply to sandboxed Bash commands when
+enabled
+is
+True
+in the parent
+SandboxSettings
+. They do not restrict the WebFetch tool, which uses
+permission rules
+instead.
 class
 SandboxNetworkConfig
 (

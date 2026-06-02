@@ -660,7 +660,7 @@ can close that gap, since anything the hook prints to stdout is added to Claudeâ
 For example, you can write a script that reads the launch directory from the
 hook input
 , looks it up in a path-to-plugin map committed to the repository, and prints the recommendation for Claude to relay in its first reply. See
-Automate workflows with hooks
+Automate actions with hooks
 to write and register the hook.
 â€‹
 Put it together
