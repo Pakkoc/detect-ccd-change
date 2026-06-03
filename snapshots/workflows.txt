@@ -155,8 +155,8 @@ the run’s script as a command
 Have Claude write a workflow
 You can have Claude write a workflow for your task in two ways:
 Ask for a workflow
-in your prompt with the word
-workflow
+in your prompt, either in your own words or by including the keyword
+ultracode
 , and Claude writes one for the task.
 Let Claude decide with ultracode
 : set
@@ -171,15 +171,17 @@ saved
 .
 ​
 Ask for a workflow in your prompt
-To run a single task as a workflow without changing the session’s effort level, include the word
+To run a single task as a workflow without changing the session’s effort level, include the keyword
+ultracode
+in your prompt. Asking in your own words, for example “use a workflow” or “run a workflow”, also works: Claude treats a direct request as the same opt-in. Before v2.1.160 the literal trigger keyword was
 workflow
-anywhere in your prompt.
-Run a workflow to audit every API endpoint under src/routes/ for missing auth checks
-Claude Code highlights the word in your input and Claude writes a workflow script for the task instead of working through it turn by turn. If you didn’t mean to start a workflow, press
+; natural-language requests work in both versions.
+ultracode: audit every API endpoint under src/routes/ for missing auth checks
+Claude Code highlights the keyword in your input and Claude writes a workflow script for the task instead of working through it turn by turn. If you didn’t mean to start a workflow, press
 Option+W
 on macOS or
 Alt+W
-on Windows and Linux to dismiss the highlight for this prompt, or press backspace while the cursor is right after the highlighted word. To stop the word from triggering at all, turn off Workflow keyword trigger in
+on Windows and Linux to dismiss the highlight for this prompt, or press backspace while the cursor is right after the highlighted keyword. To stop the keyword from triggering at all, turn off Ultracode keyword trigger in
 /config
 .
 If the run does what you wanted, you can
@@ -362,7 +364,7 @@ managed settings
 Claude Code admin settings
 page.
 When workflows are disabled, the bundled workflow commands are unavailable, the
-workflow
+ultracode
 keyword no longer triggers a run, and
 ultracode
 is removed from the

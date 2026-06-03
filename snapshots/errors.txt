@@ -652,12 +652,33 @@ CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 before launching. This disables features that require the beta header so requests succeed through a gateway that cannot forward it.
 ​
 There’s an issue with the selected model
-The configured model name was not recognized or your account lacks access to it.
-There's an issue with the selected model (claude-...). It may not exist or you may not have access to it. Run /model to select a different one.
+The configured model name was not recognized or your account lacks access to it. As of v2.1.160 the trailing hint, shown here in its interactive form, varies by surface.
+There's an issue with the selected model (claude-...). It may not exist or you may not have access to it. Run /model to pick a different model.
 What to do:
-Run
+Interactive CLI
+: run
 /model
-to pick from models available to your account
+to pick from models available to your account.
+Non-interactive mode (
+-p
+)
+: pass
+--model
+with a valid alias or ID, or set
+ANTHROPIC_MODEL
+. The error text shows
+Run --model
+on this surface.
+Agent SDK
+: the error text omits the hint because the model is set programmatically. Set
+model
+on
+Options
+in TypeScript or
+ClaudeAgentOptions(model=...)
+in Python, and handle the structured
+model_not_found
+error to surface your own retry or model picker.
 Use an alias such as
 sonnet
 or
@@ -665,7 +686,7 @@ opus
 instead of a full versioned ID. Aliases track the latest release so they do not go stale. See
 Model configuration
 .
-If the wrong model keeps coming back, a stale ID is set somewhere. Check in
+If the wrong model keeps coming back in the CLI, a stale ID is set somewhere. Check in
 priority order
 : the
 --model

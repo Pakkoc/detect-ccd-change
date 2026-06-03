@@ -503,6 +503,9 @@ and the
 tui
 setting. You can also switch with
 /tui default
+. Does not apply to background sessions opened from
+agent view
+, which always use fullscreen rendering
 CLAUDE_CODE_DISABLE_ATTACHMENTS
 Set to
 1
@@ -674,6 +677,13 @@ and the
 effortLevel
 setting. See
 Adjust effort level
+CLAUDE_CODE_ENABLE_AUTO_MODE
+Set to
+1
+to make
+auto mode
+available on Amazon Bedrock, Google Cloud Vertex AI, and Microsoft Foundry. Has no effect on the Anthropic API, where auto mode is available by default. See
+Enable auto mode on Bedrock, Vertex AI, or Foundry
 CLAUDE_CODE_ENABLE_AWAY_SUMMARY
 Override
 session recap
@@ -741,9 +751,7 @@ allowlist
 CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE
 Removed in v2.1.142, when the
 fast mode
-default moved from Opus 4.6 to Opus 4.7. Set
-CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1
-to keep Opus 4.6 instead
+default moved from Opus 4.6 to Opus 4.7
 CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
 Set to
 false
@@ -916,13 +924,12 @@ OAuth access token for Claude.ai authentication. Alternative to
 for SDK and automated environments. Takes precedence over keychain-stored credentials. Generate one with
 claude setup-token
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE
-Set to
-1
-to pin fast mode to Claude Opus 4.6 instead of the
-current fast mode default
-, which depends on your Claude Code version. With the variable set,
-/fast
-runs on Opus 4.6. Fast mode for Opus 4.6 is deprecated, and this variable will be removed when it is retired
+Removed in v2.1.160 and now a no-op. Previously pinned
+fast mode
+to Claude Opus 4.6 instead of the current default. To run fast mode on Opus 4.6 until it is retired, select the model with
+/model
+first, then
+/fast on
 CLAUDE_CODE_OTEL_FLUSH_TIMEOUT_MS
 Timeout in milliseconds for flushing pending OpenTelemetry spans (default: 5000). See
 Monitoring

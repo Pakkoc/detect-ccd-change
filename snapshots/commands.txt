@@ -590,7 +590,7 @@ session into this terminal: opens a picker, then fetches the branch and conversa
 /tp
 . Requires a claude.ai subscription
 /terminal-setup
-Configure terminal keybindings for Shift+Enter and other shortcuts. Only visible in terminals that need it, like VS Code, Cursor, Windsurf, Alacritty, or Zed
+Configure terminal keybindings for Shift+Enter and other shortcuts. Only visible in terminals that need it, like VS Code, Cursor, Devin Desktop, Alacritty, or Zed
 /theme
 Change the color theme. Includes an
 auto

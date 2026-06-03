@@ -22,7 +22,7 @@ Terminal
 Shift+Enter for newline
 Ghostty, Kitty, iTerm2, WezTerm, Warp, Apple Terminal, Windows Terminal
 Works without setup
-VS Code, Cursor, Windsurf, Alacritty, Zed
+VS Code, Cursor, Devin Desktop, Alacritty, Zed
 Run
 /terminal-setup
 once
@@ -30,14 +30,14 @@ gnome-terminal, JetBrains IDEs such as PyCharm and Android Studio
 Not available; use Ctrl+J or
 \
 then Enter
-For VS Code, Cursor, Windsurf, Alacritty, and Zed,
+For VS Code, Cursor, Devin Desktop, Alacritty, and Zed,
 /terminal-setup
 writes Shift+Enter and other keybindings into the terminal’s configuration file. Existing bindings are left in place; if you see a message such as
 VSCode terminal Shift+Enter key binding already configured
 , no change was made. Run
 /terminal-setup
 directly in the host terminal rather than inside tmux or screen, since it needs to write to the host terminal’s configuration.
-In VS Code, Cursor, and Windsurf,
+In VS Code, Cursor, and Devin Desktop,
 /terminal-setup
 also updates two editor settings: it sets
 terminal.integrated.gpuAcceleration

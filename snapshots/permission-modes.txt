@@ -316,9 +316,12 @@ in
 managed settings
 .
 Model
-: Claude Opus 4.6 or later, or Sonnet 4.6. Older models, including Sonnet 4.5, Opus 4.5, Haiku, and claude-3 models, are not supported.
+: on the Anthropic API, Claude Opus 4.6 or later, or Sonnet 4.6. On Amazon Bedrock, Google Cloud Vertex AI, and Microsoft Foundry, only Claude Opus 4.7 and Opus 4.8. Older models, including Sonnet 4.5, Opus 4.5, Haiku, and claude-3 models, are not supported on any provider.
 Provider
-: Anthropic API only. Not available on Bedrock, Vertex, or Foundry.
+: available by default on the Anthropic API. On Amazon Bedrock, Google Cloud Vertex AI, and Microsoft Foundry, auto mode is off until you
+set
+CLAUDE_CODE_ENABLE_AUTO_MODE
+.
 If Claude Code reports auto mode as unavailable, one of these requirements is unmet; this is not a transient outage. A separate message that names a model and says auto mode “cannot determine the safety” of an action is a transient classifier outage; see the
 error reference
 .
@@ -337,6 +340,60 @@ auto
 from those files so a repository cannot grant itself auto mode. Move it to
 ~/.claude/settings.json
 .
+​
+Enable auto mode on Bedrock, Vertex AI, or Foundry
+On
+Amazon Bedrock
+,
+Google Cloud Vertex AI
+, and
+Microsoft Foundry
+, auto mode does not appear in the
+Shift+Tab
+cycle until
+CLAUDE_CODE_ENABLE_AUTO_MODE
+is set to
+1
+. Only Claude Opus 4.7 and Opus 4.8 are supported on these providers.
+To enable it for one developer, add the variable to the
+env
+block in
+~/.claude/settings.json
+:
+{
+"env"
+: {
+"CLAUDE_CODE_ENABLE_AUTO_MODE"
+:
+"1"
+}
+}
+To enable it for your organization, add the same
+env
+block to
+managed settings
+.
+Once the variable is set, auto mode appears in the
+Shift+Tab
+cycle for every session. To make it the default starting mode, also set
+"permissions": {"defaultMode": "auto"}
+in user or managed settings. On these providers, Claude Code ignores
+defaultMode: "auto"
+unless
+CLAUDE_CODE_ENABLE_AUTO_MODE
+is also set.
+To prevent developers from enabling auto mode, set
+disableAutoMode
+to
+"disable"
+in managed settings. This overrides the enable variable.
+If you connect through an
+LLM gateway
+configured with
+ANTHROPIC_BASE_URL
+, auto mode may already be reachable without the enable variable, because the gateway routes requests through the Anthropic API. The
+disableAutoMode
+setting applies the same way in that configuration.
 ​
 What the classifier blocks by default
 The classifier trusts your working directory and your repo’s configured remotes. Everything else is treated as external until you
@@ -492,25 +549,31 @@ managed settings
 Protected paths
 Writes to a small set of paths are never auto-approved, in every mode except
 bypassPermissions
-. This prevents accidental corruption of repository state and Claude’s own configuration. In
+. This prevents accidental corruption of repository state and Claude’s own configuration.
+Mode
+Protected-path writes
 default
 ,
 acceptEdits
-, and
+,
 plan
-these writes prompt; in
+Prompted
 auto
-they route to the classifier; in
+Routed to the classifier
 dontAsk
-they are denied; in
+Denied
 bypassPermissions
-they are allowed.
+Allowed
 Protected directories:
 .git
+.config/git
 .vscode
 .idea
 .husky
 .cargo
+.devcontainer
+.yarn
+.mvn
 .claude
 , except for
 .claude/commands
@@ -529,12 +592,61 @@ Protected files:
 ,
 .bash_profile
 ,
+.bash_login
+,
+.bash_aliases
+,
+.bash_logout
+,
 .zshrc
 ,
 .zprofile
 ,
+.zshenv
+,
+.zlogin
+,
+.zlogout
+,
 .profile
+,
+.envrc
+.npmrc
+,
+.yarnrc
+,
+.yarnrc.yml
+,
+.pnp.cjs
+,
+.pnp.loader.mjs
+,
+.pnpmfile.cjs
+,
+bunfig.toml
+,
+.bunfig.toml
+.bazelrc
+,
+.bazelversion
+,
+.bazeliskrc
+.pre-commit-config.yaml
+,
+lefthook.yml
+,
+lefthook.yaml
+,
+.lefthook.yml
+,
+.lefthook.yaml
+gradle-wrapper.properties
+,
+maven-wrapper.properties
+.devcontainer.json
 .ripgreprc
+,
+pyrightconfig.json
 .mcp.json
 ,
 .claude.json

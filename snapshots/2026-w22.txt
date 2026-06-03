@@ -19,7 +19,7 @@ research preview
 A workflow is an orchestration script Claude writes for your task and runs across many subagents in the background. Use one when a task is too large for one conversation to coordinate: a codebase-wide audit, a large migration, a research question that needs cross-checking. Manage runs with
 /workflows
 .
-Describe the task and include the word workflow:
+Describe the task and ask for a workflow:
 Claude Code
 > create a workflow that migrates every internal fetch() call to the new HttpClient wrapper
 Dynamic workflows

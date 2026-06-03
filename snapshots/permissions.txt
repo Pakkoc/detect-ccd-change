@@ -92,6 +92,8 @@ bypassPermissions
 mode skips all permission prompts, including writes to
 .git
 ,
+.config/git
+,
 .claude
 ,
 .vscode
@@ -99,8 +101,14 @@ mode skips all permission prompts, including writes to
 .idea
 ,
 .husky
-, and
+,
 .cargo
+,
+.devcontainer
+,
+.yarn
+, and
+.mvn
 . Removals targeting the filesystem root or home directory, such as
 rm -rf /
 and

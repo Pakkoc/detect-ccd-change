@@ -805,6 +805,8 @@ bypassPermissions
 with caution. It skips all permission prompts, allowing the subagent to execute operations without approval, including writes to
 .git
 ,
+.config/git
+,
 .claude
 ,
 .vscode
@@ -812,8 +814,14 @@ with caution. It skips all permission prompts, allowing the subagent to execute 
 .idea
 ,
 .husky
-, and
+,
 .cargo
+,
+.devcontainer
+,
+.yarn
+, and
+.mvn
 . Root and home directory removals such as
 rm -rf /
 still prompt as a circuit breaker. See

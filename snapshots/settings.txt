@@ -1051,7 +1051,9 @@ for the classic main-screen renderer. Set via
 /tui
 . You can also set the
 CLAUDE_CODE_NO_FLICKER
-environment variable
+environment variable. Background sessions opened from
+agent view
+always use the fullscreen renderer regardless of this setting
 "fullscreen"
 ultracode
 Turn on
@@ -1108,20 +1110,22 @@ voice
 object
 true
 workflowKeywordTriggerEnabled
-Whether the word
-workflow
+Whether the keyword
+ultracode
 in a prompt triggers a
 dynamic workflow
 . Set to
 false
-to type the word without triggering one. Ultracode,
+to type the word without triggering one. The
+ultracode
+effort setting,
 /workflows
 , and saved workflow commands are unaffected. Default:
 true
 . Appears in
 /config
 as
-Workflow keyword trigger
+Ultracode keyword trigger
 false
 wslInheritsWindowsSettings
 (Windows managed settings only) When
