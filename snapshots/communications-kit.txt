@@ -1,7 +1,3 @@
-Documentation Index
-Fetch the complete documentation index at:
-https://code.claude.com/docs/llms.txt
-Use this file to discover all available pages before exploring further.
 This page is for administrators and engineering leads rolling Claude Code out to a team. It provides copy-ready launch announcements, a tips-and-tricks drip campaign, and one-line FAQ responses for the questions you will be asked most.
 Treat everything here as draft copy, not finished copy. Rewrite each message in your organization’s voice, swap the example tasks for real bugs and modules from your own codebase, and replace the
 [bracketed placeholders]

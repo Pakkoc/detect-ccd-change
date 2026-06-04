@@ -1,7 +1,3 @@
-Documentation Index
-Fetch the complete documentation index at:
-https://code.claude.com/docs/llms.txt
-Use this file to discover all available pages before exploring further.
 Releases
 v2.1.139 → v2.1.142
 3 features · May 11–15
@@ -28,12 +24,7 @@ Goals
 Fast mode on Opus 4.7
 research preview
 /fast
-now runs on Opus 4.7 by default instead of Opus 4.6. Fast mode is a high-speed Opus configuration: the same model quality at about 2.5x the speed for a higher per-token cost, useful for rapid iteration and live debugging. Pricing is unchanged at
-30
-/
-30/
-30/
-150 per MTok, the same as Opus 4.6 fast mode. To pin fast mode to Opus 4.6, set
+now runs on Opus 4.7 by default instead of Opus 4.6. Fast mode is a high-speed Opus configuration: the same model quality at about 2.5x the speed for a higher per-token cost, useful for rapid iteration and live debugging. Pricing is unchanged at $30/$150 per MTok, the same as Opus 4.6 fast mode. To pin fast mode to Opus 4.6, set
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1
 .
 Toggle fast mode, now running on Opus 4.7:

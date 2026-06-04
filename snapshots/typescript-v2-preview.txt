@@ -1,7 +1,3 @@
-Documentation Index
-Fetch the complete documentation index at:
-https://code.claude.com/docs/llms.txt
-Use this file to discover all available pages before exploring further.
 The V2 session API is no longer supported. TypeScript Agent SDK 0.3.142 removes
 unstable_v2_createSession
 ,

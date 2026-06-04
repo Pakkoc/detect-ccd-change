@@ -1,7 +1,3 @@
-Documentation Index
-Fetch the complete documentation index at:
-https://code.claude.com/docs/llms.txt
-Use this file to discover all available pages before exploring further.
 Claude Code charges by API token consumption. For subscription plan pricing (Pro, Max, Team, Enterprise), see
 claude.com/pricing
 . Per-developer costs vary widely based on model selection, codebase size, and usage patterns such as running multiple instances or automation.

@@ -1,7 +1,3 @@
-Documentation Index
-Fetch the complete documentation index at:
-https://code.claude.com/docs/llms.txt
-Use this file to discover all available pages before exploring further.
 Claude Code supports various enterprise network and security configurations through environment variables. This includes routing traffic through corporate proxy servers, trusting custom Certificate Authorities (CA), and authenticating with mutual Transport Layer Security (mTLS) certificates for enhanced security.
 All environment variables shown on this page can also be configured in
 settings.json
