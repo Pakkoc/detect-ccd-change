@@ -841,7 +841,17 @@ sessionId
 name
 , and
 status
-when set. Combine with
+when set. When
+status
+is
+waiting
+,
+waitingFor
+says what the session is blocked on, such as
+permission prompt
+or
+input needed
+. Combine with
 --cwd <path>
 to filter
 claude attach <id>

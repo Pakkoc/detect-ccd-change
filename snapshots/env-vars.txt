@@ -1606,7 +1606,7 @@ Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hou
 timeout
 field in
 .mcp.json
-overrides this for that server. Values below 1000 are floored to one second
+overrides this for that server. For the env variable, values below 1000 are floored to one second; for the per-server field, values below 1000 are ignored
 NO_PROXY
 List of domains and IPs to which requests will be directly issued, bypassing proxy
 OTEL_LOG_RAW_API_BODIES

@@ -207,7 +207,9 @@ reads it and incorporates the relevant parts into the generated
 CLAUDE.md
 . It also reads other tool configs like
 .cursorrules
-and
+,
+.devin/rules/
+, and
 .windsurfrules
 .
 ​

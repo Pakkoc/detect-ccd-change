@@ -187,41 +187,52 @@ command
 claude
 mcp
 add
---transport
-stdio
 --env
 AIRTABLE_API_KEY=YOUR_KEY
+--transport
+stdio
 airtable
 \
 --
 npx
 -y
 airtable-mcp-server
-Important: Option ordering
-All options (
+Important: Separate server arguments with
+--
+For stdio servers, the
+--
+(double dash) separates Claude’s own options, such as
 --transport
 ,
 --env
-,
+, and
 --scope
-,
---header
-) must come
-before
-the server name. The
+, from the command and arguments that run the server. Everything after
 --
-(double dash) then separates the server name from the command and arguments that get passed to the MCP server.
+is passed to the server untouched.
 For example:
 claude mcp add --transport stdio myserver -- npx server
 → runs
 npx server
-claude mcp add --transport stdio --env KEY=value myserver -- python server.py --port 8080
+claude mcp add --env KEY=value --transport stdio myserver -- python server.py --port 8080
 → runs
 python server.py --port 8080
 with
 KEY=value
 in environment
-This prevents conflicts between Claude’s flags and the server’s flags.
+Without
+--
+, Claude Code would try to parse the server’s flags, like
+--port
+above, as its own options.
+--env
+accepts multiple
+KEY=value
+pairs. If the server name comes directly after
+--env
+, the CLI reads the name as another pair and rejects it, so place at least one other option between
+--env
+and the server name, as in the examples above.
 ​
 Option 4: Add a remote WebSocket server
 WebSocket servers hold a persistent bidirectional connection, which suits remote MCP servers that push events to Claude unprompted. Use HTTP instead when your server only responds to requests, since HTTP supports OAuth and the
@@ -381,7 +392,10 @@ Use
 to authenticate with remote servers that require OAuth 2.0 authentication
 The per-server
 timeout
-is a hard wall-clock limit per tool call, and progress notifications from the server do not extend it. Values below 1000 are floored to one second. For HTTP and SSE servers, the per-request fetch first-byte budget has a 60-second minimum regardless of this value, so only the tool-call watchdog honors smaller values.
+is a hard wall-clock limit per tool call, and progress notifications from the server do not extend it. Values below 1000 are ignored and fall through to
+MCP_TOOL_TIMEOUT
+, or to its default of about 28 hours when that variable is unset.
+Before v2.1.162, values below 1000 were floored to one second instead. For HTTP and SSE servers, the per-request fetch first-byte budget has a 60-second minimum.
 ​
 Plugin-provided MCP servers
 Plugins
@@ -1173,6 +1187,9 @@ precedence
 over a claude.ai connector that points at the same URL. When this happens,
 /mcp
 lists the connector as hidden and shows how to remove the duplicate if you’d rather use the connector.
+Some Anthropic-hosted connectors, such as Microsoft 365, Gmail, and Google Calendar, do not support local OAuth from Claude Code because the upstream identity provider only accepts the redirect URL that claude.ai registered. From v2.1.162, authenticating one of these hosts in
+/mcp
+shows a message directing you to connect it at Settings → Connectors on claude.ai instead. Once connected there, the connector appears in Claude Code automatically.
 To disable claude.ai MCP servers in Claude Code, set the
 ENABLE_CLAUDEAI_MCP_SERVERS
 environment variable to
