@@ -115,7 +115,7 @@ Open your terminal in any project directory and start Claude Code:
 cd
 /path/to/your/project
 claude
-You’ll see the Claude Code welcome screen with your session information, recent conversations, and latest updates. Type
+You’ll see the Claude Code prompt with the version, current model, and working directory shown above it. Type
 /help
 for available commands or
 /resume

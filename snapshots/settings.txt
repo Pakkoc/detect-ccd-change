@@ -781,7 +781,8 @@ via
 /config
 prompts you to stay on the current version or allow the downgrade. Choosing to stay sets this value. Also useful in
 managed settings
-to pin an organization-wide minimum
+to pin an organization-wide minimum. For a hard floor that blocks startup entirely, see
+requiredMinimumVersion
 "2.1.100"
 model
 Override the default model to use for Claude Code.
@@ -886,6 +887,30 @@ github.com
 #123
 autolinks in Claude’s prose
 "https://reviews.example.com/{owner}/{repo}/pull/{number}"
+requiredMaximumVersion
+Managed settings only. Maximum Claude Code version allowed to start. If the running version is newer, Claude Code exits at startup and instructs the user to install an approved version through the organization’s approved method;
+claude install <version>
+may also work. Background auto-updates and
+claude update
+skip versions above the ceiling, so an in-range installation stays in range.
+claude update
+,
+claude install
+, and
+claude doctor
+keep working above the ceiling so users can recover. Versions that predate this setting ignore it
+"2.1.150"
+requiredMinimumVersion
+Managed settings only. Minimum Claude Code version required to start. If the running version is older, Claude Code exits at startup and instructs the user to update through the organization’s approved method.
+claude update
+,
+claude install
+, and
+claude doctor
+keep working below the floor so users can recover. Differs from
+minimumVersion
+, which prevents downgrades but never blocks startup. Versions that predate this setting ignore it
+"2.1.150"
 respectGitignore
 Control whether the
 @
@@ -1651,8 +1676,8 @@ Attribution for git commits, including any trailers. Empty string hides commit a
 pr
 Attribution for pull request descriptions. Empty string hides pull request attribution
 Default commit attribution:
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+The model name in the trailer reflects the active model for the session.
 Default pull request attribution:
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 Example:

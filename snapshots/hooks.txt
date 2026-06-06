@@ -748,7 +748,11 @@ Permission rule syntax to filter when this hook runs, such as
 "Bash(git *)"
 or
 "Edit(*.ts)"
-. The hook only spawns if the tool call matches the pattern, or if a Bash command is too complex to parse. Only evaluated on tool events:
+. The hook command only runs if the tool call matches the pattern. See the
+Bash matching table
+below for how Bash patterns evaluate against subcommands,
+$()
+, and backticks. Only evaluated on tool events:
 PreToolUse
 ,
 PostToolUse
@@ -801,15 +805,52 @@ field holds exactly one permission rule. There is no
 &&
 ,
 ||
-, or list syntax for combining rules; to apply multiple conditions, define a separate hook handler for each. For Bash, the rule is matched against each subcommand of the tool input after leading
+, or list syntax for combining rules; to apply multiple conditions, define a separate hook handler for each.
+For Bash patterns, whether your hook command runs depends on the shape of the pattern and the Bash command Claude is invoking. Leading
 VAR=value
-assignments are stripped, so
-if: "Bash(git push *)"
-matches both
+assignments are stripped before matching.
+if
+pattern
+Bash command
+Hook runs?
+Why
+Bash(git *)
 FOO=bar git push
-and
+yes
+leading assignments are stripped;
+git push
+matches
+Bash(git *)
 npm test && git push
-. The hook runs if any subcommand matches, and always runs when the command is too complex to parse.
+yes
+each subcommand is checked;
+git push
+matches
+Bash(rm *)
+echo $(rm -rf /)
+yes
+commands inside
+$()
+and backticks are checked;
+rm -rf /
+matches
+Bash(rm *)
+echo $(date)
+no
+no subcommand matches
+rm *
+Bash(git push *)
+echo $(date)
+yes
+patterns that constrain past the command name fail open on
+$()
+, backticks, or
+$VAR
+The filter also fails open, running your hook regardless of pattern, when the Bash command cannot be parsed. Because the
+if
+filter is best-effort, use the
+permission system
+rather than a hook to enforce a hard allow or deny.
 ​
 Command hook fields
 In addition to the
@@ -1159,7 +1200,10 @@ prompt
 yes
 Prompt text to send to the model. Use
 $ARGUMENTS
-as a placeholder for the hook input JSON
+as a placeholder for the hook input JSON. Escape with a backslash to include literal text:
+\$1.00
+renders as
+$1.00
 model
 no
 Model to use for evaluation. Defaults to a fast model
@@ -1907,6 +1951,11 @@ PostToolUseFailure
 , and
 PostToolBatch
 : next to the tool result
+Stop
+and
+SubagentStop
+: at the end of the turn. The conversation continues so Claude can act on the feedback. See
+Stop decision control
 When several hooks return
 additionalContext
 for the same event, Claude receives all of the values. If a value exceeds 10,000 characters, Claude Code writes the full text to a file in the session directory and passes Claude the file path with a short preview instead.
@@ -1952,6 +2001,10 @@ decision
 decision: "block"
 ,
 reason
+. Stop and SubagentStop also accept
+hookSpecificOutput.additionalContext
+for
+non-error feedback that continues the conversation
 TeammateIdle, TaskCreated, TaskCompleted
 Exit code or
 continue: false
@@ -4695,9 +4748,13 @@ false
 }
 SubagentStop hooks use the same decision control format as
 Stop hooks
-. They do not support
-additionalContext
-. Returning
+, including
+hookSpecificOutput.additionalContext
+with
+hookEventName
+set to
+"SubagentStop"
+, for non-error feedback that keeps the subagent running. Returning
 decision: "block"
 with a
 reason
@@ -5171,6 +5228,10 @@ decision
 is
 "block"
 . Tells Claude why it should continue
+hookSpecificOutput.additionalContext
+Non-error feedback for Claude. The conversation continues so Claude can act on it, but unlike
+decision: "block"
+it is shown in the transcript as hook feedback rather than a hook error
 {
 "decision"
 :
@@ -5179,6 +5240,27 @@ is
 "reason"
 :
 "Must be provided when Claude is blocked from stopping"
+}
+Use
+additionalContext
+when the hook is working as designed and giving Claude guidance, such as “run the test suite before finishing”. It keeps the conversation going through the same loop protections as
+decision: "block"
+, namely the
+stop_hook_active
+input and the 8-consecutive-continuation cap, but the transcript labels it
+Stop hook feedback
+and no hook error notification is shown:
+{
+"hookSpecificOutput"
+: {
+"hookEventName"
+:
+"Stop"
+,
+"additionalContext"
+:
+"Please run the test suite before finishing"
+}
 }
 ​
 StopFailure

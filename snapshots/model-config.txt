@@ -648,13 +648,13 @@ Foundry
 , or
 Claude Platform on AWS
 , pin model versions before rolling out to users.
-Without pinning, Claude Code uses model aliases (
+Without pinning, Claude Code uses model aliases such as
 sonnet
 ,
 opus
-,
+, and
 haiku
-) that resolve to the latest version. When Anthropic releases a new model that isn’t yet enabled in a user’s account, Bedrock and Vertex AI users see a notice and fall back to the previous version for that session, while Foundry users see errors because Foundry has no equivalent startup check.
+that resolve to a built-in default model ID for each provider. That default can lag the newest Anthropic release, and the model it points to may not yet be enabled in a user’s account. When the default is unavailable, Bedrock and Vertex AI users see a notice and fall back to the previous version for that session, while Foundry users see errors because Foundry has no equivalent startup check.
 Set all three model environment variables to specific version IDs as part of your initial setup. Pinning lets you control when your users move to a new model.
 Use the following environment variables with version-specific model IDs for your provider:
 Provider

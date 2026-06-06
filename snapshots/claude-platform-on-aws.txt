@@ -106,7 +106,11 @@ opus
 sonnet
 , and
 haiku
-resolve to the latest versions available in your workspace.
+resolve to Claude Code’s built-in defaults for Claude Platform on AWS, which can lag the newest release. Without
+ANTHROPIC_DEFAULT_OPUS_MODEL
+, the
+opus
+alias resolves to Opus 4.7.
 If you deploy Claude Code to a team, pin the model IDs explicitly so a new release doesn’t move everyone at once:
 export
 ANTHROPIC_DEFAULT_OPUS_MODEL

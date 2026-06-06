@@ -191,6 +191,13 @@ disableAgentView
 Version floor
 Prevent auto-update from installing below an org-wide minimum
 minimumVersion
+Required version range
+Refuse to start at all when the running version is outside an org-approved range. Stronger than
+minimumVersion
+, which only blocks downgrades
+requiredMinimumVersion
+,
+requiredMaximumVersion
 Permission rules and sandboxing cover different layers. Denying WebFetch blocks Claude’s fetch tool, but if Bash is allowed,
 curl
 and

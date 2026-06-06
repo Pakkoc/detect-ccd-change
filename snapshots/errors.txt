@@ -679,7 +679,7 @@ Use an alias such as
 sonnet
 or
 opus
-instead of a full versioned ID. Aliases track the latest release so they do not go stale. See
+instead of a full versioned ID. Aliases resolve to a maintained default so they do not go stale. See
 Model configuration
 .
 If the wrong model keeps coming back in the CLI, a stale ID is set somewhere. Check in

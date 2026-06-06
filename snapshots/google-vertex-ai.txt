@@ -206,9 +206,9 @@ Pin specific model versions when deploying to multiple users. Without pinning, m
 sonnet
 and
 opus
-resolve to the latest version, which may not yet be enabled in your Vertex AI project when Anthropic releases an update. Claude Code
+resolve to Claude Code’s built-in default for Vertex AI, which can lag the newest release and may not yet be enabled in your project. Claude Code
 falls back
-to the previous version at startup when the latest is unavailable, but pinning lets you control when your users move to a new model.
+to the previous version at startup when the default is unavailable, but pinning lets you control when your users move to a new model.
 Set these environment variables to specific Vertex AI model IDs.
 Without
 ANTHROPIC_DEFAULT_OPUS_MODEL

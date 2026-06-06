@@ -382,7 +382,9 @@ app for a repository. Walks you through selecting a repo and configuring the int
 /install-slack-app
 Install the Claude Slack app. Opens a browser to complete the OAuth flow
 /keybindings
-Open or create your keybindings configuration file
+Open your
+keyboard shortcuts
+file
 /login
 Sign in to your Anthropic account
 /logout
@@ -429,9 +431,18 @@ recent auto mode denials
 /plan [description]
 Enter plan mode directly from the prompt. Pass an optional description to enter plan mode and immediately start with that task, for example
 /plan fix the auth bug
-/plugin
+/plugin [subcommand]
 Manage Claude Code
 plugins
+. Run with no argument to open the plugin menu, or pass a subcommand such as
+list
+,
+install
+,
+enable
+, or
+disable
+to act directly
 /powerup
 Discover Claude Code features through quick interactive lessons with animated demos
 /pr-comments [PR]
@@ -448,10 +459,11 @@ Session recap
 for the automatic recap that appears after you’ve been away
 /release-notes
 View the changelog in an interactive version picker. Select a specific version to see its release notes, or choose to show all versions
-/reload-plugins
+/reload-plugins [--force]
 Reload all active
 plugins
-to apply pending changes without restarting. Reports counts for each reloaded component and flags any load errors
+to apply pending changes without restarting. Reports counts for each reloaded component and flags any load errors. When the reload would change which MCP tools are loaded and invalidate the prompt cache, the command warns and skips unless you pass
+--force
 /reload-skills
 Re-scan
 skill
@@ -462,9 +474,8 @@ remote control
 from claude.ai. Alias:
 /rc
 /remote-env
-Configure the default remote environment for
-web sessions started with
---remote
+Choose the default environment for
+cloud agents
 /rename [name]
 Rename the current session and show the name on the prompt bar. Without a name, auto-generates one from conversation history
 /resume [session]
@@ -577,7 +588,7 @@ background session
 or press
 ←
 /tasks
-List and manage background tasks. Also available as
+View and manage everything running in the background. Also available as
 /bashes
 /team-onboarding
 Generate a team onboarding guide from your Claude Code usage history. Claude analyzes your sessions, commands, and MCP server usage from the past 30 days and produces a markdown guide a teammate can paste as a first message to get set up quickly. For claude.ai subscribers on Pro, Max, Team, and Enterprise plans, also returns a share link teammates can open directly in Claude Code

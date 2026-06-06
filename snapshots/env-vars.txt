@@ -805,7 +805,9 @@ Set to
 1
 to make
 forked subagents
-the model’s default: Claude spawns a fork, a subagent that inherits the full conversation context instead of starting fresh, whenever it would otherwise use the general-purpose subagent, and all subagent spawns run in the background. The explicit
+the model’s default, or
+0
+to disable them, overriding any server-side rollout. When enabled, Claude spawns a fork, a subagent that inherits the full conversation context instead of starting fresh, whenever it would otherwise use the general-purpose subagent, and all subagent spawns run in the background. The explicit
 /fork
 command works without this variable. Works in interactive mode and via the SDK or
 claude -p
@@ -1075,11 +1077,13 @@ subprocesses. For Bash, PowerShell, and hooks this matches the
 session_id
 field in the hook JSON input and is updated on
 /clear
-. An MCP server subprocess retains the ID it was spawned with, and may receive the initial startup ID rather than the resumed ID when launched via
---resume
-or
+. An MCP server subprocess retains the ID it was spawned with. On
+--resume <session-id>
+it receives the resumed ID, matching hooks and Bash. On
 --continue
-. Use to correlate scripts and external tools with the Claude Code session that launched them
+or
+--resume
+without an explicit ID it may receive the initial startup ID instead. Use to correlate scripts and external tools with the Claude Code session that launched them
 CLAUDE_CODE_SHELL
 Override automatic shell detection. Useful when your login shell differs from your preferred working shell (for example,
 bash
@@ -1187,6 +1191,10 @@ before the first query and resync every 10 minutes. Applies only in non-interact
 flag. Set automatically in
 Claude Code on the web
 sessions. Requires claude.ai authentication
+CLAUDE_CODE_SYNC_SKILLS_INSTALL_TIMEOUT_MS
+Timeout in milliseconds for a mid-session skills resync when
+CLAUDE_CODE_SYNC_SKILLS
+is set (default: 30000). Bounds the download triggered when the host requests a skill reload during the session. When exceeded, the resync stops and remaining downloads continue in the background
 CLAUDE_CODE_SYNC_SKILLS_WAIT_TIMEOUT_MS
 Timeout in milliseconds for the first query to wait on the initial skills sync when
 CLAUDE_CODE_SYNC_SKILLS
@@ -1214,9 +1222,13 @@ on Windows to this path. Default:
 on macOS,
 os.tmpdir()
 on Linux and Windows.
-As of v2.1.161, on macOS and Linux, Bash subprocesses receive a short fallback
+As of v2.1.161, on macOS and Linux,
+sandboxed
+Bash subprocesses receive a short fallback
 $TMPDIR
-under the system default when your override is a long path, since some tools fail when temp paths get too long. Claude Code’s own temp files always use your override
+under the system default when your override is a long path, since some tools fail when temp paths get too long. Unsandboxed Bash commands inherit your shell’s
+$TMPDIR
+unchanged. Claude Code’s own temp files always use your override
 CLAUDE_CODE_TMUX_TRUECOLOR
 Set to
 1
