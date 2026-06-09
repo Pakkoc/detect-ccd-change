@@ -21,7 +21,7 @@ Agent teams
 Multiple coordinated sessions with a shared task list and inter-agent messaging, managed by a lead. Experimental and disabled by default
 You want Claude to split a project into pieces, assign them, and keep the workers in sync
 Dynamic workflows
-A script that runs many subagents and cross-checks their results, for work too big to coordinate one turn at a time or that needs more than a single pass. Research preview
+A script that runs many subagents and cross-checks their results, for work too big to coordinate one turn at a time or that needs more than a single pass
 A job outgrows a handful of subagents, or you want findings verified against each other: a codebase-wide audit, a 500-file migration, cross-checked research, or a plan drafted from several angles
 In every approach the workers are Claude sessions. To involve a different tool, expose it to Claude as an
 MCP server

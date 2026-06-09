@@ -238,7 +238,7 @@ Data usage policy
 What Anthropic collects, how long it’s retained, what’s never used for training
 Data usage
 Zero Data Retention (ZDR)
-Nothing stored after the request completes. Available on Claude for Enterprise
+Nothing stored after the request completes. Available to qualified accounts on Claude for Enterprise
 Zero data retention
 Security architecture
 Network model, encryption, authentication, audit trail
