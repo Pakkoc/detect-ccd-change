@@ -588,6 +588,16 @@ options.env
 The following example enables 1-hour TTL for an agent running on Bedrock:
 Python
 TypeScript
+from
+claude_agent_sdk
+import
+ClaudeAgentOptions, query
+import
+asyncio
+async
+def
+main
+():
 options
 =
 ClaudeAgentOptions(
@@ -604,6 +614,21 @@ env
 ,
 },
 )
+async
+for
+message
+in
+query(
+prompt
+=
+"Summarize this project"
+,
+options
+=
+options):
+print
+(message)
+asyncio.run(main())
 Cache writes with a 1-hour TTL are billed at a higher rate than 5-minute writes, so enabling this trades higher write cost for more cache reads. See
 prompt caching pricing
 for details. Claude subscription users already receive 1-hour TTL automatically and do not need to set this variable.

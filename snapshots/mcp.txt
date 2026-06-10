@@ -1377,7 +1377,7 @@ Claude Code automatically provides tools to list and read MCP resources when ser
 Resources can contain any type of content that the MCP server provides (text, JSON, structured data, etc.)
 ​
 Scale with MCP Tool Search
-Tool search keeps MCP context usage low by deferring tool definitions until Claude needs them. Only tool names and server instructions load at session start, so adding more MCP servers has minimal impact on your context window.
+Tool search keeps MCP context usage low by deferring tool definitions until Claude needs them. Only tool names and server instructions load at session start, so adding more MCP servers has minimal impact on your context window. Claude Code does not impose a fixed per-server tool cap; the practical limit is your context window budget.
 ​
 How it works
 Tool search is enabled by default. MCP tools are deferred rather than loaded into context upfront, and Claude uses a search tool to discover relevant ones when a task needs them. Only the tools Claude actually uses enter context. From your perspective, MCP tools work exactly as before.
@@ -1407,7 +1407,7 @@ ENABLE_TOOL_SEARCH
 explicitly to override either fallback.
 Tool search requires a model that supports
 tool_reference
-blocks: Sonnet 4 and later, or Opus 4 and later. Haiku models do not support it. On Vertex AI, tool search is supported for Claude Sonnet 4.5 and later and Claude Opus 4.5 and later.
+blocks. Haiku models do not support it. On Vertex AI, tool search is supported for Claude Sonnet 4.5 and later and Claude Opus 4.5 and later.
 Control tool search behavior with the
 ENABLE_TOOL_SEARCH
 environment variable:

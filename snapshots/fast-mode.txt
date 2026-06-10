@@ -187,6 +187,6 @@ Was this page helpful?
 Yes
 No
 Model configuration
-Output styles
+Escalate hard decisions with the advisor tool
 ⌘
 I

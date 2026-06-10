@@ -50,6 +50,11 @@ Close and restart Claude Code between major tasks
 Consider adding large build directories to your
 .gitignore
 file
+Restart with
+claude --safe-mode
+to check whether a plugin, MCP server, or hook is the source. It disables all customizations for the session; if usage drops, see
+Debug your configuration
+to find which one
 If memory usage stays high after these steps, run
 /heapdump
 to write a JavaScript heap snapshot and a memory breakdown to

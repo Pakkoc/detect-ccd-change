@@ -62,7 +62,9 @@ to monitor and dispatch parallel background sessions. Use
 --cwd <path>
 to show only sessions started under that directory, or
 --json
-to print live sessions as a JSON array for scripting. Pass
+to print active sessions as a JSON array for scripting (
+--json --all
+also includes completed background sessions). Pass
 --permission-mode
 ,
 --model
@@ -211,6 +213,20 @@ from these directories. Validates each path exists as a directory. To persist th
 permissions.additionalDirectories
 in settings
 claude --add-dir ../apps ../lib
+--advisor <model>
+Enable the server-side
+advisor tool
+for this session with a model alias:
+opus
+,
+sonnet
+, or
+fable
+(
+v2.1.170+), or a full model ID. Takes precedence over the
+advisorModel
+setting for the session. Requires Claude Code v2.1.98 or later
+claude --advisor opus
 --agent
 Specify an agent for the current session (overrides the
 agent
@@ -236,6 +252,8 @@ later. See
 permission modes
 claude --permission-mode plan --allow-dangerously-skip-permissions
 --allowedTools
+,
+--allowed-tools
 Tools that execute without prompting for permission. See
 permission rule syntax
 for pattern matching. To restrict which tools are available, use
@@ -315,7 +333,15 @@ claude --debug-file /tmp/claude-debug.log
 Disable all skills and commands for this session
 claude --disable-slash-commands
 --disallowedTools
-Deny rules. A bare tool name removes that tool from the model’s context. A scoped rule such as
+,
+--disallowed-tools
+Deny rules. A bare tool name removes the matching tools from the model’s context:
+"Edit"
+removes Edit,
+"*"
+removes every tool, and
+"mcp__*"
+removes every MCP tool. A scoped rule such as
 Bash(rm *)
 leaves the tool available and denies only matching calls
 "Bash(git log *)" "Bash(git diff *)" "Edit"
@@ -358,12 +384,13 @@ Run a shell command as a PTY-backed background job instead of starting a Claude 
 to launch from the shell
 claude --bg --exec 'pytest -x'
 --fallback-model
-Enable automatic fallback to a specified model when the default model is overloaded or not available, for example a retired model. Takes effect in print mode (
--p
-) and in
-background sessions
-, which run non-interactively; ignored in an interactive session
-claude -p --fallback-model sonnet "query"
+Enable automatic fallback to the specified model(s) when the primary model is overloaded or not available, for example a retired model. Accepts a comma-separated list tried in order. See
+Fallback model chains
+. To persist a chain across sessions, use the
+fallbackModel
+setting
+, which this flag overrides
+claude --fallback-model sonnet,haiku
 --fork-session
 When resuming, create a new session ID instead of reusing the original (use with
 --resume
@@ -432,8 +459,12 @@ claude --mcp-config ./mcp.json
 --model
 Sets the model for the current session with an alias for the latest model (
 sonnet
-or
+,
 opus
+,
+haiku
+, or
+fable
 ) or a model’s full name. Overrides the
 model
 setting and
@@ -558,6 +589,14 @@ background sessions
 appear in the picker marked with
 bg
 claude --resume auth-refactor
+--safe-mode
+Start with all customizations disabled to troubleshoot a broken configuration: CLAUDE.md, skills, plugins, hooks, MCP servers, custom commands and agents, output styles, workflows, custom themes, custom keybindings, status line and file-suggestion commands, LSP servers, and auto-memory do not load. Authentication, model selection, built-in tools, and permissions work normally, which differs from
+--bare
+. Managed settings policy still applies, including policy-configured hooks, status line, and file-suggestion commands; managed plugins, managed skills, managed CLAUDE.md, and policy-configured MCP servers do not. Useful for checking whether a customization is what triggers
+automatic fallback from Fable 5
+. Sets
+CLAUDE_CODE_SAFE_MODE
+claude --safe-mode
 --session-id
 Use a specific session ID for the conversation (must be a valid UUID)
 claude --session-id "550e8400-e29b-41d4-a716-446655440000"
@@ -620,6 +659,13 @@ to disable all,
 "default"
 for all, or tool names like
 "Bash,Edit,Read"
+. MCP tools are not affected; to deny those too, use
+--disallowedTools "mcp__*"
+, or pass
+--strict-mcp-config
+without
+--mcp-config
+so no MCP servers load
 claude --tools "Bash,Edit,Read"
 --verbose
 Enable verbose logging, shows full turn-by-turn output. Overrides the

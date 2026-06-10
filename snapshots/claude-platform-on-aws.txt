@@ -101,6 +101,8 @@ if they’re set.
 ​
 3. Pin model versions
 Claude Platform on AWS uses the same model IDs as the direct Claude API. The default aliases
+fable
+,
 opus
 ,
 sonnet
@@ -112,6 +114,10 @@ ANTHROPIC_DEFAULT_OPUS_MODEL
 opus
 alias resolves to Opus 4.7.
 If you deploy Claude Code to a team, pin the model IDs explicitly so a new release doesn’t move everyone at once:
+export
+ANTHROPIC_DEFAULT_FABLE_MODEL
+=
+claude-fable-5
 export
 ANTHROPIC_DEFAULT_OPUS_MODEL
 =

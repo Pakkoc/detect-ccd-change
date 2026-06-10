@@ -54,7 +54,7 @@ Team and Enterprise
 none
 billed as
 usage credits
-Pro and Max subscribers receive three free ultrareview runs to try the feature. These three runs are a one-time allotment per account and do not refresh. After you use all three, or after the free run period ends, each review is billed to usage credits and typically costs $5 to $20 depending on the size of the change. A run counts once the remote session starts, so a review that you stop early or that fails to complete still uses a free run. For a paid review, usage credits are billed only for the portion that ran.
+Pro and Max subscribers receive three free ultrareview runs to try the feature. These three runs are a one-time allotment per account and do not refresh. After you use all three, or after the free run period ends, each review is billed to usage credits and typically costs $5 to $20 depending on the size of the change. A run counts once the cloud session starts, so a review that you stop early or that fails to complete still uses a free run. For a paid review, usage credits are billed only for the portion that ran.
 Because ultrareview always bills as usage credits outside the free runs, your account or organization must have usage credits turned on before you can launch a paid review. If usage credits are not turned on, Claude Code blocks the launch and links you to the billing settings where you can turn them on. You can also run
 /usage-credits
 to check or change your current setting.
@@ -93,7 +93,7 @@ Running
 claude ultrareview
 requires the same authentication and usage credit configuration as
 /code-review ultra
-. The subcommand exits with code 0 when the review completes with or without findings, code 1 when the review fails to launch, the remote session errors, or the timeout elapses, and code 130 when interrupted with Ctrl-C. The remote review keeps running if you interrupt the subcommand; follow the session URL printed to stderr to watch it in the browser.
+. The subcommand exits with code 0 when the review completes with or without findings, code 1 when the review fails to launch, the cloud session errors, or the timeout elapses, and code 130 when interrupted with Ctrl-C. The remote review keeps running if you interrupt the subcommand; follow the session URL printed to stderr to watch it in the browser.
 For automatic reviews on GitHub pull requests,
 Code Review
 integrates with your repository directly and posts findings as inline PR comments without a CLI step.
@@ -125,7 +125,7 @@ before merging a substantial change when you want a deeper pass that catches iss
 ​
 Related resources
 Claude Code on the web
-: learn how remote sessions and cloud sandboxes work
+: learn how cloud sessions and cloud sandboxes work
 Plan complex changes with ultraplan
 : the planning counterpart to ultrareview for upfront design work
 Manage costs effectively

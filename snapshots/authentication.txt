@@ -167,7 +167,7 @@ apiKeyHelper
 ANTHROPIC_API_KEY
 , and
 ANTHROPIC_AUTH_TOKEN
-apply to terminal CLI sessions only. Claude Desktop and remote sessions use OAuth exclusively and do not call
+apply to terminal CLI sessions only. Claude Desktop and cloud sessions use OAuth exclusively and do not call
 apiKeyHelper
 or read API key environment variables.
 ​

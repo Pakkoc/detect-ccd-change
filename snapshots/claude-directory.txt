@@ -154,7 +154,7 @@ Permissions, hooks, env vars, model defaults
 Settings
 settings.local.json
 Project only
-Your personal overrides, auto-gitignored
+Your personal overrides, gitignored when Claude Code creates it
 Settings scopes
 .mcp.json
 Project only

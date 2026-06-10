@@ -212,7 +212,7 @@ start Claude from that package’s directory
 instead of editing exclusions.
 If you only want these exclusions for yourself, put the setting in
 .claude/settings.local.json
-, which is gitignored and not committed. Patterns use glob syntax matched against absolute file paths, so start relative-style patterns with
+. Claude Code gitignores that file when it creates it; since you’re creating it by hand here, add it to your gitignore. Patterns use glob syntax matched against absolute file paths, so start relative-style patterns with
 **/
 to match anywhere in the tree. The example below excludes packages owned by other teams:
 .claude/settings.local.json

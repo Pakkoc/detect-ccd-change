@@ -30,7 +30,7 @@ Yes (committed to git)
 Local
 .claude/settings.local.json
 You, in this repository only
-No (gitignored)
+No (gitignored when Claude Code creates it)
 ​
 When to use each scope
 Managed scope
@@ -126,9 +126,9 @@ are saved in your project directory:
 .claude/settings.json
 for settings that are checked into source control and shared with your team
 .claude/settings.local.json
-for settings that are not checked in, useful for personal preferences and experimentation. Claude Code will configure git to ignore
+for settings that are not checked in, useful for personal preferences and experimentation. When Claude Code creates
 .claude/settings.local.json
-when it is created.
+, it configures git to ignore the file. If you create the file yourself, add it to your gitignore manually.
 Managed settings
 : For organizations that need centralized control, Claude Code supports multiple delivery mechanisms for managed settings. All use the same JSON format and cannot be overridden by user or project settings:
 Server-managed settings
@@ -284,12 +284,61 @@ outputStyle
 /clear
 or restart
 ​
+Invalid entries in managed settings
+Managed settings parse tolerantly. When a managed configuration contains an entry that fails schema validation, Claude Code strips that entry, records a warning, and enforces every remaining valid policy. A single typo cannot disable the rest of your organization’s policy. This behavior is consistent across all three delivery mechanisms:
+server-managed settings
+, plist and registry policies deployed through MDM, and
+managed-settings.json
+files. Requires Claude Code v2.1.169 or later.
+Security-enforcement fields are handled per field instead of being stripped wholesale when they are present but invalid:
+Field
+Behavior when present but invalid
+allowedMcpServers
+Enforced as an empty allowlist, so no MCP servers are admitted until the value is fixed. An individual invalid entry is stripped and the valid subset is enforced.
+allowManagedMcpServersOnly
+Treated as
+true
+.
+forceLoginOrgUUID
+No organization is permitted to log in until the value is fixed.
+deniedMcpServers
+An individual invalid entry is stripped and the valid subset is enforced. A wholly invalid value is dropped with a warning, since denying every server would block servers the policy never named.
+requiredMinimumVersion
+and
+requiredMaximumVersion
+fail open by design: an invalid value is stripped rather than enforced, so a bad policy push cannot prevent Claude Code from starting.
+Validation errors surface in three places:
+Interactive sessions show a dialog at startup listing the invalid entries.
+Headless runs with
+-p
+print a summary to stderr.
+claude doctor
+lists each invalid entry with its source and field.
+Validate policy changes by running
+claude doctor
+on a test machine before deploying them fleet-wide.
+This tolerance applies only to managed settings. User, project, and local settings files remain strict: a file that fails validation is rejected as a whole and reported.
+​
 Available settings
 settings.json
 supports a number of options:
 Key
 Description
 Example
+advisorModel
+Model for the server-side
+advisor tool
+. Accepts a model alias such as
+"opus"
+,
+"sonnet"
+, or
+"fable"
+(
+v2.1.170+), or a full model ID. Written automatically when you run
+/advisor
+. Unset to disable the advisor. Requires Claude Code v2.1.98 or later
+"opus"
 agent
 Run the main thread as a named subagent, and set the default agent for sessions dispatched from
 claude agents
@@ -348,9 +397,14 @@ extended thinking
 by default for all sessions. Typically configured via the
 /config
 command rather than editing directly. To force thinking off regardless of this setting, set
-CLAUDE_CODE_DISABLE_THINKING
+MAX_THINKING_TOKENS=0
 in
 env
+, which disables thinking on the Anthropic API except on Fable 5, which cannot have thinking turned off. On
+third-party providers
+this omits the
+thinking
+parameter instead, and adaptive-reasoning models may still think
 true
 apiKeyHelper
 Custom script, to be executed in
@@ -557,6 +611,22 @@ at startup. Most useful in
 managed settings
 where users cannot override it
 "disable"
+disableBundledSkills
+Set to
+true
+to disable the
+skills
+and workflows that ship with Claude Code: bundled skills and workflows are removed entirely, while built-in slash commands like
+/init
+stay typable but are hidden from the model. Skills from plugins,
+.claude/skills/
+, and
+.claude/commands/
+are unaffected. Equivalent to setting
+CLAUDE_CODE_DISABLE_BUNDLED_SKILLS
+to
+1
+true
 disableDeepLinkRegistration
 Set to
 "disable"
@@ -658,6 +728,14 @@ set here are passed to subprocesses but do not change Claude Code’s own interf
 claude
 to change interface colors
 {"FOO": "bar"}
+fallbackModel
+Fallback model(s) to try in order when the primary model is overloaded or unavailable. Claude Code switches to the next available model in the chain for the rest of the turn and shows a notice.
+"default"
+expands to the default model. Chains are capped at three models; extra entries are ignored. Unlike most array settings, this key does not merge across settings files: the highest-precedence file that defines it supplies the entire chain. The
+--fallback-model
+flag overrides this for one session. See
+Fallback model chains
+["claude-sonnet-4-6", "claude-haiku-4-5"]
 fastModePerSessionOptIn
 When
 true
@@ -821,13 +899,13 @@ Customize where plan files are stored. Path is relative to project root. Default
 ~/.claude/plans
 "./plans"
 pluginSuggestionMarketplaces
-(Managed settings only) Marketplace names whose plugins can appear as contextual install suggestions, in addition to the official marketplace. Suggestions come from each plugin’s
+(Managed settings only) Marketplace names whose plugins can appear as contextual install suggestions. No marketplace-declared suggestions surface without this allowlist; the built-in first-party frontend-design tip is unaffected. Suggestions come from each plugin’s
 relevance
 declaration in its marketplace entry. A name only takes effect when the marketplace is registered on the machine and its registered source is also declared in managed settings, either as the
 extraKnownMarketplaces
 entry for that name or as an entry of
 strictKnownMarketplaces
-. A marketplace registered from a different source under an allowlisted name is ignored.
+. A marketplace registered from a different source under an allowlisted name is ignored. The official marketplace is exempt from the source requirement: allowlisting its name alone suffices, since that name can only register from the official Anthropic source.
 ["acme-corp-plugins"]
 pluginTrustMessage
 (Managed settings only) Custom message appended to the plugin trust warning shown before installation. Use this to add organization-specific context, for example to confirm that plugins from your internal marketplace are vetted.
@@ -1052,11 +1130,11 @@ How
 agent team
 teammates display:
 auto
-(picks split panes in tmux or iTerm2, in-process otherwise),
+(split panes when running inside tmux or iTerm2, in-process otherwise),
 in-process
 , or
 tmux
-.
+(split panes using tmux or iTerm2, detected from your terminal).
 --teammate-mode
 overrides this for one session. See
 choose a display mode
@@ -1296,7 +1374,11 @@ Keys
 Description
 Example
 allow
-Array of permission rules to allow tool use. See
+Array of permission rules to allow tool use. Tool-name globs are supported only in the tool position after a literal
+mcp__<server>__
+prefix, such as
+mcp__github__get_*
+; the server segment must be glob-free. See
 Permission rule syntax
 below for pattern matching details
 [ "Bash(git diff *)" ]
@@ -1306,7 +1388,11 @@ Permission rule syntax
 below
 [ "Bash(git push *)" ]
 deny
-Array of permission rules to deny tool use. Use this to exclude sensitive files from Claude Code access. See
+Array of permission rules to deny tool use. Use this to exclude sensitive files from Claude Code access. Tool names accept glob patterns:
+"*"
+denies every tool and
+"mcp__*"
+denies all MCP tools. See
 Permission rule syntax
 and
 Bash permission limitations
@@ -1374,7 +1460,9 @@ Permission rules follow the format
 Tool
 or
 Tool(specifier)
-. Rules are evaluated in order: deny rules first, then ask, then allow. The first matching rule wins.
+. Rules are evaluated in order: deny rules first, then ask, then allow. The first match determines the outcome regardless of rule specificity. See the
+permission rule evaluation order
+for details.
 Quick examples:
 Rule
 Effect
@@ -1748,6 +1836,7 @@ jq
 -r
 '.query'
 )
+# Replace your-repo-file-index with your own file search command
 your-repo-file-index
 --query
 "
@@ -1925,7 +2014,9 @@ to
 ["/opt/company-tools"]
 and a user adds
 ["~/.kube"]
-, both paths are included in the final configuration.
+, both paths are included in the final configuration. The one exception is
+fallbackModel
+, an ordered chain where position carries meaning: the highest-precedence file that defines it supplies the entire value.
 ​
 Verify active settings
 Run
@@ -1953,9 +2044,11 @@ The
 Setting sources
 line confirms which sources are being read. It does not show which layer supplied each individual key. The Config tab in the same dialog is an editor for a fixed set of toggles such as theme and verbose output, not a view of your
 settings.json
-contents. If a settings file contains errors, such as invalid JSON or a value that fails validation,
+contents. If a settings file contains errors, such as invalid JSON or a value that fails validation, Claude Code shows a setup issues notice at startup and
 /status
-reports the issue so you can fix it.
+lists the affected files. Run
+/doctor
+to see the details for each error.
 ​
 Key points about the configuration system
 Memory files (
@@ -1973,7 +2066,9 @@ MCP servers
 Precedence
 : Higher-level configurations (Managed) override lower-level ones (User/Project)
 Inheritance
-: Settings merge across scopes; scalar values from higher-priority scopes override, and arrays concatenate
+: Settings merge across scopes; scalar values from higher-priority scopes override, and arrays concatenate (
+fallbackModel
+is the exception: the highest-precedence scope supplies the whole chain)
 ​
 System prompt
 Claude Code’s internal system prompt is not published. To add custom instructions, use
@@ -2082,7 +2177,7 @@ Project settings
 Local settings
 (
 .claude/settings.local.json
-): Per-machine overrides (not committed)
+): Per-machine overrides, gitignored when Claude Code creates it
 Managed settings
 (
 managed-settings.json

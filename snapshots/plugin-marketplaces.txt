@@ -264,6 +264,10 @@ claude-code-plugins
 ,
 claude-plugins-official
 ,
+claude-plugins-community
+,
+claude-community
+,
 anthropic-marketplace
 ,
 anthropic-plugins
@@ -549,6 +553,21 @@ acme-corp/plugin-catalog
 (marketplace source) can list a plugin fetched from
 acme-corp/code-formatter
 (plugin source). The marketplace source and plugin source point to different repositories and are pinned independently.
+The git-based source types below are
+github
+,
+url
+, and
+git-subdir
+. When both
+ref
+and
+sha
+are set on any of them, the
+sha
+is the effective pin. Claude Code fetches and checks out the pinned commit directly, so installation succeeds even if the branch or tag named by
+ref
+has since been deleted upstream, as long as the commit is still reachable from the repository.
 ​
 Relative paths
 For plugins in the same repository, use a path starting with
@@ -1839,6 +1858,11 @@ Verify plugin source URLs are accessible
 Check that plugin directories contain required files
 For GitHub sources, ensure repositories are public or you have access
 Test plugin sources manually by cloning/downloading
+If the source pins both
+ref
+and
+sha
+, a deleted upstream branch or tag does not block installation. If the install still fails, confirm the pinned commit still exists in the repository
 ​
 Private repository authentication fails
 Symptoms

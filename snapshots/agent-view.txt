@@ -355,6 +355,8 @@ for everything waiting on you
 #<number>
 or a PR URL
 The session working on that pull request
+Any other URL
+The session whose first prompt contained that URL
 ​
 Keyboard shortcuts
 Press
@@ -827,31 +829,51 @@ claude agents --cwd <path>
 Open agent view scoped to sessions started under
 <path>
 claude agents --json
-Print live sessions as a JSON array and exit. Each entry has
-pid
-,
+Print active sessions as a JSON array and exit: every live session, plus background sessions that are still working or blocked even when their process has exited. Add
+--all
+to also include completed background sessions. Each entry has
 cwd
 ,
 kind
 , and
 startedAt
-, plus
-sessionId
-,
-name
+. Background entries also have
+id
+, usable with
+claude attach
+/
+logs
+/
+stop
 , and
-status
-when set. When
-status
-is
-waiting
+state
+: one of
+working
 ,
+blocked
+,
+done
+,
+failed
+, or
+stopped
+.
+pid
+and
+status
+are present only while the process is alive, plus
 waitingFor
-says what the session is blocked on, such as
+when status is
+waiting
+, which says what the session is blocked on, such as
 permission prompt
 or
 input needed
-. Combine with
+;
+sessionId
+and
+name
+appear when set. Combine with
 --cwd <path>
 to filter
 claude attach <id>
@@ -968,11 +990,11 @@ Before you dispatch your first session, agent view shows a short onboarding hint
 Enter
 to dispatch your first session.
 ​
-Cannot open agents because background tasks are running
+Cannot open agents because work is running in the background
 If pressing
 ←
 to background the current session shows
-Cannot open agents — N background task(s) running
+Cannot open agents — N still running in the background
 , the session has in-flight work such as a subagent, a dynamic workflow, or a background shell command, and the shortcut won’t silently abandon it. Run
 /tasks
 to see what’s running, then

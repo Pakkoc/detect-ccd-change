@@ -298,9 +298,11 @@ or in
 /model
 , disabling thinking in
 /config
-, or lowering the budget with
+, or, on models with a
+fixed thinking budget
+, lowering the budget with
 MAX_THINKING_TOKENS=8000
-.
+. Adaptive-reasoning models ignore nonzero budgets, so use effort levels there instead. Disabling thinking is not available on Fable 5, which always uses extended thinking.
 ​
 Delegate verbose operations to subagents
 Running tests, fetching documentation, or processing log files can consume significant context. Delegate these to

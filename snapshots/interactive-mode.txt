@@ -98,7 +98,8 @@ Ctrl+P
 /
 Ctrl+N
 Move cursor or navigate command history
-In multiline input, first moves the cursor within the prompt. Once the cursor is already on the top or bottom edge, pressing again navigates command history
+When the input spans more than one visual row, whether wrapped or multiline, first moves the cursor within the prompt. Once the cursor is on the first or last visual row, pressing again navigates command history.
+As of v2.1.169, wrapped single-line input behaves the same as multiline
 Esc
 Interrupt Claude
 Stop the current response or tool call mid-turn so you can redirect. Claude keeps the work done so far
@@ -144,7 +145,7 @@ Option+T
 Alt+T
 (Windows/Linux)
 Toggle extended thinking
-Enable or disable extended thinking mode.
+Enable or disable extended thinking mode. Has no effect on Fable 5, which always uses extended thinking.
 As of v2.1.132 this shortcut works on macOS without configuring Option as Meta
 Option+O
 (macOS) or

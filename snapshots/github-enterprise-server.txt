@@ -154,7 +154,7 @@ or at
 claude.ai/code
 . See
 Claude Code on the web
-for the full remote session workflow including diff review, auto-fix, and routines.
+for the full cloud session workflow including diff review, auto-fix, and routines.
 ​
 Teleport sessions to your terminal
 Pull a web session into your local terminal with

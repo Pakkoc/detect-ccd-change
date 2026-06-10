@@ -8,7 +8,13 @@ Anthropic Trust Center
 ​
 Permission-based architecture
 Claude Code uses strict read-only permissions by default. When additional actions are needed (editing files, running tests, executing commands), Claude Code requests explicit permission. Users control whether to approve actions once or allow them automatically.
-We designed Claude Code to be transparent and secure. For example, we require approval for bash commands before executing them, giving you direct control. This approach enables users and organizations to configure permissions directly.
+Claude Code requires approval before running Bash commands that can modify your system. A built-in set of read-only commands such as
+ls
+,
+cat
+, and
+git status
+runs without a prompt. This approach lets users and organizations configure permissions directly.
 For detailed permission configuration, see
 Permissions
 .
@@ -53,13 +59,15 @@ Context-aware analysis
 : Detects potentially harmful instructions by analyzing the full request
 Input sanitization
 : Prevents command injection by processing user inputs
-Command blocklist
-: Blocks risky commands that fetch arbitrary content from the web like
+Network command approval
+: Commands that fetch content from the web such as
 curl
 and
 wget
-by default. When explicitly allowed, be aware of
-permission pattern limitations
+are not auto-approved by default. They prompt like any other non-read-only Bash command, so you can still approve once or add an explicit allow rule like
+Bash(curl *)
+. To block them entirely, add them to
+permissions.deny
 ​
 Privacy safeguards
 We have implemented several safeguards to protect your data, including:
@@ -87,9 +95,7 @@ Trust verification
 : First-time codebase runs and new MCP servers require trust verification
 Note: Trust verification is disabled when running non-interactively with the
 -p
-flag. The exception is
---worktree
-, which still requires that trust has been accepted for the directory
+flag
 Note: When you start Claude Code directly in your home directory, trust acceptance is held for the current session only and is not written to disk, so the prompt reappears on each launch. There is no setting to persist it. Start Claude Code from a project subdirectory instead, where trust acceptance is saved per directory
 Command injection detection
 : Suspicious bash commands require manual approval even if previously allowlisted
@@ -98,7 +104,7 @@ Fail-closed matching
 Natural language descriptions
 : Complex bash commands include explanations for user understanding
 Secure credential storage
-: API keys and tokens are encrypted. See
+: API keys and tokens are stored in the macOS Keychain when available, and protected by file permissions on Windows and Linux. See
 Credential Management
 Windows WebDAV security risk
 : When running Claude Code on Windows, we recommend against enabling WebDAV or allowing Claude Code to access paths such as

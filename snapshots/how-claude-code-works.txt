@@ -258,7 +258,7 @@ and
 mv
 without asking, still asks for other commands
 Plan mode
-: Claude uses read-only tools only, creating a plan you can approve before execution
+: Claude explores and proposes a plan without editing your source files; permission prompts still apply as in default mode
 Auto mode
 : Claude evaluates all actions with background safety checks. Currently a research preview
 You can also allow specific commands in

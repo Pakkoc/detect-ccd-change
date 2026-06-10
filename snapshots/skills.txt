@@ -38,7 +38,9 @@ dynamic context injection
 .
 ​
 Bundled skills
-Claude Code includes a set of bundled skills that are available in every session, including
+Claude Code includes a set of bundled skills that are available in every session unless disabled with the
+disableBundledSkills
+setting, including
 /code-review
 ,
 /batch
@@ -597,9 +599,11 @@ in prose, escape it with a backslash:
 \$1.00
 . A backslash before any other
 $
-is left unchanged. Only a single backslash directly before the token escapes it; a doubled backslash such as
+is left unchanged. Only a single backslash directly before the token escapes it. A doubled backslash such as
 \\$1
-keeps both backslashes and substitutes as before.
+leaves both backslashes in place, and
+$1
+still expands to the argument value.
 Example using substitutions:
 ---
 name

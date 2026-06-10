@@ -1103,8 +1103,9 @@ bypassPermissions
 Permissions
 effort
 'low' | 'medium' | 'high' | 'xhigh' | 'max'
-'high'
-Controls how much effort Claude puts into its response. Works with adaptive thinking to guide thinking depth
+Model default
+Controls how much effort Claude puts into its response. Works with adaptive thinking to guide thinking depth. See
+adjust the effort level
 enableFileCheckpointing
 boolean
 false
@@ -1224,7 +1225,8 @@ MCP server configurations
 model
 string
 Default from CLI
-Claude model to use
+Claude model alias or full model name. See
+accepted values and provider-specific IDs
 onElicitation
 (request: ElicitationRequest, options: { signal: AbortSignal }) => Promise<ElicitationResult>
 undefined
@@ -1468,7 +1470,9 @@ run_in_background
 CLAUDE_ENABLE_STREAM_WATCHDOG=1
 with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
-: aborts the request when headers have arrived but the response body stops streaming. Off by default.
+: aborts the request when headers have arrived but the response body stops streaming. When
+CLAUDE_ENABLE_STREAM_WATCHDOG
+is unset, the default is server-controlled on the direct Anthropic API and off on other providers.
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 defaults to
 300000
@@ -2032,9 +2036,11 @@ The agent’s system prompt
 model
 No
 Model override for this agent. Accepts an alias such as
-'sonnet'
+'fable'
 ,
 'opus'
+,
+'sonnet'
 ,
 'haiku'
 ,
@@ -2118,7 +2124,7 @@ Global user settings
 Shared project settings (version controlled)
 .claude/settings.json
 'local'
-Local project settings (gitignored)
+Local project settings (not version controlled)
 .claude/settings.local.json
 ​
 Default behavior
@@ -2311,10 +2317,10 @@ PermissionMode
 // Auto-accept file edits
 |
 "bypassPermissions"
-// Bypass all permission checks
+// Bypass permission checks; explicit ask rules still prompt
 |
 "plan"
-// Planning mode - read-only tools only
+// Planning mode - explore without editing
 |
 "dontAsk"
 // Don't prompt for permissions, deny if not pre-approved
@@ -2961,6 +2967,10 @@ ttft_ms
 ?:
 number
 ;
+ttft_stream_ms
+?:
+number
+;
 total_cost_usd
 :
 number
@@ -3113,7 +3123,13 @@ api_error_status
 null
 when the turn ended without an API error.
 ttft_ms
-: time to first token in milliseconds. Present on the success arm only.
+: time to first token in milliseconds, measured when the first complete assistant message arrives. Present on the success arm only.
+ttft_stream_ms
+: time in milliseconds until the first
+message_start
+stream event, when the response stream opens. Lower than
+ttft_ms
+; the gap between the two is time spent streaming the first message. Present on the success arm only.
 terminal_reason
 : why the loop ended. One of
 "completed"
@@ -3299,6 +3315,11 @@ session_id
 :
 string
 ;
+ttft_ms
+?:
+number
+;
+// Time to first token in ms, present only on message_start events
 };
 ​
 SDKCompactBoundaryMessage
@@ -4718,6 +4739,8 @@ model
 "opus"
 |
 "haiku"
+|
+"fable"
 ;
 resume
 ?:
@@ -6927,7 +6950,7 @@ PermissionUpdateDestination
 // Per-directory project settings
 |
 "localSettings"
-// Gitignored local settings
+// Local project settings
 |
 "session"
 // Current session only
@@ -6982,7 +7005,7 @@ SdkBeta
 The
 context-1m-2025-08-07
 beta is retired as of April 30, 2026. Passing this value with Claude Sonnet 4.5 or Sonnet 4 has no effect, and requests that exceed the standard 200k-token context window return an error. To use a 1M-token context window, migrate to
-Claude Sonnet 4.6, Claude Opus 4.6, or Claude Opus 4.7
+Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
 , which include 1M context at standard pricing with no beta header required.
 ​
 SlashCommand
@@ -7407,7 +7430,11 @@ type
 |
 "image"
 |
+"audio"
+|
 "resource"
+|
+"resource_link"
 ;
 // Additional fields vary by type
 }>;
@@ -9000,7 +9027,10 @@ is set to
 bypassPermissions
 and
 allowUnsandboxedCommands
-is enabled, the model can autonomously execute commands outside the sandbox without any approval prompts. This combination effectively allows the model to escape sandbox isolation silently.
+is enabled, the model can autonomously execute commands outside the sandbox without approval prompts (an explicit
+ask
+rule
+still forces one). This combination effectively allows the model to escape sandbox isolation silently.
 ​
 See also
 SDK overview

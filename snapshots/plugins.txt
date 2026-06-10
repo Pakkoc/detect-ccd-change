@@ -306,6 +306,15 @@ Plugin root
 Default
 settings
 applied when the plugin is enabled
+A plugin that ships exactly one skill can place
+SKILL.md
+directly at the plugin root instead of creating a
+skills/
+directory. Claude Code loads it as a single skill and uses the frontmatter
+name
+field for the invocation name. Use the
+skills/
+layout for plugins that may grow to more than one skill.
 Next steps
 : Ready to add more features? Jump to
 Develop more complex plugins
@@ -686,9 +695,11 @@ hooks/hooks.json
 Must manually copy to share
 Install with
 /plugin install
-After migrating, you can remove the original files from
+After migrating, remove the original files from
 .claude/
-to avoid duplicates. The plugin version will take precedence when loaded.
+to avoid duplicates. Project and user
+.claude/agents/
+definitions override same-named plugin agents, so the plugin version only takes effect once the originals are removed.
 ​
 Next steps
 Now that you understand Claude Code’s plugin system, here are suggested paths for different goals:

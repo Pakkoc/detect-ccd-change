@@ -67,7 +67,7 @@ for a remote machine you manage. See
 environment configuration
 .
 Project folder
-: select the folder or repository Claude works in. For remote sessions, you can add
+: select the folder or repository Claude works in. For cloud sessions, you can add
 multiple repositories
 .
 Model
@@ -108,7 +108,7 @@ The prompt box supports two ways to bring in external context:
 @mention files
 : type
 @
-followed by a filename to add a file to the conversation context. Claude can then read and reference that file. @mention is not available in remote sessions.
+followed by a filename to add a file to the conversation context. Claude can then read and reference that file. @mention is not available in cloud sessions.
 Attach files
 : attach images, PDFs, and other files to your prompt using the attachment button, or drag and drop files directly into the prompt. This is useful for sharing screenshots of bugs, design mockups, or reference documents.
 ​
@@ -139,7 +139,9 @@ availability requirements
 below.
 Bypass permissions
 bypassPermissions
-Claude runs without any permission prompts, equivalent to
+Claude runs without permission prompts, except those forced by explicit
+ask rules
+; equivalent to
 --dangerously-skip-permissions
 in the CLI. Enable in your Settings → Claude Code under “Allow bypass permissions mode”. Only use this in sandboxed containers or VMs. Enterprise admins can disable this option.
 The
@@ -154,7 +156,9 @@ CLAUDE_CODE_ENABLE_AUTO_MODE
 Start complex tasks in Plan mode so Claude maps out an approach before making changes. Once you approve the plan, switch to Auto accept edits or Ask permissions to execute it. See
 explore first, then plan, then code
 for more on this workflow.
-Remote sessions support Auto accept edits and Plan mode. Ask permissions is not available because remote sessions auto-accept file edits by default, and Bypass permissions is not available because the remote environment is already sandboxed.
+Cloud sessions support Accept edits, Plan mode, and Auto mode. Accept edits corresponds to
+default
+mode: cloud sessions pre-approve file edits, so the selector shows Accept edits instead of Ask permissions. Bypass permissions is not available because the cloud environment is already sandboxed.
 Enterprise admins can restrict which permission modes are available. See
 enterprise configuration
 for details.
@@ -267,7 +271,7 @@ Save
 to write them back. If the file changed on disk since you opened it, the pane warns you and lets you override or discard. Click
 Discard
 to revert your edits, or click the path in the pane header to copy the absolute path.
-The file pane is available in local and SSH sessions. For remote sessions, ask Claude to make the change.
+The file pane is available in local and SSH sessions. For cloud sessions, ask Claude to make the change.
 ​
 Open files in other apps
 Right-click any file path in the chat, diff viewer, or file pane to open a context menu:
@@ -551,22 +555,22 @@ For large refactors, test suites, migrations, or other long-running tasks, selec
 Remote
 instead of
 Local
-when starting a session. Remote sessions run on Anthropic’s cloud infrastructure and continue even if you close the app or shut down your computer. Check back anytime to see progress or steer Claude in a different direction. You can also monitor remote sessions from
+when starting a session. Cloud sessions run on Anthropic’s cloud infrastructure and continue even if you close the app or shut down your computer. Check back anytime to see progress or steer Claude in a different direction. You can also monitor cloud sessions from
 claude.ai/code
 or the Claude iOS app.
-Remote sessions also support multiple repositories. After selecting a cloud environment, click the
+Cloud sessions also support multiple repositories. After selecting a cloud environment, click the
 +
 button next to the repo pill to add additional repositories to the session. Each repo gets its own branch selector. This is useful for tasks that span multiple codebases, such as updating a shared library and its consumers.
 See
 Claude Code on the web
-for more on how remote sessions work.
+for more on how cloud sessions work.
 ​
 Continue in another surface
 The
 Continue in
 menu, accessible from the VS Code icon in the bottom right of the session toolbar, lets you move your session to another surface:
 Claude Code on the Web
-: sends your local session to continue running remotely. Desktop pushes your branch, generates a summary of the conversation, and creates a new remote session with the full context. You can then choose to archive the local session or keep it. This requires a clean working tree, and is not available for SSH sessions.
+: sends your local session to continue running remotely. Desktop pushes your branch, generates a summary of the conversation, and creates a new cloud session with the full context. You can then choose to archive the local session or keep it. This requires a clean working tree, and is not available for SSH sessions.
 Your IDE
 : opens your project in a supported IDE at the current working directory.
 ​
@@ -603,7 +607,7 @@ button next to the prompt box and select
 Connectors
 to add integrations like Google Calendar, Slack, GitHub, Linear, Notion, and more. You can add connectors before or during a session. The
 +
-button is not available in remote sessions, but
+button is not available in cloud sessions, but
 routines
 configure connectors at routine creation time.
 To manage or disconnect connectors, go to Settings → Connectors in the desktop app, or select
@@ -650,7 +654,7 @@ marketplaces
 including the official Anthropic marketplace. Select
 Manage plugins
 to enable, disable, or uninstall plugins.
-Plugins can be scoped to your user account, a specific project, or local-only. If your organization manages plugins centrally, those plugins are available in desktop sessions the same way they are in the CLI. Plugins are not available for remote sessions. For the full plugin reference including creating your own plugins, see
+Plugins can be scoped to your user account, a specific project, or local-only. If your organization manages plugins centrally, those plugins are available in desktop sessions the same way they are in the CLI. Plugins are not available for cloud sessions. For the full plugin reference including creating your own plugins, see
 plugins
 .
 ​
@@ -986,11 +990,17 @@ file, though these reach Claude sessions only and not dev servers. See
 environment variables
 for the full list of supported variables.
 Extended thinking
-is enabled by default, which improves performance on complex reasoning tasks but uses additional tokens. To disable thinking entirely, set
+is enabled by default, which improves performance on complex reasoning tasks but uses additional tokens. To disable thinking, set
 MAX_THINKING_TOKENS
 to
 0
-in the local environment editor. On models with
+in the local environment editor; this has no effect on Fable 5, which always uses extended thinking. On
+third-party providers
+,
+0
+omits the
+thinking
+parameter instead, and adaptive-reasoning models may still think. On models with
 adaptive reasoning
 , any other
 MAX_THINKING_TOKENS
@@ -1000,11 +1010,11 @@ to
 1
 to use a fixed thinking budget; Opus 4.7 and later always use adaptive reasoning and have no fixed-budget mode.
 ​
-Remote sessions
-Remote sessions continue in the background even if you close the app. Usage counts toward your
+Cloud sessions
+Cloud sessions continue in the background even if you close the app. Usage counts toward your
 subscription plan limits
 with no separate compute charges.
-You can create custom cloud environments with different network access levels and environment variables. Select the environment dropdown when starting a remote session and choose
+You can create custom cloud environments with different network access levels and environment variables. Select the environment dropdown when starting a cloud session and choose
 Add environment
 . See
 the cloud environment
@@ -1213,7 +1223,7 @@ Device management policies
 IT teams can manage the desktop app through MDM on macOS or group policy on Windows. Available policies include enabling or disabling the Claude Code feature, controlling auto-updates, and setting a custom deployment URL.
 macOS
 : configure via
-com.anthropic.Claude
+com.anthropic.claudefordesktop
 preference domain using tools like Jamf or Kandji
 Windows
 : configure via registry at
@@ -1227,7 +1237,7 @@ Setting up SSO
 for SAML and OIDC configuration.
 ​
 Data handling
-Claude Code processes your code locally in local sessions or on Anthropic’s cloud infrastructure in remote sessions. Conversations and code context are sent to Anthropic’s API for processing. See
+Claude Code processes your code locally in local sessions or on Anthropic’s cloud infrastructure in cloud sessions. Conversations and code context are sent to Anthropic’s API for processing. See
 data handling
 for details on data retention, privacy, and compliance.
 ​
@@ -1274,7 +1284,7 @@ Bypass permissions mode. Enable in Settings → Claude Code → “Allow bypass 
 --add-dir
 Add multiple repos with the
 +
-button in remote sessions
+button in cloud sessions
 --allowedTools
 ,
 --disallowedTools
@@ -1322,7 +1332,9 @@ are shared. Permission rules, allowed tools, and other settings in
 settings.json
 apply to Desktop sessions.
 Models
-: Sonnet, Opus, and Haiku are available in both. In Desktop, select the model from the dropdown next to the send button. You can change the model mid-session from the same dropdown.
+: the same
+models
+are available in both. In Desktop, select the model from the dropdown next to the send button. You can change the model mid-session from the same dropdown.
 MCP servers from the Claude Desktop chat app
 : the Desktop app loads MCP servers from
 claude_desktop_config.json
@@ -1358,9 +1370,11 @@ Ask permissions, Auto accept edits, Plan mode, Auto, and Bypass permissions via 
 CLI flag
 Bypass permissions mode. Enable in Settings → Claude Code → “Allow bypass permissions mode”
 Third-party providers
-Bedrock, Vertex, Foundry
+Bedrock, Vertex AI, Foundry
 Anthropic’s API by default. Enterprise deployments can configure Vertex AI and gateway providers. See the
 enterprise configuration guide
+. To run the Code tab on Bedrock, Vertex AI, Foundry, or a self-hosted LLM gateway, see the
+Cowork on 3P research preview
 .
 MCP servers
 Configure in settings files
@@ -1402,13 +1416,15 @@ Agent SDK
 Not available
 ​
 What’s not available in Desktop
-The following features are only available in the CLI or VS Code extension:
+The following features are only available in the CLI or VS Code extension, except where noted:
 Third-party providers
 : Desktop connects to Anthropic’s API by default. Enterprise deployments can configure Vertex AI and gateway providers via
 managed settings
-. For Bedrock or Foundry, use the
-CLI
-.
+. For Bedrock or Foundry in the CLI, see the
+quickstart
+. As an exception to the section above, the
+Cowork on 3P research preview
+runs the Code tab on Bedrock, Vertex AI, Foundry, or a self-hosted LLM gateway.
 Linux
 : the desktop app is available on macOS and Windows only. On Linux, use the
 CLI
@@ -1518,7 +1534,7 @@ Concurrent installation error
 : if you see an error about another installation in progress but there isn’t one, try running the installer as Administrator.
 ​
 ”Branch doesn’t exist yet” when opening in CLI
-Remote sessions can create branches that don’t exist on your local machine. Click the branch name in the session toolbar to copy it, then fetch it locally:
+Cloud sessions can create branches that don’t exist on your local machine. Click the branch name in the session toolbar to copy it, then fetch it locally:
 git
 fetch
 origin

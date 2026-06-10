@@ -979,7 +979,9 @@ user_01BWBeN28...
 OTEL_METRICS_INCLUDE_ACCOUNT_UUID
 (default: true)
 user.id
-Anonymous device/installation identifier, generated per Claude Code installation
+Random anonymous identifier generated on first run and persisted in
+~/.claude.json
+. It contains no personal information and is not derived from your Claude account. Deleting the file produces a new unrelated value on next run.
 Always included
 user.email
 User email address (when authenticated via OAuth)
@@ -2081,6 +2083,15 @@ command_path_count
 : number of command directories the plugin declares
 agent_path_count
 : number of agent directories the plugin declares
+safe_mode
+:
+"true"
+when the session was started with
+--safe-mode
+,
+"false"
+otherwise. In safe mode this event reports configured inventory only; the plugin’s commands, skills, hooks, and MCP servers do not load.
+Requires Claude Code v2.1.169 or later
 ​
 Skill activated event
 Logged when a skill is invoked, whether Claude calls it through the Skill tool or you run it as a
@@ -2254,6 +2265,15 @@ hook_source
 "policySettings"
 , or
 "pluginHook"
+safe_mode
+:
+"true"
+when the session was started with
+--safe-mode
+,
+"false"
+otherwise.
+Requires Claude Code v2.1.169 or later
 hook_matcher
 (when
 OTEL_LOG_TOOL_DETAILS=1
@@ -2309,6 +2329,15 @@ hook_source
 "policySettings"
 or
 "merged"
+safe_mode
+:
+"true"
+when the session was started with
+--safe-mode
+,
+"false"
+otherwise.
+Requires Claude Code v2.1.169 or later
 hook_definitions
 : JSON-serialized hook configuration. Included only when both detailed beta tracing and
 OTEL_LOG_TOOL_DETAILS=1
@@ -2355,6 +2384,15 @@ hook_source
 "policySettings"
 or
 "merged"
+safe_mode
+:
+"true"
+when the session was started with
+--safe-mode
+,
+"false"
+otherwise.
+Requires Claude Code v2.1.169 or later
 hook_definitions
 : JSON-serialized hook configuration. Included only when both detailed beta tracing and
 OTEL_LOG_TOOL_DETAILS=1
@@ -2526,19 +2564,17 @@ Common alerts to consider:
 Cost spikes
 Unusual token consumption
 High session volume from specific users
-All metrics can be segmented by
-user.account_uuid
-,
-user.account_id
-,
-organization.id
-,
-session.id
-,
+All metrics can be segmented by the
+standard attributes
+. The
 model
-, and
-app.version
-.
+attribute is available on
+claude_code.token.usage
+and
+claude_code.cost.usage
+only; activity counters have never carried it. Per-model breakdowns of lines of code or commits can only be approximated by joining against the token or cost metrics on
+session.id
+, since one session can span multiple models.
 ​
 Detect retry exhaustion
 Claude Code retries failed API requests internally and emits a single

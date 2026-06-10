@@ -172,7 +172,7 @@ Debug your configuration
 Was this page helpful?
 Yes
 No
-Speed up responses with fast mode
+Escalate hard decisions with the advisor tool
 Terminal configuration
 ⌘
 I

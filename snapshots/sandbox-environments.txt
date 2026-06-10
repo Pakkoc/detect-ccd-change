@@ -92,7 +92,9 @@ How isolation relates to permission modes
 Permission modes
 decide whether a tool call runs and whether you are prompted first. Isolation restricts what a command can access once it runs. The two work together: when a permission mode lets actions run without asking you, an isolation boundary limits what those actions can reach.
 --dangerously-skip-permissions
-removes per-action review entirely, so an isolation boundary is the only thing limiting what Claude can do. Always run it inside a container, a VM, or the
+removes per-action review other than explicit
+ask rules
+, so an isolation boundary is the only thing limiting what Claude can do. Always run it inside a container, a VM, or the
 sandbox runtime
 , so that file tools, MCP servers, and hooks are also inside the boundary.
 Auto mode

@@ -282,6 +282,8 @@ Foundry
 , or
 Claude Platform on AWS
 , pin specific model versions using
+ANTHROPIC_DEFAULT_FABLE_MODEL
+,
 ANTHROPIC_DEFAULT_OPUS_MODEL
 ,
 ANTHROPIC_DEFAULT_SONNET_MODEL

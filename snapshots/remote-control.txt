@@ -115,6 +115,9 @@ claude
 This gives you a full interactive session in your terminal that you can also control from claude.ai or the Claude app. Unlike
 claude remote-control
 (server mode), you can type messages locally while the session is also available remotely.
+As of v2.1.162, a
+Remote Control active
+indicator stays in the footer below the input box while Remote Control is connected. The indicator text is a link to the session on claude.ai, so you can reopen it from the terminal at any time. Select the indicator with the down arrow key and press Enter to open a status panel with the session URL and a QR code.
 If you’re already in a Claude Code session and want to continue it remotely, use the
 /remote-control
 (or
@@ -123,9 +126,15 @@ If you’re already in a Claude Code session and want to continue it remotely, u
 /remote-control
 Pass a name as an argument to set a custom session title:
 /remote-control My Project
-This starts a Remote Control session that carries over your current conversation history and displays a session URL and QR code you can use to
+This starts a Remote Control session that carries over your current conversation history.
+As of v2.1.162, a
+Remote Control active
+indicator appears in the footer below the input box and stays visible while the connection is up. The indicator text is a link to the session on claude.ai. Select it with the down arrow key and press Enter, or run
+/remote-control
+again, to open a status panel with the session URL and a QR code you can use to
 connect from another device
-. The
+.
+The
 --verbose
 ,
 --sandbox
@@ -283,10 +292,8 @@ ultraplan
 session disconnects any active Remote Control session because both features occupy the claude.ai/code interface and only one can be connected at a time.
 Some commands are local-only
 : commands that open an interactive picker in the terminal, such as
-/mcp
-,
 /plugin
-, or
+or
 /resume
 , work only from the local CLI. Commands that produce text output, including
 /compact
@@ -305,6 +312,20 @@ Some commands are local-only
 , and
 /reload-plugins
 , work from mobile and web.
+As of v2.1.166,
+/mcp
+also works from mobile and web: it returns a text summary of server status instead of opening the picker, and accepts the same
+reconnect
+,
+enable
+, and
+disable
+subcommands
+as the local CLI, with one difference: from mobile and web,
+/mcp reconnect
+with no server name reconnects every server that has failed or needs authentication, while the local CLI requires a server name for
+reconnect
+.
 ​
 Troubleshooting
 ​

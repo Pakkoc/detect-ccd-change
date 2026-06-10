@@ -83,6 +83,8 @@ The
 opusplan
 model setting
 resolves to Opus during plan mode and Sonnet during execution, so each plan-mode toggle is a model switch and starts a fresh cache.
+Automatic model fallback
+on Fable 5 is also a model switch. When a safety classifier flags a request, Claude Code re-runs it on the default Opus model and the session continues there.
 ​
 Changing effort level
 The cache is keyed by
@@ -109,7 +111,11 @@ reset this, since they rebuild the cache at those points anyway.
 Keeping the header across toggles requires Claude Code v2.1.86 or later. On earlier versions, every fast mode toggle and rate-limit fallback invalidates the cache.
 ​
 Connecting or disconnecting an MCP server
-Tool definitions sit in the system prompt layer, so the cache invalidates when the set of tool definitions in the request changes between turns. Whether an
+Tool definitions sit in the system prompt layer, so the cache invalidates when the set of tool definitions in the request changes between turns. Toggling the
+advisor tool
+is an exception: its definition sits after the cache breakpoint, so enabling or disabling
+/advisor
+keeps the cached prefix intact. Whether an
 MCP server
 change does this depends on whether its tools are deferred by
 tool search
@@ -152,7 +158,7 @@ or start a new session. The cost, whether appended announcements or a full re-re
 .
 As of v2.1.163, when a reload would trigger the full re-read,
 /reload-plugins
-warns and holds instead of applying it. Pass
+shows a warning and does not apply the reload. Pass
 --force
 to apply anyway.
 Disabling a plugin you enabled earlier in the session restores the previous request shape. If that prefix is still within its
@@ -171,9 +177,17 @@ removes that tool from Claude’s context entirely. Built-in tool definitions lo
 or by
 editing a settings file directly
 .
-Only a bare tool name, or the equivalent
+Only a deny rule that matches in the tool-name position has this effect: a bare tool name, the equivalent
 Bash(*)
-form, has this effect. Scoped deny rules like
+form, or a
+tool-name glob
+like
+"*"
+. A glob that matches only MCP tools, such as
+"mcp__*"
+, removes those tools the same way but leaves the cache intact when the matched tools are
+deferred
+, the default, since deferred definitions were never in the cached prefix. Scoped deny rules like
 Bash(rm *)
 , and all allow and ask rules, don’t change which tools Claude sees. Claude Code checks them when Claude attempts a call, leaving the prefix intact.
 ​
@@ -351,6 +365,8 @@ DISABLE_PROMPT_CACHING_SONNET
 Disable for Sonnet only
 DISABLE_PROMPT_CACHING_OPUS
 Disable for Opus only
+DISABLE_PROMPT_CACHING_FABLE
+Disable for Fable only
 To set caching policy across an organization, put any of these or the
 TTL variables
 in the

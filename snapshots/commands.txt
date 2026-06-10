@@ -118,6 +118,17 @@ from the added directory. You can later resume the session from the added direct
 --continue
 or
 --resume
+/advisor [model|off]
+Enable or disable the
+advisor tool
+, which consults a second model for guidance at key moments during a task. Accepts
+opus
+,
+sonnet
+,
+fable
+(
+v2.1.170+), or a full model ID. Without an argument, opens a picker. Requires Claude Code v2.1.98 or later
 /agents
 Manage
 agent
@@ -127,7 +138,7 @@ Spawn a
 Claude Code on the web
 session that watches the current branch’s PR and pushes fixes when CI fails or reviewers leave comments. Detects the open PR from your checked-out branch with
 gh pr view
-; to watch a different PR, check out its branch first. By default the remote session is told to fix every CI failure and review comment; pass a prompt to give it different instructions, for example
+; to watch a different PR, check out its branch first. By default the cloud session is told to fix every CI failure and review comment; pass a prompt to give it different instructions, for example
 /autofix-pr only fix lint and type errors
 . Requires the
 gh
@@ -158,6 +169,22 @@ Create a branch of the current conversation at this point, so you can try a diff
 Ask a quick
 side question
 without adding to the conversation
+/cd <path>
+Move this session to a new working directory. The conversation’s prompt cache is preserved: the new directory’s
+CLAUDE.md
+is appended as a message instead of rebuilding the system prompt. The session is relocated to the new directory’s project storage, so
+--resume
+and
+--continue
+find it from there. Prompts you to trust the directory if you haven’t worked in it before. To grant access to an extra directory without moving the session, use
+/add-dir
+. Restrict or disable
+/cd
+targets with
+Cd
+permission rules
+. Requires Claude Code v2.1.169 or later; earlier versions report
+Unknown command: /cd
 /chrome
 Configure
 Claude in Chrome
@@ -402,8 +429,16 @@ where available
 Run prompts on a schedule
 . Alias:
 /proactive
-/mcp
-Manage MCP server connections and OAuth authentication
+/mcp [reconnect <server>|enable|disable [<server>|all]]
+Manage MCP server connections and OAuth authentication. Run with no argument to open the interactive list, pass
+reconnect <server>
+to reconnect one disconnected server, or pass
+enable
+/
+disable
+with a server name or
+all
+to change connection state without opening the dialog
 /memory
 Edit
 CLAUDE.md

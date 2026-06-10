@@ -118,6 +118,16 @@ Your user
 ~/.claude/CLAUDE.md
 No
 Lives on your machine, not in the repo
+Your user
+~/.claude/skills/
+,
+~/.claude/agents/
+,
+~/.claude/commands/
+No
+Live on your machine, not in the repo. Commit them to the repo’s
+.claude/
+directory instead. Skills you enable on claude.ai are loaded into cloud sessions automatically
 Plugins enabled only in your user settings
 No
 User-scoped
@@ -541,6 +551,7 @@ Environments run behind an HTTP/HTTPS network proxy for security and abuse preve
 Protection against malicious requests
 Rate limiting and abuse prevention
 Content filtering for enhanced security
+A DNS-level audit trail of requested hostnames
 ​
 Default allowed domains
 When using
@@ -1100,7 +1111,7 @@ locally to refresh your credentials, then reconnect
 Confirm you are signed in to the same account that owns the session
 If you see
 Remote Control may not be available for this organization
-, your admin has not enabled remote sessions for your plan
+, your admin has not enabled cloud sessions for your plan
 ​
 Environment expired
 Cloud sessions stop after a period of inactivity and the underlying environment is reclaimed. From a local terminal, this surfaces as

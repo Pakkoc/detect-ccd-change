@@ -222,6 +222,7 @@ or
 iOS app
 , then pull it into your terminal with
 claude --teleport
+. Teleport requires a claude.ai subscription.
 Hand off a terminal session to the
 Desktop app
 with

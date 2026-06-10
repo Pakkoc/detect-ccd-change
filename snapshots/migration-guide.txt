@@ -85,7 +85,9 @@ After:
 "^0.2.0"
 }
 }
-That’s it! No other code changes are required.
+5. Review
+breaking changes
+Make any code changes needed to complete the migration.
 ​
 For Python Projects
 1. Uninstall the old package:
@@ -198,9 +200,16 @@ The SDK no longer uses Claude Code’s system prompt by default.
 Migration:
 TypeScript
 Python
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
 // BEFORE (v0.0.x) - Used Claude Code's system prompt by default
 const
-result
+before
 =
 query
 ({
@@ -210,7 +219,7 @@ prompt:
 // AFTER (v0.1.0) - Uses minimal system prompt by default
 // To get the old behavior, explicitly request Claude Code's preset:
 const
-result
+presetResult
 =
 query
 ({
@@ -231,7 +240,7 @@ preset:
 });
 // Or use a custom system prompt:
 const
-result
+customResult
 =
 query
 ({
@@ -264,8 +273,15 @@ loads user, project, and local filesystem settings, matching the CLI. This inclu
 To run isolated from filesystem settings, pass an empty array:
 TypeScript
 Python
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
 const
-result
+isolatedResult
 =
 query
 ({
@@ -281,7 +297,7 @@ settingSources:
 });
 // Or load only specific sources:
 const
-result
+projectOnlyResult
 =
 query
 ({

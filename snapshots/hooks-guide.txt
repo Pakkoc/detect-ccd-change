@@ -947,11 +947,13 @@ deny
 to suppress side effects in another hook.
 After all matching hooks finish, Claude Code combines their outputs. For
 PreToolUse
-permission decisions, the most restrictive answer wins:
+permission decisions, the most restrictive answer wins, in the order
 deny
-overrides
+,
+defer
+,
 ask
-, which overrides
+,
 allow
 . Text from
 additionalContext
@@ -1634,7 +1636,7 @@ git *
 Bash(git push *)
 echo $(date)
 yes
-patterns that constrain past the command name fail open on
+patterns that specify more than the command name run the hook anyway on
 $()
 , backticks, or
 $VAR
@@ -1678,7 +1680,7 @@ Single project
 Yes, can be committed to the repo
 .claude/settings.local.json
 Single project
-No, gitignored
+No, gitignored when Claude Code creates it
 Managed policy settings
 Organization-wide
 Yes, admin-controlled

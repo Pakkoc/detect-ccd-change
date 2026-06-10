@@ -2347,7 +2347,8 @@ File checkpointing
 model
 str | None
 None
-Claude model to use
+Claude model alias or full model name. See
+accepted values and provider-specific IDs
 fallback_model
 str | None
 None
@@ -2501,7 +2502,8 @@ effort
 EffortLevel
 | None
 None
-Effort level for thinking depth
+Effort level for thinking depth. See
+adjust the effort level
 session_store
 SessionStore
 | None
@@ -2567,7 +2569,9 @@ run_in_background
 CLAUDE_ENABLE_STREAM_WATCHDOG=1
 with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
-: aborts the request when headers have arrived but the response body stops streaming. Off by default.
+: aborts the request when headers have arrived but the response body stops streaming. When
+CLAUDE_ENABLE_STREAM_WATCHDOG
+is unset, the default is server-controlled on the direct Anthropic API and off on other providers.
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 defaults to
 300000
@@ -2667,7 +2671,7 @@ Global user settings
 Shared project settings (version controlled)
 .claude/settings.json
 "local"
-Local project settings (gitignored)
+Local project settings (not version controlled)
 .claude/settings.local.json
 ​
 Default behavior
@@ -3076,13 +3080,13 @@ Literal[
 # Auto-accept file edits
 "plan"
 ,
-# Planning mode - read-only tools only
+# Planning mode - explore without editing
 "dontAsk"
 ,
 # Deny anything not pre-approved instead of prompting
 "bypassPermissions"
 ,
-# Bypass all permission checks (use with caution)
+# Bypass permission checks; explicit ask rules still prompt (use with caution)
 ]
 ​
 EffortLevel
@@ -3101,7 +3105,7 @@ Literal[
 # Deep reasoning
 "xhigh"
 ,
-# Extended reasoning (Opus 4.7 only; falls back to "high" on other models)
+# Extended reasoning (Opus 4.8 and Opus 4.7; falls back to "high" on other models)
 "max"
 ,
 # Maximum effort
@@ -3562,7 +3566,7 @@ to enable beta features.
 The
 context-1m-2025-08-07
 beta is retired as of April 30, 2026. Passing this header with Claude Sonnet 4.5 or Sonnet 4 has no effect, and requests that exceed the standard 200k-token context window return an error. To use a 1M-token context window, migrate to
-Claude Sonnet 4.6, Claude Opus 4.6, or Claude Opus 4.7
+Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
 , which include 1M context at standard pricing with no beta header required.
 ​
 McpSdkServerConfig
@@ -8417,7 +8421,10 @@ is set to
 bypassPermissions
 and
 allow_unsandboxed_commands
-is enabled, the model can autonomously execute commands outside the sandbox without any approval prompts. This combination effectively allows the model to escape sandbox isolation silently.
+is enabled, the model can autonomously execute commands outside the sandbox without approval prompts (an explicit
+ask
+rule
+still forces one). This combination effectively allows the model to escape sandbox isolation silently.
 ​
 See also
 SDK overview
