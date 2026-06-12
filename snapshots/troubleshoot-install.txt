@@ -195,6 +195,17 @@ at
 on macOS/Linux or
 %USERPROFILE%\.local\bin\claude.exe
 on Windows.
+The
+VS Code extension
+does not place
+claude
+at this location. It bundles a private copy of the CLI inside the extension directory for its own chat panel and does not add it to PATH. If you have only installed the extension,
+~/.local/bin/claude
+will not exist. Run the
+standalone install
+to use
+claude
+from a terminal, then continue below.
 Check if the install directory is in your PATH by listing your PATH entries and filtering for
 local/bin
 :

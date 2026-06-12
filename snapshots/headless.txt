@@ -532,6 +532,9 @@ claude
 "
 $session_id
 "
+Run both commands from the same directory: session ID lookup is scoped to the current project directory and its git worktrees. See
+Resume a session
+for the full scope rules.
 ​
 Next steps
 Agent SDK quickstart

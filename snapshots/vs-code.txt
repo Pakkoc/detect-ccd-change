@@ -7,7 +7,11 @@ VS Code 1.98.0 or higher
 An Anthropic account (you’ll sign in when you first open the extension). If you’re using a third-party provider like Amazon Bedrock or Google Vertex AI, see
 Use third-party providers
 instead.
-The extension includes the CLI (command-line interface), which you can access from VS Code’s integrated terminal for advanced features. See
+The extension bundles its own copy of the CLI (command-line interface) for the chat panel. To run
+claude
+in VS Code’s integrated terminal, you also need the
+standalone CLI install
+. See
 VS Code extension vs. Claude Code CLI
 for details.
 ​
@@ -24,11 +28,11 @@ Install
 .
 The extension also installs in other VS Code forks like Devin Desktop or Kiro. Search for “Claude Code” in the editor’s Extensions view, or install from the
 Open VSX registry
-. If your editor can’t install the extension, run
+. If your editor can’t install the extension,
+install the CLI
+and run
 claude
-in its integrated terminal instead. The
-CLI
-works in any terminal.
+in its integrated terminal instead. The CLI works in any terminal.
 If the extension doesn’t appear after installation, restart VS Code or run “Developer: Reload Window” from the Command Palette.
 ​
 Get started
@@ -468,7 +472,13 @@ binary if the extension build doesn’t include one for your platform.
 VS Code extension vs. Claude Code CLI
 Claude Code is available as both a VS Code extension (graphical panel) and a CLI (command-line interface in the terminal). Some features are only available in the CLI. If you need a CLI-only feature, run
 claude
-in VS Code’s integrated terminal.
+in VS Code’s integrated terminal. This requires the
+standalone CLI install
+: the extension does not add
+claude
+to your PATH. See
+Run CLI in VS Code
+.
 Feature
 CLI
 VS Code Extension
@@ -513,6 +523,21 @@ Cmd+`
 on Mac) and run
 claude
 . The CLI automatically integrates with your IDE for features like diff viewing and diagnostic sharing.
+Installing the extension does not put
+claude
+on your shell PATH. The extension bundles a private copy of the CLI for its chat panel, but typing
+claude
+in a terminal requires the
+standalone CLI install
+. Run the install once and the commands on this page, including
+claude mcp add
+and
+claude --resume
+, work in any terminal. If
+claude
+is still not found after installing,
+verify your PATH
+.
 If using an external terminal, run
 /ide
 inside Claude Code to connect it to VS Code.

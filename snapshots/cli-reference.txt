@@ -582,9 +582,9 @@ claude -p --input-format stream-json --output-format stream-json --verbose --rep
 --resume
 ,
 -r
-Resume a specific session by ID or name, or show an interactive picker to choose a session. Includes sessions that added this directory with
+Resume a specific session by ID or name, or show an interactive picker to choose a session. The picker and name search include sessions that added this directory with
 /add-dir
-. As of v2.1.144,
+; passing a session ID searches only the current project directory and its git worktrees. As of v2.1.144,
 background sessions
 appear in the picker marked with
 bg
