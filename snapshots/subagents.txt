@@ -261,11 +261,15 @@ In the Python SDK, these field names use camelCase to match the wire format. See
 AgentDefinition
 reference
 for details.
-Subagents cannot spawn their own subagents. Don’t include
+As of Claude Code v2.1.172, subagents can spawn their own subagents. A background subagent five levels below the main agent cannot spawn further subagents; foreground subagents can spawn at any depth. To prevent a subagent from spawning others, omit
 Agent
-in a subagent’s
+from its
 tools
-array.
+array or add it to
+disallowedTools
+. See
+nested subagents
+for the full depth rules.
 ​
 Filesystem-based definition (alternative)
 You can also define subagents as markdown files in

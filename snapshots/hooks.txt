@@ -1513,9 +1513,9 @@ name
 field from the agent’s frontmatter, not the filename.
 Only
 SessionStart
-hooks receive a
+hooks can receive a
 model
-field. There is no
+field, and it is not guaranteed to be present. There is no
 $CLAUDE_MODEL
 environment variable. A hook process inherits the parent environment, so it can read
 $ANTHROPIC_MODEL
@@ -2217,11 +2217,11 @@ In addition to the
 common input fields
 , SessionStart hooks receive
 source
-,
+and optionally
 model
-, and optionally
+,
 agent_type
-and
+, and
 session_title
 . The
 source
@@ -2237,7 +2237,9 @@ after
 "compact"
 after compaction. The
 model
-field contains the model identifier. If you start Claude Code with
+field contains the active model identifier. It can be omitted, for example after
+/clear
+or when a session is restored through conversation recovery, so check for the field before reading it. If you start Claude Code with
 claude --agent <name>
 , an
 agent_type
@@ -3406,6 +3408,11 @@ content
 array
 [{"type": "text", "text": "Found 12 endpoints..."}]
 The subagent’s final text blocks
+resolvedModel
+string
+"claude-sonnet-4-5"
+Model the subagent ran on, which may differ from the requested model.
+Requires Claude Code v2.1.174 or later
 totalTokens
 number
 12450
@@ -3441,9 +3448,18 @@ agentId
 description
 ,
 prompt
-, and
+,
 outputFile
-instead.
+, and
+resolvedModel
+.
+The
+resolvedModel
+field names the model the subagent actually runs on, which can differ from the
+model
+value in
+tool_input
+. It requires Claude Code v2.1.174 or later.
 AskUserQuestion
 Asks the user one to four multiple-choice questions.
 Field

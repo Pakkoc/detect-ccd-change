@@ -359,7 +359,9 @@ commands,
 status line
 commands, stdio
 MCP server
-subprocesses). Use to detect when a script is running inside a subprocess spawned by Claude Code
+subprocesses). IDE extensions also set this in their integrated terminals. Use to detect when a script is running inside a subprocess spawned by Claude Code. To check whether the current process was spawned directly by a tool call or hook, rather than inside a stdio MCP server that Claude Code started, use
+CLAUDE_CODE_CHILD_SESSION
+instead
 CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS
 Set to
 1
@@ -379,12 +381,17 @@ Stall timeout in milliseconds for background subagents. Default
 600000
 (10 minutes). The timer resets on each streaming progress event; if no progress arrives within the window, the subagent is aborted and the task is marked failed, surfacing any partial result to the parent
 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE
-Set the percentage of context capacity (1-100) at which auto-compaction triggers. By default, auto-compaction triggers at approximately 95% capacity. Use lower values like
+Set the percentage (1-100) of the auto-compaction window at which auto-compaction triggers. Use lower values like
 50
-to compact earlier. Values above the default threshold have no effect. Applies to both main conversations and subagents. This percentage aligns with the
-context_window.used_percentage
-field available in
-status line
+to compact earlier. This variable only causes earlier compaction when Claude Code compacts proactively: when
+CLAUDE_CODE_AUTO_COMPACT_WINDOW
+is set, in
+cloud sessions
+, in
+Remote Control
+sessions, and on Sonnet 4.6 and Opus 4.6 without
+extended context
+, which compact at the 200K boundary by default. In other cases, such as a default local session, auto-compaction triggers when the conversation reaches the model’s context limit. The override can only lower the threshold, so values above the default have no effect. Applies to both main conversations and subagents
 CLAUDE_AUTO_BACKGROUND_TASKS
 Set to
 1
@@ -462,6 +469,32 @@ is the Mozilla CA set shipped with Claude Code.
 system
 is the operating system trust store. Default is
 bundled,system
+CLAUDE_CODE_CHILD_SESSION
+Set to
+1
+in subprocesses Claude Code spawns via the Bash, PowerShell, and Monitor tools,
+hook
+commands, and
+status line
+commands. Not set for stdio
+MCP server
+subprocesses, which are long-lived and outlive the session that spawned them. Unlike
+CLAUDECODE
+, this is only set by Claude Code’s own spawn path and not by IDE extensions, so it reliably distinguishes a nested session from a top-level
+claude
+launched in an IDE-integrated terminal. A nested interactive
+claude
+TUI started this way is automatically excluded from
+--resume
+,
+--continue
+, up-arrow history, and the
+claude agents
+list. Non-interactive
+claude -p
+sessions still persist. Set
+CLAUDE_CODE_FORCE_SESSION_PERSISTENCE=1
+to override this exclusion. Requires Claude Code v2.1.172 or later
 CLAUDE_CODE_CLIENT_CERT
 Path to client certificate file for mTLS authentication
 CLAUDE_CODE_CLIENT_KEY
@@ -866,9 +899,15 @@ JSON object to merge into the top level of every API request body. Useful for pa
 CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS
 Override the default token limit for file reads. Useful when you need to read larger files in full
 CLAUDE_CODE_FORCE_SESSION_PERSISTENCE
-Removed in v2.1.170. This variable forced transcript persistence when an inherited
-CLAUDECODE
-value caused a top-level session to be misclassified as nested. The nested-session detection it overrode was removed in v2.1.170, so the variable no longer applies
+Set to
+1
+to force transcript persistence, prompt history, and
+claude agents
+registration even when this
+claude
+was launched from inside another Claude Code session. Use when an inherited
+CLAUDE_CODE_CHILD_SESSION
+value, for example from a tmux server first started by Claude Code’s Bash tool, causes a genuine top-level session to be misclassified as nested. Also honored on v2.1.169 and earlier; has no effect on v2.1.170 and v2.1.171, where the nested-session detection it overrides was removed
 CLAUDE_CODE_FORCE_SYNC_OUTPUT
 Set to
 1
@@ -1136,7 +1175,9 @@ is not detected; this is a defense-in-depth control
 CLAUDE_CODE_SCROLL_SPEED
 Set the mouse wheel scroll multiplier in
 fullscreen rendering
-. Accepts values from 1 to 20. Set to
+. Accepts values from 1 to 20, and fractional values below 1 such as
+0.5
+to slow accelerated trackpad and wheel scrolling in terminals on the native scroll path. Set to
 3
 to match
 vim

@@ -1073,6 +1073,9 @@ type
 ,
 "removed"
 )
+model
+: Model identifier for the model that made the change (for example, “claude-sonnet-4-6”).
+Requires Claude Code v2.1.172 or later
 ​
 Pull request counter
 Incremented when Claude Code creates a pull request or merge request through a shell command or an MCP tool.
@@ -2077,6 +2080,13 @@ has_hooks
 : whether the plugin contributes hooks
 has_mcp
 : whether the plugin contributes MCP servers
+host_owned_mcp
+:
+true
+when the SDK host manages this plugin’s MCP connections and Claude Code skipped reading the plugin’s MCP server configuration,
+false
+otherwise.
+Requires Claude Code v2.1.172 or later
 skill_path_count
 : number of skill directories the plugin declares
 command_path_count
@@ -2538,7 +2548,7 @@ agent.name
 claude_code.session.count
 Track adoption and engagement over time
 claude_code.lines_of_code.count
-Measure productivity by tracking code additions/removals
+Measure productivity by tracking code additions and removals, broken down by model
 claude_code.commit.count
 &
 claude_code.pull_request.count
@@ -2570,9 +2580,12 @@ standard attributes
 model
 attribute is available on
 claude_code.token.usage
-and
+,
 claude_code.cost.usage
-only; activity counters have never carried it. Per-model breakdowns of lines of code or commits can only be approximated by joining against the token or cost metrics on
+, and
+from v2.1.172,
+claude_code.lines_of_code.count
+. Per-model breakdowns of commits can only be approximated by joining against the token or cost metrics on
 session.id
 , since one session can span multiple models.
 ​

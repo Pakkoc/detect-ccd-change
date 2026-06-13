@@ -34,6 +34,9 @@ d
 or
 w
 to switch between the last 24 hours and the last 7 days. The figures are approximate and computed from local session history on this machine, so usage from other devices or claude.ai is not included.
+In the
+VS Code extension
+, the same breakdown appears in the Account & usage dialog with a Day and Week toggle. Requires Claude Code v2.1.174 or later.
 ​
 Managing costs for teams
 When using Claude API, you can

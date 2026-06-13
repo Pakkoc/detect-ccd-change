@@ -956,13 +956,13 @@ Shows what’s currently in the context window
 /clear
 No
 Start a new session from the sidebar instead
-Auto-compaction runs automatically when the context window approaches capacity, the same as in the CLI. To trigger it earlier, set
+Auto-compaction runs automatically when the context window approaches capacity. To trigger it earlier, set
 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE
 in your
 environment variables
 . For example,
 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70
-compacts at 70% capacity instead of the default ~95%. To change the effective window size for compaction calculations, use
+compacts at 70% capacity instead of waiting until the window is nearly full. To change the effective window size for compaction calculations, use
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
 .
 Subagents

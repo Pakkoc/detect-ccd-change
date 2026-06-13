@@ -393,7 +393,7 @@ Thorough analysis
 Refactors, debugging
 "xhigh"
 Extended reasoning depth
-Coding and agentic tasks; recommended on Opus 4.8 and Opus 4.7
+Coding and agentic tasks; recommended on Fable 5 and Opus 4.7+
 "max"
 Maximum reasoning depth
 Multi-step problems requiring deep analysis
@@ -640,7 +640,7 @@ error_during_execution
 An error interrupted the loop (for example, an API failure or cancelled request)
 No
 error_max_structured_output_retries
-Structured output validation failed after the configured retry limit
+No valid structured output was produced within the configured retry limit: every attempt failed validation, or a model fallback retracted the completed output with no successful retry
 No
 The
 result

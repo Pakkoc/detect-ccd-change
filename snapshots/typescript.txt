@@ -2627,6 +2627,10 @@ path
 :
 string
 ;
+skipMcpDiscovery
+?:
+boolean
+;
 };
 Field
 Type
@@ -2639,6 +2643,15 @@ Must be
 path
 string
 Absolute or relative path to the plugin directory
+skipMcpDiscovery
+boolean
+When
+true
+, the SDK loads skills, hooks, agents, and commands from this plugin but does not read its
+.mcp.json
+or manifest
+mcpServers
+. Set this when your application owns the plugin’s MCP connections.
 Example:
 plugins
 : [
@@ -3578,6 +3591,12 @@ kind
 kind
 :
 "coordinator"
+}
+|
+{
+kind
+:
+"auto-continuation"
 };
 kind
 Meaning
@@ -3592,13 +3611,11 @@ channel
 server
 is the source MCP server name.
 peer
-Message from another agent session via
-SendMessage
-.
+Reserved for messages from another agent session.
 from
-is the sender address;
+is the sender address and
 name
-is the sender’s display name when available.
+is the sender’s display name when available. The Agent SDK does not emit this origin; treat as an unknown origin.
 task-notification
 Synthetic turn injected after a background task finished. See
 SDKTaskNotificationMessage
@@ -3607,6 +3624,8 @@ coordinator
 Message from a team coordinator in an
 agent team
 .
+auto-continuation
+Synthetic turn injected when the session continues without fresh user input, such as a command result that triggers a follow-up prompt.
 ​
 Hook Types
 For a comprehensive guide on using hooks with examples and common patterns, see the
@@ -5577,6 +5596,10 @@ text
 :
 string
 }>;
+resolvedModel
+?:
+string
+;
 totalToolUseCount
 :
 number
@@ -5674,6 +5697,10 @@ description
 :
 string
 ;
+resolvedModel
+?:
+string
+;
 prompt
 :
 string
@@ -5711,6 +5738,18 @@ for finished tasks,
 for background tasks, and
 "sub_agent_entered"
 for interactive subagents.
+The
+resolvedModel
+field on the
+completed
+and
+async_launched
+variants names the model the subagent actually ran on, which can differ from the requested
+model
+input when
+availableModels
+or another override applies.
+This field requires Claude Code v2.1.174 or later.
 ​
 AskUserQuestion
 Tool name:

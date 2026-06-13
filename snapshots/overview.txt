@@ -121,7 +121,9 @@ Get started on the web →
 A plugin for IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs with interactive diff viewing and selection context sharing.
 Install the
 Claude Code plugin
-from the JetBrains Marketplace and restart your IDE.
+from the JetBrains Marketplace and restart your IDE. The plugin requires the Claude Code CLI, installed separately; see the
+JetBrains setup steps
+.
 Get started with JetBrains →
 ​
 What you can do

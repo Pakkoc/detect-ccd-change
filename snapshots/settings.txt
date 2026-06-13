@@ -480,12 +480,10 @@ in
 env
 "stable"
 availableModels
-Restrict which models users can select via
-/model
-,
---model
-, or
-ANTHROPIC_MODEL
+Restrict which models users can select for the main session,
+subagents
+, and the
+advisor
 . Does not affect the Default option. See
 Restrict model selection
 ["sonnet", "haiku"]
@@ -1216,6 +1214,15 @@ voice.enabled
 voice
 object
 true
+wheelScrollAccelerationEnabled
+In
+fullscreen rendering
+, accelerate mouse-wheel scroll speed during fast scrolls. Default:
+true
+. Set to
+false
+for a constant scroll rate per wheel notch. Requires Claude Code v2.1.174 or later
+false
 workflowKeywordTriggerEnabled
 Whether the keyword
 ultracode

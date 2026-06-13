@@ -190,15 +190,41 @@ managed or policy settings
 to restrict which models users can select.
 When
 availableModels
-is set, users cannot switch to models not in the list via
+is set, the allowlist applies to every surface where a user can name a model:
+Main session model
+:
 /model
-,
+, the
 --model
-flag, or
+flag, and the
 ANTHROPIC_MODEL
-environment variable. Elements of a
+environment variable
+Subagent models
+: the
+model
+field in
+subagent
+frontmatter, the Agent tool’s
+model
+parameter, the model picker in
+/agents
+, and
+CLAUDE_CODE_SUBAGENT_MODEL
+Advisor model
+: the configured
+advisorModel
+setting
+Fallback chains
+: elements of a
 fallback model chain
-outside the list are dropped.
+outside the list are dropped
+Switching to a blocked model with
+/model
+is rejected with an error, while a blocked
+--model
+flag or
+ANTHROPIC_MODEL
+value is ignored at startup and the session starts on the default model. A blocked subagent or advisor override falls back to the inherited or default model rather than failing the request.
 {
 "availableModels"
 : [
@@ -290,9 +316,7 @@ that start with
 anthropic.
 are added to the
 /model
-picker as custom options and routed to the Mantle endpoint. This is an exception to the alias-only matching described in
-Pin models for third-party deployments
-. The setting still restricts the picker to listed entries, so include the standard aliases alongside any Mantle IDs.
+picker as custom options and routed to the Mantle endpoint. The setting still restricts the picker to listed entries, so include the standard aliases alongside any Mantle IDs.
 ​
 Special model behavior
 ​
@@ -337,12 +361,14 @@ for code generation
 and implementation
 This gives you the best of both worlds: Opus’s superior reasoning for planning,
 and Sonnet’s efficiency for execution.
-The plan-mode Opus phase runs with the standard 200K context window. The automatic 1M upgrade described in
-Extended context
-applies to the
+The plan-mode Opus phase uses the same context window as the
 opus
-model setting and does not extend to
+model setting. On subscription tiers where Opus is
+automatically upgraded to 1M context
+,
 opusplan
+receives the upgrade in plan mode as well. To force 1M context for both phases when you are not on an auto-upgrade tier, set the model to
+opusplan[1m]
 .
 For a hybrid approach where Claude decides mid-task when to consult a second model rather than switching at the plan boundary, see the
 advisor tool
@@ -864,10 +890,8 @@ suffix applies the 1M context window to all usage of the
 opus
 and
 sonnet
-aliases. It does not extend the plan-mode Opus phase of
+aliases, including the plan-mode Opus phase of
 opusplan
-, which
-remains capped at 200K
 .
 Claude Code strips the suffix before sending the model ID to your provider.
 Only append
@@ -880,15 +904,21 @@ The suffix is read per variable, not per model. On Bedrock, Vertex, and Foundry,
 in one variable uses 200K context even if another variable sets the same model with the suffix.
 The
 settings.availableModels
-allowlist still applies when using third-party providers. Filtering matches on the model alias (
-fable
-,
+allowlist still applies when using third-party providers. Filtering matches on the model alias such as
 opus
-,
-sonnet
-,
-haiku
-), not the provider-specific model ID.
+, the version prefix such as
+claude-opus-4-8
+, or the full model ID. Any
+[1m]
+suffix is stripped from both the allowlist entry and the requested model before matching, so an entry of
+claude-opus-4-8
+permits both the standard and 1M-context Opus rows. Provider-specific prefixes such as
+us.anthropic.
+are not stripped: list the same form in
+availableModels
+that the picker shows, or map it through
+modelOverrides
+.
 ​
 Customize pinned model display and capabilities
 When you pin a model on a third-party provider, the provider-specific ID appears as-is in the

@@ -37,7 +37,7 @@ Ctrl+C
 Interrupt, or clear input
 Interrupts a running operation. If nothing is running, the first press clears the prompt input and a second press exits Claude Code
 Ctrl+X Ctrl+K
-Kill all running
+Stop all running
 background subagents
 in this session. Press twice within 3 seconds to confirm
 Subagent control

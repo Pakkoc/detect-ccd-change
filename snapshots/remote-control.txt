@@ -115,9 +115,12 @@ claude
 This gives you a full interactive session in your terminal that you can also control from claude.ai or the Claude app. Unlike
 claude remote-control
 (server mode), you can type messages locally while the session is also available remotely.
-As of v2.1.162, a
+As of v2.1.162, a Remote Control indicator stays in the footer below the input box while the connection is up.
+From v2.1.172, the indicator reads
+/rc active
+and is hidden when the terminal is too narrow to fit it; earlier versions always show
 Remote Control active
-indicator stays in the footer below the input box while Remote Control is connected. The indicator text is a link to the session on claude.ai, so you can reopen it from the terminal at any time. Select the indicator with the down arrow key and press Enter to open a status panel with the session URL and a QR code.
+. The indicator text is a link to the session on claude.ai, so you can reopen it from the terminal at any time. Select the indicator with the down arrow key and press Enter to open a status panel with the session URL and a QR code.
 If you’re already in a Claude Code session and want to continue it remotely, use the
 /remote-control
 (or
@@ -127,9 +130,12 @@ If you’re already in a Claude Code session and want to continue it remotely, u
 Pass a name as an argument to set a custom session title:
 /remote-control My Project
 This starts a Remote Control session that carries over your current conversation history.
-As of v2.1.162, a
+As of v2.1.162, a Remote Control indicator appears in the footer below the input box and stays visible while the connection is up.
+From v2.1.172, the indicator reads
+/rc active
+and is hidden when the terminal is too narrow to fit it; earlier versions always show
 Remote Control active
-indicator appears in the footer below the input box and stays visible while the connection is up. The indicator text is a link to the session on claude.ai. Select it with the down arrow key and press Enter, or run
+. The indicator text is a link to the session on claude.ai. Select it with the down arrow key and press Enter, or run
 /remote-control
 again, to open a status panel with the session URL and a QR code you can use to
 connect from another device
