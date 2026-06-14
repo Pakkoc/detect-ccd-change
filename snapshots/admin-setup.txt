@@ -252,7 +252,11 @@ Legal and compliance
 Verify and onboard
 After configuring managed settings, have a developer run
 /status
-inside Claude Code. The output includes a line beginning with
+inside Claude Code. On the
+Status
+tab, the
+Setting sources
+line shows
 Enterprise managed settings
 followed by the source in parentheses, one of
 (remote)
