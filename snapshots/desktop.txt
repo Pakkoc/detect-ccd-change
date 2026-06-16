@@ -1550,11 +1550,14 @@ e
 >
 ​
 Still stuck?
-Search or file a bug on
-GitHub Issues
-Visit the
+Open Help → Get Support in the desktop app, or visit the
 Claude support center
-When filing a bug, include your desktop app version, your operating system, the exact error message, and relevant logs. On macOS, check Console.app. On Windows, check Event Viewer → Windows Logs → Application.
+directly
+For problems that also reproduce in the standalone
+claude
+CLI, search or file a bug on
+GitHub Issues
+When reporting a problem, include your desktop app version, your operating system, the exact error message, and relevant logs. On macOS, check Console.app. On Windows, check Event Viewer → Windows Logs → Application.
 Was this page helpful?
 Yes
 No

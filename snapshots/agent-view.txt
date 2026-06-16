@@ -956,7 +956,15 @@ To inspect this state without reading the files directly, run
 claude daemon status
 . It reports whether the supervisor is reachable, its process ID and version, the socket directory, and how many background sessions are live.
 /doctor
-includes a summary of the same check. On Windows,
+includes a summary of the same check.
+The command also warns when the running supervisor is on a different version than the
+claude
+you invoked, which happens after an update the supervisor hasn’t restarted into yet. The warning shows both versions and tells you to run
+claude daemon stop --any
+to pick up the new version. When Claude Code is installed as an OS service, the suggested command is
+claude daemon stop
+without the flag.
+On Windows,
 claude daemon status
 surfaces the underlying file error when the daemon’s pipe-key file is locked or unreadable instead of reporting a generic connection failure.
 ​

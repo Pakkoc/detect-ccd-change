@@ -351,6 +351,19 @@ claude agents
 . Applies that subagent’s system prompt, tool restrictions, and model. See
 Invoke subagents explicitly
 "code-reviewer"
+agentPushNotifEnabled
+When
+Remote Control
+is connected, allow Claude to send proactive push notifications to your phone, for example when a long task finishes. Default:
+false
+. Appears in
+/config
+as
+Push when Claude decides
+. See
+Mobile push notifications
+. Requires Claude Code v2.1.119 or later
+true
 allowAllClaudeAiMcps
 (Managed settings only) Load claude.ai connectors alongside a deployed
 managed-mcp.json
@@ -426,6 +439,18 @@ attribution
 Customize attribution for git commits and pull requests. See
 Attribution settings
 {"commit": "🤖 Generated with Claude Code", "pr": ""}
+autoCompactEnabled
+Automatically compact the conversation when context approaches the limit. Default:
+true
+. Appears in
+/config
+as
+Auto-compact
+. To disable via environment variable, set
+DISABLE_AUTO_COMPACT
+in
+env
+false
 autoMemoryDirectory
 Custom directory for
 auto memory
@@ -772,6 +797,20 @@ in
 env
 . Useful when using Bedrock, Vertex, or Foundry where the default sample rate does not apply
 0.05
+fileCheckpointingEnabled
+Snapshot files before each edit so
+/rewind
+can restore them. Default:
+true
+. Appears in
+/config
+as
+Rewind code (checkpoints)
+. To disable via environment variable, set
+CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING
+in
+env
+false
 fileSuggestion
 Configure a custom script for
 @
@@ -841,6 +880,19 @@ to remove both, for example when using your own git workflow skills. The
 CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS
 environment variable takes precedence over this setting when set
 false
+inputNeededNotifEnabled
+When
+Remote Control
+is connected, send a push notification to your phone when a permission prompt or question is waiting for your input. Default:
+false
+. Appears in
+/config
+as
+Push when actions required
+. See
+Mobile push notifications
+. Requires Claude Code v2.1.119 or later
+true
 language
 Configure Claude’s preferred response language (e.g.,
 "japanese"
@@ -1164,6 +1216,34 @@ true
 as
 Terminal progress bar
 false
+theme
+Color theme for the interface:
+"auto"
+,
+"dark"
+,
+"light"
+,
+"dark-daltonized"
+,
+"light-daltonized"
+,
+"dark-ansi"
+,
+"light-ansi"
+, or a custom theme reference such as
+"custom:<slug>"
+or
+"custom:<plugin-name>:<slug>"
+. Default:
+"dark"
+. See
+Create a custom theme
+. Appears in
+/config
+as
+Theme
+"dark"
 tui
 Terminal UI renderer. Use
 "fullscreen"
@@ -1197,6 +1277,17 @@ true
 /config
 as “Use auto mode during plan”
 false
+verbose
+Show full tool output instead of truncated summaries. Default:
+false
+. Appears in
+/config
+as
+Verbose output
+. The
+--verbose
+flag overrides this for one session
+true
 viewMode
 Default transcript view mode on startup:
 "default"
@@ -1280,18 +1371,20 @@ settings.json
 . Adding them to
 settings.json
 will trigger a schema validation error.
-Versions before v2.1.119 also store
-autoScrollEnabled
+Versions before v2.1.119 also store a number of
+/config
+preference keys here instead of in
+settings.json
+, including
+theme
+,
+verbose
 ,
 editorMode
 ,
-showTurnDuration
-,
-teammateMode
+autoCompactEnabled
 , and
-terminalProgressBarEnabled
-here instead of in
-settings.json
+preferredNotifChannel
 .
 Key
 Description
@@ -2083,9 +2176,7 @@ tab lists the affected files. Run
 for the details of each error.
 The line confirms which files are being read, not which layer supplied each individual key. The
 Config
-tab in the same dialog edits built-in toggles such as theme and verbose output, not your
-settings.json
-contents.
+tab in the same dialog is where you change preference toggles such as theme and verbose output.
 ​
 Key points about the configuration system
 Memory files (
