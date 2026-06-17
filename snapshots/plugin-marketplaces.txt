@@ -1022,6 +1022,23 @@ plugin.json
 . The marketplace entry defines everything. See
 Strict mode
 below.
+By default, a plugin’s skills load from the
+skills/
+directory under its
+source
+, and any paths listed under
+skills
+add to that scan. The exception is a marketplace-root source such as
+source: "./"
+, where several plugin entries share one
+skills/
+folder. In that case, listing specific subdirectories under
+skills
+makes that list the complete set for the entry, and other directories under
+skills/
+do not load. Listing the
+skills/
+directory itself or the plugin root keeps the full scan. If none of the listed paths exist, the default scan runs instead.
 ​
 Strict mode
 The

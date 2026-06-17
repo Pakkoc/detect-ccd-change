@@ -391,7 +391,7 @@ cloud sessions
 Remote Control
 sessions, and on Sonnet 4.6 and Opus 4.6 without
 extended context
-, which compact at the 200K boundary by default. In other cases, such as a default local session, auto-compaction triggers when the conversation reaches the model’s context limit. The override can only lower the threshold, so values above the default have no effect. Applies to both main conversations and subagents
+, which compact at the 200K boundary by default. In other cases, such as a local session on Opus 4.8 or any model with extended context, auto-compaction triggers when the conversation reaches the model’s context limit. The override can only lower the threshold, so values above the default have no effect. Applies to both main conversations and subagents
 CLAUDE_AUTO_BACKGROUND_TASKS
 Set to
 1
@@ -480,7 +480,7 @@ commands. Not set for stdio
 MCP server
 subprocesses, which are long-lived and outlive the session that spawned them. Unlike
 CLAUDECODE
-, this is only set by Claude Code’s own spawn path and not by IDE extensions, so it reliably distinguishes a nested session from a top-level
+, this is only set by Claude Code itself when it launches a subprocess and not by IDE extensions, so it reliably distinguishes a nested session from a top-level
 claude
 launched in an IDE-integrated terminal. A nested interactive
 claude
@@ -919,11 +919,13 @@ that implement BSU/ESU but do not reply to the capability probe. Has no effect u
 CLAUDE_CODE_FORK_SUBAGENT
 Set to
 1
-to make
+to let Claude spawn
 forked subagents
-the model’s default, or
+, or
 0
-to disable them, overriding any server-side rollout. When enabled, Claude spawns a fork, a subagent that inherits the full conversation context instead of starting fresh, whenever it would otherwise use the general-purpose subagent, and all subagent spawns run in the background. The explicit
+to disable them, overriding any server-side rollout. When enabled, Claude can request the
+fork
+subagent type to spawn a fork, a subagent that inherits the full conversation context instead of starting fresh. Spawns without a subagent type still use the general-purpose subagent, and all subagent spawns run in the background. The explicit
 /fork
 command works without this variable. Works in interactive mode and via the SDK or
 claude -p
@@ -1177,7 +1179,7 @@ Set the mouse wheel scroll multiplier in
 fullscreen rendering
 . Accepts values from 1 to 20, and fractional values below 1 such as
 0.5
-to slow accelerated trackpad and wheel scrolling in terminals on the native scroll path. Set to
+to slow accelerated trackpad and wheel scrolling in terminals that already amplify wheel events. Set to
 3
 to match
 vim

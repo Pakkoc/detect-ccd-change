@@ -2029,7 +2029,13 @@ field rather than listing
 here
 disallowedTools
 No
-Array of tool names to explicitly disallow for this agent
+Array of tool names to explicitly disallow for this agent. MCP server-level patterns are also accepted:
+mcp__server
+or
+mcp__server__*
+removes every tool from that server, and
+mcp__*
+removes every MCP tool from any server
 prompt
 Yes
 The agent’s system prompt
@@ -2722,6 +2728,8 @@ SDKTaskUpdatedMessage
 |
 SDKSessionStateChangedMessage
 |
+SDKWorkerShuttingDownMessage
+|
 SDKCommandsChangedMessage
 |
 SDKNotificationMessage
@@ -2743,6 +2751,8 @@ SDKPromptSuggestionMessage
 SDKAPIRetryMessage
 |
 SDKMirrorErrorMessage
+|
+SDKInformationalMessage
 ;
 ​
 SDKAssistantMessage
@@ -3373,6 +3383,92 @@ number
 };
 };
 ​
+SDKInformationalMessage
+Generic text banner emitted by the loop. Carries non-error status lines, hook feedback such as a
+UserPromptSubmit
+hook’s block reason, and command output. Render
+content
+as plaintext at the given
+level
+.
+type
+SDKInformationalMessage
+=
+{
+type
+:
+"system"
+;
+subtype
+:
+"informational"
+;
+content
+:
+string
+;
+level
+:
+"info"
+|
+"notice"
+|
+"suggestion"
+|
+"warning"
+;
+tool_use_id
+?:
+string
+;
+prevent_continuation
+?:
+boolean
+;
+uuid
+:
+UUID
+;
+session_id
+:
+string
+;
+};
+​
+SDKWorkerShuttingDownMessage
+Emitted on graceful worker teardown so remote clients can show why the worker went away instead of waiting for heartbeat timeout. The
+reason
+is a short snake_case string set by the host CLI, such as
+"host_exit"
+or
+"remote_control_disabled"
+. Act on this only when streaming live. A resumed session replays past instances of this message, so ignore them in that case.
+type
+SDKWorkerShuttingDownMessage
+=
+{
+type
+:
+"system"
+;
+subtype
+:
+"worker_shutting_down"
+;
+reason
+:
+string
+;
+uuid
+:
+UUID
+;
+session_id
+:
+string
+;
+};
+​
 SDKPluginInstallMessage
 Plugin installation progress event. Emitted when
 CLAUDE_CODE_SYNC_PLUGIN_INSTALL
@@ -3579,6 +3675,10 @@ string
 name
 ?:
 string
+;
+senderTaskId
+?:
+string
 }
 |
 {
@@ -3615,7 +3715,9 @@ Reserved for messages from another agent session.
 from
 is the sender address and
 name
-is the sender’s display name when available. The Agent SDK does not emit this origin; treat as an unknown origin.
+is the sender’s display name when available.
+senderTaskId
+is the task ID of the in-process background subagent that sent the message; absent for cross-session peers. The Agent SDK does not emit this origin; treat as an unknown origin.
 task-notification
 Synthetic turn injected after a background task finished. See
 SDKTaskNotificationMessage
@@ -4286,6 +4388,9 @@ teammate_name
 :
 string
 ;
+/**
+@deprecated
+since v2.1.178. Carries the session-derived team name; will be removed. */
 team_name
 :
 string
@@ -4319,6 +4424,9 @@ teammate_name
 ?:
 string
 ;
+/**
+@deprecated
+since v2.1.178. Carries the session-derived team name; will be removed. */
 team_name
 ?:
 string
@@ -4774,10 +4882,6 @@ max_turns
 number
 ;
 name
-?:
-string
-;
-team_name
 ?:
 string
 ;

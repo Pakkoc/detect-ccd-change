@@ -178,18 +178,6 @@ No
 TaskUpdate
 Updates task status, dependencies, details, or deletes tasks
 No
-TeamCreate
-Creates an
-agent team
-with multiple teammates. Only available when
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-is set
-No
-TeamDelete
-Disbands an agent team and cleans up teammate processes. Only available when
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-is set
-No
 TodoWrite
 Manages the session task checklist. Disabled by default as of v2.1.142 in favor of
 TaskCreate

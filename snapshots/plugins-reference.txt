@@ -987,9 +987,11 @@ skills
 string|array
 Custom skill directories containing
 <name>/SKILL.md
-(in addition to default
+. Adds to the default
 skills/
-)
+scan. See
+Path behavior rules
+for the marketplace-root exception
 "./custom/skills/"
 commands
 string|array
@@ -1257,7 +1259,11 @@ skills
 skills/
 directory is always scanned, and directories listed in
 skills
-are loaded alongside it
+are loaded alongside it. Exception: for a
+marketplace entry whose
+source
+resolves to the marketplace root
+, declaring specific subdirectories replaces the scan
 Own merge rules
 :
 hooks

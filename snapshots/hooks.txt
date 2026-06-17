@@ -3459,7 +3459,9 @@ field names the model the subagent actually runs on, which can differ from the
 model
 value in
 tool_input
-. It requires Claude Code v2.1.174 or later.
+, such as when
+availableModels
+or another override applies. It requires Claude Code v2.1.174 or later.
 AskUserQuestion
 Asks the user one to four multiple-choice questions.
 Field
@@ -4877,7 +4879,7 @@ team_name
 ,
 "team_name"
 :
-"my-project"
+"session-a1b2c3d4"
 }
 Field
 Description
@@ -4890,7 +4892,7 @@ Detailed description of the task. May be absent
 teammate_name
 Name of the teammate creating the task. May be absent
 team_name
-Name of the team. May be absent
+Deprecated. Session-derived team name; will be removed in a future release
 ​
 TaskCreated decision control
 TaskCreated hooks support two ways to control task creation:
@@ -5007,7 +5009,7 @@ team_name
 ,
 "team_name"
 :
-"my-project"
+"session-a1b2c3d4"
 }
 Field
 Description
@@ -5020,7 +5022,7 @@ Detailed description of the task. May be absent
 teammate_name
 Name of the teammate completing the task. May be absent
 team_name
-Name of the team. May be absent
+Deprecated. Session-derived team name; will be removed in a future release
 ​
 TaskCompleted decision control
 TaskCompleted hooks support two ways to control task completion:
@@ -5438,14 +5440,14 @@ team_name
 ,
 "team_name"
 :
-"my-project"
+"session-a1b2c3d4"
 }
 Field
 Description
 teammate_name
 Name of the teammate that is about to go idle
 team_name
-Name of the team
+Deprecated. Session-derived team name; will be removed in a future release
 ​
 TeammateIdle decision control
 TeammateIdle hooks support two ways to control teammate behavior:

@@ -210,7 +210,13 @@ Array of allowed tool names. If omitted, inherits all tools
 disallowedTools
 string[]
 No
-Array of tool names to remove from the agent’s tool set
+Array of tool names to remove from the agent’s tool set. MCP server-level patterns are also accepted:
+mcp__server
+or
+mcp__server__*
+removes every tool from that server, and
+mcp__*
+removes every MCP tool from any server
 model
 string
 No

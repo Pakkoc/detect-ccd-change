@@ -191,7 +191,7 @@ matches the default in
 vim
 and similar applications. The setting accepts values from 1 to 20, and fractional values below 1 such as
 0.5
-to slow accelerated trackpad and wheel scrolling in terminals on the native scroll path.
+to slow accelerated trackpad and wheel scrolling in terminals that already amplify wheel events.
 To adjust scroll speed interactively, run
 /scroll-speed
 . The dialog shows a ruler you can scroll while it is open so you can feel the change immediately. Press

@@ -99,13 +99,20 @@ session lifecycle events. The
 subtype
 field distinguishes them:
 "init"
-is the first message (session metadata), and
+: the first message with session metadata
 "compact_boundary"
-fires after
+: fires after
 compaction
-. In TypeScript, the compact boundary is its own
-SDKCompactBoundaryMessage
-type rather than a subtype of
+"informational"
+: plain-text status banners from the loop
+"worker_shutting_down"
+: the loop will end after the current turn because the host is exiting or Remote Control disconnected
+In TypeScript, each subtype other than
+"init"
+is its own type in the
+SDKMessage
+union
+rather than a subtype of
 SDKSystemMessage
 .
 AssistantMessage

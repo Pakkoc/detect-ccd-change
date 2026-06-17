@@ -517,6 +517,9 @@ subagents
 advisor
 . See
 Restrict model selection
+. See
+enforceAvailableModels
+to also constrain Default
 ["sonnet", "haiku"]
 awaySummaryEnabled
 Show a one-line session recap when you return to the terminal after a few minutes away. Set to
@@ -817,6 +820,21 @@ Configure a custom script for
 file autocomplete. See
 File suggestion settings
 {"type": "command", "command": "~/.claude/file-suggestion.sh"}
+footerLinksRegexes
+Render extra clickable badges in the footer when a regex matches turn output. Each entry has a
+pattern
+, a
+url
+template with
+{name}
+placeholders filled from named capture groups, and an optional
+label
+. Read from user,
+--settings
+flag, and managed settings only. See
+Footer link badges
+for URL constraints, scheme allowlist, and limits. Requires Claude Code v2.1.176 or later
+[{"type": "regex", "pattern": "\\b(?<key>PROJ-\\d+)\\b", "url": "https://issues.example.com/browse/{key}", "label": "{key}"}]
 forceLoginMethod
 Use
 claudeai
@@ -900,9 +918,10 @@ Configure Claude’s preferred response language (e.g.,
 "spanish"
 ,
 "french"
-). Claude will respond in this language by default. Also sets the
+). Claude will respond in this language by default. Also sets the language for
 voice dictation
-language
+and auto-generated session titles.
+As of v2.1.176, when not set, session titles match the language of your conversation
 "japanese"
 maxSkillDescriptionChars
 Per-skill character cap on the combined
@@ -1965,6 +1984,124 @@ $query
 head
 -20
 ​
+Footer link badges
+The
+footerLinksRegexes
+setting renders extra clickable badges in the footer below the input box. Use it to turn IDs printed by project CLIs, such as review tools and issue trackers, into session links.
+Each entry’s
+pattern
+regex is matched against turn output: tool results, including file contents and fetched pages, and Claude’s own responses.
+{name}
+placeholders in
+url
+and
+label
+are filled from named capture groups in the pattern.
+The following example renders a badge whenever an issue key like
+PROJ-1234
+appears in turn output. The
+(?<key>...)
+named group captures the key, and
+{key}
+substitutes it into the URL and label:
+~/.claude/settings.json
+{
+"footerLinksRegexes"
+: [
+{
+"type"
+:
+"regex"
+,
+"pattern"
+:
+"
+\\
+b(?<key>PROJ-
+\\
+d+)
+\\
+b"
+,
+"url"
+:
+"https://issues.example.com/browse/{key}"
+,
+"label"
+:
+"{key}"
+}
+]
+}
+With this configured, when
+PROJ-1234
+appears in a tool result or in Claude’s reply, a
+PROJ-1234
+chip appears in the footer linking to
+https://issues.example.com/browse/PROJ-1234
+.
+The following constraints apply to each entry:
+Constraint
+Behavior
+URL origin
+Captured values are URL-encoded and the constructed URL must share the template’s literal origin. A capture can fill a path segment or query value but cannot change where the link points
+URL length
+Constructed URLs longer than 2048 characters are dropped
+URL scheme
+Must be
+https
+,
+http
+, or a recognized editor or workspace deep-link scheme:
+vscode
+,
+vscode-insiders
+,
+cursor
+,
+windsurf
+,
+zed
+,
+jetbrains
+,
+idea
+,
+slack
+,
+linear
+,
+notion
+,
+figma
+Label
+Defaults to the matched text and is truncated to 28 display columns
+Badge count
+At most 5 badges render. The oldest is displaced by newer matches and
+/clear
+removes them
+Settings scope
+Read from user settings, the
+--settings
+flag, and managed settings only. Ignored in project
+.claude/settings.json
+and local
+.claude/settings.local.json
+When a turn completes, Claude Code matches each entry’s
+pattern
+regex against the turn output on the main thread, so a slow regex blocks the UI until it finishes. Nested quantifiers such as
+(a+)+$
+can take exponentially long against certain inputs and freeze the session, so keep each
+pattern
+linear and avoid nesting
++
+or
+*
+.
+Footer badges render alongside a
+custom status line
+when one is configured; neither replaces the other. Use a status line for a script-driven row that computes its own content from session data, and footer badges to turn IDs from the conversation into links without a script.
+​
 Hook configuration
 These settings control which hooks are allowed to run and what HTTP hooks can access. The
 allowManagedHooksOnly
@@ -2135,28 +2272,25 @@ and a user adds
 ["~/.kube"]
 , both paths are included in the final configuration. Two exceptions:
 fallbackModel
-, an ordered chain where position carries meaning so the highest-precedence file that defines it supplies the entire value, and
-as of v2.1.175,
+is an ordered chain where position carries meaning, so the highest-precedence file that defines it supplies the entire value.
+As of v2.1.175, a managed or policy
 availableModels
-, where a managed or policy value replaces lower-precedence entries entirely. See
+value replaces lower-precedence entries entirely. See
 Merge behavior
 .
 ​
 Verify active settings
 Run
 /status
-and check the
-Setting sources
-line on the
+inside Claude Code to see which settings sources are active. Inside the menu, the
 Status
-tab. It lists every settings layer Claude Code loaded for this session:
-If a layer such as
+tab includes a
+Setting sources
+line that lists each layer Claude Code loaded for the current session, such as
 User settings
 or
 Project local settings
-appears, that file is being read.
-If a layer is missing, that file was not found or contains no keys.
-When
+. When
 managed settings
 are in effect, the entry shows the delivery channel in parentheses, for example
 Enterprise managed settings (remote)
@@ -2168,15 +2302,19 @@ Enterprise managed settings (remote)
 (HKCU)
 , or
 (file)
-.
-If a settings file has invalid JSON or a value that fails validation, Claude Code shows a setup issues notice at startup and the
-Status
-tab lists the affected files. Run
-/doctor
-for the details of each error.
-The line confirms which files are being read, not which layer supplied each individual key. The
+. A layer appears in the list only when that source is loaded with at least one key, so an empty list means no settings sources were found.
+The
+Setting sources
+line confirms which sources are being read. It does not show which layer supplied each individual key. The
 Config
-tab in the same dialog is where you change preference toggles such as theme and verbose output.
+tab in the same dialog is an editor for a fixed set of toggles such as theme and verbose output, not a view of your
+settings.json
+contents.
+If a settings file contains errors, such as invalid JSON or a value that fails validation, Claude Code shows a setup issues notice at startup and
+/status
+lists the affected files. Run
+/doctor
+to see the details for each error.
 ​
 Key points about the configuration system
 Memory files (
