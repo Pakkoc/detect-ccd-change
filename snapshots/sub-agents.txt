@@ -688,7 +688,20 @@ grants or removes every tool from the named server. In
 disallowedTools
 ,
 mcp__*
-also removes every MCP tool from any server.
+also removes every MCP tool from any server. This example removes every tool from the
+github
+MCP server while keeping tools from other servers and every built-in tool:
+---
+name
+:
+local-only
+description
+:
+Inherits every tool except those from the github MCP server
+disallowedTools
+:
+mcp__github
+---
 ​
 Restrict which subagents can be spawned
 When an agent runs as the main thread with
