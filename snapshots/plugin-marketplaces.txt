@@ -1026,19 +1026,37 @@ By default, a plugin’s skills load from the
 skills/
 directory under its
 source
-, and any paths listed under
+. Paths listed in the
 skills
-add to that scan. The exception is a marketplace-root source such as
+field add to that scan:
+"skills"
+: [
+"./skills/"
+,
+"./extra-skills/"
+]
+When several plugin entries share one
+skills/
+folder at the marketplace root (
 source: "./"
-, where several plugin entries share one
+), list specific subdirectories instead so each entry loads only its own skills:
+"source"
+:
+"./"
+,
+"skills"
+: [
+"./skills/code-review"
+,
+"./skills/docs"
+]
+With a marketplace-root
+source
+, the listed paths are the complete set for that entry, and other directories in the shared
 skills/
-folder. In that case, listing specific subdirectories under
-skills
-makes that list the complete set for the entry, and other directories under
-skills/
-do not load. Listing the
-skills/
-directory itself or the plugin root keeps the full scan. If none of the listed paths exist, the default scan runs instead.
+folder do not load. Listing
+./skills/
+itself, or the plugin root, keeps the full scan. If none of the listed paths exist, the default scan runs instead.
 ​
 Strict mode
 The

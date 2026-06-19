@@ -1423,11 +1423,7 @@ main
 lists running subagents as a flat list.
 Depth is counted as the number of subagent levels below the main conversation, regardless of whether each level runs in the
 foreground or background
-:
-Foreground subagents
-: can spawn at any depth. Each level blocks its parent until it returns, so the chain is self-limiting: the main conversation waits on the entire chain.
-Background subagents
-: a background subagent at depth five does not receive the Agent tool and cannot spawn further. The limit is fixed and not configurable, and exists to prevent runaway concurrent trees.
+. A subagent at depth five does not receive the Agent tool and cannot spawn further. The limit is fixed and not configurable.
 To prevent a specific subagent from spawning others, omit
 Agent
 from its

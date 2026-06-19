@@ -2084,7 +2084,7 @@ Bash command validator example
 Was this page helpful?
 Yes
 No
-Create plugins
+Share session output as artifacts
 Push external events to Claude
 ⌘
 I

@@ -455,12 +455,19 @@ and custom commands work in
 mode: include
 /skill-name
 in the prompt string and Claude Code expands it before running. Built-in commands that open an interactive dialog, such as
-/config
-and
 /login
 , are not available in
 -p
 mode.
+To change a setting from a
+-p
+invocation, pass
+key=value
+to
+/config
+, for example
+/config thinking=false
+.
 ​
 Customize the system prompt
 Use

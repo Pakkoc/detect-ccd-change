@@ -615,6 +615,19 @@ enableWeakerNetworkIsolation
 to
 true
 instead.
+open
+,
+osascript
+, or browser-based auth flows fail with error
+-600
+on macOS
+: the sandbox blocks Apple Events by default. Set
+allowAppleEvents
+to
+true
+in your user, managed, or CLI settings to allow them. Project settings are ignored for this key. Enabling it removes code-execution isolation, since sandboxed commands can then launch other applications unsandboxed with no user prompt and send AppleScript commands to running applications, subject to the macOS automation-consent prompt (TCC). Alternatively, add the command to
+excludedCommands
+to run it outside the sandbox.
 docker
 commands fail
 :
@@ -679,6 +692,14 @@ Linux sandbox strength
 : the Linux implementation provides strong filesystem and network isolation but includes an
 enableWeakerNestedSandbox
 mode that enables it to work inside Docker environments without privileged namespaces, or on Linux hosts where unprivileged user namespaces are disabled by sysctl. This option considerably weakens security and should only be used when additional isolation is otherwise enforced.
+Apple Events on macOS
+: the macOS sandbox blocks Apple Events by default. The
+allowAppleEvents
+setting lifts this restriction so tools such as
+open
+and
+osascript
+work, but it removes code-execution isolation: sandboxed commands can launch other applications unsandboxed with no user prompt, and can send AppleScript commands to running applications, subject to the per-app macOS automation-consent prompt (TCC). It is only honored from user, managed, or CLI settings. Project settings cannot enable it.
 Settings files protected
 : the sandbox automatically denies write access to Claude Code’s
 settings.json

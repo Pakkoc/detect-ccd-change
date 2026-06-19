@@ -254,12 +254,25 @@ is connected, the color syncs to claude.ai/code
 /compact [instructions]
 Free up context by summarizing the conversation so far. Optionally pass focus instructions for the summary. See
 how compaction handles rules, skills, and memory files
-/config
+/config [key=value ...]
 Open the
 Settings
 interface to adjust theme, model,
 output style
-, and other preferences. Alias:
+, and other preferences.
+From v2.1.181, pass one or more
+key=value
+pairs to set a setting directly without opening the interface, for example
+/config thinking=false
+. The
+key=value
+form also works in non-interactive mode (
+-p
+) and from
+Remote Control
+. Run
+/config help
+to list the keys you can set. Alias:
 /settings
 /context [all]
 Visualize current context usage as a colored grid. Shows optimization suggestions for context-heavy tools, memory bloat, and capacity warnings. In

@@ -731,6 +731,6 @@ Was this page helpful?
 Yes
 No
 Discover and install prebuilt plugins
-Automate with hooks
+Share session output as artifacts
 ⌘
 I

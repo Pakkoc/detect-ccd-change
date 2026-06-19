@@ -16,11 +16,11 @@ Move the session into another project without restarting:
 Claude Code
 > /cd ../other-project
 Commands reference
-Sub-agents can spawn sub-agents
+Subagents can spawn subagents
 v2.1.172
-Sub-agents can now spawn their own sub-agents. The subagent panel below the prompt shows the full tree: each row carries a count of its descendants and a path back to
+Subagents can now spawn their own subagents. The subagent panel below the prompt shows the full tree: each row carries a count of its descendants and a path back to
 main
-. Background sub-agents are capped at five levels deep to prevent runaway concurrent trees; foreground chains can spawn at any depth and are self-limiting.
+. Subagent chains are capped at five levels deep to prevent runaway concurrent trees.
 Open the agents view to watch the nested tree as work fans out:
 Claude Code
 > /agents

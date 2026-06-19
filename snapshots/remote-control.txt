@@ -159,9 +159,7 @@ indicator sits in the footer below the input box while the connection is up, and
 again, to open a status panel with the session URL and a QR code you can use to
 connect from another device
 .
-If the connection fails, the indicator turns red and reads
-/rc failed
-. Select it with the down arrow key and press Enter to see the failure reason and a dismiss option, or run
+If the connection fails, a notification appears with the failure reason and the indicator disappears from the footer. Run
 /remote-control
 again to retry.
 ​
@@ -281,6 +279,10 @@ No mobile registered
 , open the Claude app on your phone so it can refresh its push token. The warning clears the next time Remote Control connects.
 On iOS, Focus modes and notification summaries can suppress or delay pushes. Check Settings → Notifications → Claude.
 On Android, aggressive battery optimization can delay delivery. Exempt the Claude app from battery optimization in system settings.
+Claude Code skips mobile push notifications while you are typing in or focused on the connected terminal.
+As of v2.1.181, you can set
+CLAUDE_CLIENT_PRESENCE_FILE
+to a marker file path to extend this to any time you are at the machine, even in another window: notifications are skipped while the file exists. Configure a screen-lock listener or similar tool to create the file when your screen unlocks and delete it when your screen locks.
 ​
 Limitations
 One remote session per interactive process
@@ -304,7 +306,8 @@ Some commands are local-only
 /plugin
 or
 /resume
-, work only from the local CLI. Commands that produce text output, including
+, work only from the local CLI. The following work from mobile and web:
+Text-output commands:
 /compact
 ,
 /clear
@@ -318,23 +321,23 @@ or
 /usage-credits
 ,
 /recap
-, and
+,
 /reload-plugins
-, work from mobile and web.
-As of v2.1.166,
 /mcp
-also works from mobile and web: it returns a text summary of server status instead of opening the picker, and accepts the same
+, from v2.1.166: returns a text summary of server status instead of opening the picker, and accepts the
 reconnect
 ,
 enable
 , and
 disable
 subcommands
-as the local CLI, with one difference: from mobile and web,
+. Unlike the local CLI,
 /mcp reconnect
-with no server name reconnects every server that has failed or needs authentication, while the local CLI requires a server name for
-reconnect
-.
+without a server name reconnects every server that has failed or needs authentication.
+/config
+, from v2.1.181: pass
+key=value
+to set a setting, or run it with no argument to list the keys you can set.
 ​
 Troubleshooting
 ​

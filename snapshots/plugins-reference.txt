@@ -1263,7 +1263,9 @@ are loaded alongside it. Exception: for a
 marketplace entry whose
 source
 resolves to the marketplace root
-, declaring specific subdirectories replaces the scan
+, declaring specific subdirectories replaces the default
+skills/
+scan
 Own merge rules
 :
 hooks

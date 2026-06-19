@@ -266,7 +266,9 @@ in your home directory: available in every project, visible only to you
 Press Enter to save. The workflow runs as
 /<name>
 in future sessions from either location.
-As of v2.1.178, saving to the project location writes to the closest
+In a monorepo with several
+.claude/
+directories, you can keep workflows alongside the package they apply to. As of v2.1.178, saving to the project location writes to the closest
 .claude/workflows/
 directory that already exists between your working directory and the repository root, or to the repository root if none exists yet. Project workflows also load from every
 .claude/workflows/

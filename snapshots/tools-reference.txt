@@ -25,6 +25,15 @@ subagent
 with its own context window to handle a task. See
 Agent tool behavior
 No
+Artifact
+Publishes an HTML or Markdown file as an
+artifact
+: a private, interactive page on claude.ai you can share inside your organization.
+Requires a Team or Enterprise plan and
+/login
+authentication; see
+Availability
+Yes
 AskUserQuestion
 Asks multiple-choice questions to gather requirements or clarify ambiguity
 No

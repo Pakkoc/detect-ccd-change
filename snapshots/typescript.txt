@@ -3436,7 +3436,7 @@ string
 };
 ​
 SDKWorkerShuttingDownMessage
-Emitted on graceful worker teardown so remote clients can show why the worker went away instead of waiting for heartbeat timeout. The
+Emitted on graceful worker teardown so remote clients can show why the worker exited instead of waiting for heartbeat timeout. The
 reason
 is a short snake_case string set by the host CLI, such as
 "host_exit"
@@ -3711,13 +3711,23 @@ channel
 server
 is the source MCP server name.
 peer
-Reserved for messages from another agent session.
+Message from another agent. For an in-process
+teammate
+sending to
+main
+via
+SendMessage
+,
+from
+is the teammate’s name and
+senderTaskId
+is its task ID. For a cross-session peer such as another local Claude Code process,
 from
 is the sender address and
-name
-is the sender’s display name when available.
 senderTaskId
-is the task ID of the in-process background subagent that sent the message; absent for cross-session peers. The Agent SDK does not emit this origin; treat as an unknown origin.
+is absent. The
+name
+field is reserved.
 task-notification
 Synthetic turn injected after a background task finished. See
 SDKTaskNotificationMessage

@@ -1,6 +1,13 @@
 Claude Code offers a variety of settings to configure its behavior to meet your needs. You can configure Claude Code by running the
 /config
-command when using the interactive REPL, which opens a tabbed Settings interface where you can view status information and modify configuration options.
+command, which opens a tabbed Settings interface where you can view status information and modify configuration options.
+From v2.1.181, you can change a single option without opening the interface by passing
+key=value
+to
+/config
+, for example
+/config verbose=true
+.
 ​
 Configuration scopes
 Claude Code uses a
@@ -519,7 +526,7 @@ advisor
 Restrict model selection
 . See
 enforceAvailableModels
-to also constrain Default
+to also constrain the default model
 ["sonnet", "haiku"]
 awaySummaryEnabled
 Show a one-line session recap when you return to the terminal after a few minutes away. Set to
@@ -541,6 +548,15 @@ Custom script that outputs JSON with AWS credentials (see
 advanced credential configuration
 )
 /bin/generate_aws_grant.sh
+axScreenReader
+Render screen-reader friendly output: flat text without decorative borders or animations. Screen-reader mode always uses the classic renderer, so the
+tui
+setting has no effect while it is active. The
+CLAUDE_AX_SCREEN_READER
+environment variable and the
+--ax-screen-reader
+flag take precedence. Requires Claude Code v2.1.181 or later
+true
 blockedMarketplaces
 (Managed settings only) Blocklist of marketplace sources. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. Blocked sources are checked before downloading, so they never touch the filesystem. See
 Managed marketplace restrictions
@@ -627,6 +643,16 @@ Disable all
 hooks
 and any custom
 status line
+true
+disableArtifact
+Set to
+true
+to disable the
+Artifact
+tool, which publishes session output as a private web page on claude.ai. Equivalent to setting
+CLAUDE_CODE_DISABLE_ARTIFACT
+to
+1
 true
 disableAutoMode
 Set to
@@ -1217,16 +1243,18 @@ teammateMode
 How
 agent team
 teammates display:
-auto
-(split panes when running inside tmux or iTerm2, in-process otherwise),
 in-process
-, or
+(the default),
+auto
+(split panes when running inside tmux or iTerm2, in-process otherwise), or
 tmux
-(split panes using tmux or iTerm2, detected from your terminal).
+(split panes using tmux or iTerm2, detected from your terminal). The default changed from
+auto
+in v2.1.179.
 --teammate-mode
 overrides this for one session. See
 choose a display mode
-"in-process"
+"auto"
 terminalProgressBarEnabled
 Show the terminal progress bar in supported terminals: ConEmu, Ghostty 1.2.0+, and iTerm2 3.6.6+. Default:
 true
@@ -1747,6 +1775,17 @@ with a MITM proxy and custom CA.
 Reduces security
 by opening a potential data exfiltration path. Default: false
 true
+allowAppleEvents
+(macOS only) Allow sandboxed commands to send Apple Events. Required for
+open
+,
+osascript
+, and tools that open URLs in a browser, which otherwise fail with error
+-600
+.
+Removes code-execution isolation.
+Sandboxed commands can launch other applications unsandboxed with no user prompt; they can also send AppleScript commands to running applications such as Terminal, subject to the per-app macOS automation-consent prompt (TCC). Only honored from user, managed, or CLI settings, not from project settings. Default: false
+true
 bwrapPath
 (Managed settings only, Linux/WSL2) Absolute path to the bubblewrap (
 bwrap
@@ -2037,7 +2076,7 @@ With this configured, when
 PROJ-1234
 appears in a tool result or in Claude’s reply, a
 PROJ-1234
-chip appears in the footer linking to
+badge appears in the footer linking to
 https://issues.example.com/browse/PROJ-1234
 .
 The following constraints apply to each entry:

@@ -71,6 +71,10 @@ Hook
 Script, HTTP request, prompt, or subagent triggered by events
 Automation that must run on every matching event
 Run ESLint after every file edit
+Artifact
+Publish session output as a private, interactive web page
+Output you want to see or share visually rather than as terminal text
+An incident timeline that updates as Claude investigates
 Plugins
 are the packaging layer. A plugin bundles skills, hooks, subagents, and MCP servers into a single installable unit. Plugin skills are namespaced (like
 /my-plugin:review

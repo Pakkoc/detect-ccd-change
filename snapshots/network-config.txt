@@ -163,6 +163,10 @@ Native installer and native auto-updater on versions prior to 2.1.116
 bridge.claudeusercontent.com
 Claude in Chrome
 extension WebSocket bridge
+*.claudeusercontent.com
+Viewing
+artifacts
+on claude.ai. The viewer loads each artifact’s content from a sandboxed subdomain of this origin. Required in the viewer’s browser, not by the CLI itself
 raw.githubusercontent.com
 Changelog feed for
 /release-notes
