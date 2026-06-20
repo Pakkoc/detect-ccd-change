@@ -188,7 +188,9 @@ mcpServers: {}
 does not suppress them
 Set
 strictMcpConfig: true
-, or
+,
+disableClaudeAiConnectors: true
+in settings, or
 ENABLE_CLAUDEAI_MCP_SERVERS=false
 in
 env

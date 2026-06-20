@@ -521,6 +521,12 @@ CLAUDE_CODE_CLIENT_KEY
 Path to client private key file for mTLS authentication
 CLAUDE_CODE_CLIENT_KEY_PASSPHRASE
 Passphrase for encrypted CLAUDE_CODE_CLIENT_KEY (optional)
+CLAUDE_CODE_CONNECT_TIMEOUT_MS
+Timeout in milliseconds for the connect, TLS, and response-header phase of a streaming API request (default: 60000, or 60 seconds). If no response headers arrive within this window, the request is aborted and retried. Set to
+0
+to disable and rely on
+API_TIMEOUT_MS
+alone
 CLAUDE_CODE_DEBUG_LOGS_DIR
 Override the debug log file path. Despite the name, this is a file path, not a directory. Requires debug mode to be enabled separately via
 --debug
@@ -1144,6 +1150,16 @@ MachinePolicy
 or
 UserPolicy
 regardless of this setting
+CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS
+Maximum time in milliseconds that
+non-interactive mode
+with the
+-p
+flag waits after the final turn for background subagents and workflows whose result is part of the output. Default:
+600000
+, or 10 minutes. When the cap is exceeded, remaining background tasks are terminated and the process exits. Set to
+0
+to wait indefinitely. This cap is separate from the five-second grace period that applies to plain background shells
 CLAUDE_CODE_PROPAGATE_TRACEPARENT
 Set to
 1
@@ -1689,7 +1705,9 @@ Set to
 false
 to disable
 claude.ai MCP servers
-in Claude Code. Enabled by default for logged-in users
+in Claude Code. Enabled by default for logged-in users. To disable per-project or per-org, set
+disableClaudeAiConnectors
+in settings instead
 ENABLE_PROMPT_CACHING_1H
 Set to
 1

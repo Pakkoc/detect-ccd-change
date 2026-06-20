@@ -413,6 +413,28 @@ Modifying shared infrastructure
 Irreversibly destroying files that existed before the session
 Force push, or pushing directly to
 main
+git reset --hard
+,
+git checkout -- .
+,
+git restore .
+,
+git clean -fd
+,
+git stash drop
+, or
+git stash clear
+, which the classifier presumes would discard uncommitted changes
+git commit --amend
+when the commit at HEAD was not created in this session
+terraform destroy
+,
+pulumi destroy
+,
+cdk destroy
+, or
+terragrunt destroy
+, and applying a plan that destroys resources
 Allowed by default
 :
 Local file operations in your working directory

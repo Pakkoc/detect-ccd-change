@@ -275,17 +275,43 @@ deniedMcpServers
 No servers blocked
 No servers blocked
 Matching servers blocked
-An allowlist that uses only
+A
 serverName
-entries is not a security control. The name is the label a user assigns when running
+entry, in either list, is not a security control. The name is the label a user assigns when running
 claude mcp add
 or editing a config file, not the underlying server, so a user can call any server
 github
-. To enforce which servers actually run, add
+. For claude.ai connectors the name is the display name returned by claude.ai, which can change. To enforce which servers actually run, add
 serverCommand
 or
 serverUrl
 entries.
+The
+serverName
+validation differs between the two lists:
+In
+deniedMcpServers
+,
+serverName
+accepts any non-empty string, so you can block
+claude.ai connectors
+by their display name. For example,
+{ "serverName": "claude.ai Slack" }
+blocks the Slack connector. Prefer a
+serverUrl
+entry when you need the deny to be robust to renames, or when a connector name collides and gains a
+(N)
+suffix.
+In
+allowedMcpServers
+,
+serverName
+is limited to letters, numbers, hyphens, and underscores. Use
+serverUrl
+to allowlist a claude.ai connector.
+To turn off all claude.ai connectors, see
+disableClaudeAiConnectors
+.
 ​
 How a server is evaluated
 Before loading a server, including one from

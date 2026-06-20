@@ -264,6 +264,11 @@ From v2.1.181, pass one or more
 key=value
 pairs to set a setting directly without opening the interface, for example
 /config thinking=false
+.
+From v2.1.182, named shorthand keys are also accepted, such as
+/config theme=dark
+or
+/config model=sonnet
 . The
 key=value
 form also works in non-interactive mode (
@@ -271,8 +276,8 @@ form also works in non-interactive mode (
 ) and from
 Remote Control
 . Run
-/config help
-to list the keys you can set. Alias:
+/config --help
+to list every settable key with its options. Alias:
 /settings
 /context [all]
 Visualize current context usage as a colored grid. Shows optimization suggestions for context-heavy tools, memory bloat, and capacity warnings. In

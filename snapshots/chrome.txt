@@ -130,9 +130,7 @@ Claude records the interaction sequence and saves it as a GIF file.
 Troubleshooting
 ​
 Extension not detected
-If Claude Code’s setup-issues line lists
-chrome
-:
+If Claude Code can’t detect the Chrome extension:
 Verify the Chrome extension is installed and enabled in
 chrome://extensions
 Verify Claude Code is up to date by running
