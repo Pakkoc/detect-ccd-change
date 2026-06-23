@@ -138,6 +138,8 @@ j
 /
 k
 Scroll within the agent detail when it overflows
+f
+Filter the agent list in the selected phase by status. Press again to cycle
 p
 Pause or resume the run
 x

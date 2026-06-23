@@ -58,11 +58,11 @@ shows what changed,
 /code-review
 checks the diff for correctness bugs and cleanups and can apply the findings with
 --fix
-, and
+,
 /review
-or
+runs the same read-only review on a GitHub pull request, and
 /security-review
-give a deeper read-only pass.
+gives a deeper read-only pass.
 /code-review ultra
 runs a multi-agent review in the cloud.
 Between sessions.
@@ -539,7 +539,9 @@ bg
 . Alias:
 /continue
 /review [PR]
-Review a pull request locally in your current session. For a deeper cloud-based review, see
+Review a GitHub pull request by number, using the same review engine as
+/code-review
+. With no arguments, lists open PRs to pick from. For a cloud-based review, see
 /code-review ultra
 /rewind
 Rewind the conversation and/or code to a previous point, or summarize from a selected message. See

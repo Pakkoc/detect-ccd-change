@@ -522,11 +522,9 @@ Path to client private key file for mTLS authentication
 CLAUDE_CODE_CLIENT_KEY_PASSPHRASE
 Passphrase for encrypted CLAUDE_CODE_CLIENT_KEY (optional)
 CLAUDE_CODE_CONNECT_TIMEOUT_MS
-Timeout in milliseconds for the connect, TLS, and response-header phase of a streaming API request (default: 60000, or 60 seconds). If no response headers arrive within this window, the request is aborted and retried. Set to
-0
-to disable and rely on
+Removed in v2.1.186 and now a no-op. Previously set a separate timeout for the connect, TLS, and response-header phase of a streaming API request. Use
 API_TIMEOUT_MS
-alone
+for the per-request timeout
 CLAUDE_CODE_DEBUG_LOGS_DIR
 Override the debug log file path. Despite the name, this is a file path, not a directory. Requires debug mode to be enabled separately via
 --debug
@@ -941,7 +939,20 @@ registration even when this
 claude
 was launched from inside another Claude Code session. Use when an inherited
 CLAUDE_CODE_CHILD_SESSION
-value, for example from a tmux server first started by Claude Code’s Bash tool, causes a genuine top-level session to be misclassified as nested. Also honored on v2.1.169 and earlier; has no effect on v2.1.170 and v2.1.171, where the nested-session detection it overrides was removed
+value, for example from a
+screen
+session or a background launcher first started by Claude Code’s Bash tool, causes a genuine top-level session to be misclassified as nested.
+As of v2.1.178, Claude Code detects the tmux case automatically and ignores the inherited marker, so tmux no longer needs this variable. Also honored on v2.1.169 and earlier; has no effect on v2.1.170 and v2.1.171, where the nested-session detection it overrides was removed
+CLAUDE_CODE_FORCE_STRIKETHROUGH
+Set to
+1
+to force strikethrough rendering for
+~~text~~
+in Claude’s responses when your terminal supports it but is not auto-detected, such as over SSH without
+TERM_PROGRAM
+forwarded. Without this, undetected terminals show the literal
+~~
+markers instead of rendering the text as strikethrough. Requires Claude Code v2.1.186 or later
 CLAUDE_CODE_FORCE_SYNC_OUTPUT
 Set to
 1
@@ -1020,7 +1031,10 @@ max output tokens
 auto-compaction
 triggers.
 CLAUDE_CODE_MAX_RETRIES
-Override the number of times to retry failed API requests (default: 10)
+Override the number of times to retry failed API requests (default: 10).
+Capped at 15 as of v2.1.186. For unattended sessions that need to wait through longer outages, set
+CLAUDE_CODE_RETRY_WATCHDOG
+instead
 CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY
 Maximum number of read-only tools and subagents that can execute in parallel (default: 10). Higher values increase parallelism but consume more resources
 CLAUDE_CODE_MAX_TURNS
@@ -1205,6 +1219,16 @@ CLAUDE_CODE_RESUME_PROMPT
 Override the continuation message injected when resuming a session that ended mid-turn. Defaults to
 Continue from where you left off.
 . Spawn scripts for long-running agents can set this to a more directive boot message. An empty string uses the default
+CLAUDE_CODE_RETRY_WATCHDOG
+Set to
+1
+for unattended sessions such as eval harnesses, CI jobs, or remote workers. Retries
+429
+and
+529
+capacity errors indefinitely instead of failing after
+CLAUDE_CODE_MAX_RETRIES
+attempts. The watchdog backs off up to 5 minutes between attempts, or until the limit resets when the response carries a rate-limit reset time, so a session that hits a usage limit waits out the remaining window. Requires Claude Code v2.1.186 or later
 CLAUDE_CODE_SAFE_MODE
 Set to
 1

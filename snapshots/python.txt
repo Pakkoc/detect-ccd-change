@@ -2555,11 +2555,15 @@ API_TIMEOUT_MS
 CLAUDE_CODE_MAX_RETRIES
 : maximum API retries. Default
 10
+, capped at
+15
 . Each retry gets its own
 API_TIMEOUT_MS
 window, so worst-case wall time is roughly
 API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)
-plus backoff.
+plus backoff. For unattended runs that need to wait through longer outages, set
+CLAUDE_CODE_RETRY_WATCHDOG=1
+to retry capacity errors indefinitely.
 CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
 : stall watchdog for subagents launched with
 run_in_background

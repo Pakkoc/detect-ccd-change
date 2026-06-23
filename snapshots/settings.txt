@@ -1147,6 +1147,19 @@ true
 .gitignore
 patterns are excluded from suggestions
 false
+respondToBashCommands
+Whether Claude responds after an input-box
+!
+shell command runs. Set to
+false
+to add the command output to context without a response. Default:
+true
+. See
+Shell mode with
+!
+prefix
+. Requires Claude Code v2.1.186 or later
+false
 showClearContextOnPlanAccept
 Show the “clear context” option on the plan accept screen. Defaults to
 false
@@ -1279,9 +1292,13 @@ teammates display:
 in-process
 (the default),
 auto
-(split panes when running inside tmux or iTerm2, in-process otherwise), or
+(split panes when running inside tmux or iTerm2, in-process otherwise),
 tmux
-(split panes using tmux or iTerm2, detected from your terminal). The default changed from
+(split panes using tmux or iTerm2, detected from your terminal), or
+iterm2
+(iTerm2 native split panes via the
+it2
+CLI, added in v2.1.186). The default changed from
 auto
 in v2.1.179.
 --teammate-mode

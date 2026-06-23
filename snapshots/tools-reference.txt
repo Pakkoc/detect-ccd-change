@@ -151,9 +151,7 @@ Sends a message to an
 agent team
 teammate, or
 resumes a subagent
-by its agent ID. Stopped subagents auto-resume in the background. Only available when
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-is set
+by its agent ID. Stopped subagents auto-resume in the background. Structured team-protocol messages require agent teams
 No
 ShareOnboardingGuide
 Uploads
@@ -346,7 +344,7 @@ Launching the subagent does not itself prompt for permission. The subagent’s o
 Foreground subagents
 show the same permission prompts you would see in the main conversation, at the moment each tool call happens.
 Background subagents
-do not show prompts. They run with the permissions already granted in the session and auto-deny any tool call that would otherwise prompt. After a denial, the subagent keeps going without that tool.
+surface permission prompts in your main session as of v2.1.186. The prompt names which subagent is asking, and pressing Esc denies that one tool call without stopping the subagent. Before v2.1.186, background subagents auto-denied any tool call that would otherwise prompt and continued without that tool.
 To limit what a subagent can reach in the first place, narrow its
 tools
 field, leave Bash off the list, or set deny rules in your settings, as described in

@@ -990,12 +990,15 @@ Subagents
 in
 .claude/agents/
 Yes
-Plugin settings in
+Settings
+in
 .claude/settings.json
+and
+.claude/settings.local.json
 enabledPlugins
 and
 extraKnownMarketplaces
-only
+keys only
 CLAUDE.md
 files,
 .claude/rules/

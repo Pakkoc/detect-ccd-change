@@ -208,7 +208,7 @@ Anthropic Trust Center
 Was this page helpful?
 Yes
 No
-Recommend your plugin from your CLI
+Recommend plugins for your org
 Data usage
 ⌘
 I

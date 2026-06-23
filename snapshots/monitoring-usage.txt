@@ -2702,6 +2702,8 @@ attribute on the event records how many attempts were made in total. A value gre
 CLAUDE_CODE_MAX_RETRIES
 (default
 10
+, capped at
+15
 ) indicates the request exhausted all retries on a transient error. A lower value indicates a non-retryable error such as a
 400
 response.

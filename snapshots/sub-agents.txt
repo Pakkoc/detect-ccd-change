@@ -1348,8 +1348,8 @@ Subagents can run in the foreground (blocking) or background (concurrent):
 Foreground subagents
 block the main conversation until complete. Permission prompts are passed through to you as they come up.
 Background subagents
-run concurrently while you continue working. They run with the permissions already granted in the session and auto-deny any tool call that would otherwise prompt. If a background subagent needs to ask clarifying questions, that tool call fails but the subagent continues.
-If a background subagent fails due to missing permissions, you can start a new foreground subagent with the same task to retry with interactive prompts.
+run concurrently while you continue working.
+As of v2.1.186, when a background subagent reaches a tool call that needs permission, the prompt surfaces in your main session and names the subagent that is asking. Approve to let the subagent continue, or press Esc to deny that one tool call without stopping the subagent. Before v2.1.186, background subagents auto-denied any tool call that would have prompted.
 Claude decides whether to run subagents in the foreground or background based on the task. You can also:
 Ask Claude to “run this in the background”
 Press
@@ -1368,7 +1368,7 @@ is set to
 1
 , every subagent spawn runs in the background regardless of the
 background
-field. Forks still surface permission prompts in your terminal as they occur; named subagents auto-deny anything that would prompt, as described above.
+field. Permission prompts from these background subagents surface in your main session as described above.
 ​
 Common patterns
 ​
@@ -1485,11 +1485,13 @@ tool with the agent’s ID as the
 to
 field to resume it. The
 SendMessage
-tool is only available when
+tool is always available for resuming subagents by agent ID or name. Structured team-protocol messages such as
+shutdown_request
+and
+plan_approval_response
+require
 agent teams
-are enabled via
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-.
+to be enabled.
 To resume a subagent, ask Claude to continue the previous work:
 Use the code-reviewer subagent to review the authentication module
 [Agent completes]
@@ -1619,7 +1621,7 @@ model
 field
 Permissions
 Prompts surface in your terminal
-Auto-denied
+Prompts surface in your main session
 when running in the background
 Prompt cache
 Shared with main session

@@ -122,6 +122,17 @@ Configure Model Context Protocol (MCP) servers
 See the
 Claude Code MCP documentation
 .
+claude mcp login <name>
+Run a configured MCP server’s OAuth flow without opening the interactive
+/mcp
+panel. Works for HTTP, SSE, and claude.ai connector servers. Add
+--no-browser
+over SSH to print the authorization URL instead of opening a browser, then paste the redirect URL back at the prompt. Requires Claude Code v2.1.186 or later. See
+Authenticate from the command line
+claude mcp login sentry
+claude mcp logout <name>
+Clear stored OAuth credentials for an MCP server. Requires Claude Code v2.1.186 or later
+claude mcp logout sentry
 claude plugin
 Manage Claude Code
 plugins
@@ -647,9 +658,11 @@ teammates display:
 in-process
 (default),
 auto
-, or
+,
 tmux
-. The default changed from
+, or
+iterm2
+(added in v2.1.186). The default changed from
 auto
 in v2.1.179. Overrides the
 teammateMode

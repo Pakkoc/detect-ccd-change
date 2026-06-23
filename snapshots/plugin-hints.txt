@@ -176,6 +176,6 @@ Was this page helpful?
 Yes
 No
 Plugin dependency versions
-Security
+Recommend plugins for your org
 ⌘
 I
