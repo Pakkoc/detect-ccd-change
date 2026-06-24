@@ -1932,6 +1932,8 @@ Commands
 : reference for built-in commands and bundled skills
 Permissions
 : control tool and skill access
+Claude Tag skills
+: project skills committed to a repo also load when that repo is used in a Claude Tag channel
 Was this page helpful?
 Yes
 No

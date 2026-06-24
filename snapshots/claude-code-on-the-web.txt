@@ -1167,6 +1167,8 @@ Security
 : isolation guarantees and data handling
 Data usage
 : what Anthropic retains from cloud sessions
+Claude Tag
+: an organization-managed @Claude in Slack that runs on the same cloud environment
 Was this page helpful?
 Yes
 No
