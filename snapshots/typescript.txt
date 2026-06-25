@@ -914,7 +914,9 @@ SettingSource
 All sources
 Which filesystem sources to load. Pass
 []
-to skip user, project, and local settings. Managed policy settings load in all cases
+to skip user, project, and local settings. Endpoint-managed policy loads in all cases. Server-managed settings are taken from
+serverManagedSettings
+when the host passes it, or read from the CLI’s on-disk cache otherwise; the snapshot does not fetch them from the network
 options.managedSettings
 Settings
 undefined
@@ -1334,7 +1336,9 @@ SettingSource
 CLI defaults (all sources)
 Control which filesystem settings to load. Pass
 []
-to disable user, project, and local settings. Managed policy settings load regardless. See
+to disable user, project, and local settings. Endpoint-managed policy loads regardless; server-managed settings are fetched when the session authenticates with an organization credential on an
+eligible configuration
+. See
 Use Claude Code features
 skills
 string[] | 'all'
@@ -2144,7 +2148,9 @@ is omitted or
 undefined
 ,
 query()
-loads the same filesystem settings as the Claude Code CLI: user, project, and local. Managed policy settings are loaded in all cases. See
+loads the same filesystem settings as the Claude Code CLI: user, project, and local. Endpoint-managed policy is loaded in all cases; server-managed settings are fetched when the session authenticates with an organization credential on an
+eligible configuration
+. See
 What settingSources does not control
 for inputs that are read regardless of this option, and how to disable them.
 ​

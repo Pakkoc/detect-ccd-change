@@ -2470,7 +2470,9 @@ None
 (CLI defaults: all sources)
 Control which filesystem settings to load. Pass
 []
-to disable user, project, and local settings. Managed policy settings load regardless. See
+to disable user, project, and local settings. Endpoint-managed policy loads regardless; server-managed settings are fetched when the session authenticates with an organization credential on an
+eligible configuration
+. See
 Use Claude Code features
 skills
 list[str] | Literal["all"] | None
@@ -2685,7 +2687,9 @@ is omitted or
 None
 ,
 query()
-loads the same filesystem settings as the Claude Code CLI: user, project, and local. Managed policy settings are loaded in all cases. See
+loads the same filesystem settings as the Claude Code CLI: user, project, and local. Endpoint-managed policy is loaded in all cases; server-managed settings are fetched when the session authenticates with an organization credential on an
+eligible configuration
+. See
 What settingSources does not control
 for inputs that are read regardless of this option, and how to disable them.
 ​

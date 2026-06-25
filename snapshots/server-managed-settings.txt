@@ -1,4 +1,6 @@
-Server-managed settings allow administrators to centrally configure Claude Code through a web-based interface on Claude.ai. Claude Code clients automatically receive these settings when users authenticate with their organization credentials.
+Server-managed settings allow administrators to centrally configure Claude Code through a web-based interface on Claude.ai. Claude Code clients automatically receive these settings when users authenticate with an organization OAuth login or a directly configured API key, on platforms where server-managed delivery is supported. See
+Platform availability
+.
 This approach is designed for organizations that do not have device management infrastructure in place, or need to manage settings for users on unmanaged devices.
 Server-managed settings are available for
 Claude for Teams
@@ -26,7 +28,9 @@ Settings delivered from Anthropic’s servers at authentication time
 Endpoint-managed settings
 Organizations with MDM or endpoint management
 Settings deployed to devices via MDM configuration profiles, registry policies, or managed settings files
-If your devices are enrolled in an MDM or endpoint management solution, endpoint-managed settings provide stronger security guarantees because the settings file can be protected from user modification at the OS level.
+If your devices are enrolled in an MDM or endpoint management solution, endpoint-managed settings provide stronger security guarantees because the settings file can be protected from user modification at the OS level. Endpoint-managed settings do not reach
+cloud sessions
+, so organizations using Claude Code on the web should configure server-managed settings as well.
 ​
 Configure server-managed settings
 1
@@ -260,10 +264,13 @@ flag, Claude Code skips security dialogs and applies settings without user appro
 Platform availability
 Server-managed settings require a direct connection to
 api.anthropic.com
-and are not available when using third-party model providers:
+, and delivery requires the session to authenticate with an organization OAuth login or a directly configured API key: keys returned by an
+apiKeyHelper
+script do not trigger the settings fetch. Server-managed settings are not available when using third-party model providers:
 Amazon Bedrock
 Google Vertex AI
 Microsoft Foundry
+Claude Platform on AWS
 Custom API endpoints via
 ANTHROPIC_BASE_URL
 or
@@ -299,6 +306,8 @@ CLAUDE_CODE_USE_MANTLE
 CLAUDE_CODE_USE_VERTEX
 ,
 CLAUDE_CODE_USE_FOUNDRY
+,
+CLAUDE_CODE_USE_ANTHROPIC_AWS
 , or a non-default
 ANTHROPIC_BASE_URL
 To detect runtime configuration changes, use

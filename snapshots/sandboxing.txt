@@ -321,6 +321,90 @@ instead, and project files would remain blocked by the
 denyRead
 rule.
 ​
+Protect credentials
+The
+sandbox.credentials
+setting declares credential files and environment variables that sandboxed commands must not access. Listed file paths are denied for reads inside the sandbox, the same block that
+filesystem.denyRead
+applies, and listed environment variables are unset before each sandboxed command runs. The dedicated
+credentials
+block keeps credential rules grouped with the environment-variable unset and separate from general filesystem rules. Requires Claude Code v2.1.187 or later.
+The example below blocks reads of the AWS credentials file and the SSH directory and removes
+GITHUB_TOKEN
+and
+NPM_TOKEN
+from the environment of sandboxed commands:
+{
+"sandbox"
+: {
+"enabled"
+:
+true
+,
+"credentials"
+: {
+"files"
+: [
+{
+"path"
+:
+"~/.aws/credentials"
+,
+"mode"
+:
+"deny"
+},
+{
+"path"
+:
+"~/.ssh"
+,
+"mode"
+:
+"deny"
+}
+],
+"envVars"
+: [
+{
+"name"
+:
+"GITHUB_TOKEN"
+,
+"mode"
+:
+"deny"
+},
+{
+"name"
+:
+"NPM_TOKEN"
+,
+"mode"
+:
+"deny"
+}
+]
+}
+}
+}
+Each entry carries
+"mode": "deny"
+, which is the only supported value. The explicit
+mode
+field keeps the schema forward-compatible with future modes. File paths follow the same
+prefix rules
+as
+sandbox.filesystem.*
+settings, and entries from every
+settings scope
+are merged. Because the only mode is
+deny
+, any scope can add restrictions but none can remove them.
+There is no built-in credential deny list, so only the files and variables you list are restricted. The setting affects sandboxed Bash commands only. To strip Anthropic and cloud provider credentials from all subprocesses regardless of sandboxing, set
+CLAUDE_CODE_SUBPROCESS_ENV_SCRUB
+.
+​
 How sandboxing works
 ​
 Filesystem isolation
@@ -334,9 +418,11 @@ Default read behavior
 ~/.aws/credentials
 and
 ~/.ssh/
-. Add them to
+. Use
+sandbox.credentials
+to block reads of these files and unset secret environment variables, or add the paths to
 denyRead
-to block them.
+.
 Blocked access
 : cannot modify files outside the current working directory and session temp directory without explicit permission, including shell configuration files such as
 ~/.bashrc
@@ -531,12 +617,12 @@ escape hatch is ignored, so commands that fail under the sandbox cannot be retri
 Two additions are worth considering alongside them. Add
 excludedCommands
 for any organization-approved tools that must run without isolation. Add
-denyRead
+sandbox.credentials
 entries for credential directories such as
 ~/.aws
 and
 ~/.ssh
-, which the default read policy still allows.
+and for secret environment variables, since the default read policy still allows them.
 The sandbox does not run on native Windows, so if your fleet includes Windows hosts, scope this configuration to macOS and Linux or have those users run Claude Code inside WSL2 or a container.
 ​
 Keep developers from widening the policy
@@ -726,9 +812,11 @@ or
 computer use in Desktop
 .
 Environment variables
-: sandboxed Bash commands inherit the parent process environment by default, including any credentials set there. To strip Anthropic and cloud provider credentials from subprocesses, set
+: sandboxed Bash commands inherit the parent process environment by default, including any credentials set there. Use
+sandbox.credentials
+to unset specific variables for sandboxed commands, or set
 CLAUDE_CODE_SUBPROCESS_ENV_SCRUB
-.
+to strip Anthropic and cloud provider credentials from all subprocesses.
 Subagents
 :
 subagents

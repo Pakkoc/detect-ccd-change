@@ -879,9 +879,12 @@ picker from your gateway’s
 /v1/models
 endpoint when
 ANTHROPIC_BASE_URL
-points at an Anthropic-compatible gateway such as LiteLLM, Kong, or an internal proxy. Off by default because gateways backed by a shared API key would otherwise show every user every model the key can access. Discovered models are still filtered by the
+points at an Anthropic-compatible gateway such as LiteLLM, Kong, or an internal proxy. Off by default because gateways backed by a shared API key would otherwise show every user every model the key can access. Discovered models are still filtered by an
 availableModels
-allowlist
+allowlist the session receives; deliver the list through
+MDM or a managed settings file
+, since
+server-managed delivery is not available on gateway configurations
 CLAUDE_CODE_ENABLE_OPUS_4_7_FAST_MODE
 Removed in v2.1.142, when the
 fast mode
@@ -1047,6 +1050,16 @@ Set to
 to spawn stdio MCP servers with only a safe baseline environment plus the server’s configured
 env
 , instead of inheriting your shell environment
+CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT
+Idle timeout in milliseconds for remote MCP tool calls (default: 300000, or 5 minutes). When an HTTP, SSE, WebSocket, or
+claude.ai connector
+MCP server sends no response and no progress notification for this long, the tool call aborts with an error instead of waiting for the wall-clock
+MCP_TOOL_TIMEOUT
+. Set to
+0
+to disable the idle check. Values below 1000 are raised to one second, and the value is capped at the effective
+MCP_TOOL_TIMEOUT
+. Does not apply to stdio or IDE servers. Requires Claude Code v2.1.187 or later
 CLAUDE_CODE_NATIVE_CURSOR
 Set to
 1

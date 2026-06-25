@@ -78,6 +78,13 @@ command or
 @
 file list
 to accept it. Hovering highlights the row under your cursor.
+Click an option in a select menu
+to choose it. This covers permission prompts,
+/model
+,
+/config
+, and other dialogs that show a list of options. Hovering shows a pointer on the row under your cursor.
+Requires Claude Code v2.1.187 or later.
 Click a collapsed tool result
 to expand it and see the full output. Click again to collapse. The tool call and its result expand together. Only messages that have more to show are clickable.
 Hold

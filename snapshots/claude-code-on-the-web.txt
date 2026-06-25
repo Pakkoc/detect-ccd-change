@@ -79,7 +79,9 @@ The cloud environment
 Each session runs in a fresh Anthropic-managed VM with your repository cloned. This section covers what’s available when a session starts and how to customize it.
 ​
 What’s available in cloud sessions
-Cloud sessions start from a fresh clone of your repository. Anything committed to the repo is available. Anything you’ve installed or configured only on your own machine is not.
+Cloud sessions start from a fresh clone of your repository. Anything committed to the repo is available. Anything you’ve installed or configured only on your own machine is not; your organization’s policy arrives separately through
+server-managed settings
+.
 Available in cloud sessions
 Why
 Your repo’s
@@ -114,6 +116,14 @@ Yes
 Installed at session start from the
 marketplace
 you declared. Requires network access to reach the marketplace source
+Your organization’s
+server-managed settings
+Yes
+Fetched from Anthropic’s servers when the session starts. See
+Surface coverage
+for how
+availableModels
+is enforced in cloud sessions. Settings deployed to your device through MDM or managed settings files do not apply, because the session runs on an Anthropic-managed VM
 Your user
 ~/.claude/CLAUDE.md
 No
@@ -149,7 +159,9 @@ No dedicated secrets store exists yet. See below
 Interactive auth like AWS SSO
 No
 Not supported. SSO requires browser-based login that can’t run in a cloud session
-To make configuration available in cloud sessions, commit it to the repo. A dedicated secrets store is not yet available. Both environment variables and setup scripts are stored in the environment configuration, visible to anyone who can edit that environment. If you need secrets in a cloud session, add them as environment variables with that visibility in mind.
+To make your own configuration available in cloud sessions, commit it to the repo; organization policy arrives separately through
+server-managed settings
+. A dedicated secrets store is not yet available. Both environment variables and setup scripts are stored in the environment configuration, visible to anyone who can edit that environment. If you need secrets in a cloud session, add them as environment variables with that visibility in mind.
 ​
 Installed tools
 Cloud sessions come with common language runtimes, build tools, and databases pre-installed. The table below summarizes what’s included by category.
@@ -397,7 +409,9 @@ Cloud environments only
 Both local and cloud
 SessionStart hooks can also be defined in your user-level
 ~/.claude/settings.json
-locally, but user-level settings don’t carry over to cloud sessions. In the cloud, only hooks committed to the repo run.
+locally, but user-level settings don’t carry over to cloud sessions. In the cloud, hooks come from the repo and from your organization’s
+server-managed settings
+.
 ​
 Install dependencies with a SessionStart hook
 To install dependencies only in cloud sessions, add a SessionStart hook to your repo’s

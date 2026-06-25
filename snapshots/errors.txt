@@ -97,6 +97,8 @@ There's an issue with the selected model
 Request errors
 Claude Opus is not available with the Claude Pro plan
 Request errors
+Model ... is restricted by your organization's settings
+Request errors
 thinking.type.enabled is not supported for this model
 Request errors
 max_tokens must be greater than thinking.budget_tokens
@@ -830,6 +832,36 @@ then
 See
 claude.com/pricing
 for which models each plan includes
+​
+Model is restricted by your organization’s settings
+Your organization admin has disabled this model in the Claude Console, or it is excluded by an
+availableModels
+allowlist in managed settings. When the restricted model was set with
+--model
+,
+ANTHROPIC_MODEL
+, or the
+model
+setting, Claude Code substitutes an allowed model and continues. Typing
+/model <name>
+for a restricted model is rejected with
+Run /model to choose a different model.
+and the session keeps its current model.
+Model "claude-opus-4-8" is restricted by your organization's settings. Using claude-sonnet-4-6 instead.
+What to do:
+Run
+/model
+to pick from the models your organization allows. Restricted models are hidden from the picker.
+If the restricted model was set in
+--model
+,
+ANTHROPIC_MODEL
+, or the
+model
+field of a settings file, remove or update that value so the notice does not recur on each launch
+If you need access to the restricted model, ask your organization admin to enable it. See
+Organization model restrictions
+.
 ​
 thinking.type.enabled is not supported for this model
 Your Claude Code version is older than the minimum for Opus 4.7 or Opus 4.8. The CLI sent a thinking configuration the model no longer accepts.

@@ -448,7 +448,9 @@ Model to use when this skill is active. The override applies for the rest of the
 /model
 , or
 inherit
-to keep the active model.
+to keep the active model. A value excluded by your organization’s
+availableModels
+allowlist is not used and the session keeps its current model.
 effort
 No
 Effort level

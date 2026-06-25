@@ -33,7 +33,7 @@ Run
 /voice
 to enable dictation. The first time you enable it, Claude Code runs a microphone check. On macOS, this triggers the system microphone permission prompt for your terminal if it has never been granted.
 /voice
-Voice mode enabled (hold). Hold Space to record. Dictation language: en (/config to change).
+Voice mode enabled (hold). Hold space to record. Dictation language: en (/config to change).
 /voice
 accepts an optional mode argument:
 Command
@@ -66,7 +66,7 @@ true
 }
 }
 While voice dictation is enabled, the input footer shows a
-hold Space to speak
+hold space to speak
 hint when the prompt is empty. The hint reflects your current
 voice:pushToTalk
 binding and updates if you
@@ -109,7 +109,7 @@ to stop recording and finalize the text. The transcript is inserted at your curs
 Space
 again to append another recording, or move the cursor first to insert speech elsewhere in the prompt:
 > refactor the auth middleware to ▮
-# hold Space, speak "use the new token validation helper"
+# hold space, speak "use the new token validation helper"
 > refactor the auth middleware to use the new token validation helper▮
 By default, releasing the key inserts the transcript and waits for you to press
 Enter

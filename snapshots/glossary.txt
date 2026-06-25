@@ -216,11 +216,17 @@ Hooks reference
 M
 ​
 Managed settings
-A settings file enforced org-wide by IT or DevOps, placed at an OS-level path outside
+Settings enforced org-wide by IT or DevOps, delivered from Anthropic’s servers through the admin console or deployed to devices at an OS-level path outside
 ~/.claude
-. Users cannot override or exclude managed settings. Use this for security policies, compliance requirements, or standardized tooling across a fleet.
+. Users cannot override managed settings from lower-precedence scopes. Server-managed delivery applies on
+eligible configurations
+; see
+Security considerations
+. Use this for security policies, compliance requirements, or standardized tooling across a fleet.
 Learn more:
 Server-managed settings
+·
+Settings files
 ​
 MCP (Model Context Protocol)
 An open standard for connecting AI tools to external data sources and services. MCP servers give Claude new tools for Slack, Jira, databases, browsers, and hundreds of other integrations. You connect servers via

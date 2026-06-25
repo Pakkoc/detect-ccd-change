@@ -614,7 +614,7 @@ to cancel and restore your original input
 Press
 Backspace
 on empty search to cancel
-The search displays matching commands with the search term highlighted, so you can find and reuse previous inputs.
+The search loads the 100 most recent unique prompts in the selected scope, with duplicates collapsed to the newest occurrence. Matching prompts display with the search term highlighted, so you can find and reuse previous inputs.
 ​
 Background bash commands
 Claude Code supports running bash commands in the background, allowing you to continue working while long-running processes execute.
@@ -751,6 +751,16 @@ Up
 /
 Down
 Scroll the answer
+Left
+/
+Right
+Step between this answer and your earlier
+/btw
+answers from the session.
+Left
+moves to older answers and
+Right
+returns toward the current one. Requires Claude Code v2.1.187 or later
 c
 Copy the answer to your clipboard as raw Markdown. Use this instead of mouse selection, which captures the hard-wrapped terminal rendering rather than the source text
 f

@@ -164,8 +164,11 @@ Input
 Behavior
 To disable
 Managed policy settings
-Always loaded when present on the host
-Remove the managed settings file
+Endpoint-managed policy, whether MDM plist, registry policy, or managed settings files, loads from the host;
+server-managed settings
+are fetched when the session authenticates with an organization OAuth login or a directly configured API key, on an
+eligible configuration
+Endpoint policy: remove the managed settings file, plist, or registry policy from the host. Server-managed settings: controlled by your org admin; cannot be disabled from the SDK
 ~/.claude.json
 global config
 Always read
@@ -204,7 +207,9 @@ plus
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1
 in
 env
-. See
+.
+Server-managed settings
+are fetched when the process authenticates with an organization credential; filesystem isolation does not remove them. See
 Secure deployment
 .
 ​

@@ -125,7 +125,13 @@ Whichever mechanism you choose, managed values take precedence over user and pro
 permissions.allow
 and
 permissions.deny
-merge entries from all sources, so developers can extend managed lists but not remove from them.
+merge entries from all sources, so developers can extend managed lists but not remove from them, with
+two exceptions
+where the managed value replaces lower layers rather than merging:
+fallbackModel
+and
+availableModels
+.
 See
 Server-managed settings
 and
@@ -188,6 +194,13 @@ claude agents
 /background
 , and the on-demand supervisor
 disableAgentView
+Model restrictions
+Restrict which models users can select, and optionally also apply the allowlist to the Default model selection. See
+surface coverage
+for how this setting reaches the CLI, web, and IDE
+availableModels
+,
+enforceAvailableModels
 Version floor
 Prevent auto-update from installing below an org-wide minimum
 minimumVersion

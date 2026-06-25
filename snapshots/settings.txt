@@ -22,7 +22,7 @@ Shared with team?
 Managed
 Server-managed settings, plist / registry, or system-level
 managed-settings.json
-All users on the machine
+All organization members for server-managed delivery; all users on the machine for plist, HKLM registry, and file delivery; the current user for HKCU registry delivery
 Yes (deployed by IT)
 User
 ~/.claude/
@@ -520,13 +520,14 @@ env
 availableModels
 Restrict which models users can select for the main session,
 subagents
+,
+skills
 , and the
 advisor
-. See
-Restrict model selection
-. See
+. Does not affect the Default option unless
 enforceAvailableModels
-to also constrain the default model
+is also set. See
+Restrict model selection
 ["sonnet", "haiku"]
 awaySummaryEnabled
 Show a one-line session recap when you return to the terminal after a few minutes away. Set to
@@ -794,17 +795,17 @@ List of specific MCP servers from
 files to approve
 ["memory", "github"]
 enforceAvailableModels
-When
+Extend the
+availableModels
+allowlist to the Default model. When
 true
-and
+in managed settings and
 availableModels
-is a non-empty list in managed or policy settings, the Default model is also constrained to the allowlist. See
-Restrict model selection
-for details and the
-merge behavior
-when
+is a non-empty array, the Default option falls back to the first allowlisted entry that is available. Has no effect when
 availableModels
-is set at multiple levels. Requires Claude Code v2.1.175 or later
+is unset or empty. See
+Enforce the allowlist for the Default model
+. Requires Claude Code v2.1.175 or later
 true
 env
 Environment variables applied to every session and to subprocesses Claude Code spawns from it.
@@ -1760,6 +1761,28 @@ paths from managed settings are respected.
 denyRead
 still merges from all sources. Default: false
 true
+credentials.files
+Credential files or directories that sandboxed commands cannot read. Applies the same read block as
+filesystem.denyRead
+; the separate key keeps credential paths grouped with
+credentials.envVars
+and apart from general filesystem rules. Each entry is
+{ "path": "...", "mode": "deny" }
+. Paths use the same
+prefixes
+as
+filesystem.*
+settings. Arrays are merged across all settings scopes. Only
+deny
+is supported. Requires Claude Code v2.1.187 or later.
+[{ "path": "~/.aws/credentials", "mode": "deny" }]
+credentials.envVars
+Environment variables to unset before running sandboxed commands. Each entry is
+{ "name": "...", "mode": "deny" }
+. Arrays are merged across all settings scopes. Only
+deny
+is supported. Requires Claude Code v2.1.187 or later.
+[{ "name": "GITHUB_TOKEN", "mode": "deny" }]
 network.allowUnixSockets
 (macOS only) Unix socket paths accessible in sandbox. Ignored on Linux and WSL2, where the seccomp filter cannot inspect socket paths; use
 allowAllUnixSockets
@@ -1862,8 +1885,10 @@ filesystem.allowWrite
 filesystem.denyWrite
 ,
 filesystem.denyRead
-, and
+,
 filesystem.allowRead
+, and
+credentials.files
 support these prefixes:
 Prefix
 Meaning
@@ -2322,7 +2347,7 @@ managed-settings.json
 ) > HKCU registry (Windows only). Only one managed source is used; sources do not merge across tiers. Within the file-based tier, drop-in files and the base file are merged together.
 Embedding hosts such as Claude Desktop can supply policy via the SDK
 managedSettings
-option. By default this is ignored when any managed-settings tier is present. Administrators can opt in by setting
+option. By default this is ignored when an admin-deployed managed source is present: server-managed settings, an MDM or OS-level policy, or a managed settings file. The user-writable HKCU registry fallback does not count as an admin-deployed source. Administrators can opt in by setting
 parentSettingsBehavior
 to
 "merge"
@@ -2371,12 +2396,15 @@ to
 ["/opt/company-tools"]
 and a user adds
 ["~/.kube"]
-, both paths are included in the final configuration. Two exceptions:
+, both paths are included in the final configuration.
+Two array settings do not merge this way:
 fallbackModel
-is an ordered chain where position carries meaning, so the highest-precedence file that defines it supplies the entire value.
-As of v2.1.175, a managed or policy
+is an ordered chain where position carries meaning: the highest-precedence file that defines it supplies the entire value.
 availableModels
-value replaces lower-precedence entries entirely. See
+:
+when the
+highest-precedence managed source
+defines it, that list applies as-is and user, project, and local entries cannot extend it. Across non-managed scopes the arrays merge as usual. See
 Merge behavior
 .
 ​
@@ -2433,11 +2461,8 @@ MCP servers
 Precedence
 : Higher-level configurations (Managed) override lower-level ones (User/Project)
 Inheritance
-: Settings merge across scopes; scalar values from higher-priority scopes override, and arrays concatenate. Exceptions:
-fallbackModel
-, where the highest-precedence scope supplies the whole chain, and
-availableModels
-, where a managed or policy value replaces lower-precedence entries
+: Settings merge across scopes; scalar values from higher-priority scopes override, and arrays concatenate, with two exceptions described in the
+array-merge Note
 ​
 System prompt
 Claude Code’s internal system prompt is not published. To add custom instructions, use

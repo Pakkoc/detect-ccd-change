@@ -559,7 +559,13 @@ picker, list its ID in
 availableModels
 in your
 settings file
-. This setting also restricts the picker to the listed entries, so include every alias you want to keep available:
+. This setting also restricts the picker to the listed entries. Listing
+anthropic.claude-haiku-4-5
+removes the bare
+haiku
+alias from the picker, so also list version prefixes or full IDs for the versions you want to keep selectable. See
+Merge behavior
+:
 {
 "availableModels"
 : [
@@ -567,7 +573,7 @@ settings file
 ,
 "sonnet"
 ,
-"haiku"
+"claude-haiku-4-5"
 ,
 "anthropic.claude-haiku-4-5"
 ]
