@@ -78,6 +78,13 @@ C:\
 without the
 PS
 when you’re in CMD.
+If the install command fails with
+syntax error near unexpected token '<'
+, a
+403
+, or another curl error, see
+Troubleshoot installation
+to match the error to a fix and for alternative install methods.
 Git for Windows
 is recommended on native Windows so Claude Code can use the Bash tool. If Git for Windows is not installed, Claude Code uses PowerShell as the shell tool instead. WSL setups do not need Git for Windows.
 Native installations automatically update in the background to keep you on the latest version.

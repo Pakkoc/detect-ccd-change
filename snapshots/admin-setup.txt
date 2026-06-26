@@ -195,7 +195,10 @@ claude agents
 , and the on-demand supervisor
 disableAgentView
 Model restrictions
-Restrict which models users can select, and optionally also apply the allowlist to the Default model selection. See
+availableModels
+filters which models appear in the picker. Adding
+enforceAvailableModels
+also constrains the auto-selected default model. See
 surface coverage
 for how this setting reaches the CLI, web, and IDE
 availableModels

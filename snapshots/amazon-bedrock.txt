@@ -563,7 +563,9 @@ settings file
 anthropic.claude-haiku-4-5
 removes the bare
 haiku
-alias from the picker, so also list version prefixes or full IDs for the versions you want to keep selectable. See
+alias from the picker, so also list version prefixes or full IDs for the versions you want to keep selectable. The Mantle ID and the
+haiku
+alias resolve to the same model family, so the merge keeps only the more specific entry. See
 Merge behavior
 :
 {
@@ -703,7 +705,7 @@ Claude Code Monitoring Implementation (Bedrock)
 Was this page helpful?
 Yes
 No
-Overview
+Feature availability
 Claude Platform on AWS
 ⌘
 I

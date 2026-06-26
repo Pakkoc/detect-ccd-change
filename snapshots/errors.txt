@@ -217,6 +217,14 @@ Retry the action; this usually succeeds on the next attempt
 Run
 claude --debug
 and repeat the action to see the underlying classifier response in the debug log
+When a separate API safety check blocked the classifier request because of earlier conversation content:
+Auto mode could not evaluate this action and is blocking it for safety — a safety check separate from auto mode blocked this request because of earlier conversation content — it isn't about the action itself — run with --debug for details
+What to do:
+This is not a decision about your action. A safety filter on the API was triggered by existing content in your conversation when auto mode sent the conversation to the classifier
+Retrying will not help; the same conversation content will trigger the filter again
+Switch to a different
+permission mode
+so you can approve the action when prompted, or start a fresh conversation without the triggering content
 When the conversation has grown larger than the classifier’s context window:
 Auto mode classifier transcript exceeded context window — falling back to manual approval (try /compact to reduce conversation size)
 In an interactive session, auto mode falls back to a normal permission prompt for that action so you can approve or deny it manually. In
@@ -491,7 +499,7 @@ If you are the admin and do not see an option to enable access, contact
 Anthropic support
 ​
 Routines are disabled by your organization’s policy
-Your Team or Enterprise admin has turned off routines at the organization level. The error appears when you try to create or run a routine, including from
+An Owner in your Team or Enterprise organization has turned off routines at the organization level. The error appears when you try to create or run a routine, including from
 /schedule
 and the
 Routines
@@ -499,7 +507,7 @@ UI on claude.ai/code.
 Routines are disabled by your organization's policy.
 This is a server-side setting, so it cannot be overridden from local settings, environment variables, or CLI flags.
 What to do:
-Ask your admin to enable the
+Ask an Owner in your organization to enable the
 Routines
 toggle at
 claude.ai/admin-settings/claude-code
@@ -565,7 +573,7 @@ Network configuration
 If you route through an LLM gateway or relay, set
 ANTHROPIC_BASE_URL
 to its address. See
-LLM gateway configuration
+Connect Claude Code to an LLM gateway
 for setup.
 Ensure your firewall allows the hosts listed in
 Network access requirements
@@ -757,8 +765,8 @@ What to do:
 Configure your gateway to forward the
 anthropic-beta
 header. See
-LLM gateway configuration
-.
+feature pass-through
+for what gateways must forward.
 As a fallback, set
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 before launching. This disables features that require the beta header so requests succeed through a gateway that cannot forward it.

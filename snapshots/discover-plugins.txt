@@ -427,7 +427,7 @@ claude plugin details
 .
 In Claude Code v2.1.187 and later, the Installed tab adds a
 Not used recently
-group for marketplace plugins you installed yourself but haven’t invoked in at least two weeks and across at least 10 sessions, and the detail view shows a
+group for marketplace plugins you installed yourself but haven’t invoked in at least two weeks, over a span of at least 10 sessions, and the detail view shows a
 Last used
 line for each plugin. Use these to find plugins that you no longer use but that are still adding startup and context cost, then disable or uninstall them.
 Plugins that your organization manages or that you load with

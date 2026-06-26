@@ -164,10 +164,11 @@ Input
 Behavior
 To disable
 Managed policy settings
-Endpoint-managed policy, whether MDM plist, registry policy, or managed settings files, loads from the host;
-server-managed settings
-are fetched when the session authenticates with an organization OAuth login or a directly configured API key, on an
+Endpoint-managed policy, such as an MDM plist, registry policy, or managed settings file, loads from the host.
+Server-managed settings
+are fetched on an
 eligible configuration
+when the session authenticates with an organization OAuth login or a directly configured API key
 Endpoint policy: remove the managed settings file, plist, or registry policy from the host. Server-managed settings: controlled by your org admin; cannot be disabled from the SDK
 ~/.claude.json
 global config

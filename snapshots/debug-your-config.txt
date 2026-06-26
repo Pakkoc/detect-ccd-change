@@ -109,7 +109,14 @@ field is a single string that uses
 |
 to match multiple tool names, for example
 "Edit|Write"
-. A misspelled tool name fails silently because the matcher never matches. An array value is a schema error: Claude Code shows a settings error notice,
+.
+On Claude Code v2.1.191 or later,
+,
+also works as a separator, so
+"Edit,Write"
+is equivalent. On earlier versions a comma falls through to regex evaluation and the matcher never matches, so use
+|
+if you aren’t on v2.1.191 yet. A misspelled tool name fails silently for the same reason. An array value is a schema error: Claude Code shows a settings error notice,
 /doctor
 reports the validation failure, and the hook entry is dropped so it won’t appear in
 /hooks
@@ -187,6 +194,20 @@ to match multiple tools, for example
 . See
 matcher patterns
 .
+Hook never fires
+matcher
+uses
+,
+as a separator on a version before v2.1.191
+Claude Code v2.1.191 or later treats
+,
+as a list separator like
+|
+. Earlier versions evaluate a comma as a literal character, so
+"Edit,Write"
+matches nothing. Use
+|
+instead, or upgrade Claude Code.
 Hook never fires
 matcher
 value is lowercase, for example

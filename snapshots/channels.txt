@@ -297,7 +297,7 @@ Admins control availability through two
 managed settings
 that users cannot override. The default depends on how you authenticate:
 claude.ai Team and Enterprise
-: channels are blocked until an admin enables them.
+: channels are blocked until an Owner enables them.
 Anthropic Console with API key authentication
 : channels are permitted by default. You only need this setting if your organization deploys managed settings.
 In all cases, no channel runs until a user opts it in for the session with
@@ -325,9 +325,9 @@ Pro and Max users without an organization skip these checks entirely: channels a
 .
 ​
 Enable channels for your organization
-Admins can enable channels from
+Enable channels for your organization from
 claude.ai → Admin settings → Claude Code → Channels
-, or by setting
+, which requires the Owner role, or by setting
 channelsEnabled
 to
 true

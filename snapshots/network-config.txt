@@ -224,6 +224,6 @@ Was this page helpful?
 Yes
 No
 Microsoft Foundry
-LLM gateway
+Development containers
 ⌘
 I

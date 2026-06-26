@@ -167,9 +167,11 @@ apiKeyHelper
 ANTHROPIC_API_KEY
 , and
 ANTHROPIC_AUTH_TOKEN
-apply to terminal CLI sessions only. Claude Desktop and cloud sessions use OAuth exclusively and do not call
+apply to the CLI and the surfaces that wrap it, including the VS Code extension, the Agent SDK, and GitHub Actions. Claude Desktop and cloud sessions do not call
 apiKeyHelper
-or read API key environment variables.
+or read these environment variables: they use OAuth, except desktop sessions running an
+organization-distributed third-party inference configuration
+, which authenticate with that configuration’s credential.
 ​
 Authentication precedence
 When multiple credentials are present, Claude Code chooses one in this order:

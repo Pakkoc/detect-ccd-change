@@ -296,6 +296,8 @@ claude --bare -p "query"
 Beta headers to include in API requests (API key users only)
 claude --betas interleaved-thinking
 --bg
+,
+--background
 Start the session as a
 background agent
 and return immediately. Prints the session ID and management commands. Combine with

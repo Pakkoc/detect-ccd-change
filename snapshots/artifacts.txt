@@ -154,7 +154,7 @@ Artifacts require every condition below. When one is not met, Claude writes a lo
 Requirement
 Available when
 Plan
-Team or Enterprise. On Team plans, artifacts are on by default. On Enterprise plans, an admin
+Team or Enterprise. On Team plans, artifacts are on by default. On Enterprise plans, an Owner
 enables them
 in claude.ai admin settings.
 Authentication
@@ -197,7 +197,7 @@ to
 permissions.deny
 ​
 Manage artifacts for your organization
-Admins on Team and Enterprise plans control artifacts from
+Owners on Team and Enterprise plans control artifacts from
 claude.ai admin settings
 . Artifact content is stored on Anthropic-operated infrastructure and is visible only to authenticated members of the publishing organization.
 ​

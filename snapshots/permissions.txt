@@ -1180,7 +1180,7 @@ C:\Program Files\ClaudeCode\managed-settings.json
 Settings files
 disableBypassPermissionsMode
 is typically placed in managed settings to enforce organizational policy, but it works from any scope. A user can set it in their own settings to lock themselves out of bypass mode.
-On Team and Enterprise plans, an admin enables or disables
+On Team and Enterprise plans, an Owner enables or disables
 Remote Control
 and
 web sessions

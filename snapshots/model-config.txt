@@ -14,7 +14,7 @@ Foundry: a deployment name
 Vertex: a version name
 ANTHROPIC_BASE_URL
 changes where requests are sent, not which model answers them. To route Claude through an LLM gateway, see
-LLM gateway configuration
+LLM gateways
 .
 ​
 Model aliases
@@ -397,7 +397,7 @@ is unset or empty: with
 availableModels: []
 , the Default model for the account type remains usable, so the setting cannot lock users out of every model. When
 availableModels
-is non-empty but no entry resolves to an allowed and available model, enforcement degrades and Default falls through to the account-type default, with a warning visible only under
+is non-empty but no entry resolves to an allowed and available model, enforcement is skipped and Default resolves to the account-type default, with a warning visible only under
 --debug
 . Keep at least one guaranteed-available entry in the list to avoid this.
 Deploy both keys in the
@@ -531,7 +531,7 @@ and the session starts on an allowed model. Typing
 for a restricted model is rejected with
 Model '<name>' is restricted by your organization's settings. Run /model to choose a different model.
 and the session keeps its current model.
-The two mechanisms compose: a model is selectable only when it is permitted by
+Both restrictions apply together: a model is selectable only when it is permitted by
 availableModels
 and not restricted by the organization. Organization restrictions are delivered to sessions on the Anthropic API and
 LLM gateway
@@ -658,7 +658,7 @@ The session then continues on that Opus model. To return to Fable 5, run
 .
 The fallback target is checked against
 availableModels
-. When it is blocked, no fallback occurs. The refusal surfaces as a normal error and the session’s model is unchanged.
+. When it is blocked, no fallback occurs. The refusal is shown as a normal error and the session’s model is unchanged.
 ​
 Check what triggered fallback
 Fallback can trigger on the first request of a session, before you send anything unusual, because the first request carries workspace context such as your CLAUDE.md content and git status. A repository that contains security or biology material can trip the classifier on that context alone.
@@ -996,7 +996,7 @@ picker without replacing the built-in aliases. This is useful for testing model 
 endpoint when
 CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
 is set, so this variable is needed only when discovery is disabled or does not return the model you want. See
-LLM gateway model selection
+gateway model discovery
 .
 This example sets all three variables to make a gateway-routed Opus deployment selectable:
 export

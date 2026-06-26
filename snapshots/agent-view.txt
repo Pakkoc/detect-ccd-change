@@ -517,6 +517,8 @@ before any session can use it.
 From your shell
 Pass
 --bg
+or its long form
+--background
 to start a session that goes straight to the background:
 claude
 --bg

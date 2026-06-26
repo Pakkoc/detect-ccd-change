@@ -316,6 +316,16 @@ forceLoginOrgUUID
 No organization is permitted to log in until the value is fixed.
 deniedMcpServers
 An individual invalid entry is stripped and the valid subset is enforced. A wholly invalid value is dropped with a warning, since denying every server would block servers the policy never named.
+sandbox.credentials
+An individual invalid entry in
+files
+or
+envVars
+is stripped with a warning and the valid subset is enforced. A wholly invalid
+credentials
+value is dropped with a warning while the rest of
+sandbox
+still applies. Applies in v2.1.191 and later.
 requiredMinimumVersion
 and
 requiredMaximumVersion
@@ -433,9 +443,11 @@ thinking
 parameter instead, and adaptive-reasoning models may still think
 true
 apiKeyHelper
-Custom script, to be executed in
+Custom command, run through the system shell (
 /bin/sh
-, to generate an auth value. This value will be sent as
+on macOS and Linux,
+cmd
+on Windows), to generate an auth value. This value will be sent as
 X-Api-Key
 and
 Authorization: Bearer

@@ -1053,7 +1053,7 @@ env
 CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT
 Idle timeout in milliseconds for remote MCP tool calls (default: 300000, or 5 minutes). When an HTTP, SSE, WebSocket, or
 claude.ai connector
-MCP server sends no response and no progress notification for this long, the tool call aborts with an error instead of waiting for the wall-clock
+MCP server sends no response and no progress notification for this long, the tool call aborts with an error instead of waiting for the overall
 MCP_TOOL_TIMEOUT
 . Set to
 0
@@ -1360,7 +1360,9 @@ Claude Platform on AWS
 CLAUDE_CODE_SKIP_BEDROCK_AUTH
 Skip AWS authentication for Bedrock (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_FOUNDRY_AUTH
-Skip Azure authentication for Microsoft Foundry (for example, when using an LLM gateway)
+Skip Azure authentication for Microsoft Foundry. For a gateway, set the credential in
+ANTHROPIC_FOUNDRY_API_KEY
+instead; without an API key this variable leaves the Foundry client unable to send requests
 CLAUDE_CODE_SKIP_MANTLE_AUTH
 Skip AWS authentication for Bedrock Mantle (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_PROMPT_HISTORY

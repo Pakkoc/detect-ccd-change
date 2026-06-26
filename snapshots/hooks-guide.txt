@@ -307,7 +307,14 @@ This hook uses the
 PostToolUse
 event with an
 Edit|Write
-matcher, so it runs only after file-editing tools. The command extracts the edited file path with
+matcher, so it runs only after file-editing tools.
+On Claude Code v2.1.191 or later you can also write the matcher as
+Edit,Write
+, since
+|
+and
+,
+are interchangeable list separators for tool-name matchers on those versions. The command extracts the edited file path with
 jq
 and passes it to Prettier. Add this to
 .claude/settings.json

@@ -7,7 +7,7 @@ set
 CLAUDE_CODE_ENABLE_AUTO_MODE
 . If Claude Code reports auto mode as unavailable for your account, check the
 full requirements
-, which also cover the supported models and admin enablement on Team and Enterprise plans.
+, which also cover the supported models and Owner enablement on Team and Enterprise plans.
 Out of the box, the classifier trusts only the working directory and the current repo’s configured remotes. Actions like pushing to your company’s source-control org or writing to a team cloud bucket are blocked until you add them to
 autoMode.environment
 .
