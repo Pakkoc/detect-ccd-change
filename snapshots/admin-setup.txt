@@ -54,7 +54,7 @@ Google Vertex AI
 You want to inherit existing GCP compliance controls and billing
 Microsoft Foundry
 You want to inherit existing Azure compliance controls and billing
-Some Claude Code features require a Claude.ai account.
+Some Claude Code features require a claude.ai account.
 Claude Code on the web
 ,
 Routines
@@ -64,7 +64,7 @@ Code Review
 Remote Control
 , and the
 Chrome extension
-are not available through Console API keys or cloud-provider credentials alone. If you deploy through Bedrock, Vertex, or Foundry, plan whether developers also need Claude for Teams or Enterprise seats. Each feature page lists its plan requirements.
+aren’t available through Console API keys or cloud-provider credentials alone. If you deploy through Bedrock, Vertex, or Foundry, plan whether developers also need Claude for Teams or Enterprise seats. Each feature page lists its plan requirements.
 For the full provider comparison covering authentication, regions, and feature parity, see the
 enterprise deployment overview
 . Each provider’s auth setup is in
@@ -83,7 +83,7 @@ Delivery
 Priority
 Platforms
 Server-managed
-Claude.ai admin console
+claude.ai admin console
 Highest
 All
 plist / registry policy
@@ -110,11 +110,11 @@ Windows only
 Server-managed settings reach devices at authentication time and refresh hourly during active sessions, with no endpoint infrastructure. They require a Claude for Teams or Enterprise plan, so deployments on other providers need one of the file-based or OS-level mechanisms instead.
 If your organization mixes providers, configure
 server-managed settings
-for Claude.ai users plus a
+for claude.ai users plus a
 file-based or plist/registry fallback
 so other users still receive managed policy.
 The plist and HKLM registry locations work with any provider and resist tampering because they require admin privileges to write. The Windows user registry at HKCU is writable without elevation, so treat it as a convenience default rather than an enforcement channel.
-By default WSL reads only the Linux file path at
+By default, WSL reads only the Linux file path at
 /etc/claude-code
 . To extend your Windows registry and
 C:\Program Files\ClaudeCode
@@ -125,13 +125,13 @@ Whichever mechanism you choose, managed values take precedence over user and pro
 permissions.allow
 and
 permissions.deny
-merge entries from all sources, so developers can extend managed lists but not remove from them, with
+merge entries from all sources, so developers can extend managed lists but not remove from them. For
 two exceptions
-where the managed value replaces lower layers rather than merging:
+,
 fallbackModel
 and
 availableModels
-.
+, the managed value replaces lower layers rather than merging.
 See
 Server-managed settings
 and
@@ -160,7 +160,7 @@ sandbox.enabled
 ,
 sandbox.network.allowedDomains
 Managed policy CLAUDE.md
-Org-wide instructions loaded in every session, cannot be excluded
+Org-wide instructions loaded in every session, can’t be excluded
 File at the managed policy path
 MCP server control
 Restrict which MCP servers users can add or connect to, or deploy a fixed set
@@ -246,7 +246,7 @@ claude.ai/analytics/claude-code
 .
 ​
 Review data handling
-On Team, Enterprise, Claude API, and cloud provider plans, Anthropic does not train models on your code or prompts. Your API provider determines retention and compliance posture.
+On Team, Enterprise, Claude API, and cloud provider plans, Anthropic doesn’t train models on your code or prompts. Your API provider determines retention and compliance posture.
 Topic
 What to know
 Where to start

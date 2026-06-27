@@ -27,13 +27,6 @@ TaskCompleted
 TeammateIdle
 hook payloads
 carries the session-derived name and is deprecated.
-This page covers:
-When to use agent teams
-, including best use cases and how they compare with subagents
-Starting a team
-Controlling teammates
-, including display modes, task assignment, and delegation
-Best practices for parallel work
 ​
 When to use agent teams
 Agent teams are most effective for tasks where parallel exploration adds real value. See

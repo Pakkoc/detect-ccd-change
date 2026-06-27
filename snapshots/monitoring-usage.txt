@@ -91,10 +91,10 @@ Example managed settings configuration:
 "Authorization=Bearer example-token"
 }
 }
-Managed settings can be distributed via MDM (Mobile Device Management) or other device management solutions. Environment variables defined in the managed settings file have high precedence and cannot be overridden by users.
-Claude Code does not pass
+Managed settings can be distributed via MDM (Mobile Device Management) or other device management solutions. Environment variables defined in the managed settings file have high precedence and can’t be overridden by users.
+Claude Code doesn’t pass
 OTEL_*
-environment variables to the subprocesses it spawns, including the Bash tool, hooks, MCP servers, and language servers. An OpenTelemetry-instrumented application that you run through the Bash tool does not inherit Claude Code’s exporter endpoint or headers, so set those variables directly in the command if that application needs to export its own telemetry.
+environment variables to the subprocesses it spawns, including the Bash tool, hooks, MCP servers, and language servers. An OpenTelemetry-instrumented application that you run through the Bash tool doesn’t inherit Claude Code’s exporter endpoint or headers, so set those variables directly in the command if that application needs to export its own telemetry.
 ​
 Configuration details
 ​
@@ -724,7 +724,7 @@ export
 OTEL_RESOURCE_ATTRIBUTES
 =
 "department=engineering,team.id=platform,cost_center=eng-123"
-These custom attributes will be included in all metrics and events, allowing you to:
+These custom attributes are included in all metrics and events, allowing you to:
 Filter metrics by team or department
 Track costs per cost center
 Create team-specific dashboards
@@ -741,28 +741,23 @@ OTEL_METRICS_INCLUDE_RESOURCE_ATTRIBUTES=false
 . See
 Metrics cardinality control
 .
-Important formatting requirements for OTEL_RESOURCE_ATTRIBUTES:
 The
 OTEL_RESOURCE_ATTRIBUTES
 environment variable uses comma-separated key=value pairs with strict formatting requirements:
 No spaces allowed
-: Values cannot contain spaces. For example,
+: values can’t contain spaces. For example,
 user.organizationName=My Company
 is invalid
 Format
-: Must be comma-separated key=value pairs:
+: must be comma-separated key=value pairs:
 key1=value1,key2=value2
 Allowed characters
-: Only US-ASCII characters excluding control characters, whitespace, double quotes, commas, semicolons, and backslashes
+: only US-ASCII characters excluding control characters, whitespace, double quotes, commas, semicolons, and backslashes
 Special characters
-: Characters outside the allowed range must be percent-encoded
-Examples:
-# ❌ Invalid - contains spaces
-export
-OTEL_RESOURCE_ATTRIBUTES
-=
-"org.name=John's Organization"
-# ✅ Valid - use underscores or camelCase instead
+: characters outside the allowed range must be percent-encoded
+For a value that would need a space, use underscores or camelCase instead. The following examples set
+org.name
+with each form:
 export
 OTEL_RESOURCE_ATTRIBUTES
 =
@@ -771,16 +766,16 @@ export
 OTEL_RESOURCE_ATTRIBUTES
 =
 "org.name=JohnsOrganization"
-# ✅ Valid - percent-encode special characters if needed
+You can percent-encode any character, not only the excluded ones. This example encodes both the space and the apostrophe:
 export
 OTEL_RESOURCE_ATTRIBUTES
 =
 "org.name=John%27s%20Organization"
-Note: wrapping values in quotes doesn’t escape spaces. For example,
+Wrapping values in quotes doesn’t escape spaces. For example,
 org.name="My Company"
 results in the literal value
 "My Company"
-(with quotes included), not
+with the quotes included, not
 My Company
 .
 ​
@@ -1130,7 +1125,7 @@ applied to the request:
 "xhigh"
 , or
 "max"
-. Absent when the model does not support effort.
+. Absent when the model doesn’t support effort.
 agent.name
 : Subagent type that issued the request. Built-in agent names and agents from official-marketplace plugins appear verbatim. Other user-defined agent names are replaced with
 "custom"
@@ -1256,7 +1251,7 @@ language
 for unrecognized file extensions.
 ​
 Active time counter
-Tracks actual time spent actively using Claude Code, excluding idle time. This metric is incremented during user interactions (typing, reading responses) and during CLI processing (tool execution, AI response generation).
+Tracks actual time spent actively using Claude Code, excluding idle time. This metric is incremented during user interactions, such as typing and reading responses, and during CLI processing, such as tool execution and AI response generation.
 Attributes
 :
 All
@@ -1306,9 +1301,9 @@ event.sequence
 prompt_length
 : Length of the prompt
 prompt
-: Prompt content (redacted by default, enable with
+: Prompt content. Redacted by default. Set
 OTEL_LOG_USER_PROMPTS=1
-)
+to include it
 command_name
 : Command name when the prompt invokes one. Built-in and bundled command names such as
 compact
@@ -1376,7 +1371,7 @@ OTEL_LOG_TOOL_DETAILS=1
 decision_type
 : Always
 "accept"
-, since this event is only emitted after the tool runs (rejected calls don’t produce a tool result)
+, since this event is only emitted after the tool runs. Rejected calls don’t produce a tool result
 decision_source
 : Where the permission decision came from. One of
 "config"
@@ -1498,7 +1493,7 @@ applied to the request:
 "xhigh"
 , or
 "max"
-. Absent when the model does not support effort.
+. Absent when the model doesn’t support effort.
 agent.name
 ,
 skill.name
@@ -1563,7 +1558,7 @@ query_source
 effort
 :
 Effort level
-applied to the request. Absent when the model does not support effort.
+applied to the request. Absent when the model doesn’t support effort.
 agent.name
 ,
 skill.name
@@ -1584,7 +1579,7 @@ Logged when an API request returns
 stop_reason: "refusal"
 . Refusals arrive on a successful response stream rather than as an HTTP error, so the
 api_error
-event does not fire for them. This event lets you track refusal frequency and group refusals by the same attributes as
+event doesn’t fire for them. This event lets you track refusal frequency and group refusals by the same attributes as
 api_request
 and
 api_error
@@ -1633,7 +1628,7 @@ attempt
 effort
 :
 Effort level
-applied to the request. Absent when the model does not support effort.
+applied to the request. Absent when the model doesn’t support effort.
 server_fallback_hop
 :
 true
@@ -1663,7 +1658,7 @@ when the response carried no category or a value outside that set. Absent when
 server_fallback_hop
 is
 true
-, because hop blocks do not carry
+, because hop blocks don’t carry
 stop_details
 .
 has_explanation
@@ -1837,7 +1832,7 @@ source
 --allowedTools
 or
 --disallowedTools
-flags, the active permission mode, a session-scoped grant from an earlier prompt in the same interactive CLI session, or because the tool is inherently safe. The event does not indicate which of these sources matched.
+flags, the active permission mode, a session-scoped grant from an earlier prompt in the same interactive CLI session, or because the tool is inherently safe. The event doesn’t indicate which of these sources matched.
 "hook"
 : A
 PreToolUse
@@ -2210,7 +2205,7 @@ when the session was started with
 --safe-mode
 ,
 "false"
-otherwise. In safe mode this event reports configured inventory only; the plugin’s commands, skills, hooks, and MCP servers do not load.
+otherwise. In safe mode this event reports configured inventory only; the plugin’s commands, skills, hooks, and MCP servers don’t load.
 Requires Claude Code v2.1.169 or later
 ​
 Skill activated event
@@ -2519,7 +2514,7 @@ OTEL_LOG_TOOL_DETAILS=1
 are enabled
 ​
 Hook plugin metrics event
-Logged when an official-marketplace plugin hook emits per-invocation metrics. Only plugins installed from an official Anthropic marketplace can emit these. Third-party marketplace plugins and user-configured hooks do not emit to this event. Use this event to monitor plugin behavior such as finding rates, costs, and durations from your own observability stack.
+Logged when an official-marketplace plugin hook emits per-invocation metrics. Only plugins installed from an official Anthropic marketplace can emit these. Third-party marketplace plugins and user-configured hooks don’t emit to this event. Use this event to monitor plugin behavior such as finding rates, costs, and durations from your own observability stack.
 Event Name
 :
 claude_code.hook_plugin_metrics
@@ -2695,7 +2690,8 @@ claude_code.cost.usage
 , and
 from v2.1.172,
 claude_code.lines_of_code.count
-. Per-model breakdowns of commits can only be approximated by joining against the token or cost metrics on
+.
+Per-model breakdowns of commits can only be approximated by joining against the token or cost metrics on
 session.id
 , since one session can span multiple models. Filter the token or cost side to rows where
 query_source
@@ -2724,17 +2720,17 @@ event exists after the error.
 ​
 Event analysis
 The event data provides detailed insights into Claude Code interactions:
-Tool Usage Patterns
+Tool usage patterns
 : analyze tool result events to identify:
 Most frequently used tools
 Tool success rates
 Average tool execution times
 Error patterns by tool type
-Performance Monitoring
+Performance monitoring
 : track API request durations and tool execution times to identify performance bottlenecks.
 ​
 Audit security events
-OpenTelemetry events are the audit data source for Claude Code activity. Every event carries identity attributes that tie tool calls, MCP activity, and permission decisions back to the user who triggered them, and the OTLP logs exporter can deliver these events to any Security Information and Event Management (SIEM) platform with an OTLP receiver or to an OpenTelemetry Collector that forwards to your SIEM.
+OpenTelemetry events are the audit data source for Claude Code activity. Every event carries identity attributes that tie tool calls, MCP activity, and permission decisions back to the user who triggered them. The OTLP logs exporter can deliver these events to any Security Information and Event Management (SIEM) platform with an OTLP receiver, or to an OpenTelemetry Collector that forwards to your SIEM.
 ​
 Attribute actions to users
 The
@@ -2752,7 +2748,7 @@ user.id
 and the per-session
 session.id
 .
-MCP tool calls, Bash commands, and file edits are therefore attributed to the developer who started the session. Claude Code does not act under a separate service account; the identity recorded on each event is the developer’s own Claude account.
+MCP tool calls, Bash commands, and file edits are therefore attributed to the developer who started the session. Claude Code doesn’t act under a separate service account; the identity recorded on each event is the developer’s own Claude account.
 When Claude Code authenticates with a direct API key, or against Bedrock, Vertex AI, or Microsoft Foundry, there is no Claude account in the session and only
 user.id
 and

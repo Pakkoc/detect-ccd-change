@@ -79,6 +79,9 @@ Agent
 in
 allowedTools
 to auto-approve subagent invocations without a permission prompt.
+Most examples on this page print only the final result. To confirm that Claude delegated to a subagent rather than answering directly, see
+Detecting subagent invocation
+.
 Python
 TypeScript
 import
@@ -263,7 +266,11 @@ permissionMode
 PermissionMode
 No
 Permission mode for tool execution within this agent
-In the Python SDK, these field names use camelCase to match the wire format. See the
+In the Python SDK, multi-word field names such as
+disallowedTools
+and
+mcpServers
+keep their camelCase spelling to match the wire format rather than following Python’s snake_case convention. See the
 AgentDefinition
 reference
 for details.
@@ -729,6 +736,8 @@ session_id
 =
 None
 # First invocation - run the endpoint-finder subagent
+try
+:
 async
 for
 message
@@ -794,6 +803,21 @@ hasattr
 ):
 print
 (message.result)
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result,
+# so session_id and agent_id have already been captured by the loop above.
+print
+(
+f
+"Session ended with an error:
+{
+error
+}
+"
+)
 # Second invocation - resume and ask follow-up
 if
 agent_id
@@ -843,6 +867,12 @@ hasattr
 ):
 print
 (message.result)
+else
+:
+print
+(
+"No agentId found in the first query, so there is no subagent to resume."
+)
 asyncio.run(main())
 Subagent transcripts persist independently of the main conversation:
 Main conversation compaction

@@ -120,7 +120,7 @@ voice
 settings object to send the prompt automatically when you release the key, as long as the transcript is at least three words long.
 ​
 Tap to record and send
-Tap mode toggles recording with a single keypress: tap once to start, speak, then tap again to send the prompt. There is no warmup, and you do not need to keep the key held.
+Tap mode toggles recording with a single keypress: tap once to start, speak, then tap again to send the prompt. There is no warmup, and you don’t need to keep the key held.
 Enable tap mode with
 /voice tap
 . With the prompt input empty, tap
@@ -243,7 +243,7 @@ Space
 , or use a modifier combination like
 meta+k
 to start recording on the first keypress with no warmup. Tap mode has no warmup, so most keys work.
-Some keys are not delivered to terminal applications and cannot be bound at all. For example,
+Some keys are not delivered to terminal applications and can’t be bound at all. For example,
 Caps Lock
 shows an error if you try to bind it. See
 customize keyboard shortcuts
@@ -283,7 +283,7 @@ Space
 in hold mode
 : watch the prompt input while you hold. If spaces keep accumulating, voice dictation is likely off; run
 /voice hold
-to enable it. If only one or two spaces appear and then nothing, voice dictation is on but hold detection is not triggering. Hold detection requires your terminal to send key-repeat events, so it cannot detect a held key if key-repeat is disabled at the OS level. Switch to tap mode with
+to enable it. If only one or two spaces appear and then nothing, voice dictation is on but hold detection is not triggering. Hold detection requires your terminal to send key-repeat events, so it can’t detect a held key if key-repeat is disabled at the OS level. Switch to tap mode with
 /voice tap
 to avoid the key-repeat requirement.
 Tapping

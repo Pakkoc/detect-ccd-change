@@ -5359,7 +5359,7 @@ Description
 script
 string
 Inline workflow script. Must begin with
-export const meta = { name, description, phases }
+export const meta = { name, description }
 as a literal, followed by the script body using
 agent()
 ,
@@ -5368,6 +5368,11 @@ parallel()
 pipeline()
 , and
 phase()
+. An optional
+phases
+array in
+meta
+groups agents under named stages in the progress view
 name
 string
 Name of a built-in workflow or one saved in

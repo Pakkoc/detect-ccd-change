@@ -688,7 +688,7 @@ description
 input_schema
 ,
 cache_control
-) are preserved.
+) are preserved
 CLAUDE_CODE_DISABLE_FAST_MODE
 Set to
 1
@@ -1032,7 +1032,7 @@ Set the maximum number of output tokens for most requests. Defaults and caps var
 max output tokens
 . Increasing this value reduces the effective context window available before
 auto-compaction
-triggers.
+triggers
 CLAUDE_CODE_MAX_RETRIES
 Override the number of times to retry failed API requests (default: 10).
 Capped at 15 as of v2.1.186. For unattended sessions that need to wait through longer outages, set
@@ -1071,7 +1071,7 @@ to make
 /init
 run an interactive setup flow. The flow asks which files to generate, including CLAUDE.md, skills, and hooks, before exploring the codebase and writing them. Without this variable,
 /init
-generates a CLAUDE.md automatically without prompting.
+generates a CLAUDE.md automatically without prompting
 CLAUDE_CODE_NO_FLICKER
 Set to
 1
@@ -1101,10 +1101,7 @@ claude setup-token
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE
 Removed in v2.1.160 and now a no-op. Previously pinned
 fast mode
-to Claude Opus 4.6 instead of the current default. To run fast mode on Opus 4.6 until it is retired, select the model with
-/model
-first, then
-/fast on
+to Claude Opus 4.6 instead of the current default
 CLAUDE_CODE_OTEL_DIAG_STDERR
 Set to
 1

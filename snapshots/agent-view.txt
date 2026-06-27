@@ -82,7 +82,7 @@ claude agents
 to open agent view. It takes over the full terminal and lists every session grouped by state, with pinned sessions and the ones that need you at the top. Each row shows the session’s name, current activity, and how long ago it last changed.
 By default the list shows every background session you’ve started, across all your projects. A session working in one repository and another in a different worktree both appear here, regardless of which directory you opened agent view from. To narrow the list to one project, pass
 --cwd
-(requires Claude Code v2.1.141 or later):
+, which requires Claude Code v2.1.141 or later:
 claude
 agents
 --cwd
@@ -304,7 +304,8 @@ above: a session moves to
 Ready for review
 when it has an open pull request, and
 Completed
-collects finished, failed, and stopped sessions together. Press
+collects finished, failed, and stopped sessions together.
+Press
 Ctrl+S
 to group by directory instead. Your choice persists across runs.
 Within a group:
@@ -510,7 +511,7 @@ Carrying
 --allow-dangerously-skip-permissions
 through keeps
 bypassPermissions
-reachable in the backgrounded session, but it does not grant anything new. The mode still requires the same one-time interactive acceptance described in
+reachable in the backgrounded session, but it doesn’t grant anything new. The mode still requires the same one-time interactive acceptance described in
 Permission mode, model, and effort
 before any session can use it.
 ​
@@ -568,12 +569,12 @@ claude
 --bg
 --exec
 'pytest -x'
-The command runs as a PTY-backed job and appears as a row in agent view, with the most recent line of output as its status. A shell job runs the command in place of Claude, so no model is invoked and the output is not sent to any session.
+The command runs as a PTY-backed job and appears as a row in agent view, with the most recent line of output as its status. A shell job runs the command in place of Claude, so no model is invoked and the output isn’t sent to any session.
 To see the output, attach to the row, press
 Space
 to peek without attaching, or run
 claude logs <id>
-from your shell. The captured output stays in memory and is not written to disk. The row and its output clean up automatically about five minutes after the command exits, so read it before then if you need the result.
+from your shell. The captured output stays in memory and isn’t written to disk. The row and its output clean up automatically about five minutes after the command exits, so read it before then if you need the result.
 ​
 How file edits are isolated
 Every background session, whether started from agent view,
@@ -618,9 +619,9 @@ Outside a git repository, sessions write to the working directory directly and a
 WorktreeCreate
 hook
 and Claude isolates edits the same way it does for git.
-Deleting a session in agent view (
+Deleting a session in agent view with
 Ctrl+X
-twice) removes a worktree Claude created for it, including any uncommitted changes, so merge or push the changes you want to keep first. Deleting from the shell with
+twice removes a worktree Claude created for it, including any uncommitted changes, so merge or push the changes you want to keep first. Deleting from the shell with
 claude rm
 keeps a worktree that has uncommitted changes and prints its path so you can clean it up yourself. A worktree you created yourself and started the session inside is left in place either way.
 To find a session’s worktree path, peek the session or attach and check its working directory.
@@ -639,7 +640,8 @@ setting
 in your user settings. Set it by selecting a model in the
 /model
 picker
-, or edit the setting directly. To override it for the whole agent view session, pass
+, or edit the setting directly.
+To override the dispatch default for the whole agent view session, pass
 --model
 when opening agent view. See
 Permission mode, model, and effort
@@ -654,7 +656,7 @@ marker, and sessions you dispatch afterward use it. Type
 /model default
 to clear the override and return to the dispatch default. This override lasts for the rest of the current
 claude agents
-run, does not write to your settings file, and requires Claude Code v2.1.172 or later.
+run, doesn’t write to your settings file, and requires Claude Code v2.1.172 or later.
 The following example dispatches one session on Opus and the next on Sonnet:
 /model opus
 refactor auth
@@ -698,7 +700,7 @@ aliases follow the shell that dispatched the session. Gateway endpoint variables
 ANTHROPIC_BASE_URL
 and its paired
 ANTHROPIC_AUTH_TOKEN
-do not. See
+don’t. See
 the supervisor process
 for how background sessions source provider settings and credentials.
 The
@@ -757,7 +759,7 @@ high
 --agent
 sets the
 subagent
-used when a dispatch prompt does not name one, either with
+used when a dispatch prompt doesn’t name one, either with
 @name
 or as the first word. It defaults to the
 agent
@@ -848,7 +850,7 @@ Repeat
 --mcp-config
 once per value. The space-separated form, such as
 --add-dir a b c
-, is not supported with
+, isn’t supported with
 claude agents
 .
 The following example opens agent view with a settings override and one extra directory:
@@ -964,7 +966,7 @@ CLAUDE_CODE_USE_BEDROCK
 and
 ANTHROPIC_DEFAULT_*_MODEL
 aliases are read from the shell that dispatched each session and are applied to its worker.
-A background session does not inherit gateway endpoint variables such as
+A background session doesn’t inherit gateway endpoint variables such as
 ANTHROPIC_BASE_URL
 , the equivalent Bedrock, Vertex, and Foundry base URL variables, or a paired
 ANTHROPIC_AUTH_TOKEN
@@ -990,7 +992,7 @@ An empty row left over from pressing
 ←
 that was never given a prompt is removed entirely after about five minutes so the list clears on its own. Sessions started with
 claude --bg
-and sessions waiting on a setup prompt such as a trust dialog are not removed this way.
+and sessions waiting on a setup prompt such as a trust dialog aren’t removed this way.
 When the host runs low on memory, the supervisor stops idle non-pinned sessions first and stops idle pinned ones only if that freed nothing.
 The supervisor watches the installed Claude Code binary on disk and restarts into the new version after the regular
 auto-updater
@@ -1056,7 +1058,7 @@ claude agents
 prints a count followed by your configured subagents and then exits, agent view is unavailable in your environment. Earlier versions didn’t open agent view in every environment, including when connected through Bedrock, Vertex AI, or Foundry. Run
 claude update
 to install the latest version.
-If agent view still does not open after updating, check whether it has been
+If agent view still doesn’t open after updating, check whether it has been
 turned off
 by a setting or environment variable.
 ​
@@ -1087,7 +1089,7 @@ investigate the flaky checkout test
 ​
 Sessions show as failed after shutdown
 Shutting down or restarting your machine stops running background sessions, so they show as failed when you next open agent view. Attach, peek, or reply to any of them and the session restarts from where it left off.
-Sleep alone does not cause this. Sessions are preserved across sleep and the supervisor reconnects to them on wake.
+Sleep alone doesn’t cause this. Sessions are preserved across sleep and the supervisor reconnects to them on wake.
 ​
 Agent view says the background service did not respond
 If attaching, peeking, or
@@ -1107,7 +1109,7 @@ The new supervisor reconnects to the running sessions. Without
 , the command ends the background sessions too. The
 --any
 flag confirms you want to stop a supervisor that started on demand rather than as an installed service, which is the default.
-On Windows, if the supervisor does not respond to the stop request, the command prints its process ID. End that process with
+On Windows, if the supervisor doesn’t respond to the stop request, the command prints its process ID. End that process with
 taskkill /PID <pid>
 to finish the recovery. Background sessions are still preserved when you passed
 --keep-workers

@@ -83,7 +83,7 @@ if your terminal intercepts
 Ctrl+V
 Ctrl+B
 Background running tasks
-Backgrounds bash commands and agents. Tmux users press twice
+Backgrounds Bash commands and agents. Tmux users press twice
 Ctrl+T
 Toggle task list
 Show or hide the
@@ -426,7 +426,7 @@ i
 then
 /
 to open the command menu instead
-In vim normal mode, if the cursor is at the beginning or end of input and cannot move further,
+In vim normal mode, if the cursor is at the beginning or end of input and can’t move further,
 j
 /
 k
@@ -581,10 +581,9 @@ Input history resets when you run
 to start a new session. The previous session’s conversation is preserved and can be resumed.
 Submitting the same prompt twice in a row records one history entry, so pressing Up steps to the previous distinct prompt
 Use Up/Down arrows to navigate (see keyboard shortcuts above)
-Note
-: history expansion (
+History expansion with
 !
-) is disabled by default
+is disabled by default
 ​
 Reverse search with Ctrl+R
 Press
@@ -624,14 +623,18 @@ Backspace
 on empty search to cancel
 The search loads the 100 most recent unique prompts in the selected scope, with duplicates collapsed to the newest occurrence. Matching prompts display with the search term highlighted, so you can find and reuse previous inputs.
 ​
-Background bash commands
-Claude Code supports running bash commands in the background, allowing you to continue working while long-running processes execute.
+Background Bash commands
+Claude Code supports running Bash commands in the background, allowing you to continue working while long-running processes execute.
 ​
 How backgrounding works
 When Claude Code runs a command in the background, it runs the command asynchronously and immediately returns a background task ID. Claude Code can respond to new prompts while the command continues executing in the background.
 To run commands in the background, you can either:
 Prompt Claude Code to run a command in the background
-Press Ctrl+B to move a regular Bash tool invocation to the background. (Tmux users must press Ctrl+B twice due to tmux’s prefix key.)
+Press
+Ctrl+B
+to move a regular Bash tool invocation to the background. Tmux users must press
+Ctrl+B
+twice due to tmux’s prefix key.
 Key features:
 Output is written to a file and Claude can retrieve it using the Read tool
 Background tasks have unique IDs for tracking and output retrieval
@@ -672,7 +675,7 @@ Shows real-time progress and output
 Supports the same
 Ctrl+B
 backgrounding for long-running commands
-Does not require Claude to interpret or approve the command
+Doesn’t require Claude to interpret or approve the command
 Supports history-based autocomplete: type a partial command and press
 Tab
 to complete from previous
@@ -713,7 +716,8 @@ Enter
 to submit
 Start typing to dismiss it
 The suggestion runs as a background request that reuses the parent conversation’s prompt cache, so the additional cost is minimal. Claude Code skips suggestion generation when the cache is cold to avoid unnecessary cost.
-Suggestions are automatically skipped after the first turn of a conversation and in plan mode. In print mode they are off by default. Pass
+Suggestions are automatically skipped after the first turn of a conversation and in plan mode.
+In print mode they are off by default. Pass
 --prompt-suggestions
 with
 --output-format stream-json --verbose
@@ -737,16 +741,17 @@ Side questions have full visibility into the current conversation, so you can as
 Available while Claude is working
 : you can run
 /btw
-even while Claude is processing a response. The side question runs independently and does not interrupt the main turn.
+even while Claude is processing a response. The side question runs independently and doesn’t interrupt the main turn.
 No tool access
-: side questions answer only from what is already in context. Claude cannot read files, run commands, or search when answering a side question.
+: side questions answer only from what is already in context. Claude can’t read files, run commands, or search when answering a side question.
 Single response
 : there are no follow-up turns in the overlay. To continue the thread, fork it into its own session with
 f
 .
 Low cost
 : the side question reuses the parent conversation’s prompt cache, so the additional cost is minimal.
-Once the answer appears, the overlay accepts these keys. Earlier side questions from the same session appear as a dimmed list above the current answer; they stay out of the conversation history but remain visible in the overlay until you clear them.
+Earlier side questions from the same session appear as a dimmed list above the current answer. They stay out of the conversation history but remain visible in the overlay until you clear them.
+Once the answer appears, the overlay accepts these keys.
 Key
 Action
 Space
@@ -812,14 +817,14 @@ Session recap
 Session recap is on by default for every plan and provider. The recap is always skipped in non-interactive mode.
 ​
 PR review status
-When working on a branch with an open pull request, Claude Code displays a clickable PR link in the footer (for example, “PR #446”). The link has a colored underline indicating the review state:
+When working on a branch with an open pull request, Claude Code displays a clickable PR link in the footer, such as “PR #446”. The link has a colored underline indicating the review state:
 Green: approved
 Yellow: pending review
 Red: changes requested
 Gray: draft
 The badge disappears once the pull request merges or closes.
 Cmd+click
-(Mac) or
+(macOS) or
 Ctrl+click
 (Windows/Linux) the link to open the pull request in your browser. The status refreshes every 60 seconds, and immediately after a
 gh pr

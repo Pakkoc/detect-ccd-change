@@ -744,6 +744,14 @@ type: "agent"
 ): spawn a subagent that can use tools like Read, Grep, and Glob to verify conditions before returning a decision. Agent hooks are experimental and may change. See
 Agent-based hooks
 .
+All matching hooks run in parallel, and identical handlers are deduplicated automatically. Command hooks are deduplicated by command string and
+args
+, and HTTP hooks are deduplicated by URL.
+Handlers run in the current directory with Claude Code’s environment. The
+$CLAUDE_CODE_REMOTE
+environment variable is set to
+"true"
+in remote web environments and not set in the local CLI.
 ​
 Common fields
 These fields apply to all hook types:
@@ -1226,13 +1234,6 @@ $1.00
 model
 no
 Model to use for evaluation. Defaults to a fast model
-All matching hooks run in parallel, and identical handlers are deduplicated automatically. Command hooks are deduplicated by command string and
-args
-, and HTTP hooks are deduplicated by URL. Handlers run in the current directory with Claude Code’s environment. The
-$CLAUDE_CODE_REMOTE
-environment variable is set to
-"true"
-in remote web environments and not set in the local CLI.
 ​
 Reference scripts by path
 Use these placeholders to reference hook scripts relative to the project or plugin root, regardless of the working directory when the hook runs:
@@ -2083,29 +2084,26 @@ None
 No decision control. Used for side effects like logging or cleanup
 A few events can also rewrite content rather than only allow or block it:
 PreToolUse
-—
+:
 updatedInput
 directly under
 hookSpecificOutput
-replaces a tool’s arguments before it runs (
-details
-)
+replaces a tool’s arguments before it runs. See
+PreToolUse decision control
 PermissionRequest
-—
+:
 updatedInput
 inside the
 decision
-object (
-details
-)
+object. See
+PermissionRequest decision control
 PostToolUse
-—
+:
 updatedToolOutput
-replaces the tool’s result (
-details
-)
+replaces the tool’s result. See
+PostToolUse decision control
 UserPromptSubmit
-— cannot replace the prompt; only injects
+: cannot replace the prompt; it only injects
 additionalContext
 alongside it
 For redaction or transformation use cases, intercept at
@@ -6587,7 +6585,7 @@ PermissionDenied
 ok: false
 has no effect because the denial already happened. The only output this event reads is
 hookSpecificOutput.retry
-, which prompt and agent hooks cannot set — they run on this event, but their output is discarded. Use a
+, which prompt and agent hooks cannot set. They run on this event, but their output is discarded. Use a
 command hook
 to return
 retry

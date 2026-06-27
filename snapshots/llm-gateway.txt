@@ -1,10 +1,4 @@
 An LLM gateway is a proxy your organization runs between Claude Code and a model provider. Claude Code sends API traffic to the gateway, and the gateway forwards it to the provider using a credential your organization controls.
-This page covers:
-What a gateway provides
-How routing and credentials work
-The steps to roll one out
-How gateways interact with claude.ai subscriptions
-What’s configured separately from the gateway
 If you’re a developer connecting to an existing gateway:
 connect Claude Code to your gateway
 If you’re an admin rolling out a gateway for your organization:

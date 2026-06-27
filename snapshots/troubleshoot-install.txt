@@ -54,7 +54,8 @@ WSL1 native-binary regression
 PowerShell installer completes but
 claude
 is not found or shows an old version
-Restart your terminal and verify PATH
+Add the install directory to your PATH
+, then open a new terminal
 dyld: cannot load
 ,
 dyld: Symbol not found

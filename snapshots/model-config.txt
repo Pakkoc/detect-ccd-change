@@ -7,7 +7,7 @@ A
 model alias
 A
 model name
-Anthropic API: A full
+Anthropic API: a full
 model name
 Bedrock: an inference profile ARN
 Foundry: a deployment name
@@ -67,9 +67,9 @@ ANTHROPIC_DEFAULT_OPUS_MODEL
 or
 ANTHROPIC_DEFAULT_SONNET_MODEL
 .
-Aliases point to the recommended version for your provider and update over time. To pin to a specific version, use the full model name (for example,
+Aliases point to the recommended version for your provider and update over time. To pin to a specific version, use the full model name, for example
 claude-opus-4-8
-) or set the corresponding environment variable like
+, or set the corresponding environment variable like
 ANTHROPIC_DEFAULT_OPUS_MODEL
 .
 Opus 4.8 requires Claude Code v2.1.154 or later. Run
@@ -106,21 +106,21 @@ picker either omits it or shows it disabled.
 Setting your model
 You can configure your model in several ways, listed in order of priority:
 During session
-- Use
+: use
 /model <alias|name>
 to switch immediately, or run
 /model
 with no argument to open the picker. The picker asks for confirmation when the conversation has prior output, since the next response re-reads the full history without cached context
 At startup
-- Launch with
+: launch with
 claude --model <alias|name>
 Environment variable
-- Set
+: set
 ANTHROPIC_MODEL=<alias|name>
 Settings
-- Configure permanently in your settings file using the
+: configure permanently in your settings file using the
 model
-field.
+field
 As of v2.1.153,
 /model
 saves your choice as the default for new sessions by writing the
@@ -511,9 +511,9 @@ Merge behavior
 .
 ​
 Organization model restrictions
-Use the Console toggle instead of
+Organization admins restrict which models members can run by disabling individual models in the Claude Console. Use this Console toggle instead of
 availableModels
-when your members authenticate through the Anthropic API and you want one org-wide switch without deploying settings files. Organization admins restrict which models members can run by disabling individual models in the Claude Console. This restriction is delivered with the account’s entitlements when Claude Code authenticates, separate from any
+when your members authenticate through the Anthropic API and you want one org-wide switch without deploying settings files. This restriction is delivered with the account’s entitlements when Claude Code authenticates, separate from any
 availableModels
 list in settings, and the server enforces the same restriction independently when a session is created. Requires Claude Code v2.1.187 or later.
 A restricted model is hidden from the
@@ -578,17 +578,14 @@ The
 opusplan
 model alias provides an automated hybrid approach:
 In plan mode
-- Uses
+: uses
 opus
-for complex reasoning and architecture
-decisions
+for complex reasoning and architecture decisions
 In execution mode
-- Automatically switches to
+: automatically switches to
 sonnet
-for code generation
-and implementation
-This gives you the best of both worlds: Opus’s superior reasoning for planning,
-and Sonnet’s efficiency for execution.
+for code generation and implementation
+This pairs Opus’s reasoning for planning with Sonnet’s efficiency for execution.
 The plan-mode Opus phase uses the same context window as the
 opus
 model setting. On subscription tiers where Opus is
@@ -962,9 +959,9 @@ CLAUDE_CODE_DISABLE_1M_CONTEXT=1
 environment variables
 .
 The 1M context window uses standard model pricing with no premium for tokens beyond 200K. For plans where extended context is included with your subscription, usage remains covered by your subscription. For plans that access extended context through usage credits, tokens are billed to usage credits.
-If your account supports 1M context, the option appears in the model picker (
+If your account supports 1M context, the option appears in the
 /model
-) in the latest versions of Claude Code. If you don’t see it, try restarting your session.
+picker in the latest versions of Claude Code. If you don’t see it, try restarting your session.
 You can also use the
 [1m]
 suffix with model aliases or full model names:
@@ -978,13 +975,13 @@ sonnet[1m]
 claude-opus-4-8[1m]
 ​
 Checking your current model
-You can see which model you’re currently using in several ways:
-In
+You can see which model you’re currently using in two places:
+In the
 status line
-(if configured)
+, if you have one configured
 In
 /status
-, which also displays your account information.
+, which also displays your account information
 ​
 Add a custom model option
 Use
@@ -1002,7 +999,7 @@ This example sets all three variables to make a gateway-routed Opus deployment s
 export
 ANTHROPIC_CUSTOM_MODEL_OPTION
 =
-"my-gateway/claude-opus-4-7"
+"my-gateway/claude-opus-4-8"
 export
 ANTHROPIC_CUSTOM_MODEL_OPTION_NAME
 =
@@ -1027,16 +1024,13 @@ availableModels
 is set, include the custom model ID in the allowlist as well: the custom entry is filtered from the picker and a
 --model
 selection of it is rejected like any other excluded model. A custom ID that embeds a family name, such as
-my-gateway/claude-opus-4-7
+my-gateway/claude-opus-4-8
 , counts as a specific entry for that family and disables its wildcard, so also list the versions you intend to keep selectable. See
 Merge behavior
 .
 ​
 Environment variables
-You can use the following environment variables, which must be full
-model
-names
-(or equivalent for your API provider), to control the model names that the aliases map to.
+You can use the following environment variables to control the model names that the aliases map to. Each value must be a full model name, or the equivalent identifier for your API provider.
 Environment variable
 Description
 ANTHROPIC_DEFAULT_FABLE_MODEL
