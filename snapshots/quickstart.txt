@@ -115,6 +115,13 @@ Claude Console
 (API access with pre-paid credits). On first login, a “Claude Code” workspace is automatically created in the Console for centralized cost tracking.
 Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
 (enterprise cloud providers)
+A self-hosted
+Claude apps gateway
+, if your organization runs one: your admin pre-configures the gateway URL, and
+/login
+opens directly on the
+Cloud gateway
+screen for you to sign in with corporate SSO
 Once logged in, your credentials are stored and you won’t need to log in again.
 ​
 Step 3: Start your first session

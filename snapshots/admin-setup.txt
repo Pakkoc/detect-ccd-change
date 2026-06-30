@@ -77,13 +77,17 @@ LLM gateway
 .
 ​
 Decide how settings reach devices
-Managed settings define policy that takes precedence over local developer configuration. Claude Code checks the four sources below in priority order and applies the first one that returns a non-empty configuration.
+Managed settings define policy that takes precedence over local developer configuration. Claude Code checks the four sources below in priority order and applies the first one that returns a non-empty configuration, with one exception: a small set of
+cross-source lock keys
+, such as the sandbox allowlist locks, is honored when any admin-controlled source sets them.
 Mechanism
 Delivery
 Priority
 Platforms
 Server-managed
-claude.ai admin console
+claude.ai admin console, or a self-hosted
+Claude apps gateway
+for gateway sign-ins
 Highest
 All
 plist / registry policy
@@ -107,7 +111,14 @@ Windows user registry
 HKCU\SOFTWARE\Policies\ClaudeCode
 Lowest
 Windows only
-Server-managed settings reach devices at authentication time and refresh hourly during active sessions, with no endpoint infrastructure. They require a Claude for Teams or Enterprise plan, so deployments on other providers need one of the file-based or OS-level mechanisms instead.
+A configured
+policyHelper
+preempts all four sources: its output becomes the only managed configuration for the run. See
+Settings precedence
+.
+Server-managed settings reach devices at authentication time and refresh hourly during active sessions, with no endpoint infrastructure. Delivery through the claude.ai admin console requires a Claude for Teams or Enterprise plan. Deployments on Bedrock, Vertex AI, or Foundry can get the same remote delivery by running a
+Claude apps gateway
+, or use one of the file-based or OS-level mechanisms instead.
 If your organization mixes providers, configure
 server-managed settings
 for claude.ai users plus a
@@ -239,7 +250,10 @@ Anthropic only
 Analytics
 Cost tracking
 Spend limits, rate limits, and usage attribution
-Anthropic only
+Anthropic; on third-party clouds, a
+Claude apps gateway
+provides per-user attribution and
+spend limits
 Costs
 Cloud providers expose spend through AWS Cost Explorer, GCP Billing, or Azure Cost Management. Claude for Teams and Enterprise plans include a usage dashboard at
 claude.ai/analytics/claude-code
@@ -259,9 +273,11 @@ Zero data retention
 Security architecture
 Network model, encryption, authentication, audit trail
 Security
-If you need request-level audit logging or to route traffic by data sensitivity, place an
+If you need request-level audit logging or to route traffic by data sensitivity, place a gateway between developers and your provider: a self-hosted
+Claude apps gateway
+records a per-request audit log with IdP identity, or use another
 LLM gateway
-between developers and your provider. For regulatory requirements and certifications, see
+. For regulatory requirements and certifications, see
 Legal and compliance
 .
 ​

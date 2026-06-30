@@ -487,7 +487,11 @@ Comma-separated list of CA certificate sources for TLS connections.
 bundled
 is the Mozilla CA set shipped with Claude Code.
 system
-is the operating system trust store. Default is
+is the operating system trust store, read only on runtimes with
+tls.getCACertificates
+: the native binary, or Node 22.15 or later for npm installs. See
+CA certificate store
+. Default is
 bundled,system
 CLAUDE_CODE_CHILD_SESSION
 Set to
@@ -816,7 +820,9 @@ Set to
 1
 to make
 auto mode
-available on Amazon Bedrock, Google Cloud Vertex AI, and Microsoft Foundry. Requires Claude Code v2.1.158 or later. Has no effect on the Anthropic API, where auto mode is available by default. See
+available on Amazon Bedrock, Google Cloud Vertex AI, Microsoft Foundry, and signed-in
+Claude apps gateway
+sessions. Requires Claude Code v2.1.158 or later. Has no effect on the Anthropic API, where auto mode is available by default. See
 Enable auto mode on Bedrock, Vertex AI, or Foundry
 CLAUDE_CODE_ENABLE_AWAY_SUMMARY
 Override

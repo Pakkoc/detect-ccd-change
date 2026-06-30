@@ -28,6 +28,15 @@ claude -r "auth-refactor" "Finish this PR"
 claude update
 Update to latest version
 claude update
+claude gateway
+Start the self-hosted
+Claude apps gateway
+server, for administrators deploying SSO and policy in front of Claude Code on Bedrock, Vertex AI, or Foundry. Requires
+--config
+pointing at a
+gateway.yaml
+. Available in Claude Code v2.1.195 and later.
+claude gateway --config gateway.yaml
 claude install [version]
 Install or reinstall the native binary. Accepts a version like
 2.1.118

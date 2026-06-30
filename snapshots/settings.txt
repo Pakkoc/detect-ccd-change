@@ -137,7 +137,9 @@ for settings that are not checked in, useful for personal preferences and experi
 Managed settings
 : For organizations that need centralized control, Claude Code supports multiple delivery mechanisms for managed settings. All use the same JSON format and cannot be overridden by user or project settings:
 Server-managed settings
-: delivered from Anthropic’s servers via the Claude.ai admin console. See
+: delivered remotely at sign-in, either from Anthropic’s servers via the claude.ai admin console or from a self-hosted
+Claude apps gateway
+. See
 server-managed settings
 .
 MDM/OS-level policies
@@ -915,14 +917,26 @@ Use
 claudeai
 to restrict login to Claude.ai accounts,
 console
-to restrict login to Claude Console accounts. When set in managed settings, sessions authenticated by
+to restrict login to Claude Console accounts, or
+gateway
+to restrict login to a cloud gateway; see
+Claude apps gateway
+. When set to any value in managed settings, sessions authenticated by
 ANTHROPIC_API_KEY
 ,
 ANTHROPIC_AUTH_TOKEN
 , or
 apiKeyHelper
-are blocked at startup, since neither value can be satisfied without first-party OAuth. Third-party provider sessions such as Bedrock, Vertex, and Foundry are not blocked: they authenticate against your cloud provider rather than Anthropic
+are blocked at startup, since an environment credential cannot satisfy the required login method. Third-party provider sessions such as Bedrock, Vertex, and Foundry are not blocked: they authenticate against your cloud provider rather than Anthropic
 claudeai
+forceLoginGatewayUrl
+Pre-fills and locks the gateway URL on the
+/login
+Cloud gateway screen. Either this key or
+forceLoginMethod: "gateway"
+surfaces that screen; set both so the URL is filled in. Honored only at the managed policy tier; ignored in user and project settings. See
+Claude apps gateway
+"https://claude-gateway.example.com"
 forceLoginOrgUUID
 Require login to belong to a specific Anthropic organization. Accepts a single UUID string, which also pre-selects that organization during login, or an array of UUIDs where any listed organization is accepted without pre-selection. When set in managed settings, login fails if the authenticated account does not belong to a listed organization, and sessions authenticated by
 ANTHROPIC_API_KEY
@@ -2379,7 +2393,7 @@ undefined and applies nothing:
 }
 When the helper emits
 managedSettings
-, that object replaces the file-based managed settings for the run. When the helper exits non-zero at startup, Claude Code prints the error and refuses to start, so a helper that needs outage resilience should serve from its own cache and exit
+, that object becomes the only managed settings source for the run, taking precedence over remote, MDM, and file-based sources. When the helper exits non-zero at startup, Claude Code prints the error and refuses to start, so a helper that needs outage resilience should serve from its own cache and exit
 0
 .
 ​
@@ -2395,11 +2409,27 @@ managed settings
 )
 Policies deployed by IT through server delivery, MDM configuration profiles, registry policies, or managed settings files
 Cannot be overridden by any other level, including command line arguments
-Within the managed tier, precedence is: server-managed > MDM/OS-level policies > file-based (
+Within the managed tier, precedence is:
+policyHelper
+output, which when configured is the only managed source used > remote (claude.ai
+server-managed
+or
+Claude apps gateway
+-delivered) > MDM/OS-level policies > file-based (
 managed-settings.d/*.json
 +
 managed-settings.json
-) > HKCU registry (Windows only). Only one managed source is used; sources do not merge across tiers. Within the file-based tier, drop-in files and the base file are merged together.
+) > HKCU registry (Windows only). Only one managed source is used; sources do not merge across tiers, with one exception: the sandbox lock keys
+sandbox.network.allowManagedDomainsOnly
+and
+sandbox.filesystem.allowManagedReadPathsOnly
+, with their associated allowlists,
+allowAllClaudeAiMcps
+, and the sandbox binary paths
+sandbox.bwrapPath
+and
+sandbox.socatPath
+are honored when any admin-controlled managed source sets them; the user-writable HKCU tier is excluded. Within the file-based tier, drop-in files and the base file are merged together.
 Embedding hosts such as Claude Desktop can supply policy via the SDK
 managedSettings
 option. By default this is ignored when an admin-deployed managed source is present: server-managed settings, an MDM or OS-level policy, or a managed settings file. The user-writable HKCU registry fallback does not count as an admin-deployed source. Administrators can opt in by setting
@@ -2486,7 +2516,11 @@ Enterprise managed settings (remote)
 (HKCU)
 , or
 (file)
-. A layer appears in the list only when that source is loaded with at least one key, so an empty list means no settings sources were found.
+. The
+remote
+channel covers both claude.ai server-managed settings and
+Claude apps gateway
+-delivered policies. A layer appears in the list only when that source is loaded with at least one key, so an empty list means no settings sources were found.
 The
 Setting sources
 line confirms which sources are being read. It does not show which layer supplied each individual key. The
