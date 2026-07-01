@@ -207,9 +207,9 @@ admin-key:<id>
 or
 oidc:<sub>
 .
-The
+The gateway serves the spend-limits endpoints only. Other Admin API surfaces, such as the
 spend_limit_increase_requests
-queue is not implemented.
+queue, aren’t part of the gateway’s admin API.
 ​
 /effective
 GET /v1/organizations/spend_limits/effective
@@ -263,7 +263,7 @@ sub
 limit
 /
 page
-Page size (1–1000, default 20) and the opaque cursor from the previous response’s
+Page size, 1–1000 with a default of 20, and the opaque cursor from the previous response’s
 next_page
 .
 q=

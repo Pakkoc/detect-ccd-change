@@ -57,6 +57,8 @@ Your organization has disabled Claude subscription access
 Authentication
 Routines are disabled by your organization's policy
 Authentication
+Remote Control is only available when using Claude via api.anthropic.com
+Authentication
 OAuth token revoked
 /
 OAuth token has expired
@@ -514,6 +516,26 @@ claude.ai/admin-settings/claude-code
 For one-off scheduled work that does not require organization-level routines, see
 scheduled tasks
 ​
+Remote Control requires the Anthropic API
+The session isn’t talking to the Anthropic API directly, so there is no claude.ai backend for
+Remote Control
+to pair with.
+Remote Control is only available when using Claude via api.anthropic.com.
+This appears on Amazon Bedrock, Google Vertex AI, and Microsoft Foundry.
+As of v2.1.196 it also appears when
+ANTHROPIC_BASE_URL
+points at a host other than
+api.anthropic.com
+, such as an
+LLM gateway
+or proxy, even when you sign in with claude.ai.
+What to do:
+Unset
+ANTHROPIC_BASE_URL
+and restart the session, or start Remote Control from a session that talks to the Anthropic API directly
+For this and the other Remote Control startup messages, see
+Troubleshoot Remote Control
+​
 OAuth token revoked or expired
 Your saved login is no longer valid. A revoked token means you signed out everywhere or an admin removed access; an expired token means the automatic refresh failed mid-session.
 OAuth token revoked · Please run /login
@@ -872,18 +894,18 @@ Organization model restrictions
 .
 ​
 thinking.type.enabled is not supported for this model
-Your Claude Code version is older than the minimum for Opus 4.7 or Opus 4.8. The CLI sent a thinking configuration the model no longer accepts.
+Your Claude Code version is older than the minimum for Sonnet 5, Opus 4.8, or Opus 4.7. The CLI sent a thinking configuration the model no longer accepts.
 API Error: 400 ... "thinking.type.enabled" is not supported for this model. Use "thinking.type.adaptive" and "output_config.effort" to control thinking behavior.
 What to do:
 Run
 claude update
-and restart Claude Code. Opus 4.7 needs v2.1.111 or later. Opus 4.8 needs v2.1.154 or later
-If you cannot upgrade, run
+and restart Claude Code. Opus 4.7 needs v2.1.111 or later. Opus 4.8 needs v2.1.154 or later. Sonnet 5 needs v2.1.197 or later
+If you can’t upgrade, run
 /model
-and select Opus 4.6 or Sonnet instead
+and select Opus 4.6 or Sonnet 4.6 instead
 If you hit this in the
 Agent SDK
-, upgrade the SDK package instead. Opus 4.8 needs TypeScript SDK v0.3.154 or later and Python SDK v0.2.88 or later
+, upgrade the SDK package instead. Opus 4.8 needs TypeScript SDK v0.3.154 or later and Python SDK v0.2.88 or later. Sonnet 5 needs TypeScript SDK v0.3.197 or later
 ​
 Thinking budget exceeds output limit
 The configured extended thinking budget exceeds the maximum response length, so there is no room left for the actual answer.

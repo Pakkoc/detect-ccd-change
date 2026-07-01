@@ -422,7 +422,10 @@ to prevent Claude from automatically loading this skill. Use for workflows you w
 /name
 . Also prevents the skill from being
 preloaded into subagents
-. Default:
+.
+As of v2.1.196, also prevents the skill from running when a
+scheduled task
+fires with the skill as its prompt. Default:
 false
 .
 user-invocable
@@ -611,6 +614,21 @@ ${CLAUDE_SKILL_DIR}
 The directory containing the skill’s
 SKILL.md
 file. For plugin skills, this is the skill’s subdirectory within the plugin, not the plugin root. Use this in bash injection commands to reference scripts or files bundled with the skill, regardless of the current working directory.
+${CLAUDE_PROJECT_DIR}
+The project root directory. This is the same path
+hooks
+and MCP servers receive as
+CLAUDE_PROJECT_DIR
+. Use this to reference project-local scripts or files, such as
+${CLAUDE_PROJECT_DIR}/.claude/hooks/helper.sh
+, independent of where the skill is installed.
+The
+${CLAUDE_PROJECT_DIR}
+substitution requires Claude Code v2.1.196 or later. It applies to both the skill body and the
+allowed-tools
+frontmatter, so a permission rule like
+Bash(${CLAUDE_PROJECT_DIR}/scripts/lint.sh *)
+resolves to the same path the skill body uses.
 Indexed arguments use shell-style quoting, so wrap multi-word values in quotes to pass them as a single argument. For example,
 /my-skill "hello world" second
 makes
@@ -1897,6 +1915,11 @@ Skill descriptions are cut short
 Skill descriptions are loaded into context so Claude knows what’s available. All skill names are always included, but if you have many skills, descriptions are shortened to fit the character budget, which can strip the keywords Claude needs to match your request. The budget scales at 1% of the model’s context window. When it overflows, descriptions for the skills you invoke least are dropped first, so the skills you actually use keep their full text. Run
 /doctor
 to see how many skill descriptions are being shortened or dropped and which skills are affected.
+As of v2.1.196, the Skills row in
+/context
+reports the size of the listing after the budget is applied, so it matches what the model receives. Earlier versions counted the full text of every description, so the row could show a value several times larger than the budget
+/doctor
+reports.
 To raise the budget, set the
 skillListingBudgetFraction
 setting (e.g.
@@ -1912,7 +1935,7 @@ description
 and
 when_to_use
 text at the source: put the key use case first, since each entry’s combined text is capped at 1,536 characters regardless of budget. The cap is configurable with
-maxSkillDescriptionChars
+skillListingMaxDescChars
 .
 ​
 Related resources

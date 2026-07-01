@@ -161,7 +161,12 @@ is disabled by default. Set
 ENABLE_TOOL_SEARCH=true
 if your proxy forwards
 tool_reference
-blocks
+blocks.
+As of v2.1.196,
+Remote Control
+is disabled when this points at a host other than
+api.anthropic.com
+, matching its behavior on Bedrock, Vertex AI, and Foundry
 ANTHROPIC_BEDROCK_BASE_URL
 Override the Bedrock endpoint URL. Use for custom Bedrock endpoints or when routing through an
 LLM gateway
@@ -389,7 +394,9 @@ is set, in
 cloud sessions
 , and on Sonnet 4.6 and Opus 4.6 without
 extended context
-, which compact at the 200K boundary by default. In other cases, such as a local session on Opus 4.8 or any model with extended context, auto-compaction triggers when the conversation reaches the model’s context limit. The override can only lower the threshold, so values above the default have no effect. Applies to both main conversations and subagents
+, which compact at the 200K boundary by default. On Sonnet 5, proactive compaction applies at the model’s
+default threshold
+. In other cases, such as a local session on Opus 4.8, auto-compaction triggers when the conversation reaches the model’s context limit. The override can only lower the threshold, so values above the default have no effect. Applies to both main conversations and subagents
 CLAUDE_AUTO_BACKGROUND_TASKS
 Set to
 1
@@ -463,9 +470,11 @@ to omit the attribution block (client version and prompt fingerprint) from the s
 LLM gateway
 . Anthropic API caching is unaffected
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
-Set the context capacity in tokens used for auto-compaction calculations. Defaults to the model’s context window: 200K for standard models or 1M for
+Set the context capacity in tokens used for auto-compaction calculations. Defaults to the model’s context window, 200K for standard models or 1M for
 extended context
-models. Use a lower value like
+models, except on Sonnet 5, which has its own
+default threshold
+. Use a lower value like
 500000
 on a 1M model to treat the window as 500K for compaction purposes. The value is capped at the model’s actual context window.
 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE
@@ -561,7 +570,9 @@ Set to
 1
 to disable
 1M context window
-support. When set, 1M model variants are unavailable in the model picker. Useful for enterprise environments with compliance requirements
+support. When set, 1M model variants are unavailable in the model picker, and
+Sonnet 5
+sessions are treated as having a 200K window. Useful for enterprise environments with compliance requirements
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 Set to
 1
@@ -570,7 +581,7 @@ adaptive reasoning
 on Opus 4.6 and Sonnet 4.6 and fall back to the fixed thinking budget controlled by
 MAX_THINKING_TOKENS
 .
-From v2.1.111, has no effect on Fable 5, or on Opus 4.7 and later, which always use adaptive reasoning
+From v2.1.111, has no effect on Fable 5, Sonnet 5, or Opus 4.7 and later, which always use adaptive reasoning
 CLAUDE_CODE_DISABLE_ADVISOR_TOOL
 Set to
 1
@@ -645,6 +656,26 @@ Set to
 to disable all background task functionality, including the
 run_in_background
 parameter on Bash and subagent tools, auto-backgrounding, and the Ctrl+B shortcut
+CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF
+Set to
+1
+to stop a
+background session’s
+running background shell commands and dynamic workflows when the
+supervisor
+stops, restarts, or updates that session’s process, instead of handing them to the session’s next process. Affects only that handoff: backgrounding a session with
+←
+or
+/background
+still carries in-flight work over, and
+CLAUDE_DISABLE_ADOPT
+turns off both. Requires Claude Code v2.1.196 or later
+CLAUDE_CODE_DISABLE_BG_SHELL_PRESSURE_REAP
+Set to
+1
+to stop Claude Code from terminating
+background shell commands
+when the operating system reports memory pressure. By default, on macOS and Linux, Claude Code terminates a background shell started in the main session on a memory-pressure signal once the session has been idle for 30 minutes and no turn or subagent is running. Windows has no memory-pressure signal, so this variable has no effect there. Requires Claude Code v2.1.193 or later
 CLAUDE_CODE_DISABLE_BUNDLED_SKILLS
 Set to
 1
@@ -741,6 +772,14 @@ PgUp
 and
 PgDn
 still works. Use this to keep your terminal’s native copy-on-select behavior
+CLAUDE_CODE_DISABLE_MOUSE_CLICKS
+Set to
+1
+to disable click, drag, and hover handling in
+fullscreen rendering
+while keeping mouse-wheel scrolling. Use this when you want wheel scroll to work inside Claude Code but don’t want clicks to position the cursor, expand tool output, or open links.
+CLAUDE_CODE_DISABLE_MOUSE
+takes precedence when both are set. Requires Claude Code v2.1.195 or later
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 Equivalent of setting
 DISABLE_AUTOUPDATER
@@ -754,6 +793,14 @@ CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK
 Set to
 1
 to disable the non-streaming fallback when a streaming request fails mid-stream. Streaming errors propagate to the retry layer instead. Useful when a proxy or gateway causes the fallback to produce duplicate tool execution
+CLAUDE_CODE_DISABLE_NOTIFICATION_PRESENCE_CHECK
+Set to
+1
+to send the
+PushNotification
+tool’s desktop notification even while you are typing in or focused on the terminal. By default the tool skips both the desktop notification and the
+mobile push
+when it detects recent keyboard activity or terminal focus. This variable disables only that local check, so the server can still suppress the mobile push when it detects that you are active. Requires Claude Code v2.1.193 or later
 CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL
 Set to
 1
@@ -1028,7 +1075,8 @@ Set to
 1
 to skip validation of IDE lockfile entries during connection. Use when auto-connect fails to find your IDE despite it running
 CLAUDE_CODE_MAX_CONTEXT_TOKENS
-Override the context window size Claude Code assumes for the active model. Only takes effect when
+Override the context window size Claude Code assumes for the active model.
+As of v2.1.193, applied directly for model names Claude Code does not recognize as a Claude model; for recognized Claude models it only takes effect when
 DISABLE_COMPACT
 is also set. Use this when routing to a model through
 ANTHROPIC_BASE_URL
@@ -1107,7 +1155,7 @@ claude setup-token
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE
 Removed in v2.1.160 and now a no-op. Previously pinned
 fast mode
-to Claude Opus 4.6 instead of the current default
+to Claude Opus 4.6 instead of the current default. Opus 4.6 no longer supports fast mode
 CLAUDE_CODE_OTEL_DIAG_STDERR
 Set to
 1
@@ -1389,6 +1437,12 @@ to disable the cap. Raise this if your hook legitimately needs more iterations t
 CLAUDE_CODE_SUBAGENT_MODEL
 See
 Model configuration
+.
+As of v2.1.196, setting it to
+inherit
+is the same as leaving it unset; earlier versions treated
+inherit
+as an override that forced every subagent onto the main conversation’s model
 CLAUDE_CODE_SUBPROCESS_ENV_SCRUB
 Set to
 1
@@ -1514,6 +1568,14 @@ Override the configuration directory (default:
 ~/.claude
 ). All settings, credentials, session history, and plugins are stored under this path. Useful for running multiple accounts side by side: for example,
 alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'
+CLAUDE_DISABLE_ADOPT
+Set to
+1
+to stop in-flight background work instead of carrying it over when you background a session by pressing
+←
+or with
+/background
+. Claude Code asks you to confirm before backgrounding, then stops the tasks that would otherwise carry over. Requires Claude Code v2.1.195 or later
 CLAUDE_EFFORT
 Set automatically in Bash tool subprocesses and hook commands to the active
 effort level
@@ -1553,10 +1615,11 @@ responses. Off by default. Configure the timeout with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 CLAUDE_ENABLE_STREAM_WATCHDOG
 Set to
-1
-to force-enable the event-level streaming idle watchdog, or set to
 0
-to force-disable it. When unset, the default is server-controlled on the direct Anthropic API and off on other providers.
+to force-disable the event-level streaming idle watchdog, or set to
+1
+to force-enable it.
+When unset, the watchdog is on by default for all providers. Before v2.1.196, the unset default was server-controlled on the direct Anthropic API and off on other providers.
 As of v2.1.169, providers other than the direct Anthropic API and Claude Platform on AWS also have a default-on 5-minute body idle timeout independent of this variable; see
 API_FORCE_IDLE_TIMEOUT
 . On Bedrock, you can also enable the independent byte-level watchdog with
@@ -1584,9 +1647,7 @@ CLI flag sets the same value for a single invocation
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 Timeout in milliseconds before the streaming idle watchdog closes a stalled connection. When you set this variable explicitly, the minimum is
 300000
-(5 minutes); lower values are silently clamped to absorb extended thinking pauses and proxy buffering. When unset, the event-level watchdog defaults to 300 seconds and the byte-level watchdog defaults to 180 seconds on direct Anthropic API connections (300 seconds on Claude Platform on AWS and other providers). The unset 180-second byte-watchdog default is a separate value and is not subject to the 5-minute clamp. For the event-level watchdog on third-party providers, requires
-CLAUDE_ENABLE_STREAM_WATCHDOG=1
-; the body idle timeout described under
+(5 minutes); lower values are silently clamped to absorb extended thinking pauses and proxy buffering. When unset, the event-level watchdog defaults to 300 seconds and the byte-level watchdog defaults to 180 seconds on direct Anthropic API connections (300 seconds on Claude Platform on AWS and other providers). The unset 180-second byte-watchdog default is a separate value and is not subject to the 5-minute clamp. The body idle timeout described under
 API_FORCE_IDLE_TIMEOUT
 applies independently. On Bedrock, also applies when
 CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1
@@ -1877,6 +1938,19 @@ field in
 overrides this for that server. For the env variable, values below 1000 are floored to one second; for the per-server field, values below 1000 are ignored
 NO_PROXY
 List of domains and IPs to which requests will be directly issued, bypassing proxy
+OTEL_LOG_ASSISTANT_RESPONSES
+Set to
+1
+to include the model’s response text on
+assistant_response
+OpenTelemetry log events. When unset, the value of
+OTEL_LOG_USER_PROMPTS
+is used instead. Set to
+0
+to keep responses redacted even when
+OTEL_LOG_USER_PROMPTS
+is set. Requires Claude Code v2.1.193 or later. See
+Monitoring
 OTEL_LOG_RAW_API_BODIES
 Emit Anthropic Messages API request and response JSON as
 api_request_body

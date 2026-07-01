@@ -36,8 +36,10 @@ Prefer a graphical interface? The
 Desktop app
 lets you use Claude Code without the terminal. Download it for
 macOS
-or
+,
 Windows
+, or
+Linux
 .
 New to the terminal? See the
 terminal guide

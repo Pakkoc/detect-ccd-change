@@ -397,6 +397,12 @@ Custom session name set with the
 flag or
 /rename
 . Absent if no custom name has been set
+prompt_id
+UUID identifying the user prompt currently being processed. Matches the
+prompt.id
+attribute on OpenTelemetry events
+. Absent until the first user input.
+Requires Claude Code v2.1.196 or later
 transcript_path
 Path to conversation transcript file
 version
@@ -463,6 +469,10 @@ Your status line command receives this JSON structure via stdin:
 "session_name"
 :
 "my-session"
+,
+"prompt_id"
+:
+"550e8400-e29b-41d4-a716-446655440000"
 ,
 "transcript_path"
 :
@@ -677,6 +687,8 @@ session_name
 --name
 or
 /rename
+prompt_id
+: appears only after the first user input
 workspace.git_worktree
 : appears only when the current directory is inside a linked git worktree
 workspace.repo

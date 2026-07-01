@@ -1760,22 +1760,13 @@ async
 def
 main
 ():
+# Don't also list the gated tools in allowed_tools: allow rules approve calls before can_use_tool runs
 options
 =
 ClaudeAgentOptions(
 can_use_tool
 =
-custom_permission_handler,
-allowed_tools
-=
-[
-"Read"
-,
-"Write"
-,
-"Edit"
-]
-)
+custom_permission_handler)
 async
 with
 ClaudeSDKClient(
@@ -2216,6 +2207,17 @@ setting_sources: list[SettingSource]
 None
 =
 None
+skills: list[
+str
+]
+|
+Literal[
+"all"
+]
+|
+None
+=
+None
 sandbox: SandboxSettings
 |
 None
@@ -2418,8 +2420,14 @@ can_use_tool
 CanUseTool
 | None
 None
-Tool permission callback function. See
-Permission types
+Tool permission callback, invoked only when the
+permission flow
+falls through to a prompt. Not invoked for calls auto-approved by
+allowed_tools
+, allow rules, or
+permission_mode
+. See
+CanUseTool
 for details
 hooks
 dict[HookEvent, list[HookMatcher]] | None
@@ -2572,12 +2580,12 @@ run_in_background
 . Default
 600000
 . Resets on each stream event; on stall it aborts the subagent, marks the task failed, and surfaces the error to the parent with any partial result. Does not apply to synchronous subagents.
-CLAUDE_ENABLE_STREAM_WATCHDOG=1
+CLAUDE_ENABLE_STREAM_WATCHDOG
 with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
-: aborts the request when headers have arrived but the response body stops streaming. When
-CLAUDE_ENABLE_STREAM_WATCHDOG
-is unset, the default is server-controlled on the direct Anthropic API and off on other providers.
+: aborts the request when headers have arrived but the response body stops streaming. The watchdog is on by default for all providers; set
+CLAUDE_ENABLE_STREAM_WATCHDOG=0
+to disable it.
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 defaults to
 300000
@@ -3119,7 +3127,7 @@ Literal[
 # Deep reasoning
 "xhigh"
 ,
-# Extended reasoning (Opus 4.8 and Opus 4.7; falls back to "high" on other models)
+# Extended reasoning; falls back to "high" on models that don't support it
 "max"
 ,
 # Maximum effort
@@ -3152,6 +3160,18 @@ PermissionResultAllow
 or
 PermissionResultDeny
 ).
+The callback is the SDK replacement for the interactive permission prompt: it’s invoked only when the
+permission evaluation flow
+resolves to a prompt. Tool calls already approved by an
+allowed_tools
+entry, a settings allow rule, or the permission mode, such as
+acceptEdits
+or
+bypassPermissions
+, never invoke it. To gate every tool call, use a
+PreToolUse
+hook
+instead.
 ​
 ToolPermissionContext
 Context information passed to tool permission callbacks.
@@ -3580,7 +3600,7 @@ to enable beta features.
 The
 context-1m-2025-08-07
 beta is retired as of April 30, 2026. Passing this header with Claude Sonnet 4.5 or Sonnet 4 has no effect, and requests that exceed the standard 200k-token context window return an error. To use a 1M-token context window, migrate to
-Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
+Claude Sonnet 5, Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
 , which include 1M context at standard pricing with no beta header required.
 ​
 McpSdkServerConfig
@@ -5938,7 +5958,19 @@ None
 Monitor
 Tool name:
 Monitor
-Runs a background script and delivers each stdout line to Claude as an event so it can react without polling. Monitor follows the same permission rules as Bash. See the
+Runs a background source and delivers each event to Claude so it can react without polling:
+command
+runs a script and emits one event per stdout line, and
+ws
+opens a WebSocket and emits one event per text frame. Provide exactly one of
+command
+or
+ws
+.
+When Monitor runs a command, it follows the same permission rules as Bash; a WebSocket watch prompts for approval separately.
+The
+ws
+source requires Claude Code v2.1.195 or later. See the
 Monitor tool reference
 for behavior and provider availability.
 Input:
@@ -5946,8 +5978,17 @@ Input:
 "command"
 :
 str
+|
+None
 ,
 # Shell script; each stdout line is an event, exit ends the watch
+"ws"
+:
+dict
+|
+None
+,
+# WebSocket source: {"url": str, "protocols": list[str] | None}; each text frame is an event
 "description"
 :
 str

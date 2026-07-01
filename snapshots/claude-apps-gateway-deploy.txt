@@ -11,7 +11,7 @@ Set up your identity provider
 Deploy the gateway
 : build a pinned container image and run it on Kubernetes, Cloud Run, or your own platform. This section also covers cost, bypass, multiple-gateway, and serverless decisions
 Set up operations
-: logs, health probes, outage behavior, secret rotation, and upgrades. Reference for when you’re wiring up monitoring and runbooks
+: logs, health probes, outage behavior, secret rotation, and upgrades. Reference for when you’re setting up monitoring and runbooks
 Review the security posture
 : what data flows where, the threat model, and compliance answers. Reference for a security review
 If a sign-in or boot fails along the way, go straight to
@@ -107,9 +107,9 @@ oidc.scopes: [openid, profile, email]
 and
 oidc.extra_auth_params: { access_type: offline, prompt: consent }
 .
-The gateway is tested against a wide range of identity providers, but some have quirks that haven’t surfaced in testing. If you hit one,
-file a GitHub issue
-so it can be fixed.
+For support with an identity provider not covered above, see
+Troubleshooting
+.
 Refresh tokens let the gateway renew a developer’s session silently, without sending the developer back to the browser. They also drive deprovisioning, because when the IdP disables a user, the next refresh fails and the session ends within
 ttl_hours
 . The gateway requests
@@ -341,7 +341,7 @@ also returns
 only after config load, OIDC discovery, upstream client construction, and Postgres migration all succeed, so it doubles as an end-to-end boot check.
 A running gateway also serves a description of the paths and request shapes it accepts at
 <public_url>/protocol
-, matched to the version you’re running. The contents are not stable across releases.
+, matched to the version you’re running. The contents aren’t stable across releases.
 ​
 Outage behavior
 If Postgres goes down, the gateway itself keeps serving signed-in developers and new sign-ins fail. Whether developers actually keep working depends on how your orchestrator handles readiness:
@@ -356,7 +356,7 @@ Readiness
 /readyz
 reports not-ready during the outage, so orchestrators that gate traffic on readiness remove every replica from rotation at once. In that topology all traffic, including inference the gateway could still serve, fails at the load balancer until Postgres recovers. The liveness probe on
 /healthz
-keeps passing, so replicas are not restarted. Point the readiness probe at
+keeps passing, so replicas aren’t restarted. Point the readiness probe at
 /healthz
 instead if you’d rather signed-in developers keep working through a store outage; the cost is that new sign-ins fail against a replica that still reports ready.
 If your IdP goes down, existing sessions work until
@@ -412,7 +412,7 @@ _migrations
 with an admin role and grant the app role
 SELECT, INSERT, UPDATE, DELETE
 on each.
-With spend limits in use, a lost database means lost spend tracking and caps, not just developer re-logins, so run regular backups. To erase one departed developer immediately rather than waiting on retention, run
+With spend limits in use, a lost database means lost spend tracking and caps, not only developer re-logins, so run regular backups. To erase one departed developer immediately rather than waiting on retention, run
 DELETE FROM principal_emails WHERE principal = '<sub>'
 directly; that removes the only table holding their email, name, and groups.
 spend
@@ -457,7 +457,7 @@ Gateway stderr → your aggregator
 Never
 ​
 Threat model summary
-The gateway sits inside your network perimeter, but individual developer laptops are not treated as trusted. The design accounts for this in three ways:
+The gateway sits inside your network perimeter, but individual developer laptops aren’t treated as trusted. The design accounts for this in three ways:
 Developers hold short-lived JWTs instead of raw upstream keys. The CLI-to-gateway leg uses the RFC 8628 device grant, and the gateway’s authorization-code exchange with the IdP runs PKCE in the default configuration, so an intercepted IdP authorization code is useless.
 The device-verification page enforces same-origin POST and a per-IP rate limit per RFC 8628 §5.1. See
 User-code brute-force resistance
@@ -502,7 +502,7 @@ are set. See
 data usage
 .
 Survey ratings
-: the gateway credential disables the Anthropic-bound rating sink, so ratings are not sent to Anthropic.
+: the gateway credential disables the Anthropic-bound rating sink, so ratings aren’t sent to Anthropic.
 Transcript sharing
 : choosing Yes on a survey’s transcript-share prompt writes a local file under
 ~/.claude/feedback-bundles/
@@ -564,7 +564,7 @@ screen
 forceLoginMethod
 or
 forceLoginGatewayUrl
-is not set in managed settings on that machine
+isn’t set in managed settings on that machine
 Deploy the
 managed settings file
 to the device;

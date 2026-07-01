@@ -1133,6 +1133,20 @@ channels
 for the organization. See
 enterprise controls
 for the default on each plan
+disableSideloadFlags
+Reject the
+--plugin-dir
+,
+--plugin-url
+,
+--agents
+, and
+--mcp-config
+CLI flags at startup. Without this, users can bypass
+strictKnownMarketplaces
+for a single run by passing these flags. See
+disableSideloadFlags
+. Requires Claude Code v2.1.193 or later
 forceRemoteSettingsRefresh
 When
 true

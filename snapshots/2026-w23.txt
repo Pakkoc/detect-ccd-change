@@ -70,9 +70,11 @@ claude doctor
 keep working so users can still recover.
 Add a floor to your managed settings so older clients refuse to start:
 managed-settings.json
+{
 "requiredMinimumVersion"
 :
 "2.1.163"
+}
 Decide what to enforce
 Other wins
 The trigger keyword for

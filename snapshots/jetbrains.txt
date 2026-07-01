@@ -221,7 +221,12 @@ Configure the Claude command path in plugin settings
 For WSL users, use the WSL command format mentioned in the configuration section
 ​
 Security considerations
-When Claude Code runs in a JetBrains IDE with auto-edit permissions enabled, it may be able to modify IDE configuration files that can be automatically executed by your IDE. This may increase the risk of running Claude Code in auto-edit mode and allow bypassing Claude Code’s permission prompts for bash execution.
+When Claude Code runs in a JetBrains IDE in
+acceptEdits
+permission mode
+, it may be able to modify IDE configuration files that can be automatically executed by your IDE. This may increase the risk of running Claude Code in
+acceptEdits
+mode and allow bypassing Claude Code’s permission prompts for bash execution.
 When running in JetBrains IDEs, consider:
 Using manual approval mode for edits
 Taking extra care to ensure Claude is only used with trusted prompts

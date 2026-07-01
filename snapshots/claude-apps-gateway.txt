@@ -1,8 +1,8 @@
-If a third-party cloud isn’t a requirement,
-Claude for Enterprise
-is usually the better fit: richer admin capabilities, such as SCIM provisioning, and nothing to host. Subscriptions are available through AWS Marketplace, where purchases can count toward an AWS spend commitment. The gateway is designed for organizations that must route inference through their own cloud provider, for example to meet
+The Claude apps gateway is designed for organizations that must — or prefer to — route inference through their own cloud provider, for example to meet
 data residency
-requirements.
+requirements. If you don’t have this requirement, and want access to other features such as SCIM provisioning or Claude Code on web & mobile, Claude Enterprise may be a better fit. See the
+feature availability
+page for a full comparison of all deployment methods.
 Claude apps gateway is a self-hosted service that sits between your developers’ Claude Code clients and your model provider. Developers sign in with your corporate identity provider (IdP) instead of holding API keys or cloud credentials. The gateway holds the upstream credential, enforces model access and
 managed settings
 by IdP group, and relays usage telemetry to your own observability stack.
@@ -486,13 +486,23 @@ Third check reaches the IdP but bounces back with an error
 email domain not allowed
 6
 Log a developer in
-This last step happens on a developer machine, not the server. Push the two managed settings keys shown in
-Set the gateway URL
-below to that machine, then run
+This last step happens on a developer machine, not the server. Set
+forceLoginMethod
+to
+"gateway"
+and
+forceLoginGatewayUrl
+to your gateway’s
+public_url
+in that machine’s
+managed settings file
+, then run
 /login
 , press Enter on the
 Cloud gateway
 screen, and complete the browser sign-in.
+Set the gateway URL
+below covers distributing both keys at scale.
 ​
 Connect developers
 Developers connect from their own laptops with one browser sign-in, using their corporate work account. They don’t need a claude.ai account, an API key, or a subscription, because requests to the model go through the gateway using the organization’s upstream credential. Connection is driven by the
@@ -611,9 +621,11 @@ managed settings tier
 Telemetry fan-out (OTLP/HTTP)
 Available
 Identity-stamped per export; both protobuf and JSON encodings
-OIDC: Okta, Entra, Google, Keycloak, Dex
+OIDC identity providers
 Available
-Tested. Other OIDC-compliant IdPs should work
+Any OIDC-compliant IdP; the gateway runs standard OIDC discovery and the authorization-code flow. See
+Identity provider setup
+for per-IdP configuration
 Per-user and per-group spend limits
 Available
 See
@@ -636,7 +648,7 @@ third-party provider rules
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 , deliverable through the managed policy
 env
-block, and only the Opus models eligible on third-party providers can use it
+block, and only the models eligible on third-party providers can use it
 First-party-only optimizations such as global cache scope and token-efficient tools
 Not available
 The CLI doesn’t enable them on gateway sessions; see the beta-header note above

@@ -359,6 +359,8 @@ Match all
 fires on every occurrence of the event
 Only letters, digits,
 _
+,
+-
 , spaces,
 ,
 , and
@@ -373,24 +375,52 @@ matches only the Bash tool;
 Edit|Write
 and
 Edit, Write
-each match either tool exactly
+each match either tool exactly;
+code-reviewer
+matches only that agent type
 Contains any other character
-JavaScript regular expression
+JavaScript regular expression, unanchored
 ^Notebook
-matches any tool starting with Notebook;
+matches any tool whose name starts with
+Notebook
+;
 mcp__memory__.*
 matches every tool from the
 memory
 server
-Comma separators and the surrounding whitespace tolerance require Claude Code v2.1.191 or later. The
+A matcher on the regular-expression path is tested with JavaScript’s
+RegExp.prototype.test
+, which succeeds on a match anywhere in the value.
+Edit.*
+matches both
+Edit
+and
+NotebookEdit
+; wrap the pattern in
+^
+and
+$
+, as in
+^Edit$
+, when you need a whole-string match.
+Comma separators and the surrounding whitespace tolerance require Claude Code v2.1.191 or later.
+Hyphens in the exact-match set require Claude Code v2.1.195 or later. On earlier versions a hyphenated name like
+code-reviewer
+is evaluated as an unanchored regular expression, so it also fires for
+senior-code-reviewer
+; anchor it as
+^code-reviewer$
+on those versions to match only that name.
 FileChanged
 and
 StopFailure
-events accept only
+use a narrower exact-match set of letters, digits,
+_
+, and
 |
-as the list separator and treat
-,
-as a literal character; all other events listed in the table that follows accept
+only. A hyphen, space, or comma in a matcher for those two events keeps it on the regular-expression path, and only
+|
+separates alternatives. Every other event with matcher support in the table that follows accepts
 |
 or
 ,
@@ -466,7 +496,8 @@ general-purpose
 Explore
 ,
 Plan
-, or custom agent names
+, custom agent names, or plugin-scoped names like
+^my-plugin:reviewer$
 PreCompact
 ,
 PostCompact
@@ -607,6 +638,8 @@ TaskCompleted
 WorktreeCreate
 ,
 WorktreeRemove
+,
+MessageDisplay
 , and
 CwdChanged
 don’t support matchers and always fire on every occurrence. If you add a
@@ -655,15 +688,24 @@ to the server prefix. The
 .*
 is required: a matcher like
 mcp__memory
-contains only letters and underscores, so it is compared as an exact string and matches no tool.
+or
+mcp__brave-search
+contains only exact-match characters, so it is compared as an exact string and matches no tool.
 mcp__memory__.*
 matches all tools from the
 memory
 server
+mcp__brave-search__.*
+matches all tools from a server whose name contains a hyphen
 mcp__.*__write.*
 matches any tool whose name starts with
 write
 from any server
+Hyphens in the exact-match set require Claude Code v2.1.195 or later. On earlier versions a bare hyphenated prefix like
+mcp__brave-search
+is evaluated as an unanchored regular expression and matches every tool from that server. The
+mcp__brave-search__.*
+form works on every version.
 This example logs all memory server operations and validates write operations from any MCP server:
 {
 "hooks"
@@ -917,9 +959,13 @@ shell
 no
 Shell to use for this hook. Accepts
 "bash"
-(default) or
+or
 "powershell"
-. Setting
+. Defaults to
+"bash"
+, or to
+"powershell"
+on Windows when Git Bash isn’t installed. Setting
 "powershell"
 runs the command via PowerShell on Windows. Does not require
 CLAUDE_CODE_USE_POWERSHELL_TOOL
@@ -1457,6 +1503,12 @@ Field
 Description
 session_id
 Current session identifier
+prompt_id
+UUID identifying the user prompt currently being processed. Matches the
+prompt.id
+attribute on OpenTelemetry events
+, so you can correlate hook output with telemetry for a single prompt. Absent until the first user input.
+Requires Claude Code v2.1.196 or later
 transcript_path
 Path to conversation JSON
 cwd
@@ -1530,7 +1582,13 @@ value. For
 custom subagents
 , this is the
 name
-field from the agent’s frontmatter, not the filename.
+field from the agent’s frontmatter, not the filename. For subagents shipped by a
+plugin
+, this is the plugin-scoped identifier such as
+my-plugin:reviewer
+, not the bare frontmatter name. See
+SubagentStart
+for how to write a matcher against a plugin-scoped name.
 Only
 SessionStart
 hooks can receive a
@@ -1549,6 +1607,10 @@ hook for a Bash command receives this on stdin:
 "session_id"
 :
 "abc123"
+,
+"prompt_id"
+:
+"550e8400-e29b-41d4-a716-446655440000"
 ,
 "transcript_path"
 :
@@ -2294,7 +2356,7 @@ first to avoid overwriting a title the user set explicitly.
 ,
 "model"
 :
-"claude-sonnet-4-6"
+"claude-sonnet-5"
 }
 ​
 SessionStart decision control
@@ -2705,6 +2767,11 @@ mcp_tool
 types, shorter than the 600-second default for those types on most other events. Because this hook runs before every prompt and blocks model processing until it completes, a stuck hook stalls the session. If your hook needs more time, set the
 timeout
 field in the hook entry.
+A
+UserPromptSubmit
+hook that reaches its timeout is canceled and its output, including any
+additionalContext
+, is discarded. The prompt still reaches Claude without that context. As of v2.1.196, the transcript shows a notice naming the hook, the timeout that fired, and that the output was discarded. Earlier versions cancel the hook with no notice.
 ​
 UserPromptSubmit input
 In addition to the
@@ -3202,6 +3269,18 @@ ExitPlanMode
 , and any
 MCP tool names
 .
+PreToolUse runs only when Claude calls a tool. Files you
+reference with
+@
+in your prompt
+are added without any tool call: Claude Code inserts their contents while building the prompt, so no PreToolUse hook fires for them, including hooks matching
+Read
+. To block specific paths from
+@
+references, use a
+Read
+deny rule
+instead.
 Use
 PreToolUse decision control
 to allow, deny, ask, or defer the tool call.
@@ -4672,6 +4751,17 @@ custom subagents
 , this is the
 name
 field from the agent’s frontmatter, not the filename.
+For subagents shipped by a
+plugin
+, the agent type is the plugin-scoped identifier such as
+my-plugin:reviewer
+, not the bare frontmatter name. The colon places a plugin-scoped name on the regular-expression path, so anchor the matcher with
+^
+and
+$
+for an exact match:
+^my-plugin:reviewer$
+.
 ​
 SubagentStart input
 In addition to the
@@ -7024,6 +7114,51 @@ powershell.exe
 }
 ]
 }
+}
+To reference the project root from a PowerShell shell-form command, read it as an environment variable with
+$env:CLAUDE_PROJECT_DIR
+. PowerShell treats the bare
+${CLAUDE_PROJECT_DIR}
+form as a local variable, not an environment lookup, and Claude Code substitutes that placeholder in shell form only for
+plugin hooks
+. For a hook defined in
+settings.json
+, either use the
+$env:
+form or switch to
+exec form
+, where
+${CLAUDE_PROJECT_DIR}
+is substituted in each
+args
+element regardless of where the hook is defined.
+The example below shows a
+settings.json
+hook that runs a project script with the
+$env:
+form:
+{
+"type"
+:
+"command"
+,
+"shell"
+:
+"powershell"
+,
+"command"
+:
+"&
+\"
+$env:CLAUDE_PROJECT_DIR
+\\
+.claude
+\\
+hooks
+\\
+check.ps1
+\"
+"
 }
 ​
 Debug hooks

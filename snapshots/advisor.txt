@@ -86,6 +86,9 @@ Fable, Opus, Sonnet
 Haiku can call the advisor but cannot act as one
 Sonnet 4.6
 Fable, Opus, Sonnet
+Sonnet 5
+Fable, Opus, Sonnet 5
+A Sonnet 4.6 advisor is rejected
 Opus 4.6 or later
 Fable, Opus at or above the main model’s version
 An Opus 4.7 main with an Opus 4.6 advisor is rejected
@@ -176,7 +179,7 @@ configured with
 ANTHROPIC_BASE_URL
 , availability depends on whether the gateway forwards the request intact to the Anthropic API.
 Supported main model
-: Opus 4.6 or later, Sonnet 4.6, or Haiku 4.5.
+: Opus 4.6 or later, Sonnet 4.6 or later, or Haiku 4.5.
 Fable 5 also qualifies on Claude Code v2.1.170 or later.
 ​
 Turn the advisor off

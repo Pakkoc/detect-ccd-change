@@ -37,7 +37,11 @@ Uses the fast and efficient Haiku model for simple tasks
 sonnet[1m]
 Uses Sonnet with a
 1 million token context window
-for long sessions
+for long sessions. No effect when
+sonnet
+already resolves to Sonnet 5 with its native 1M window; behind an
+LLM gateway
+, selects the 1M window for Sonnet 5
 opus[1m]
 Uses Opus with a
 1 million token context window
@@ -52,7 +56,7 @@ On the Anthropic API,
 opus
 resolves to Opus 4.8 and
 sonnet
-resolves to Sonnet 4.6. On
+resolves to Sonnet 5. On
 Claude Platform on AWS
 ,
 opus
@@ -72,7 +76,7 @@ claude-opus-4-8
 , or set the corresponding environment variable like
 ANTHROPIC_DEFAULT_OPUS_MODEL
 .
-Opus 4.8 requires Claude Code v2.1.154 or later. Run
+Sonnet 5 requires Claude Code v2.1.197 or later. Opus 4.8 requires v2.1.154 or later. Run
 claude update
 to upgrade.
 ​
@@ -157,11 +161,19 @@ claude --resume
 /resume
 picker keep the model they were using when the transcript was saved, regardless of the current
 model
-setting. If that model has been retired or is excluded by
+setting. If the restored model has been retired or is excluded by
 availableModels
 , the session falls through to the normal precedence order. This prevents another session’s
 /model
 choice from changing the model on resume.
+A model you pick for the new launch with
+--model
+or
+ANTHROPIC_MODEL
+still takes precedence over the restored model.
+As of v2.1.195, so does an
+ANTHROPIC_DEFAULT_OPUS_MODEL
+family variable.
 When the active model at startup comes from project or managed settings rather than your own selection, the startup header shows which settings file set it. Run
 /model
 to override; the project or managed setting reapplies on the next launch.
@@ -349,9 +361,9 @@ unless
 enforceAvailableModels
 is also set. On its own,
 availableModels
-leaves Default available, resolving to the system’s runtime default
-based on the user’s subscription tier
-. If the tier default is a model you intend to restrict, set
+leaves Default available, resolving to the system’s
+runtime default
+for the account. If that default is a model you intend to restrict, set
 enforceAvailableModels
 as well.
 An empty
@@ -409,7 +421,9 @@ The
 model
 setting is an initial selection, not enforcement. It sets which model is active when a session starts, but users can still open
 /model
-and pick Default, which resolves to the system default for their tier regardless of what
+and pick Default, which resolves to the system’s
+runtime default
+regardless of what
 model
 is set to, unless
 enforceAvailableModels
@@ -551,7 +565,7 @@ Max, Team Premium, Enterprise pay-as-you-go, and Anthropic API
 Claude Platform on AWS
 : defaults to Opus 4.7
 Pro, Team Standard, and Enterprise subscription seats
-: defaults to Sonnet 4.6
+: defaults to Sonnet 5
 Bedrock, Vertex, and Foundry
 : defaults to Sonnet 4.5
 Enterprise pay-as-you-go means an Enterprise organization billed by usage rather than by subscription seat.
@@ -621,7 +635,7 @@ as an array:
 {
 "fallbackModel"
 : [
-"claude-sonnet-4-6"
+"claude-sonnet-5"
 ,
 "claude-haiku-4-5"
 ]
@@ -725,7 +739,7 @@ high
 xhigh
 ,
 max
-Opus 4.8 and Opus 4.7
+Sonnet 5, Opus 4.8, and Opus 4.7
 low
 ,
 medium
@@ -750,7 +764,7 @@ high
 on Opus 4.6.
 The default effort is
 high
-on Fable 5, Opus 4.8, Opus 4.6, and Sonnet 4.6, and
+on Fable 5, Sonnet 5, Opus 4.8, Opus 4.6, and Sonnet 4.6, and
 xhigh
 on Opus 4.7.
 When you first run Fable 5, Opus 4.8, or Opus 4.7, Claude Code applies that model’s default effort even if you previously set a different level for another model:
@@ -803,7 +817,7 @@ Reserve for short, scoped, latency-sensitive tasks that are not intelligence-sen
 medium
 Reduces token usage for cost-sensitive work that can trade off some intelligence
 high
-Balances token usage and intelligence. Default on Fable 5, Opus 4.8, Opus 4.6, and Sonnet 4.6
+Balances token usage and intelligence. Default on Fable 5, Sonnet 5, Opus 4.8, Opus 4.6, and Sonnet 4.6
 xhigh
 Deeper reasoning at higher token spend. Default on Opus 4.7
 max
@@ -879,7 +893,7 @@ Adaptive reasoning and fixed thinking budgets
 Adaptive reasoning makes thinking optional on each step, so Claude can respond faster to routine prompts and reserve deeper thinking for steps that benefit from it. If you want Claude to think more or less often than the current level produces, you can say so directly in your prompt or in
 CLAUDE.md
 ; the model responds to that guidance within its effort setting.
-Opus 4.7 and later always use adaptive reasoning, as does Fable 5. The fixed thinking budget mode and
+Fable 5, Sonnet 5, and Opus 4.7 and later always use adaptive reasoning. The fixed thinking budget mode and
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 do not apply to them.
 On Opus 4.6 and Sonnet 4.6, you can set
@@ -932,15 +946,15 @@ settings
 if you want the full summaries available when you expand. You are charged for all thinking tokens generated, even when collapsed or redacted.
 ​
 Extended context
-Fable 5, Opus 4.6 and later, and Sonnet 4.6 support a
+Fable 5, Sonnet 5, Opus 4.6 and later, and Sonnet 4.6 support a
 1 million token context window
 for long sessions with large codebases.
-Availability varies by model and plan. On Max, Team, and Enterprise plans, Opus is automatically upgraded to 1M context with no additional configuration. This applies to both Team Standard and Team Premium seats. On the Anthropic API, Fable 5, Opus 4.8, and Opus 4.7 always run with the 1M window. Sonnet with 1M context is not part of the automatic upgrade and requires
+Availability varies by model and plan. On the Anthropic API, Fable 5, Sonnet 5, Opus 4.8, and Opus 4.7 always run with the 1M window. On Max, Team, and Enterprise plans, Opus is automatically upgraded to 1M context with no additional configuration. This applies to both Team Standard and Team Premium seats. Sonnet 4.6 with 1M context is not part of the automatic upgrade and requires
 usage credits
 on every subscription plan, including Max.
 Plan
 Opus with 1M context
-Sonnet with 1M context
+Sonnet 4.6 with 1M context
 Max, Team, and Enterprise
 Included with subscription
 Requires
@@ -973,6 +987,24 @@ sonnet[1m]
 # Or append [1m] to a full model name
 /model
 claude-opus-4-8[1m]
+​
+Sonnet 5 context window
+On the Anthropic API, Sonnet 5 always runs with the 1M context window. There is no 200K variant, no
+[1m]
+suffix to select, and no usage credits required on any plan. Sessions auto-compact before the window fills, at about 967K tokens by default; set
+CLAUDE_CODE_AUTO_COMPACT_WINDOW
+to choose a different threshold.
+Two configurations budget the window at 200K instead and auto-compact at that boundary:
+LLM gateway
+: when
+ANTHROPIC_BASE_URL
+points at a
+gateway
+, Claude Code can’t verify 1M support. To use the full window, select Sonnet 5 (1M context) in the model picker, which maps to
+sonnet[1m]
+.
+CLAUDE_CODE_DISABLE_1M_CONTEXT=1
+: treats Sonnet 5 sessions as having a 200K window, for deployments that need to cap context.
 ​
 Checking your current model
 You can see which model you’re currently using in two places:
@@ -1142,7 +1174,7 @@ supports 1M context
 .
 The suffix is read per variable, not per model. On Bedrock, Vertex, and Foundry, a model ID without
 [1m]
-in one variable uses 200K context even if another variable sets the same model with the suffix.
+in one variable uses 200K context even if another variable sets the same model with the suffix. Sonnet 5 always runs with the 1M window on these providers and never needs the suffix.
 An
 availableModels
 allowlist delivered through

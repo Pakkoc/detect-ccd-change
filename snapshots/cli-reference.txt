@@ -500,7 +500,7 @@ fable
 model
 setting and
 ANTHROPIC_MODEL
-claude --model claude-sonnet-4-6
+claude --model claude-sonnet-5
 --name
 ,
 -n

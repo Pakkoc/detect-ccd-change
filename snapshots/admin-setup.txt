@@ -184,10 +184,12 @@ allowManagedMcpServersOnly
 managed-mcp.json
 file
 Plugin marketplace control
-Restrict which marketplace sources users can add and install from
+Restrict which marketplace sources users can add and install from, and reject the CLI flags that sideload plugins, agents, and MCP servers for a single run
 strictKnownMarketplaces
 ,
 blockedMarketplaces
+,
+disableSideloadFlags
 Customization lockdown
 Block skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings
 strictPluginOnlyCustomization

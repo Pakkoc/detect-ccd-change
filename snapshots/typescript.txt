@@ -1077,7 +1077,15 @@ Enable beta features
 canUseTool
 CanUseTool
 undefined
-Custom permission function for tool usage
+Custom permission function, invoked only when the
+permission flow
+falls through to a prompt. Not invoked for calls auto-approved by
+allowedTools
+, allow rules, or
+permissionMode
+. See
+CanUseTool
+for details
 continue
 boolean
 false
@@ -1479,12 +1487,12 @@ run_in_background
 . Default
 600000
 . Resets on each stream event; on stall it aborts the subagent, marks the task failed, and surfaces the error to the parent with any partial result. Does not apply to synchronous subagents.
-CLAUDE_ENABLE_STREAM_WATCHDOG=1
+CLAUDE_ENABLE_STREAM_WATCHDOG
 with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
-: aborts the request when headers have arrived but the response body stops streaming. When
-CLAUDE_ENABLE_STREAM_WATCHDOG
-is unset, the default is server-controlled on the direct Anthropic API and off on other providers.
+: aborts the request when headers have arrived but the response body stops streaming. The watchdog is on by default for all providers; set
+CLAUDE_ENABLE_STREAM_WATCHDOG=0
+to disable it.
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 defaults to
 300000
@@ -1589,6 +1597,13 @@ Promise
 void
 >;
 initializationResult
+()
+:
+Promise
+<
+SDKControlInitializeResponse
+>;
+reinitialize
 ()
 :
 Promise
@@ -1728,6 +1743,12 @@ Merges settings into the session’s flag settings layer at runtime (only availa
 applyFlagSettings()
 initializationResult()
 Returns the full initialization result including supported commands, models, account info, and output style configuration
+reinitialize()
+Re-sends the
+initialize
+control request to the running CLI and returns a fresh result instead of the cached first-connect result. Use it after a transport gap, such as reattaching to a session after a disconnect, so pending permission requests reach your
+canUseTool
+callback again. Make the callback idempotent per request ID, because a request whose response was lost is dispatched again. Requires Claude Code v2.1.195 or later
 supportedCommands()
 Returns available slash commands
 supportedModels()
@@ -1947,7 +1968,11 @@ control_request
 message with the same
 { type: "control_request", request_id, request }
 shape the session streams for permission requests while running.
-These are requests that were issued before the client connected and are still awaiting a reply, so read this array to surface in-flight permission prompts immediately; they will not be re-sent.
+These are requests that were issued before the client connected and are still awaiting a reply. The SDK reads the array for you and dispatches each entry to your
+canUseTool
+callback, the same redelivery that
+reinitialize()
+triggers after a transport gap. Handle repeated request IDs idempotently, because an entry can repeat a request the callback already received before the connection dropped.
 ​
 AgentDefinition
 Configuration for a subagent defined programmatically.
@@ -2353,6 +2378,18 @@ PermissionMode
 ​
 CanUseTool
 Custom permission function type for controlling tool usage.
+The function is the SDK replacement for the interactive permission prompt: it’s invoked only when the
+permission evaluation flow
+resolves to a prompt. Tool calls already approved by an
+allowedTools
+entry, a settings allow rule, or the permission mode, such as
+acceptEdits
+or
+bypassPermissions
+, never invoke it. To gate every tool call, use a
+PreToolUse
+hook
+instead.
 type
 CanUseTool
 =
@@ -3923,6 +3960,10 @@ cwd
 :
 string
 ;
+prompt_id
+?:
+string
+;
 permission_mode
 ?:
 string
@@ -3943,6 +3984,12 @@ agent_type
 string
 ;
 };
+The
+prompt_id
+field is a UUID identifying the user prompt currently being processed. It matches the
+prompt.id
+attribute on OpenTelemetry events
+and is absent until the first user input. Requires Claude Code v2.1.196 or later.
 ​
 PreToolUseHookInput
 type
@@ -5013,9 +5060,21 @@ MonitorInput
 =
 {
 command
+?:
+string
+;
+ws
+?:
+{
+url
 :
 string
 ;
+protocols
+?:
+string
+[];
+};
 description
 :
 string
@@ -5029,9 +5088,21 @@ persistent
 boolean
 ;
 };
-Runs a background script and delivers each stdout line to Claude as an event so it can react without polling. Set
+Runs a background source and delivers each event to Claude so it can react without polling:
+command
+runs a script and emits one event per stdout line, and
+ws
+opens a WebSocket and emits one event per text frame. Provide exactly one of
+command
+or
+ws
+.
+The
+ws
+source requires Claude Code v2.1.195 or later.
+Set
 persistent: true
-for session-length watches such as log tails. Monitor follows the same permission rules as Bash. See the
+for session-length watches such as log tails. When Monitor runs a command, it follows the same permission rules as Bash; a WebSocket watch prompts for approval separately. See the
 Monitor tool reference
 for behavior and provider availability.
 ​
@@ -7179,7 +7250,7 @@ SdkBeta
 The
 context-1m-2025-08-07
 beta is retired as of April 30, 2026. Passing this value with Claude Sonnet 4.5 or Sonnet 4 has no effect, and requests that exceed the standard 200k-token context window return an error. To use a 1M-token context window, migrate to
-Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
+Claude Sonnet 5, Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
 , which include 1M context at standard pricing with no beta header required.
 ​
 SlashCommand

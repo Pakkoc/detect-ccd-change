@@ -508,9 +508,16 @@ ANTHROPIC_API_KEY
 ANTHROPIC_AUTH_TOKEN
 , or an
 apiKeyHelper
-is active. To use either, unset the gateway credential and log in with claude.ai instead;
+is active.
+As of v2.1.196, Remote Control is also disabled while
+ANTHROPIC_BASE_URL
+points at a non-Anthropic host, so signing in with claude.ai isn’t enough on its own.
+To restore either feature, log in with claude.ai and unset the gateway variables it checks.
 /doctor
-names the variable to unset.
+names the credential variable to unset.
+Voice dictation: unset the gateway credential
+Remote Control: unset the gateway credential and
+ANTHROPIC_BASE_URL
 ​
 Additional configuration
 These settings cover cases beyond the base URL and credential. Set them only if your administrator’s instructions or the

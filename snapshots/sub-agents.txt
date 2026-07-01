@@ -261,9 +261,13 @@ or
 agents/research/
 . The subdirectory path doesn’t affect how a subagent is identified or invoked, because identity comes only from the
 name
-frontmatter field. Keep
+frontmatter field.
+Keep
 name
-values unique across the whole tree: if two files within one scope declare the same name, Claude Code keeps one and discards the other without warning.
+values unique across the whole tree: if two files within one scope declare the same name, Claude Code loads only one of them.
+As of v2.1.196, running
+/doctor
+reports same-scope duplicate agent names and shows which definition is active.
 Plugin
 agents/
 directories are also scanned recursively. Unlike project and user scopes, a subfolder inside a plugin’s
@@ -598,7 +602,7 @@ Full model ID
 : use a full model ID such as
 claude-opus-4-8
 or
-claude-sonnet-4-6
+claude-sonnet-5
 . Accepts the same values as the
 --model
 flag
@@ -613,7 +617,7 @@ model
 parameter for that specific invocation. Claude Code resolves the subagent’s model in this order:
 The
 CLAUDE_CODE_SUBAGENT_MODEL
-environment variable, if set
+environment variable, when set to a model alias or model ID
 The per-invocation
 model
 parameter
@@ -621,6 +625,15 @@ The subagent definition’s
 model
 frontmatter
 The main conversation’s model
+As of v2.1.196, setting
+CLAUDE_CODE_SUBAGENT_MODEL
+to
+inherit
+is the same as leaving it unset: resolution continues with the per-invocation
+model
+parameter, then the frontmatter. In earlier versions,
+inherit
+forced subagents onto the main conversation’s model and ignored both of those sources.
 The environment variable, per-invocation parameter, and frontmatter values are checked against your organization’s
 availableModels
 allowlist. A value that resolves to an excluded model is not used and the subagent runs on the inherited model instead.
@@ -1210,7 +1223,22 @@ When a subagent begins execution
 SubagentStop
 Agent type name
 When a subagent completes
-Both events support matchers to target specific agent types by name. This example runs a setup script only when the
+Both events support matchers to target specific agent types by name. The matcher value is the agent’s frontmatter
+name
+for project-level and user-level subagents, or the plugin-scoped identifier such as
+my-plugin:db-agent
+for
+plugin subagents
+. A scoped name contains a colon, so it is evaluated as an
+unanchored regular expression
+; anchor it with
+^
+and
+$
+, as in
+^my-plugin:db-agent$
+, to match only that agent.
+This example runs a setup script only when the
 db-agent
 subagent starts, and a cleanup script when any subagent stops:
 {
@@ -1256,6 +1284,13 @@ subagent starts, and a cleanup script when any subagent stops:
 ]
 }
 }
+A hyphenated matcher like
+db-agent
+matches exactly on Claude Code v2.1.195 or later. On earlier versions it is evaluated as an unanchored regular expression and also fires for any agent type that contains it, such as
+prod-db-agent
+; anchor it as
+^db-agent$
+on those versions.
 See
 Hooks
 for the complete hook configuration format.
@@ -1415,9 +1450,11 @@ Spawn nested subagents
 As of Claude Code v2.1.172, a subagent can spawn its own subagents. Use this when a delegated task itself splits into parallel subtasks, such as a reviewer subagent that dispatches a verifier per finding, so the intermediate output never reaches your main conversation. Only the top-level subagent’s summary returns to you.
 A nested subagent is configured the same way as a top-level one and resolves from the same
 scopes
-. The subagent panel below the prompt input shows the full tree: each row displays a
+.
+The subagent panel below the prompt input shows the full tree: each row displays a
 (+N)
-count of descendants, and opening a row shows that subagent’s direct children with a path back to
+count of descendants, and
+as of v2.1.193, opening a row shows that subagent’s siblings and direct children with a path back to
 main
 . The Running tab in
 /agents

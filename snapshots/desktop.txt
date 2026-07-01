@@ -11,11 +11,13 @@ Download for macOS
 Universal build for Intel and Apple Silicon
 Download for Windows
 For x64 processors
+Get Claude for Linux (beta)
+apt or .deb for Ubuntu and Debian
 For Windows ARM64, download the
 ARM64 installer
-. The desktop app is not available on Linux; use the
-CLI
-instead.
+. On Linux, install with apt; see
+Claude Desktop on Linux
+.
 After installing, launch Claude, sign in, and click the
 Code
 tab. The first time you open it on Windows, you need
@@ -149,10 +151,10 @@ dontAsk
 permission mode is available only in the
 CLI
 .
-Auto mode is a research preview available to all users on the Anthropic API and requires Claude Opus 4.6 or later, or Sonnet 4.6. In Enterprise deployments that route Desktop to Google Cloud Vertex AI, auto mode is off until you
+Auto mode is a research preview available to all users on the Anthropic API and requires Claude Opus 4.6 or later, or Sonnet 4.6 or later. In Enterprise deployments that route Desktop to Google Cloud Vertex AI, auto mode is off until you
 set
 CLAUDE_CODE_ENABLE_AUTO_MODE
-, and only Claude Opus 4.7 and Opus 4.8 are supported there.
+, and only Claude Sonnet 5, Opus 4.7, and Opus 4.8 are supported there.
 Start complex tasks in Plan mode so Claude maps out an approach before making changes. Once you approve the plan, switch to Auto accept edits or Ask permissions to execute it. See
 explore first, then plan, then code
 for more on this workflow.
@@ -1008,7 +1010,7 @@ value is ignored because adaptive reasoning controls thinking depth instead. On 
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 to
 1
-to use a fixed thinking budget; Opus 4.7 and later always use adaptive reasoning and have no fixed-budget mode.
+to use a fixed thinking budget; Fable 5, Sonnet 5, and Opus 4.7 and later always use adaptive reasoning and have no fixed-budget mode.
 ​
 Cloud sessions
 Cloud sessions continue in the background even if you close the app. Usage counts toward your
@@ -1441,9 +1443,9 @@ quickstart
 . As an exception to the section above, the
 Cowork on 3P research preview
 runs the Code tab on Bedrock, Vertex AI, Foundry, or a self-hosted LLM gateway.
-Linux
-: the desktop app is available on macOS and Windows only. On Linux, use the
-CLI
+Linux (beta)
+: Computer Use isn’t yet available in the Linux desktop app. See
+Claude Desktop on Linux
 .
 Inline code suggestions
 : Desktop does not provide autocomplete-style suggestions. It works through conversational prompts and explicit code changes.
@@ -1507,7 +1509,9 @@ Check your internet connection and proxy settings.
 Blank or stuck screen on launch
 If the app opens but shows a blank or unresponsive screen:
 Restart the app.
-Check for pending updates. The app auto-updates on launch.
+Check for pending updates. On macOS and Windows the app auto-updates on launch; on Linux, update through apt as described in
+Claude Desktop on Linux
+.
 On Windows, check Event Viewer for crash logs under
 Windows Logs → Application
 .
@@ -1578,6 +1582,6 @@ Was this page helpful?
 Yes
 No
 Get started
-Scheduled tasks
+Linux (beta)
 ⌘
 I

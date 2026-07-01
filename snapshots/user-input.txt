@@ -41,9 +41,9 @@ can_use_tool
 handle_tool_request)
 The callback fires in two cases:
 Tool needs approval
-: Claude wants to use a tool that isn’t auto-approved by
-permission rules
-or modes. Check
+: Claude wants to use a tool that isn’t auto-approved by a
+permission rule
+or permission mode. Check
 tool_name
 for the tool (e.g.,
 "Bash"
@@ -62,11 +62,26 @@ AskUserQuestion
 for this to work. See
 Handle clarifying questions
 for details.
-To automatically allow or deny tools without prompting users, use
-hooks
-instead. Hooks execute before
+The callback never fires for auto-approved tools.
+Any approval earlier in the
+permission evaluation flow
+, an allow rule or a mode like
+acceptEdits
+or
+bypassPermissions
+, resolves the call before
 canUseTool
-and can allow, deny, or modify requests based on your own logic. You can also use the
+is consulted. If you list a tool bare in
+allowed_tools
+, a
+canUseTool
+check for that tool never runs unless an ask rule or
+plan
+mode routes the call back to a prompt. For logic that must apply to every tool call, use a
+PreToolUse
+hook
+, which executes before the rest of the flow and can allow, deny, or modify requests.
+You can also use the
 PermissionRequest
 hook
 to send external notifications (Slack, email, push) when Claude is waiting for approval.
@@ -74,7 +89,7 @@ to send external notifications (Slack, email, push) when Claude is waiting for a
 Handle tool approval requests
 Once you’ve passed a
 canUseTool
-callback in your query options, it fires when Claude wants to use a tool that isn’t auto-approved. Your callback receives three arguments:
+callback in your query options, it fires when Claude wants to use a tool that nothing earlier in the permission flow has approved. Your callback receives three arguments:
 Argument
 Description
 toolName

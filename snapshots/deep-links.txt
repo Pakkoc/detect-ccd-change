@@ -64,7 +64,7 @@ the value. Use
 %0A
 for line breaks in multi-line prompts. Maximum 5,000 characters.
 cwd
-Absolute path to use as the working directory. Network and UNC paths are rejected.
+Absolute path to use as the working directory. Network and UNC paths are rejected, and so are paths that contain invisible or bidirectional control characters.
 repo
 A GitHub
 owner/name

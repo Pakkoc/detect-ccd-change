@@ -172,6 +172,17 @@ OTEL_LOG_USER_PROMPTS
 Enable logging of user prompt content (default: disabled)
 1
 to enable
+OTEL_LOG_ASSISTANT_RESPONSES
+Enable logging of assistant response text on
+assistant_response
+events (default: disabled). When unset, falls back to the value of
+OTEL_LOG_USER_PROMPTS
+.
+Requires Claude Code v2.1.193 or later
+1
+to enable,
+0
+to keep redacted
 OTEL_LOG_TOOL_DETAILS
 Enable logging of tool parameters and input arguments in tool events and trace span attributes: Bash commands, MCP server and tool names, skill names, and tool input. Also enables custom, plugin, and MCP command names on
 user_prompt
@@ -1093,8 +1104,7 @@ type
 "removed"
 )
 model
-: Model identifier for the model that made the change (for example, “claude-sonnet-4-6”).
-Requires Claude Code v2.1.172 or later
+: Model identifier for the model that made the change (for example, “claude-sonnet-5”)
 ​
 Pull request counter
 Incremented when Claude Code creates a pull request or merge request through a shell command or an MCP tool.
@@ -1117,7 +1127,7 @@ Attributes
 All
 standard attributes
 model
-: Model identifier (for example, “claude-sonnet-4-6”)
+: Model identifier (for example, “claude-sonnet-5”)
 query_source
 : Category of the subsystem that issued the request. One of
 "main"
@@ -1185,7 +1195,7 @@ type
 "cacheCreation"
 )
 model
-: Model identifier (for example, “claude-sonnet-4-6”)
+: Model identifier (for example, “claude-sonnet-5”)
 query_source
 : Category of the subsystem that issued the request. One of
 "main"
@@ -1345,6 +1355,50 @@ mcp
 . Plugin-provided commands report as
 custom
 ​
+Assistant response event
+Logged after each API request that returns text content from the model. Only the response’s text blocks are included; thinking blocks and tool-use blocks are excluded.
+Requires Claude Code v2.1.193 or later.
+Event Name
+:
+claude_code.assistant_response
+Attributes
+:
+All
+standard attributes
+event.name
+:
+"assistant_response"
+event.timestamp
+: ISO 8601 timestamp
+event.sequence
+: monotonically increasing counter for ordering events within a session
+response_length
+: Length of the response text in characters
+response
+: Response text, truncated at 60 KB. Redacted to
+<REDACTED>
+by default. Set
+OTEL_LOG_ASSISTANT_RESPONSES=1
+to include it. When
+OTEL_LOG_ASSISTANT_RESPONSES
+is unset,
+OTEL_LOG_USER_PROMPTS
+controls it instead, so set
+OTEL_LOG_ASSISTANT_RESPONSES=0
+to keep responses redacted while prompt logging is on
+model
+: Model identifier (for example, “claude-sonnet-4-6”)
+request_id
+: Anthropic API request ID from the response’s
+request-id
+header. Present only when the API returns one
+query_source
+: Subsystem that issued the request, such as
+"repl_main_thread"
+,
+"compact"
+, or a subagent name
+​
 Tool result event
 Logged when a tool completes execution. Not emitted if the tool call was rejected; see the
 Tool decision event
@@ -1466,7 +1520,7 @@ event.timestamp
 event.sequence
 : monotonically increasing counter for ordering events within a session
 model
-: Model used (for example, “claude-sonnet-4-6”)
+: Model used (for example, “claude-sonnet-5”)
 cost_usd
 : Estimated cost in USD
 duration_ms
@@ -1543,7 +1597,7 @@ event.timestamp
 event.sequence
 : monotonically increasing counter for ordering events within a session
 model
-: Model used (for example, “claude-sonnet-4-6”)
+: Model used (for example, “claude-sonnet-5”)
 error
 : Error message
 status_code
@@ -3021,6 +3075,13 @@ user.email
 is included in telemetry attributes. If this is a concern for your organization, work with your telemetry backend to filter or redact this field
 User prompt content is not collected by default. Only prompt length is recorded. To include prompt content, set
 OTEL_LOG_USER_PROMPTS=1
+Assistant response text is not collected by default. Only response length is recorded. To include response text, set
+OTEL_LOG_ASSISTANT_RESPONSES=1
+. Like all OpenTelemetry data from Claude Code, the response text is sent only to the OTel endpoint you configure, never to Anthropic. When this variable is unset,
+OTEL_LOG_USER_PROMPTS
+is used as a fallback, so set
+OTEL_LOG_ASSISTANT_RESPONSES=0
+if you want prompt content without response content
 Tool input arguments and parameters are not logged by default. To include them, set
 OTEL_LOG_TOOL_DETAILS=1
 . This data is sent only to the OTEL endpoint you configure, never to Anthropic. Arguments may still contain sensitive values, so configure your telemetry backend to filter or redact these attributes as needed. When enabled:

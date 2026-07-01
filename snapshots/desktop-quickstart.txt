@@ -3,11 +3,13 @@ Download for macOS
 Universal build for Intel and Apple Silicon
 Download for Windows
 For x64 processors
+Get Claude for Linux (beta)
+apt or .deb for Ubuntu and Debian
 For Windows ARM64, download the
 ARM64 installer
-. The desktop app is not available on Linux; use the
-CLI
-instead.
+. On Linux, install with apt; see
+Claude Desktop on Linux
+.
 Claude Code requires a
 Pro, Max, Team, or Enterprise subscription
 .
@@ -30,7 +32,9 @@ tab.
 Install
 1
 Install and sign in
-Download the installer for your platform from the links above and run it. Launch Claude from your Applications folder on macOS or the Start menu on Windows, then sign in with your Anthropic account.
+On macOS and Windows, download the installer from the links above and run it. On Linux, follow the install steps in
+Claude Desktop on Linux
+. Launch Claude from your Applications folder on macOS, the Start menu on Windows, or your application launcher on Linux, then sign in with your Anthropic account.
 2
 Open the Code tab
 Click the

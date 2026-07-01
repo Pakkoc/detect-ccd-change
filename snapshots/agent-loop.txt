@@ -489,7 +489,7 @@ Model
 If you don’t set
 model
 , the SDK uses Claude Code’s default, which depends on your authentication method and subscription. Set it explicitly (for example,
-model="claude-sonnet-4-6"
+model="claude-sonnet-5"
 ) to pin a specific model or to use a smaller model for faster, cheaper agents. See
 models
 for available IDs.

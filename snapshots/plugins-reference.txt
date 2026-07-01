@@ -843,7 +843,13 @@ Description
 Example
 name
 string
-Unique identifier (kebab-case, no spaces)
+Unique identifier (kebab-case, no spaces). When a
+marketplace entry
+lists the plugin under a different name, the marketplace entry name is what
+enabledPlugins
+keys and
+/plugin
+use
 "deployment-tools"
 This name is used for namespacing components. For example, in the UI, the
 agent
