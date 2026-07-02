@@ -838,7 +838,7 @@ allow
 or
 deny
 is the only form.
-WebSearch is available on the Claude API and Microsoft Foundry. On Google Cloud Vertex AI it works with Claude 4 models, including Opus, Sonnet, and Haiku. Amazon Bedrock does not expose the server-side web search tool.
+WebSearch is available on the Claude API and Microsoft Foundry. On Google Cloud Vertex AI it works with Claude 4 and later models, including Opus, Sonnet, and Haiku. Amazon Bedrock does not expose the server-side web search tool.
 ​
 Write tool behavior
 The Write tool creates a new file or overwrites an existing one with the full content provided. It does not append or merge.

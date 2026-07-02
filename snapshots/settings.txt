@@ -1657,7 +1657,8 @@ as
 Auto-install IDE extension
 when running inside a VS Code or JetBrains terminal. You can also set the
 CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL
-environment variable
+environment variable to
+1
 false
 externalEditorContext
 Default

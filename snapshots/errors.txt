@@ -864,7 +864,7 @@ claude.com/pricing
 for which models each plan includes
 ​
 Model is restricted by your organization’s settings
-Your organization admin has disabled this model in the Claude Console, or it is excluded by an
+Your organization admin has disabled this model in the claude.ai admin console, or it is excluded by an
 availableModels
 allowlist in managed settings. When the restricted model was set with
 --model

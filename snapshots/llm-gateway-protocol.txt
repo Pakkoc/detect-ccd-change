@@ -382,13 +382,18 @@ when provided. The
 availableModels
 managed setting
 bounds what discovery can add.
-A discovered ID is skipped only when it exactly matches a row already in the picker, or when both the discovered and existing IDs resolve to
+A discovered ID is skipped when it exactly matches a row already in the picker, or when both the discovered and existing IDs resolve to
 Fable
-. Built-in rows are keyed on aliases such as
+.
+As of Claude Code v2.1.197, a discovered explicit ID is also folded into a built-in entry when both resolve to the same model. Built-in rows are keyed on aliases such as
 sonnet
-, so a discovered ID such as
+, so a discovered explicit ID of the model the alias currently resolves to, such as
+claude-sonnet-5
+, collapses into the
+sonnet
+row, while an ID the alias doesn’t resolve to, such as
 claude-sonnet-4-6
-adds its own “From gateway” row alongside the built-in entry rather than replacing it.
+, still adds its own “From gateway” row alongside the built-in entry.
 Results are cached to
 ~/.claude/cache/gateway-models.json
 , or

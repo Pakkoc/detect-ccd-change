@@ -194,6 +194,13 @@ Typing
 runs the project-root skill. Type the qualified name
 /apps/web:deploy
 to run the nested variant explicitly.
+A
+<skill-name>
+entry in the enterprise, personal, or project locations can be a symlink to a directory elsewhere on disk. Claude Code follows the symlink and reads
+SKILL.md
+from the target directory, and if the same target is reachable from more than one location, Claude Code loads the skill once. Plugin skills handle symlinks differently; see
+Share files within a marketplace with symlinks
+.
 Add a
 .claude-plugin/plugin.json
 to a skill folder and it loads as a

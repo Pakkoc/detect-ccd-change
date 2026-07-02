@@ -400,7 +400,7 @@ Thorough analysis
 Refactors, debugging
 "xhigh"
 Extended reasoning depth
-Coding and agentic tasks; recommended on Fable 5 and Opus 4.7+
+Coding and agentic tasks; recommended on Fable 5, Opus 4.7+, and Sonnet 5
 "max"
 Maximum reasoning depth
 Multi-step problems requiring deep analysis

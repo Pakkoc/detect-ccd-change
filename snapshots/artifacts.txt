@@ -1,4 +1,4 @@
-Artifacts are in beta. They require a Team or Enterprise plan and a session signed in with
+Artifacts require a Team or Enterprise plan and a session signed in with
 /login
 . See
 Availability

@@ -1387,7 +1387,7 @@ controls it instead, so set
 OTEL_LOG_ASSISTANT_RESPONSES=0
 to keep responses redacted while prompt logging is on
 model
-: Model identifier (for example, “claude-sonnet-4-6”)
+: Model identifier (for example, “claude-sonnet-5”)
 request_id
 : Anthropic API request ID from the response’s
 request-id

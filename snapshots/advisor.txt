@@ -91,7 +91,7 @@ Fable, Opus, Sonnet 5
 A Sonnet 4.6 advisor is rejected
 Opus 4.6 or later
 Fable, Opus at or above the main model’s version
-An Opus 4.7 main with an Opus 4.6 advisor is rejected
+An Opus 4.7 main with an Opus 4.6 advisor is rejected. An Opus 4.6 main also accepts a Sonnet 5 advisor
 Fable 5 (
 v2.1.170+)
 Fable
