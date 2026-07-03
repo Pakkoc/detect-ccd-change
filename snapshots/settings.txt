@@ -901,7 +901,9 @@ allowlist to the Default model. When
 true
 in managed settings and
 availableModels
-is a non-empty array, the Default option falls back to the first allowlisted entry that is available, but only when the default model for the user’s account type is not in the allowlist; an allowlisted default is kept as-is. Has no effect when
+is a non-empty array, the Default option falls back to the first allowlisted entry that is available, but only when the model Default would resolve to (the
+organization default
+when one applies, otherwise the account-type default) is not in the allowlist; an allowlisted default is kept as-is. Has no effect when
 availableModels
 is unset or empty. See
 Enforce the allowlist for the Default model
@@ -1920,21 +1922,65 @@ filesystem.denyRead
 credentials.envVars
 and apart from general filesystem rules. Each entry is
 { "path": "...", "mode": "deny" }
-. Paths use the same
+, and
+deny
+is the only supported mode for files. Paths use the same
 prefixes
 as
 filesystem.*
-settings. Arrays are merged across all settings scopes. Only
-deny
-is supported. Requires Claude Code v2.1.187 or later.
+settings. Arrays are merged across all settings scopes. Requires Claude Code v2.1.187 or later.
 [{ "path": "~/.aws/credentials", "mode": "deny" }]
 credentials.envVars
-Environment variables to unset before running sandboxed commands. Each entry is
-{ "name": "...", "mode": "deny" }
-. Arrays are merged across all settings scopes. Only
+Environment variables to
+protect from sandboxed commands
+. Each entry has a
+name
+and a
+mode
+; the name must start with a letter or underscore and contain only letters, digits, and underscores.
 deny
-is supported. Requires Claude Code v2.1.187 or later.
+removes the variable from the environment of sandboxed commands. Requires Claude Code v2.1.187 or later.
+mask
+replaces the variable with a per-session sentinel value inside the sandbox while the sandbox proxy substitutes the real value on outbound requests to that entry’s
+injectHosts
+; it requires
+network.tlsTerminate
+and Claude Code v2.1.199 or later.
+mask
+entries are only honored from user, managed, or CLI
+--settings
+settings, not from
+.claude/settings.json
+or
+.claude/settings.local.json
+. Arrays are merged across all settings scopes, and
+deny
+takes precedence when the same variable appears with both modes.
 [{ "name": "GITHUB_TOKEN", "mode": "deny" }]
+credentials.envVars[].injectHosts
+Hosts where the sandbox proxy substitutes the real value of a
+mask
+entry. Each host must also be covered by
+network.allowedDomains
+, either exactly or by a wildcard. When unset, the proxy substitutes the value on requests to every host in
+network.allowedDomains
+. Accepted but ignored when
+mode
+is
+deny
+. Requires Claude Code v2.1.199 or later.
+["api.github.com"]
+credentials.allowPlaintextInject
+Allow
+mask
+substitution on plain HTTP requests as well as TLS-terminated HTTPS. On plain HTTP the upstream identity is unverified and the credential travels in cleartext, so leave this off outside trusted test networks. Only honored from user, managed, or CLI
+--settings
+settings, not from
+.claude/settings.json
+or
+.claude/settings.local.json
+. Default: false. Requires Claude Code v2.1.199 or later.
+true
 network.allowUnixSockets
 (macOS only) Unix socket paths accessible in sandbox. Ignored on Linux and WSL2, where the seccomp filter cannot inspect socket paths; use
 allowAllUnixSockets
@@ -1980,6 +2026,24 @@ HTTP proxy port used if you wish to bring your own proxy. If not specified, Clau
 network.socksProxyPort
 SOCKS5 proxy port used if you wish to bring your own proxy. If not specified, Claude will run its own proxy.
 8081
+network.tlsTerminate
+Experimental. Terminate TLS inside the sandbox proxy so it can read the contents of HTTPS requests. Required for
+mask
+credential substitution
+. Set
+{}
+to generate an ephemeral certificate authority for the session, or set
+caCertPath
+and
+caKeyPath
+to use your own. Only honored from user, managed, or CLI
+--settings
+settings, not from
+.claude/settings.json
+or
+.claude/settings.local.json
+. Requires Claude Code v2.1.199 or later.
+{}
 enableWeakerNestedSandbox
 Enable weaker sandbox for unprivileged Docker environments (Linux and WSL2 only).
 Reduces security.
@@ -2493,27 +2557,33 @@ managed settings
 )
 Policies deployed by IT through server delivery, MDM configuration profiles, registry policies, or managed settings files
 Cannot be overridden by any other level, including command line arguments
-Within the managed tier, precedence is:
+Within the managed tier, only one source is used and the others are ignored rather than merged. Precedence, highest first:
 policyHelper
-output, which when configured is the only managed source used > remote (claude.ai
+output: when configured, this is the only managed source used
+Remote (claude.ai
 server-managed
 or
 Claude apps gateway
--delivered) > MDM/OS-level policies > file-based (
+-delivered)
+MDM/OS-level policies
+File-based (
 managed-settings.d/*.json
-+
+and
 managed-settings.json
-) > HKCU registry (Windows only). Only one managed source is used; sources do not merge across tiers, with one exception: the sandbox lock keys
+, merged together)
+HKCU registry (Windows only)
+A few keys are exceptions, honored when any admin-controlled managed source sets them rather than only the winning source. The user-writable HKCU registry source is excluded. The exception keys are:
+the sandbox lock keys
 sandbox.network.allowManagedDomainsOnly
 and
 sandbox.filesystem.allowManagedReadPathsOnly
-, with their associated allowlists,
+, with their associated allowlists
 allowAllClaudeAiMcps
-, and the sandbox binary paths
+the sandbox binary paths
 sandbox.bwrapPath
 and
 sandbox.socatPath
-are honored when any admin-controlled managed source sets them; the user-writable HKCU tier is excluded. Within the file-based tier, drop-in files and the base file are merged together.
+forceRemoteSettingsRefresh
 Embedding hosts such as Claude Desktop can supply policy via the SDK
 managedSettings
 option. By default this is ignored when an admin-deployed managed source is present: server-managed settings, an MDM or OS-level policy, or a managed settings file. The user-writable HKCU registry fallback does not count as an admin-deployed source. Administrators can opt in by setting

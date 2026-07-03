@@ -126,7 +126,7 @@ Add custom compaction instructions
 :
 /compact Focus on code samples and API usage
 tells Claude what to preserve during summarization.
-You can also customize compaction behavior in your CLAUDE.md:
+You can also customize compaction behavior in your CLAUDE.md file at the root of your project:
 # Compact instructions
 When you are using compact, please focus on test output and code changes
 ​
@@ -207,7 +207,13 @@ to run the hook before every Bash command:
 ]
 }
 }
-The hook calls this script, which checks if the command is a test runner and modifies it to show only failures:
+The hook calls this script. Create the folder with
+mkdir -p ~/.claude/hooks
+, save the script below as
+~/.claude/hooks/filter-test-output.sh
+, and make it executable with
+chmod +x ~/.claude/hooks/filter-test-output.sh
+. It checks if the command is a test runner and modifies it to show only failures:
 #!/bin/bash
 input
 =
@@ -305,7 +311,10 @@ or in
 /config
 , or, on models with a
 fixed thinking budget
-, lowering the budget with
+, lowering the budget by setting the
+MAX_THINKING_TOKENS
+environment variable
+, for example
 MAX_THINKING_TOKENS=8000
 . Adaptive-reasoning models ignore nonzero budgets, so use effort levels there instead. Disabling thinking is not available on Fable 5, which always uses extended thinking.
 ​

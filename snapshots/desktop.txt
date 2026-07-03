@@ -1460,8 +1460,6 @@ Terminal-dialog commands
 /permissions
 ,
 /config
-,
-/agents
 , and
 /doctor
 , are not available in the Code tab and reply with

@@ -1,9 +1,9 @@
-Artifacts require a Team or Enterprise plan and a session signed in with
+Artifacts are available on Pro, Max, Team, and Enterprise plans and require a session signed in with
 /login
 . See
 Availability
 for the full set of requirements.
-An artifact is a live, interactive web page that Claude Code publishes from your session to a private URL on claude.ai. You open it in a browser, and it updates in place as the session continues. Share it from the page header when you want a teammate to see it too. For example, use an artifact to walk a reviewer through a pull request with annotated diffs, build a dashboard from session data, or keep an investigation timeline that fills in as Claude works.
+An artifact is a live, interactive web page that Claude Code publishes from your session to a private URL on claude.ai. You open it in a browser, and it updates in place as the session continues. On Team and Enterprise plans, share it from the page header when you want a teammate to see it too. For example, use an artifact to walk a reviewer through a pull request with annotated diffs, build a dashboard from session data, or keep an investigation timeline that fills in as Claude works.
 ​
 When to use an artifact
 Use an artifact when terminal text is the wrong medium for what Claude produced: output that is easier to look at and interact with than to read line by line. Claude builds the page from anything your session can reach, including your codebase and data it pulls through your
@@ -57,7 +57,7 @@ To update an artifact from a different session, give Claude the artifact’s URL
 Update https://claude.ai/code/artifact/5fbea6f3-... with today's numbers.
 ​
 Share an artifact
-A new artifact is visible only to you. Open it in your browser and use the
+A new artifact is visible only to you. On Pro and Max plans, artifacts stay private to you. On Team and Enterprise plans, open the artifact in your browser and use the
 Share
 control in the page header to grant access to specific people in your organization, or to everyone in it. The header names you as the artifact’s author, so anyone you share it with can see who published the page. It also links to your gallery at
 claude.ai/code/artifacts
@@ -133,7 +133,7 @@ Artifacts require every condition below. When one is not met, Claude writes a lo
 Requirement
 Available when
 Plan
-Team or Enterprise. On Team plans, artifacts are on by default. On Enterprise plans, an Owner
+Pro, Max, Team, or Enterprise. On Pro and Max plans, artifacts are private to you, and no admin management applies. On Team plans, artifacts are on by default. On Enterprise plans, an Owner
 enables them
 in claude.ai admin settings.
 Authentication

@@ -179,7 +179,11 @@ in
 env
 Auto memory at
 ~/.claude/projects/<project>/memory/
-Loaded by default into the system prompt
+Loaded into the system prompt at session start. The agent writes new memories there with the standard
+Write
+and
+Edit
+tools rather than a dedicated memory tool, so those tools must be enabled for the agent to save memories
 Set
 autoMemoryEnabled: false
 in settings, or

@@ -103,9 +103,17 @@ As of v2.1.181, a plain click without holding
 Cmd
 or
 Ctrl
-no longer opens links, matching native terminal behavior. In the VS Code integrated terminal and similar xterm.js-based terminals, Claude Code defers to the terminal’s own link handler, which uses the same gesture.
+no longer opens links, matching native terminal behavior. Some macOS terminals forward
+Cmd
++click to the running app instead of opening the link themselves, and the terminal mouse protocol has no way to encode the
+Cmd
+key, so Claude Code receives it as a plain click. In Ghostty, and
+as of v2.1.198 in Warp on macOS, Claude Code detects this and lets a plain click on a link open it, and holding
+Cmd
+still works. In the VS Code integrated terminal and similar xterm.js-based terminals, Claude Code defers to the terminal’s own link handler, which uses the same gesture.
 Click and drag
-to select text anywhere in the conversation. Double-click selects a word, matching iTerm2’s word boundaries so a file path selects as one unit. Triple-click selects the line.
+to select text anywhere in the conversation. Double-click selects a word, matching iTerm2’s word boundaries so a file path selects as one unit.
+As of v2.1.198, double-clicking a URL selects the whole URL, including the scheme. Triple-click selects the line.
 Scroll with the mouse wheel
 to move through the conversation.
 Selected text copies to your clipboard automatically on mouse release. To turn this off, toggle Copy on select in

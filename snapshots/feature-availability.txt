@@ -81,7 +81,7 @@ Chrome extension
 Computer use
 : Pro and Max plans
 Artifacts
-: Team and Enterprise plans
+: Pro, Max, Team, and Enterprise plans
 Voice dictation
 Desktop is the partial exception: Enterprise deployments can route Desktop to Vertex AI or a gateway provider via
 managed settings
@@ -435,8 +435,8 @@ Code Review
 ✓
 ✓
 Artifacts
-✗
-✗
+✓
+✓
 ✓
 Admin-enabled
 Analytics dashboard, API, and contribution metrics

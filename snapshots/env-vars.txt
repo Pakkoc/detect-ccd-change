@@ -367,6 +367,24 @@ MCP server
 subprocesses). IDE extensions also set this in their integrated terminals. Use to detect when a script is running inside a subprocess spawned by Claude Code. To check whether the current process was spawned directly by a tool call or hook, rather than inside a stdio MCP server that Claude Code started, use
 CLAUDE_CODE_CHILD_SESSION
 instead
+CLAUDE_AFK_COUNTDOWN_MS
+How many milliseconds before auto-continue the on-screen countdown appears on an unanswered
+AskUserQuestion
+dialog. Default
+20000
+(20 seconds). See
+CLAUDE_AFK_TIMEOUT_MS
+. Requires Claude Code v2.1.198 or later
+CLAUDE_AFK_TIMEOUT_MS
+How many milliseconds of idle time before an unanswered
+AskUserQuestion
+dialog auto-continues without you. Default
+60000
+(60 seconds). To keep questions open while you’re away, set a large value like
+86400000
+(24 hours). Setting
+0
+doesn’t turn the timeout off; it closes the dialog immediately. Requires Claude Code v2.1.198 or later
 CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS
 Set to
 1
@@ -491,6 +509,20 @@ true
 to force a connection attempt when auto-detection fails, such as when tmux obscures the parent terminal. Takes precedence over the
 autoConnectIde
 global config setting
+CLAUDE_CODE_BRIDGE_SESSION_ID
+Set automatically in Bash tool and
+hook command
+subprocesses while the session has an active
+Remote Control
+connection, and removed when the connection ends. The value is the session’s ID in
+session_
+form, the same identifier that appears in the session’s
+claude.ai/code
+URL, so a script can link back to the session that ran it. Requires Claude Code v2.1.199 or later. In
+cloud sessions
+, read
+CLAUDE_CODE_REMOTE_SESSION_ID
+instead
 CLAUDE_CODE_CERT_STORE
 Comma-separated list of CA certificate sources for TLS connections.
 bundled
@@ -589,11 +621,11 @@ to disable the
 advisor tool
 . The
 /advisor
-command and
---advisor
-flag become unavailable and any configured
+command becomes unavailable, any configured
 advisorModel
-is ignored. Requires Claude Code v2.1.98 or later
+is ignored, and the
+--advisor
+flag is accepted but has no effect, so existing scripts that pass it continue to work without errors. Requires Claude Code v2.1.98 or later
 CLAUDE_CODE_DISABLE_AGENT_VIEW
 Set to
 1
@@ -661,7 +693,8 @@ Set to
 1
 to stop a
 background session’s
-running background shell commands and dynamic workflows when the
+running background shell commands, dynamic workflows,
+and, as of v2.1.198, background subagents when the
 supervisor
 stops, restarts, or updates that session’s process, instead of handing them to the session’s next process. Affects only that handoff: backgrounding a session with
 ←
@@ -724,6 +757,20 @@ input_schema
 ,
 cache_control
 ) are preserved
+CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS
+Set to
+1
+to disable the built-in
+Explore and Plan subagents
+. Claude explores with its search tools or the general-purpose subagent instead, and
+plan mode
+reads files directly rather than launching Explore and Plan agents. Custom subagents named
+Explore
+or
+Plan
+are unaffected. To remove every built-in subagent type in the Agent SDK or non-interactive mode, use
+CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS
+instead. Requires Claude Code v2.1.198 or later
 CLAUDE_CODE_DISABLE_FAST_MODE
 Set to
 1
@@ -1091,7 +1138,10 @@ auto-compaction
 triggers
 CLAUDE_CODE_MAX_RETRIES
 Override the number of times to retry failed API requests (default: 10).
-Capped at 15 as of v2.1.186. For unattended sessions that need to wait through longer outages, set
+Capped at 15 as of v2.1.186;
+as of v2.1.199,
+CLAUDE_CODE_RETRY_WATCHDOG
+raises the default and removes the cap. For unattended sessions that need to wait through longer outages, set
 CLAUDE_CODE_RETRY_WATCHDOG
 instead
 CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY
@@ -1294,7 +1344,10 @@ and
 529
 capacity errors indefinitely instead of failing after
 CLAUDE_CODE_MAX_RETRIES
-attempts. The watchdog backs off up to 5 minutes between attempts, or until the limit resets when the response carries a rate-limit reset time, so a session that hits a usage limit waits out the remaining window. Requires Claude Code v2.1.186 or later
+attempts. The watchdog backs off up to 5 minutes between attempts, or until the limit resets when the response carries a rate-limit reset time, so a session that hits a usage limit waits out the remaining window.
+As of v2.1.199 it also raises the default retry count for other transient errors, such as server errors, timeouts, and dropped connections, to 300, roughly three hours of backoff, and removes the cap of 15 on
+CLAUDE_CODE_MAX_RETRIES
+if you set that variable explicitly. Requires Claude Code v2.1.186 or later
 CLAUDE_CODE_SAFE_MODE
 Set to
 1
@@ -1588,7 +1641,7 @@ Vertex
 CLAUDE_CONFIG_DIR
 Override the configuration directory (default:
 ~/.claude
-). All settings, credentials, session history, and plugins are stored under this path. Useful for running multiple accounts side by side: for example,
+). All settings, session history, and plugins are stored under this path, as are credentials on Linux and Windows; on macOS, credentials are in the system Keychain. Useful for running multiple accounts side by side: for example,
 alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'
 CLAUDE_DISABLE_ADOPT
 Set to

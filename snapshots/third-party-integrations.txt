@@ -90,7 +90,7 @@ Select a deployment option to view setup instructions:
 Claude for Teams or Enterprise
 Anthropic Console
 Claude apps gateway
-, a self-hosted gateway that adds IdP sign-in in front of Amazon Bedrock, Google Vertex AI, Microsoft Foundry, or the Anthropic API
+, a self-hosted gateway that adds IdP sign-in in front of Amazon Bedrock, Claude Platform on AWS, Google Vertex AI, Microsoft Foundry, or the Anthropic API
 Amazon Bedrock
 Claude Platform on AWS
 Google Vertex AI

@@ -85,10 +85,12 @@ Ctrl+B
 Background running tasks
 Backgrounds Bash commands and agents. Tmux users press twice
 Ctrl+T
-Toggle task list
-Show or hide the
-task list
-in the terminal status area
+Toggle Claude’s task checklist
+Show or hide
+Claude’s to-do checklist
+in the status area. This is not the background-task view; use
+/tasks
+to see running shells and subagents
 Left/Right arrows
 Cycle through dialog tabs
 Navigate between tabs in permission dialogs and menus
@@ -808,10 +810,12 @@ subagent
 to ask about what Claude already knows from this session; use a subagent to go find out something new.
 ​
 Task list
-When working on complex, multi-step work, Claude creates a task list to track progress. Tasks appear in the status area of your terminal with indicators showing what’s pending, in progress, or complete.
+The task list is Claude’s to-do checklist: items Claude created to plan multi-step work, with indicators showing what’s pending, in progress, or complete. It’s separate from the background-task view. To see running shells and subagents, use
+/tasks
+instead.
 Press
 Ctrl+T
-to toggle the task list view. The display shows up to 5 tasks at a time
+to toggle the task list view. The display shows up to five tasks at a time. When Claude hasn’t created any checklist items yet, the toggle has no visible effect because there’s nothing to display
 To see all tasks or clear them, ask Claude directly: “show me all tasks” or “clear all tasks”
 Tasks persist across context compactions, helping Claude stay organized on larger projects
 To share a task list across sessions, set

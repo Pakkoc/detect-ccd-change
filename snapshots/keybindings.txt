@@ -130,7 +130,9 @@ app:redraw
 Force terminal redraw
 app:toggleTodos
 Ctrl+T
-Toggle task list visibility
+Toggle visibility of Claude’s to-do checklist. This is not the
+/tasks
+background-task view
 app:toggleTranscript
 Ctrl+O
 Toggle verbose transcript

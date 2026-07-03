@@ -214,6 +214,21 @@ claude udpate
 prints
 Did you mean claude update?
 .
+As of v2.1.199,
+claude --dangerously-skip-permissions daemon <subcommand>
+runs the
+daemon
+subcommand. Earlier versions treated
+daemon <subcommand>
+as the prompt for a new interactive session, so the subcommand never ran when the flag came first, a common setup when
+claude
+is aliased to include the flag. Only a leading
+--dangerously-skip-permissions
+or
+--allow-dangerously-skip-permissions
+routes to
+daemon
+this way; any other leading flag still starts an interactive session.
 ​
 CLI flags
 Customize Claude Code’s behavior with these command-line flags.
@@ -313,7 +328,13 @@ and return immediately. Prints the session ID and management commands. Combine w
 --exec
 to run a shell command as a background job instead of a Claude session, or with
 --agent
-to run a specific subagent
+to run a specific subagent.
+Cannot be combined with
+-p
+/
+--print
+; see the
+error reference
 claude --bg "investigate the flaky test"
 --channels
 (Research preview) MCP servers whose
@@ -551,7 +572,12 @@ defaultMode
 from settings files
 claude --permission-mode plan
 --permission-prompt-tool
-Specify an MCP tool to handle permission prompts in non-interactive mode
+Specify an MCP tool to handle permission prompts in non-interactive mode.
+As of v2.1.199, the prompt tool can’t approve an MCP tool marked as
+requiring user interaction
+: an
+allow
+result for one is converted to a deny
 claude -p --permission-prompt-tool mcp_auth_tool "query"
 --plugin-dir
 Load a plugin from a directory or

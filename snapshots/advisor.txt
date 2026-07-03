@@ -89,9 +89,12 @@ Fable, Opus, Sonnet
 Sonnet 5
 Fable, Opus, Sonnet 5
 A Sonnet 4.6 advisor is rejected
-Opus 4.6 or later
-Fable, Opus at or above the main model’s version
-An Opus 4.7 main with an Opus 4.6 advisor is rejected. An Opus 4.6 main also accepts a Sonnet 5 advisor
+Opus 4.6
+Fable, Opus, Sonnet 5
+Sonnet 5 and Opus 4.6 are ranked as equally capable, so an Opus 4.6 main accepts a Sonnet 5 advisor
+Opus 4.7 or later
+Fable, Opus 4.7, Opus 4.8
+Opus 4.7 and Opus 4.8 are ranked as equally capable, so either accepts the other as an advisor. An Opus 4.7 main with an Opus 4.6 or Sonnet 5 advisor is rejected
 Fable 5 (
 v2.1.170+)
 Fable
@@ -193,13 +196,15 @@ in the
 /advisor
 picker:
 /advisor off
-To disable the advisor tool entirely, including the
-/advisor
-command and the
---advisor
-flag, set
+To disable the advisor tool entirely, set
 CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1
-. See
+. The
+/advisor
+command becomes unavailable and any configured
+advisorModel
+is ignored. The
+--advisor
+flag is accepted but has no effect; existing scripts that pass it continue to work without errors. See
 Environment variables
 .
 ​

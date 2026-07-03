@@ -29,7 +29,7 @@ Claude Code works with Anthropic’s own gateway or with a gateway your organiza
 Claude apps gateway
 Claude apps gateway is Anthropic’s self-hosted gateway, included in the
 claude
-binary. It routes to Amazon Bedrock, Google Cloud, Microsoft Foundry, or the Anthropic API as the upstream. Developers sign in with your corporate identity provider through
+binary. It routes to Amazon Bedrock, Claude Platform on AWS, Google Cloud, Microsoft Foundry, or the Anthropic API as the upstream. Developers sign in with your corporate identity provider through
 /login
 , the gateway enforces model access and
 managed settings

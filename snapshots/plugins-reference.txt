@@ -124,8 +124,10 @@ are not supported for plugin-shipped agents.
 Integration points
 :
 Agents appear in the
-/agents
-interface
+@-mention typeahead
+under their scoped name, such as
+my-plugin:code-reviewer
+, once the plugin is enabled
 Claude can invoke agents automatically based on task context
 Agents can be invoked manually by users
 Plugin agents work alongside built-in Claude agents

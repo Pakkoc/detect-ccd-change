@@ -185,6 +185,6 @@ Was this page helpful?
 Yes
 No
 Linux (beta)
-Chrome extension (beta)
+Chrome extension
 ⌘
 I

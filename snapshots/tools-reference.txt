@@ -18,7 +18,7 @@ Skill
 tool rather than adding a new tool entry.
 Tool
 Description
-Permission Required
+Permission required
 Agent
 Spawns a
 subagent
@@ -28,14 +28,21 @@ No
 Artifact
 Publishes an HTML or Markdown file as an
 artifact
-: a private, interactive page on claude.ai you can share inside your organization.
-Requires a Team or Enterprise plan and
+: a private, interactive page on claude.ai. On Team and Enterprise plans, you can share it inside your organization.
+Requires a Pro, Max, Team, or Enterprise plan and
 /login
 authentication; see
 Availability
 Yes
 AskUserQuestion
-Asks multiple-choice questions to gather requirements or clarify ambiguity
+Asks multiple-choice questions to gather requirements or clarify ambiguity.
+As of v2.1.198, if you don’t respond within 60 seconds the dialog closes on its own: it submits any options you’d already selected and tells Claude you may be away from your keyboard, so Claude proceeds on its own judgment and can re-ask later. A countdown appears for the last 20 seconds. Any keypress keeps the dialog open, and so does a focused window on terminals that report focus. Set the
+CLAUDE_AFK_TIMEOUT_MS
+environment variable to change how long Claude Code waits, or to a large value like
+86400000
+, 24 hours, to keep questions open while you’re away. This timeout applies only to
+AskUserQuestion
+’s multiple-choice questions; permission prompts, including plan approval, never auto-resolve on idle
 No
 Bash
 Executes shell commands in your environment. See
@@ -135,7 +142,14 @@ Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so 
 No
 ReportFindings
 Reports code-review findings as a structured list, with a file, summary, and failure scenario per finding, so Claude Code can render them instead of printing them as text. Claude calls it when active code-review instructions tell it to.
-Requires Claude Code v2.1.196 or later
+Requires Claude Code v2.1.196 or later.
+As of v2.1.199, a finding can also carry an optional
+category
+slug, such as
+correctness
+or
+test-coverage
+, shown next to the file location in the rendered list
 No
 ScheduleWakeup
 Reschedules the next iteration of a
@@ -155,7 +169,10 @@ Sends a message to an
 agent team
 teammate, or
 resumes a subagent
-by its agent ID. Stopped subagents auto-resume in the background. Structured team-protocol messages require agent teams
+by its agent ID or name. Stopped subagents auto-resume in the background. Structured team-protocol messages require agent teams. A receiver never treats a message from another agent as your consent or approval.
+As of v2.1.198, a subagent treats a message from the agent that launched it as normal task direction rather than as a peer request.
+As of v2.1.199, a send to a name that now resolves to a different agent than it did earlier in the conversation is refused instead of delivered; see
+Resume subagents
 No
 SendUserFile
 Sends files from the session to you with an optional caption, so a generated report, diagram, screenshot, or built artifact reaches your device instead of only being mentioned in the transcript.
@@ -198,7 +215,10 @@ Read
 on the task’s output file path
 No
 TaskStop
-Kills a running background task by ID
+Stops a running background task by ID.
+As of v2.1.198, also accepts an
+agent-team teammate
+or a named background agent by agent ID or name
 No
 TaskUpdate
 Updates task status, dependencies, details, or deletes tasks
@@ -224,7 +244,7 @@ No
 WaitForMcpServers
 Waits for one or more
 MCP servers
-that are still connecting in the background, so a request can use their tools without restarting the session. Claude calls it when a needed server is not connected yet. Only appears when
+that are still connecting in the background, so a request can use their tools without restarting the session. Claude calls it when a needed server isn’t connected yet. Only appears when
 tool search
 is disabled, since
 ToolSearch
@@ -331,7 +351,8 @@ PreToolUse input reference
 .
 ​
 Agent tool behavior
-The Agent tool spawns a subagent in a separate context window. The subagent works through its task autonomously, then returns a single text result to the parent conversation. The parent does not see the subagent’s intermediate tool calls or outputs, only that final result. To cap how many turns a subagent runs, set
+The Agent tool spawns a subagent in a separate context window. The subagent works through its task autonomously, then returns a single text result to the parent conversation. The parent doesn’t see the subagent’s intermediate tool calls or outputs, only that final result.
+To cap how many turns a subagent runs, set
 maxTurns
 in the
 subagent definition
@@ -358,7 +379,8 @@ Both set
 :
 disallowedTools
 takes precedence. A tool listed in both is removed.
-Launching the subagent does not itself prompt for permission. The subagent’s own tool calls are checked against your permission rules as it runs:
+Launching the subagent doesn’t itself prompt for permission. Claude Code checks the subagent’s own tool calls against your permission rules as it runs.
+As of v2.1.198, subagents run in the background by default; Claude runs one in the foreground when it needs the result before continuing.
 Foreground subagents
 show the same permission prompts you would see in the main conversation, at the moment each tool call happens.
 Background subagents
@@ -431,7 +453,7 @@ The Edit tool performs exact string replacement. It takes an
 old_string
 and a
 new_string
-and replaces the first with the second. It does not use regex or fuzzy matching.
+and replaces the first with the second. It doesn’t use regex or fuzzy matching.
 Three checks must pass for an edit to apply:
 Read-before-edit
 : Claude must have read the file in the current conversation, and the file must not have changed on disk since that read. This check runs first, before any string matching.
@@ -500,7 +522,7 @@ and
 .yaml
 files in the current directory
 Results are sorted by modification time and capped at 100 files. If the cap is hit, Claude sees a truncation flag in the result and can narrow the pattern.
-Glob does not respect
+Glob doesn’t respect
 .gitignore
 by default, so it finds gitignored files alongside tracked ones. This differs from
 Grep
@@ -640,7 +662,7 @@ is set in managed settings, any host outside the managed allowlist.
 NotebookEdit tool behavior
 NotebookEdit modifies a Jupyter notebook one cell at a time, targeting cells by their
 cell_id
-. It does not perform string replacement across the notebook the way
+. It doesn’t perform string replacement across the notebook the way
 Edit
 does on plain files.
 Three edit modes control what happens to the target cell:
@@ -665,7 +687,13 @@ Edit(notebooks/**)
 covers NotebookEdit calls on files in that directory.
 ​
 PowerShell tool
-The PowerShell tool lets Claude run PowerShell commands natively. On Windows, this means commands run in PowerShell instead of routing through Git Bash. On Windows without Git Bash, the tool is enabled automatically. On Windows with Git Bash installed, the tool is rolling out progressively. On Linux, macOS, and WSL, the tool is opt-in.
+The PowerShell tool lets Claude run PowerShell commands natively. On Windows, this means commands run in PowerShell instead of routing through Git Bash. How the tool becomes available depends on your platform:
+Windows without Git Bash
+: the tool is enabled automatically.
+Windows with Git Bash installed
+: the tool is rolling out progressively.
+Linux, macOS, and WSL
+: the tool is opt-in.
 ​
 Enable the PowerShell tool
 Set
@@ -697,11 +725,11 @@ Claude Code spawns PowerShell with
 -ExecutionPolicy Bypass
 at process scope only, so
 .ps1
-scripts and module imports work on default Windows installs without changing the machine’s policy. Process-scope bypass does not override Group Policy
+scripts and module imports work on default Windows installs without changing the machine’s policy. Process-scope bypass doesn’t override Group Policy
 MachinePolicy
 or
 UserPolicy
-, so enterprise lockdowns still apply. To respect the machine’s effective execution policy instead, set
+, so enterprise policies still apply. To respect the machine’s effective execution policy instead, set
 CLAUDE_CODE_POWERSHELL_RESPECT_EXECUTION_POLICY=1
 .
 ​
@@ -780,7 +808,7 @@ via the Bash tool to list directory contents.
 ​
 WebFetch tool behavior
 WebFetch takes a URL and a prompt describing what to extract. It fetches the page, converts the response to Markdown when the server returns HTML, and runs the prompt against the content using a small, fast model. For most fetches, Claude receives that model’s answer, not the raw page. The conversion step is not configurable.
-This makes WebFetch lossy by design. The extraction prompt determines what reaches Claude, so a result that says a page does not mention something may only mean the prompt did not ask about it. Ask Claude to fetch again with a more specific prompt, or use
+This makes WebFetch lossy by design. The extraction prompt determines what reaches Claude, so a result that says a page doesn’t mention something may only mean the prompt didn’t ask about it. Ask Claude to fetch again with a more specific prompt, or use
 curl
 via Bash for the unprocessed page.
 A few behaviors shape the response Claude receives:
@@ -814,13 +842,14 @@ Claude-User
 , and an
 Accept
 header that prefers Markdown over HTML so servers that support content negotiation can return Markdown directly.
-Sandbox
-network rules are configured separately, so a domain you want a sandboxed process to reach still needs an explicit sandbox permission rule.
+You configure
+sandbox
+network rules separately, so a domain you want a sandboxed process to reach still needs an explicit sandbox permission rule.
 ​
 WebSearch tool behavior
 WebSearch runs a query against Anthropic’s
 web search
-backend and returns result titles and URLs. It does not fetch the result pages. To read a page Claude finds in search results, it follows up with
+backend and returns result titles and URLs. It doesn’t fetch the result pages. To read a page Claude finds in search results, it follows up with
 WebFetch
 .
 The tool may issue up to eight backend searches per call, refining the search internally before returning results. Claude can scope results with
@@ -838,11 +867,13 @@ allow
 or
 deny
 is the only form.
-WebSearch is available on the Claude API and Microsoft Foundry. On Google Cloud Vertex AI it works with Claude 4 and later models, including Opus, Sonnet, and Haiku. Amazon Bedrock does not expose the server-side web search tool.
+WebSearch is available on the Claude API,
+Claude Platform on AWS
+, and Microsoft Foundry. On Google Cloud Vertex AI it works with Claude 4 and later models, including Opus, Sonnet, and Haiku. Amazon Bedrock doesn’t expose the server-side web search tool.
 ​
 Write tool behavior
-The Write tool creates a new file or overwrites an existing one with the full content provided. It does not append or merge.
-If the target path already exists, Claude must have read that file at least once in the current conversation before overwriting it. A Write to an unread existing file fails with an error. This constraint does not apply to new files.
+The Write tool creates a new file or overwrites an existing one with the full content provided. It doesn’t append or merge.
+If the target path already exists, Claude must have read that file at least once in the current conversation before overwriting it. A Write to an unread existing file fails with an error. This constraint doesn’t apply to new files.
 Viewing the file with Bash also satisfies this requirement under the same rules described in
 Edit tool behavior
 .

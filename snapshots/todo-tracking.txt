@@ -44,6 +44,9 @@ Explicit requests
 when users ask for todo organization
 ​
 Examples
+Before running these examples, install the Claude Agent SDK by following the
+quickstart
+.
 ​
 Monitoring Todo Changes
 TypeScript

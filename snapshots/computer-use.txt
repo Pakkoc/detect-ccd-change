@@ -227,7 +227,7 @@ Computer use safety guide
 Was this page helpful?
 Yes
 No
-Chrome extension (beta)
+Chrome extension
 Visual Studio Code
 ⌘
 I

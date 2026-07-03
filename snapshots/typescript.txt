@@ -1480,7 +1480,10 @@ window, so worst-case wall time is roughly
 API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)
 plus backoff. For unattended runs that need to wait through longer outages, set
 CLAUDE_CODE_RETRY_WATCHDOG=1
-to retry capacity errors indefinitely.
+: it retries capacity errors indefinitely, and
+as of Claude Code v2.1.199 raises the default for other transient errors to
+300
+and removes the cap on this variable.
 CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
 : stall watchdog for subagents launched with
 run_in_background
@@ -2433,12 +2436,18 @@ agentID
 ?:
 string
 ;
+requestId
+:
+string
+;
 }
 )
 =>
 Promise
 <
 PermissionResult
+|
+null
 >;
 Option
 Type
@@ -2469,6 +2478,35 @@ Unique identifier for this specific tool call within the assistant message
 agentID
 string
 If running within a sub-agent, the sub-agent’s ID
+requestId
+string
+The
+control_request
+envelope’s
+request_id
+. A
+control_response
+your application sends outside the SDK, such as a signed HTTP POST, must echo this value so the Claude Code process can match the reply to the request
+The callback normally resolves the request by returning a
+PermissionResult
+, which the SDK writes back over its transport as the
+control_response
+. Return
+null
+only when your application has already sent the
+control_response
+for this request over its own channel, echoing
+requestId
+; the SDK then skips writing the response to its transport. Returning
+null
+in any other case leaves the tool call blocked indefinitely, because no
+control_response
+is ever sent and permission prompts don’t time out.
+The
+requestId
+option and the
+null
+return value require Claude Code v2.1.199 or later.
 ​
 PermissionResult
 Result of a permission check.
@@ -5308,6 +5346,9 @@ string
 // Deprecated: use task_id
 };
 Stops a running background task or shell by ID.
+As of v2.1.198,
+task_id
+also accepts an agent-team teammate or a named background agent by agent ID or name.
 ​
 NotebookEdit
 Tool name:
