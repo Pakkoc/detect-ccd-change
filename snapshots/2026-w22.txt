@@ -74,9 +74,9 @@ or a marketplace entry, so they install without turning on until you enable them
 Vim mode:
 /
 in NORMAL mode opens reverse history search, matching Bash and Zsh vi-mode
-Streaming tool execution is now always enabled, including with telemetry disabled and on Bedrock, Vertex, and Foundry
+Streaming tool execution is now always enabled, including with telemetry disabled and on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
 ←←
-to open the agents view now works on Bedrock, Vertex, Foundry, and with telemetry disabled
+to open the agents view now works on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and with telemetry disabled
 Claude in Chrome: pick which connected browser to use via
 /chrome
 → “Select browser…”, or in-chat when a browser action runs with multiple connected

@@ -1165,6 +1165,15 @@ questions
 array and the
 answers
 mapping
+Save the TypeScript version as
+ask.ts
+and run it with
+npx tsx ask.ts
+, or save the Python version as
+ask.py
+and run it with
+python ask.py
+.
 Python
 TypeScript
 import

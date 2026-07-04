@@ -11,7 +11,7 @@ agent view
 Requirements
 Voice dictation streams your recorded audio to Anthropic’s servers for transcription. Audio is not processed locally. It needs all of the following:
 A Claude.ai account
-: the speech-to-text service is only available when you authenticate with one, and is not available when Claude Code is configured to use an Anthropic API key directly, Amazon Bedrock, Google Vertex AI, or Microsoft Foundry.
+: the speech-to-text service is only available when you authenticate with one, and is not available when Claude Code is configured to use an Anthropic API key directly, Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
 An organization without HIPAA compliance enabled
 :
 /voice
@@ -317,6 +317,11 @@ types a space instead of recording in tap mode
 .
 No audio detected from microphone
 : recording started but captured silence. Confirm the correct input device is set as the system default and that its input level is not muted or near zero. On Windows, open Settings → System → Sound → Input and select your microphone. On macOS, open System Settings → Sound → Input.
+Voice connection failed
+: your recording never reached the transcription service because the connection failed. Check your network and try again.
+A recording that captures no audio reports
+No audio detected from microphone
+instead of this message. Before v2.1.200, a silent microphone could report a connection failure, which suggested a network problem when the actual issue was the input device.
 No speech detected
 : audio reached the transcription service but no words were recognized. Speak closer to the microphone, reduce background noise, and confirm your
 dictation language

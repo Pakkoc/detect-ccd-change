@@ -125,7 +125,7 @@ Alt+M
 Cycle permission modes
 Cycle through
 default
-,
+(labeled Manual in the mode indicator),
 acceptEdits
 ,
 plan

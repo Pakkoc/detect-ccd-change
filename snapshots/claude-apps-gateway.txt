@@ -52,9 +52,9 @@ Telemetry
 OpenTelemetry Protocol (OTLP) metrics
 with token counts, model, user identity, and latency by default, with logs and traces as per-destination opt-ins.
 Upstream routing
-: clients speak the Anthropic Messages API to the gateway, and the gateway translates for each upstream, whether Bedrock,
+: clients speak the Anthropic Messages API to the gateway, and the gateway translates for each upstream, whether Amazon Bedrock,
 Claude Platform on AWS
-, Google Cloud’s Agent Platform, Foundry, or the Anthropic API, with failover between them. You can change regions, providers, or failover order without developers noticing or reconfiguring.
+, Google Cloud’s Agent Platform, Microsoft Foundry, or the Anthropic API, with failover between them. You can change regions, providers, or failover order without developers noticing or reconfiguring.
 The gateway’s own data plane sends nothing to Anthropic infrastructure unless the Anthropic API is a configured upstream. You control where telemetry, audit logs, managed settings, and your developers’ IdP identity go, and the gateway sends none of them to Anthropic. For the remaining traffic the CLI process can send and how to close it, see
 Compliance posture
 .
@@ -82,7 +82,7 @@ Breaking changes to the protocol are announced in advance, but indefinite backwa
 Quickstart
 This quickstart walks the minimal path: register an OAuth client in your IdP, write a
 gateway.yaml
-, run the gateway alongside Postgres with Docker Compose, and verify sign-in end to end. It uses an Amazon Bedrock upstream; Claude Platform on AWS, Google Cloud’s Agent Platform, Foundry, and the Anthropic API are equally supported by swapping the
+, run the gateway alongside Postgres with Docker Compose, and verify sign-in end to end. It uses an Amazon Bedrock upstream; Claude Platform on AWS, Google Cloud’s Agent Platform, Microsoft Foundry, and the Anthropic API are equally supported by swapping the
 upstreams
 block as shown in the
 configuration reference
@@ -248,14 +248,14 @@ auth
 auto_include_builtin_models
 :
 true
-This config is enough for a working sign-in loop with the default Bedrock model catalog. Once it’s running, add per-group RBAC and managed settings via
+This config is enough for a working sign-in loop with the default Amazon Bedrock model catalog. Once it’s running, add per-group RBAC and managed settings via
 managed.policies
 , telemetry fan-out via
 telemetry
 , and multi-upstream failover, provisioned-throughput ARNs, or non-US regions via
 models
 .
-The Bedrock upstream needs an AWS principal with
+The Amazon Bedrock upstream needs an AWS principal with
 bedrock:InvokeModel
 and
 bedrock:InvokeModelWithResponseStream
@@ -263,7 +263,7 @@ on both the
 inference-profile/us.anthropic.*
 ARNs and the underlying
 foundation-model/anthropic.*
-ARNs, and model access enabled in the Bedrock console for the Claude models you want. Supply the credential with IRSA on EKS, an ECS task role, or an EC2 instance profile rather than static keys. The
+ARNs, and model access enabled in the Amazon Bedrock console for the Claude models you want. Supply the credential with IRSA on EKS, an ECS task role, or an EC2 instance profile rather than static keys. The
 upstreams
 reference
 has the full IAM details, the cross-cloud credential matrix, and the
@@ -360,7 +360,7 @@ volumes
 pgdata
 : }
 The gateway is a single Linux binary that reads the config, runs OIDC discovery against your IdP, applies its Postgres schema migrations, builds upstream clients, and starts listening. Boot is fail-closed for the config, the Postgres connection with a 5-second timeout, OIDC discovery, and upstream client construction. If any of those is unreachable or misconfigured, the gateway exits with an error rather than serving traffic in a degraded state.
-A successful boot doesn’t validate the inference path, because Bedrock and Agent Platform instance credentials resolve on the first request, not at boot.
+A successful boot doesn’t validate the inference path, because Amazon Bedrock and Google Cloud’s Agent Platform instance credentials resolve on the first request, not at boot.
 Watch stderr for the boot sequence. Log lines use the format
 [gateway] <timestamp> <level> <message>
 , audit events are single-line JSON with an
@@ -609,18 +609,18 @@ Availability and limitations
 The table covers which Claude Code features work when developers connect through the gateway, and what the gateway server itself supports. Where something isn’t supported, the Notes column gives the alternative.
 The gateway delivers the
 anthropic-beta
-values the CLI sends to every upstream, so operators don’t maintain a beta allowlist. For Bedrock, which ignores the header, the gateway moves the values into the request body’s
+values the CLI sends to every upstream, so operators don’t maintain a beta allowlist. For Amazon Bedrock, which ignores the header, the gateway moves the values into the request body’s
 anthropic_beta
 field; the other upstreams receive the header as sent.
 The CLI’s gateway-session beta set omits first-party-only betas and the extended-cache-ttl beta, which is why those rows below show as not available.
 Feature
 Status
 Notes
-Inference forwarding (Bedrock, Claude Platform on AWS, Agent Platform, Foundry, Anthropic)
+Inference forwarding (Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, Microsoft Foundry, Anthropic)
 Available
-With per-upstream model translation and failover. The Bedrock upstream uses the
+With per-upstream model translation and failover. The Amazon Bedrock upstream uses the
 bedrock-runtime
-endpoint and the AWS default credential chain; the Bedrock
+endpoint and the AWS default credential chain; the Amazon Bedrock
 Mantle endpoint
 is not a supported upstream. The
 Claude Platform on AWS upstream

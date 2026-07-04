@@ -1,4 +1,4 @@
-When Claude wants to edit a file, run a shell command, or make a network request, it pauses and asks you to approve the action. Permission modes control how often that pause happens. The mode you pick shapes the flow of a session: default mode has you review each action as it comes, while looser modes let Claude work in longer uninterrupted stretches and report back when done. Pick more oversight for sensitive work, or fewer interruptions when you trust the direction.
+When Claude wants to edit a file, run a shell command, or make a network request, it pauses and asks you to approve the action. Permission modes control how often that pause happens. The mode you pick shapes the flow of a session: Manual mode has you review each action as it comes, while looser modes let Claude work in longer uninterrupted stretches and report back when done. Pick more oversight for sensitive work, or fewer interruptions when you trust the direction.
 ​
 Available modes
 Each mode makes a different tradeoff between convenience and oversight. The table below shows what Claude can do without a permission prompt in each mode.
@@ -6,7 +6,9 @@ Mode
 What runs without asking
 Best for
 default
-Reads only
+Reads only. Labeled
+Manual
+in the CLI and IDE extensions
 Getting started, sensitive work
 acceptEdits
 Reads, file edits, and common filesystem commands (
@@ -31,6 +33,21 @@ Locked-down CI and scripts
 bypassPermissions
 Everything
 Isolated containers and VMs only
+The mode that reviews every action is named
+Manual
+in the CLI, in
+claude --help
+, and in the VS Code and JetBrains extensions. Its config value is
+default
+, which is what hooks and SDK integrations use. The CLI accepts
+manual
+as an alias wherever you type the value, for example
+claude --permission-mode manual
+or
+"defaultMode": "manual"
+. The Manual label and the
+manual
+alias require Claude Code v2.1.200 or later.
 In every mode except
 bypassPermissions
 , writes to
@@ -122,7 +139,7 @@ in VS Code settings, or use the Claude Code extension settings panel.
 The mode indicator shows these labels, mapped to the mode each one applies:
 UI label
 Mode
-Ask before edits
+Manual
 default
 Edit automatically
 acceptEdits
@@ -232,15 +249,16 @@ Use
 acceptEdits
 when you want to review changes in your editor or via
 git diff
-after the fact rather than approving each edit inline. Press
+after the fact rather than approving each edit inline.
+Press
 Shift+Tab
-once from default mode to enter it, or start with it directly:
+once from Manual mode to enter it, or start with it directly:
 claude
 --permission-mode
 acceptEdits
 ​
 Analyze before you edit with plan mode
-Plan mode tells Claude to research and propose changes without making them. Claude reads files, runs shell commands to explore, and writes a plan, but does not edit your source. Permission prompts still apply the same as default mode.
+Plan mode tells Claude to research and propose changes without making them. Claude reads files, runs shell commands to explore, and writes a plan, but does not edit your source. Permission prompts still apply as they do in Manual mode.
 Enter plan mode by pressing
 Shift+Tab
 or prefixing a single prompt with
@@ -316,11 +334,11 @@ in
 managed settings
 .
 Model
-: on the Anthropic API, Claude Opus 4.6 or later, or Sonnet 4.6 or later. On Amazon Bedrock, Google Cloud Vertex AI, Microsoft Foundry, and signed-in
+: on the Anthropic API, Claude Opus 4.6 or later, or Sonnet 4.6 or later. On Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in
 Claude apps gateway
 sessions, only Claude Sonnet 5, Opus 4.7, and Opus 4.8. Older models, including Sonnet 4.5, Opus 4.5, Haiku, and claude-3 models, are not supported on any provider.
 Provider
-: available by default on the Anthropic API. On Amazon Bedrock, Google Cloud Vertex AI, Microsoft Foundry, and signed-in Claude apps gateway sessions, auto mode is off until you
+: available by default on the Anthropic API. On Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in Claude apps gateway sessions, auto mode is off until you
 set
 CLAUDE_CODE_ENABLE_AUTO_MODE
 .
@@ -343,11 +361,11 @@ from those files so a repository cannot grant itself auto mode. Move it to
 ~/.claude/settings.json
 .
 ​
-Enable auto mode on Bedrock, Vertex AI, or Foundry
+Enable auto mode on Bedrock, Agent Platform, or Foundry
 On
 Amazon Bedrock
 ,
-Google Cloud Vertex AI
+Google Cloud’s Agent Platform
 ,
 Microsoft Foundry
 , and signed-in
@@ -402,9 +420,14 @@ disableAutoMode
 setting applies the same way in either configuration.
 ​
 What the classifier blocks by default
-The classifier trusts your working directory and your repo’s configured remotes. Everything else is treated as external until you
+The classifier trusts your working directory and the remotes that were configured for it when the session started.
+A remote added or repointed during the session with
+git remote add
+or
+git remote set-url
+isn’t trusted, and everything else is treated as external until you
 configure trusted infrastructure
-.
+. Before v2.1.200, remotes added mid-session were also trusted.
 Blocked by default
 :
 Downloading and executing code, like
@@ -487,8 +510,23 @@ Deleting files in
 ,
 $TMPDIR
 , or another shared scratch or cache directory by wildcard, glob, or age filter rather than by a specific named path
-Including sensitive details in content sent, uploaded, published, or written to other people or shared systems, when your own message didn’t authorize those details for that recipient
+Including sensitive details in content sent, uploaded, published, or written to other people or shared systems, when your own message didn’t authorize those details for that recipient.
+PR and issue bodies, commit messages, and comments count as this kind of outbound content when the repository is outside the trust boundary or public, including your organization’s own public repositories; internal file paths, code names, live API response data such as emails or account identifiers, and infrastructure identifiers count as sensitive details. The PR, issue, and commit-message scoping requires Claude Code v2.1.200 or later
 Sending keystrokes to Claude Code’s own tmux pane to drive its own interface, which the classifier treats as Claude changing its own permissions or oversight
+Claude Code v2.1.200 and later also block these by default:
+Commenting out, deleting, or force-passing a test or assertion that guards security behavior, such as auth, access control, input validation, or sandboxing
+Deleting or tearing down a stateful resource Claude didn’t create in the session, when no more specific deletion rule applies and you didn’t name that resource
+Repointing an API base URL, proxy endpoint, webhook receiver, or registry mirror at a third-party host that doesn’t fit the task, including in example files like
+.env.example
+Changing where pushes go with
+git remote set-url
+or
+git remote add
+, unless you named the new remote
+Pushing secrets to a repository known to be public, or pushing other sensitive or confidential material there that isn’t part of that repository’s own work. When a repository’s visibility isn’t established, the classifier doesn’t block on that alone; it judges the content against the other rules instead
+Opening a pull request against a different repository or organization, forking with
+gh repo fork
+, or pushing to a third-party repository, unless you named that external target
 Allowed by default
 :
 Local file operations in your working directory

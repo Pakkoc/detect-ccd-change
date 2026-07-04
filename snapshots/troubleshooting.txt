@@ -8,7 +8,7 @@ EACCES
 Troubleshoot installation and login
 Login loops, OAuth errors,
 403 Forbidden
-, “organization disabled”, Bedrock/Vertex/Foundry credentials
+, “organization disabled”, Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry credentials
 Troubleshoot installation and login
 Settings not applying, hooks not firing, MCP servers not loading
 Debug your configuration

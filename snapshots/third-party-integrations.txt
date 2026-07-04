@@ -17,7 +17,7 @@ Claude for Teams/Enterprise
 Anthropic Console
 Amazon Bedrock
 Claude Platform on AWS
-Google Vertex AI
+Google Cloud’s Agent Platform, formerly Vertex AI
 Microsoft Foundry
 Best for
 Most organizations (recommended)
@@ -90,10 +90,10 @@ Select a deployment option to view setup instructions:
 Claude for Teams or Enterprise
 Anthropic Console
 Claude apps gateway
-, a self-hosted gateway that adds IdP sign-in in front of Amazon Bedrock, Claude Platform on AWS, Google Vertex AI, Microsoft Foundry, or the Anthropic API
+, a self-hosted gateway that adds IdP sign-in in front of Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, Microsoft Foundry, or the Anthropic API
 Amazon Bedrock
 Claude Platform on AWS
-Google Vertex AI
+Google Cloud’s Agent Platform
 Microsoft Foundry
 ​
 Configure proxies and gateways
@@ -129,7 +129,7 @@ for other configuration methods.
 Amazon Bedrock
 Corporate proxy
 LLM Gateway
-Route Bedrock traffic through your corporate proxy by setting the following
+Route Amazon Bedrock traffic through your corporate proxy by setting the following
 environment variables
 :
 # Enable Bedrock
@@ -146,7 +146,7 @@ export
 HTTPS_PROXY
 =
 'https://proxy.example.com:8080'
-Route Bedrock traffic through your LLM gateway by setting the following
+Route Amazon Bedrock traffic through your LLM gateway by setting the following
 environment variables
 :
 # Enable Bedrock
@@ -168,7 +168,7 @@ CLAUDE_CODE_SKIP_BEDROCK_AUTH
 Microsoft Foundry
 Corporate proxy
 LLM Gateway
-Route Foundry traffic through your corporate proxy by setting the following
+Route Microsoft Foundry traffic through your corporate proxy by setting the following
 environment variables
 :
 # Enable Microsoft Foundry
@@ -190,7 +190,7 @@ export
 HTTPS_PROXY
 =
 'https://proxy.example.com:8080'
-Route Foundry traffic through your LLM gateway by setting the following
+Route Microsoft Foundry traffic through your LLM gateway by setting the following
 environment variables
 :
 # Enable Microsoft Foundry
@@ -209,13 +209,13 @@ ANTHROPIC_FOUNDRY_API_KEY
 your-gateway-key
 # Sent as x-api-key
 ​
-Google Vertex AI
+Google Cloud’s Agent Platform
 Corporate proxy
 LLM Gateway
-Route Vertex AI traffic through your corporate proxy by setting the following
+Route Google Cloud’s Agent Platform traffic through your corporate proxy by setting the following
 environment variables
 :
-# Enable Vertex
+# Enable Agent Platform
 export
 CLAUDE_CODE_USE_VERTEX
 =
@@ -233,10 +233,10 @@ export
 HTTPS_PROXY
 =
 'https://proxy.example.com:8080'
-Route Vertex AI traffic through your LLM gateway by setting the following
+Route Google Cloud’s Agent Platform traffic through your LLM gateway by setting the following
 environment variables
 :
-# Enable Vertex
+# Enable Agent Platform
 export
 CLAUDE_CODE_USE_VERTEX
 =
@@ -287,11 +287,11 @@ Encourage new users to try Claude Code for codebase Q&A, or on smaller bug fixes
 ​
 Pin model versions for cloud providers
 If you deploy through
-Bedrock
+Amazon Bedrock
 ,
-Vertex AI
+Google Cloud’s Agent Platform
 ,
-Foundry
+Microsoft Foundry
 , or
 Claude Platform on AWS
 , pin specific model versions using

@@ -21,8 +21,9 @@ or
 curl: (56) Failure writing output to destination
 Check connectivity or use an alternative installer
 Killed
-during install on Linux
-Add swap space for low-memory servers
+during install on Linux, or
+Installation was killed before it could finish (exit code 137)
+Free memory or add swap space
 TLS connect error
 or
 SSL/TLS secure channel
@@ -80,11 +81,11 @@ Fix authentication
 Could not load the default credentials
 or
 Could not load credentials from any providers
-Bedrock, Vertex, or Foundry credentials
+Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry credentials
 ChainedTokenCredential authentication failed
 or
 CredentialUnavailableError
-Bedrock, Vertex, or Foundry credentials
+Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry credentials
 API Error: 500
 ,
 529 Overloaded
@@ -797,13 +798,21 @@ install.ps1
 iex
 ​
 Install killed on low-memory Linux servers
-If you see
+A
 Killed
-during installation on a VPS or cloud instance:
+message during install usually means the Linux out-of-memory (OOM) killer terminated the
+claude install
+step because the system ran out of free memory. This is common on small VPS and cloud instances. The install script reports the cause and exits with code 137:
 Setting up Claude Code...
-Installing Claude Code native build latest...
 bash: line 142: 34803 Killed    "$binary_path" install ${TARGET:+"$TARGET"}
-The Linux OOM killer terminated the process because the system ran out of memory. Claude Code requires at least 4 GB of available RAM.
+Installation was killed before it could finish (exit code 137). This usually means the system ran out of memory.
+Claude Code needs roughly 512MB of free memory to install. Free up memory, then run this script again.
+Before v2.1.200, the script exited with only the shell’s bare
+Killed
+line and no explanation.
+Installing needs roughly 512 MB of free memory, and running Claude Code needs more. See the
+system requirements
+.
 Solutions:
 Add swap space
 if your server has limited RAM. Swap uses disk space as overflow memory, letting the install complete even with low physical RAM.
@@ -1338,19 +1347,19 @@ security unlock-keychain ~/Library/Keychains/login.keychain-db
 login
 keychain, and choose Edit > Change Password for Keychain “login” to resync it with your account password.
 ​
-Bedrock, Vertex, or Foundry credentials not loading
+Bedrock, Agent Platform, or Foundry credentials not loading
 If you configured Claude Code to use a cloud provider and see
 Could not load credentials from any providers
-on Bedrock,
+on Amazon Bedrock,
 Could not load the default credentials
-on Vertex, or
+on Google Cloud’s Agent Platform, or
 ChainedTokenCredential authentication failed
-on Foundry, your cloud provider CLI is likely not authenticated in the current shell.
-For Bedrock, confirm your AWS credentials are valid:
+on Microsoft Foundry, your cloud provider CLI is likely not authenticated in the current shell.
+For Amazon Bedrock, confirm your AWS credentials are valid:
 aws
 sts
 get-caller-identity
-For Vertex AI, confirm
+For Google Cloud’s Agent Platform, confirm
 ANTHROPIC_VERTEX_PROJECT_ID
 and
 CLOUD_ML_REGION
@@ -1368,7 +1377,7 @@ If credentials work in your terminal but not in the VS Code or JetBrains extensi
 See
 Amazon Bedrock
 ,
-Google Vertex AI
+Google Cloud’s Agent Platform
 , or
 Microsoft Foundry
 for full provider setup.

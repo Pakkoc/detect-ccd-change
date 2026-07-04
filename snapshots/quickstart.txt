@@ -113,7 +113,7 @@ Claude Pro, Max, Team, or Enterprise
 (recommended)
 Claude Console
 (API access with pre-paid credits). On first login, a “Claude Code” workspace is automatically created in the Console for centralized cost tracking.
-Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
+Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 (enterprise cloud providers)
 A self-hosted
 Claude apps gateway

@@ -98,7 +98,7 @@ CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
 since v2.1.129
 MCP servers that hit a transient error during startup now auto-retry up to 3 times instead of staying disconnected
 ANTHROPIC_BEDROCK_SERVICE_TIER
-selects a Bedrock service tier:
+selects an Amazon Bedrock service tier:
 default
 ,
 flex
@@ -108,7 +108,7 @@ priority
 enables iTerm2’s clipboard access setting so
 /copy
 works, including from tmux
-Vertex AI now supports X.509 certificate-based Workload Identity Federation (mTLS ADC)
+Google Cloud’s Agent Platform now supports X.509 certificate-based Workload Identity Federation (mTLS ADC)
 Significant memory leak fixes: image-heavy sessions,
 /usage
 on large transcript histories, and long-running tools without progress events

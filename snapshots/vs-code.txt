@@ -6,7 +6,7 @@ Before installing, make sure you have:
 VS Code 1.98.0 or higher
 An Anthropic account: any paid Claude subscription (Pro, Max, Team, or Enterprise) or a Claude Console account works, and no API key is required. You’ll
 sign in
-with this account when you first open the extension. If you access Claude through a third-party provider like Amazon Bedrock or Google Vertex AI, see
+with this account when you first open the extension. If you access Claude through a third-party provider like Amazon Bedrock or Google Cloud’s Agent Platform, see
 Use third-party providers
 for setup instructions.
 The extension bundles its own copy of the CLI (command-line interface) for the chat panel. To run
@@ -105,9 +105,17 @@ Run “Claude Code: Open Walkthrough” from the Command Palette for a guided to
 Use the prompt box
 The prompt box supports several features:
 Permission modes
-: click the mode indicator at the bottom of the prompt box to switch modes. In normal mode, Claude asks permission before each action. In Plan mode, Claude describes what it will do and waits for approval before making changes. VS Code automatically opens the plan as a full markdown document where you can add inline comments to give feedback before Claude begins. In auto-accept mode, Claude makes edits without asking. Set the default in VS Code settings under
+: click the mode indicator at the bottom of the prompt box to switch modes, or set the default in VS Code settings under
 claudeCode.initialPermissionMode
-.
+. See
+permission modes
+for every mode the indicator offers.
+Manual
+: Claude asks permission before each action.
+Plan mode
+: Claude describes what it will do and waits for approval before making changes. VS Code automatically opens the plan as a full markdown document where you can add inline comments to give feedback before Claude begins.
+Edit automatically
+: Claude makes edits without asking.
 Command menu
 : click
 /
@@ -434,7 +442,13 @@ plan
 acceptEdits
 , or
 bypassPermissions
-. See
+.
+manual
+is an alias for
+default
+and selects the mode labeled
+Manual
+in the mode indicator. Requires Claude Code v2.1.200 or later. See
 permission modes
 .
 preferredLocation
@@ -620,7 +634,7 @@ Run parallel sessions with Git worktrees
 .
 ​
 Use third-party providers
-By default, Claude Code connects directly to Anthropic’s API. If your organization uses Amazon Bedrock, Google Vertex AI, or Microsoft Foundry to access Claude, configure the extension to use your provider instead:
+By default, Claude Code connects directly to Anthropic’s API. If your organization uses Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry to access Claude, configure the extension to use your provider instead:
 1
 Disable login prompt
 Open the
@@ -637,7 +651,7 @@ Disable Login Prompt
 Configure your provider
 Follow the setup guide for your provider:
 Claude Code on Amazon Bedrock
-Claude Code on Google Vertex AI
+Claude Code on Google Cloud’s Agent Platform
 Claude Code on Microsoft Foundry
 These guides cover configuring your provider in
 ~/.claude/settings.json

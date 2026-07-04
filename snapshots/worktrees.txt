@@ -73,6 +73,13 @@ trust check
 , so
 claude -p --worktree
 proceeds without it.
+Plugins installed at
+project scope
+from the main checkout also load in worktrees of the same repository, so you don’t need to reinstall them per worktree. This applies whether you create the worktree with
+--worktree
+or with
+git worktree add
+. Requires Claude Code v2.1.200 or later.
 Add
 .claude/worktrees/
 to your

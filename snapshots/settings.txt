@@ -134,6 +134,13 @@ for settings that are checked into source control and shared with your team
 for settings that are not checked in, useful for personal preferences and experimentation. When Claude Code creates
 .claude/settings.local.json
 , it configures git to ignore the file. If you create the file yourself, add it to your gitignore manually.
+Because this file is yours rather than the repository’s, its permission
+allow
+rules take effect without the
+workspace trust
+step that
+.claude/settings.json
+allow rules require. If the repository supplies the file, for example by committing it, workspace trust still applies.
 Managed settings
 : For organizations that need centralized control, Claude Code supports multiple delivery mechanisms for managed settings. All use the same JSON format and cannot be overridden by user or project settings:
 Server-managed settings
@@ -456,6 +463,26 @@ Authorization: Bearer
 headers for model requests. Set the refresh interval with
 CLAUDE_CODE_API_KEY_HELPER_TTL_MS
 /bin/generate_temp_api_key.sh
+askUserQuestionTimeout
+Default
+:
+"never"
+. Idle time before an unanswered
+AskUserQuestion
+dialog auto-continues with whatever options you’d already selected. Accepts
+"60s"
+,
+"5m"
+,
+"10m"
+, or
+"never"
+. With the default, questions wait until you answer them. Appears in
+/config
+as
+Question auto-continue timeout
+, which writes this key to user settings. Not read from project or local settings. Requires Claude Code v2.1.200 or later
+"5m"
 attribution
 Customize attribution for git commits and pull requests. See
 Attribution settings
@@ -949,7 +976,7 @@ to suppress entirely, or set
 CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY
 in
 env
-. Useful when using Bedrock, Vertex, or Foundry where the default sample rate does not apply
+. Useful when using Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry where the default sample rate does not apply
 0.05
 fileCheckpointingEnabled
 Default
@@ -1002,7 +1029,7 @@ ANTHROPIC_API_KEY
 ANTHROPIC_AUTH_TOKEN
 , or
 apiKeyHelper
-are blocked at startup, since an environment credential cannot satisfy the required login method. Third-party provider sessions such as Bedrock, Vertex, and Foundry are not blocked: they authenticate against your cloud provider rather than Anthropic
+are blocked at startup, since an environment credential cannot satisfy the required login method. Third-party provider sessions such as Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry are not blocked: they authenticate against your cloud provider rather than Anthropic
 claudeai
 forceLoginGatewayUrl
 Pre-fills and locks the gateway URL on the
@@ -1019,7 +1046,7 @@ ANTHROPIC_API_KEY
 ANTHROPIC_AUTH_TOKEN
 , or
 apiKeyHelper
-are blocked at startup since organization membership cannot be verified for them. Third-party provider sessions such as Bedrock, Vertex, and Foundry are not blocked: use your cloud IAM to restrict which cloud accounts can be used. An empty array fails closed and blocks login with a misconfiguration message
+are blocked at startup since organization membership cannot be verified for them. Third-party provider sessions such as Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry are not blocked: use your cloud IAM to restrict which cloud accounts can be used. An empty array fails closed and blocks login with a misconfiguration message
 "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 or
 ["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"]
@@ -1101,7 +1128,7 @@ ANTHROPIC_MODEL
 override this for one session
 "claude-sonnet-5"
 modelOverrides
-Map Anthropic model IDs to provider-specific model IDs such as Bedrock inference profile ARNs. Each model picker entry uses its mapped value when calling the provider API. See
+Map Anthropic model IDs to provider-specific model IDs such as Amazon Bedrock inference profile ARNs. Each model picker entry uses its mapped value when calling the provider API. See
 Override model IDs per version
 {"claude-opus-4-6": "arn:aws:bedrock:..."}
 otelHeadersHelper
@@ -1352,7 +1379,7 @@ that sends each requested hostname to
 api.anthropic.com
 before fetching. Set to
 true
-in environments that block traffic to Anthropic, such as Bedrock, Vertex AI, or Foundry deployments with restrictive egress. When skipped, WebFetch attempts any URL without consulting the blocklist
+in environments that block traffic to Anthropic, such as Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry deployments with restrictive egress. When skipped, WebFetch attempts any URL without consulting the blocklist
 true
 spinnerTipsEnabled
 Default
@@ -1792,16 +1819,19 @@ auto
 dontAsk
 ,
 bypassPermissions
-.
-As of Claude Code v2.1.142,
+, and
+manual
+as an alias for
+default
+, the mode labeled Manual in the CLI and the VS Code and JetBrains extensions. The
+manual
+alias requires Claude Code v2.1.200 or later.
 auto
-is ignored when set in project or local settings (
-.claude/settings.json
-,
-.claude/settings.local.json
-) so a repository cannot grant itself auto mode. Set it in
+is ignored when set in project or local settings, so a repository can’t grant itself auto mode; set it in
 ~/.claude/settings.json
-instead. The
+instead. Before v2.1.142, project settings could set
+auto
+. The
 --permission-mode
 CLI flag overrides this setting for a single session
 "acceptEdits"

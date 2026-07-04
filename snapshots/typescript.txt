@@ -3401,7 +3401,15 @@ string
 SDKPartialAssistantMessage
 Streaming partial message (only when
 includePartialMessages
-is true).
+is true). The
+parent_tool_use_id
+field is always
+null
+: stream events are emitted for the main session only. For subagent attribution, use complete messages, which carry
+parent_tool_use_id
+, or enable
+forwardSubagentText
+to receive subagent text and thinking as complete messages.
 type
 SDKPartialAssistantMessage
 =
@@ -9017,9 +9025,11 @@ message with
 subtype: "error_during_execution"
 and the reason in
 errors
-, then stops. Watch for that subtype rather than expecting
+. For a single message
 query()
-to throw before yielding messages.
+call, the SDK throws after yielding that error result, so wrap the loop in a try block to continue past it. See
+Handle the result
+for the error contract.
 To run unsandboxed instead, set
 failIfUnavailable: false
 .
@@ -9032,6 +9042,8 @@ query
 from
 "@anthropic-ai/claude-agent-sdk"
 ;
+try
+{
 for
 await
 (
@@ -9074,6 +9086,24 @@ log
 message
 .
 result
+);
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result,
+// such as when the sandbox can't start (failIfUnavailable defaults to true).
+console
+.
+log
+(
+`Session ended with an error:
+${
+error
+}
+`
 );
 }
 Unix socket security:

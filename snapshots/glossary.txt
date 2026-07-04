@@ -284,6 +284,11 @@ dontAsk
 , and
 bypassPermissions
 .
+The
+default
+mode is labeled Manual in the CLI and in the VS Code and JetBrains extensions, and Claude Code accepts
+manual
+as an alias for the value.
 Learn more:
 Choose a permission mode
 ​
@@ -423,7 +428,7 @@ Teleport
 A command,
 /teleport
 , that pulls a cloud Claude Code session into your local terminal. Claude fetches the branch, loads the conversation history, and resumes from the web session’s last state. The reverse direction is
---remote
+--cloud
 , which sends a local task to run on the web.
 Learn more:
 From web to terminal

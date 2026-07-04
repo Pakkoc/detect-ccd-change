@@ -29,7 +29,7 @@ session
 store
 : PostgreSQL, for device grants and rate-limit counters
 upstreams
-: where inference goes, whether Anthropic, Bedrock, Claude Platform on AWS, Agent Platform, or Foundry
+: where inference goes, whether Anthropic, Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry
 Optional sections:
 admin
 : Admin API auth and retention for spend limits
@@ -390,7 +390,7 @@ to the client even when a later upstream in the list served the model.
 Multiple upstreams of the same provider must set a distinct
 name:
 .
-Bedrock, Claude Platform on AWS, Agent Platform, and Foundry clients are built once at startup, and their SDKs refresh credentials internally, so rotating cloud credentials doesn’t require a restart. Static Anthropic API keys and bearers are read at startup; see
+Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry clients are built once at startup, and their SDKs refresh credentials internally, so rotating cloud credentials doesn’t require a restart. Static Anthropic API keys and bearers are read at startup; see
 Anthropic API
 .
 ​
@@ -445,7 +445,7 @@ identity_token_file
 # service_account_id: svac_...   # optional expected-target check
 ​
 Amazon Bedrock
-For the client-side Bedrock deployment that the gateway replaces or fronts, see
+For the client-side Amazon Bedrock deployment that the gateway replaces or fronts, see
 Claude Code on Amazon Bedrock
 . The gateway-side upstream:
 upstreams
@@ -488,7 +488,7 @@ and
 arn:aws:bedrock:*::foundation-model/anthropic.*
 .
 Model access
-In the Bedrock console, per region, request and enable model access for the Claude models you want. Cross-region inference profiles (
+In the Amazon Bedrock console, per region, request and enable model access for the Claude models you want. Cross-region inference profiles (
 us.anthropic.*
 ) require model access in each region the profile spans.
 EKS (IRSA)
@@ -631,8 +631,8 @@ GOOGLE_APPLICATION_CREDENTIALS
 , GCE metadata, or GKE Workload Identity. Service-account JSON key files are supported but discouraged; use Workload Identity or attach a service account to the GCE or Cloud Run instance.
 Set
 region: global
-to use
-Agent Platform’s global endpoint
+to use the
+global endpoint for Google Cloud’s Agent Platform
 instead of a regional one. Google then routes each request to an available region, so you don’t track per-region model availability. Setting a specific region pins every request to it.
 Setup
 How
@@ -641,7 +641,7 @@ Grant the gateway’s service account
 roles/aiplatform.user
 on the project, or a custom role with
 aiplatform.endpoints.predict
-. Enable the Agent Platform API (
+. Enable Google Cloud’s Agent Platform API (
 aiplatform.googleapis.com
 ).
 Model access
@@ -665,7 +665,7 @@ ${file:…}
 expansion is involved.
 ​
 Microsoft Foundry
-For the client-side Foundry deployment, see
+For the client-side Microsoft Foundry deployment, see
 Claude Code on Microsoft Foundry
 . The gateway-side upstream:
 upstreams
@@ -691,7 +691,7 @@ true
 use_azure_ad: true
 resolves through
 DefaultAzureCredential
-: Managed Identity on AKS, ACI, or App Service; the Azure CLI; or environment credentials. API keys work but are project-wide and don’t rotate automatically. Foundry’s endpoint is derived from
+: Managed Identity on AKS, ACI, or App Service; the Azure CLI; or environment credentials. API keys work but are project-wide and don’t rotate automatically. Microsoft Foundry’s endpoint is derived from
 resource:
 ; set the optional
 base_url
@@ -703,9 +703,9 @@ Grant the gateway’s identity
 Azure AI User
 or
 Cognitive Services User
-on the Foundry resource
+on the Microsoft Foundry resource
 Deployments
-Foundry uses admin-chosen deployment names, not canonical model IDs. Add a
+Microsoft Foundry uses admin-chosen deployment names, not canonical model IDs. Add a
 models:
 block mapping each canonical ID to your deployment name.
 AKS (workload identity)
@@ -749,7 +749,7 @@ doesn’t.
 is per-upstream capacity, so provisioned-throughput (PT) exhaustion fails over to on-demand.
 404
 is per-upstream model availability, so an upstream that hasn’t enabled a model doesn’t block a later upstream that serves it. An upstream that can’t resolve the requested model is skipped without a network round-trip.
-This example routes a provisioned-throughput Bedrock allotment first, overflows to on-demand and a second account, and falls back to the Anthropic API last:
+This example routes a provisioned-throughput Amazon Bedrock allotment first, overflows to on-demand and a second account, and falls back to the Anthropic API last:
 upstreams
 :
 # Primary: provisioned throughput in your home region.
@@ -840,7 +840,7 @@ claude-opus-4-8
 Lever
 How
 Different regions
-One Bedrock upstream per region, each with its own
+One Amazon Bedrock upstream per region, each with its own
 region:
 . With
 auto_include_builtin_models: true
@@ -848,7 +848,7 @@ the cross-region inference profiles route automatically; for region-pinned deplo
 models:
 block.
 Different accounts
-One Bedrock upstream per account, each with its own credentials in
+One Amazon Bedrock upstream per account, each with its own credentials in
 auth:
 . The default chain (
 auth: {}
@@ -1022,7 +1022,7 @@ The
 models
 block is an optional admin-curated model list, served at
 /v1/models
-and used to translate model IDs per upstream. It is required for non-US Bedrock regions, Bedrock provisioned-throughput ARNs, and Foundry deployment names.
+and used to translate model IDs per upstream. It is required for non-US Amazon Bedrock regions, Amazon Bedrock provisioned-throughput ARNs, and Microsoft Foundry deployment names.
 auto_include_builtin_models
 :
 true

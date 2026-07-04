@@ -41,9 +41,9 @@ Focus view: press
 Ctrl+O
 in flicker-free mode to collapse the view to your last prompt, a one-line tool summary with diffstats, and Claude’s final response
 Guided
-Bedrock
+Amazon Bedrock
 and
-Vertex AI
+Google Cloud’s Agent Platform
 setup wizards on the login screen: pick “3rd-party platform” for step-by-step auth, region, credential check, and model pinning
 /agents
 gets a tabbed layout: a Running tab shows live subagents with a
@@ -51,7 +51,7 @@ gets a tabbed layout: a Running tab shows live subagents with a
 count, plus Run agent and View running instance actions in the Library tab
 Default effort level is now
 high
-for API-key, Bedrock, Vertex, Foundry, Team, and Enterprise users (control with
+for API-key, Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, Team, and Enterprise users (control with
 /effort
 )
 /cost

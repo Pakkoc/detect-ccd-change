@@ -36,13 +36,25 @@ Availability
 Yes
 AskUserQuestion
 Asks multiple-choice questions to gather requirements or clarify ambiguity.
-As of v2.1.198, if you don’t respond within 60 seconds the dialog closes on its own: it submits any options you’d already selected and tells Claude you may be away from your keyboard, so Claude proceeds on its own judgment and can re-ask later. A countdown appears for the last 20 seconds. Any keypress keeps the dialog open, and so does a focused window on terminals that report focus. Set the
-CLAUDE_AFK_TIMEOUT_MS
-environment variable to change how long Claude Code waits, or to a large value like
-86400000
-, 24 hours, to keep questions open while you’re away. This timeout applies only to
+Questions stay open until you answer them: there’s no idle timeout by default. To have an idle dialog auto-continue instead, set the
+askUserQuestionTimeout
+setting to
+60s
+,
+5m
+, or
+10m
+, either in your user
+settings.json
+or from the
+Question auto-continue timeout
+row in
+/config
+. Once the chosen idle time passes with no input, the dialog closes on its own: it submits any options you’d already selected and tells Claude you may be away from your keyboard, so Claude proceeds on its own judgment and can re-ask later. A countdown appears for the last 20 seconds. Any keypress restarts the timer, and so does a focused window on terminals that report focus. The timeout applies only to
 AskUserQuestion
-’s multiple-choice questions; permission prompts, including plan approval, never auto-resolve on idle
+’s multiple-choice questions; permission prompts, including plan approval, never auto-resolve on idle. In v2.1.198 and v2.1.199, the dialog auto-continued after 60 seconds of idle by default, and
+CLAUDE_AFK_TIMEOUT_MS
+was the only way to change that
 No
 Bash
 Executes shell commands in your environment. See
@@ -123,7 +135,7 @@ Remote Control
 is connected, so a long-running task or
 scheduled task
 can reach you when you step away.
-Push delivery runs through Anthropic-hosted infrastructure, which is not accessible from Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
+Push delivery runs through Anthropic-hosted infrastructure, which is not accessible from Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 No
 Read
 Reads the contents of files. See
@@ -138,7 +150,7 @@ Routines
 on claude.ai. Backs the
 /schedule
 command.
-Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
+Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 No
 ReportFindings
 Reports code-review findings as a structured list, with a file, summary, and failure scenario per finding, so Claude Code can render them instead of printing them as text. Claude calls it when active code-review instructions tell it to.
@@ -160,7 +172,7 @@ session_crons
 in
 Stop hook input
 .
-Not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry, where a
+Not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry, where a
 /loop
 prompt with no interval runs on a fixed schedule instead
 No
@@ -186,7 +198,7 @@ shows a download card only, and when unset the client decides by file type. Avai
 Remote Control
 client is connected or the session runs in a managed cloud environment such as
 Claude Code on the web
-. Delivery runs through Anthropic-hosted infrastructure, so the tool is not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
+. Delivery runs through Anthropic-hosted infrastructure, so the tool is not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 No
 ShareOnboardingGuide
 Uploads
@@ -601,7 +613,7 @@ deny
 patterns you have set for Bash apply here too. The
 WebSocket source
 has its own approval prompt.
-The tool is not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry. It is also not available when
+The tool is not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. It is also not available when
 DISABLE_TELEMETRY
 or
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
@@ -869,7 +881,7 @@ deny
 is the only form.
 WebSearch is available on the Claude API,
 Claude Platform on AWS
-, and Microsoft Foundry. On Google Cloud Vertex AI it works with Claude 4 and later models, including Opus, Sonnet, and Haiku. Amazon Bedrock doesn’t expose the server-side web search tool.
+, and Microsoft Foundry. On Google Cloud’s Agent Platform it works with Claude 4 and later models, including Opus, Sonnet, and Haiku. Amazon Bedrock doesn’t expose the server-side web search tool.
 ​
 Write tool behavior
 The Write tool creates a new file or overwrites an existing one with the full content provided. It doesn’t append or merge.

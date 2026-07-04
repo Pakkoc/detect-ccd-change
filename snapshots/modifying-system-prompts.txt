@@ -235,7 +235,16 @@ at a settings file that sets it.
 outputStyle
 is not a top-level
 Options
-field
+field:
+const
+options
+=
+{
+settings:
+{
+outputStyle:
+"Explanatory"
+} };
 The Python SDK does not have an option to select an output style programmatically. For code-only deployments where you can’t write to
 .claude/settings.local.json
 , use

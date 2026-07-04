@@ -59,7 +59,7 @@ Requires GitHub
 Yes, or
 bundle a local repo
 via
---remote
+--cloud
 No
 No
 Only for cloud sessions
@@ -173,7 +173,7 @@ edit the environment or add variables
 afterward. Once
 /web-setup
 completes, you can start cloud sessions from your terminal with
---remote
+--cloud
 or set up recurring tasks with
 /schedule
 .
@@ -294,7 +294,7 @@ claude update
 to sign in with your claude.ai account.
 ​
 ”Could not create a cloud environment” or “No cloud environment available” when using
---remote
+--cloud
 or ultraplan
 Remote-session features create a default cloud environment automatically if you don’t have one. If you see “Could not create a cloud environment”, automatic creation failed.
 If you see “No cloud environment available”, your CLI predates automatic creation. In either case, run

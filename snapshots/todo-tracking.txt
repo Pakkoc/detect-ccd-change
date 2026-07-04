@@ -9,7 +9,9 @@ TaskGet
 TaskList
 instead of
 TodoWrite
-. See
+. The Python SDK gets this change from the Claude Code CLI it launches, not from the Python package version: the switch applies once that CLI — the copy bundled inside the pip package, or one you point to with
+cli_path
+— is v2.1.142 or later. See
 Migrate to Task tools
 for how monitoring code changes. The examples on this page set
 CLAUDE_CODE_ENABLE_TASKS=0
@@ -33,7 +35,7 @@ Removed
 when all tasks in a group are completed
 ​
 When Todos Are Used
-The SDK automatically creates todos for:
+The SDK creates todos for most multi-step work, such as:
 Complex multi-step tasks
 requiring 3 or more distinct actions
 User-provided task lists
@@ -42,11 +44,29 @@ Non-trivial operations
 that benefit from progress tracking
 Explicit requests
 when users ask for todo organization
+It may skip todos for very short or single-step requests.
 ​
 Examples
 Before running these examples, install the Claude Agent SDK by following the
 quickstart
 .
+Each example runs until the agent finishes and yields its final result message. If a session reaches its turn limit first, that result message has the
+error_max_turns
+subtype. Check
+subtype
+to detect that ending.
+These examples use single-shot
+query()
+calls. After yielding an
+error_max_turns
+result,
+query()
+raises an error that includes
+Reached maximum number of turns
+. Each example wraps its loop in a try block to exit cleanly when that happens.
+See
+Handle the result
+for the result subtypes.
 ​
 Monitoring Todo Changes
 TypeScript
@@ -58,6 +78,8 @@ query
 from
 "@anthropic-ai/claude-agent-sdk"
 ;
+try
+{
 for
 await
 (
@@ -192,6 +214,24 @@ content
 }
 }
 }
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result,
+// such as when the maxTurns limit is hit.
+console
+.
+log
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
 }
 ​
 Real-time Progress Display
@@ -383,6 +423,8 @@ prompt
 :
 string
 ) {
+try
+{
 for
 await
 (
@@ -460,6 +502,24 @@ displayProgress
 }
 }
 }
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result,
+// such as when the maxTurns limit is hit.
+console
+.
+log
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
 }
 }
 }
@@ -546,7 +606,11 @@ as
 { task: { id, subject } }
 , so capture it from the result block to key your map. The following example shows the minimal change to the
 Monitoring Todo Changes
-loop. To render a complete list, watch for a
+loop. It reads only
+tool_use
+inputs and skips capturing IDs from
+tool_result
+blocks. To render a complete list, watch for a
 TaskList
 tool result in the stream or accumulate
 TaskCreate
@@ -577,6 +641,8 @@ query
 from
 "@anthropic-ai/claude-agent-sdk"
 ;
+try
+{
 for
 await
 (
@@ -586,8 +652,13 @@ of
 query
 ({
 prompt:
-"Optimize my React app performance"
+"Optimize my React app performance and track progress with todos"
 ,
+options:
+{
+maxTurns:
+15
+},
 })) {
 if
 (
@@ -728,6 +799,23 @@ status
 );
 }
 }
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result.
+console
+.
+log
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
 }
 ​
 Related Documentation

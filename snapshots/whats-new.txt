@@ -61,7 +61,7 @@ Read the Week 24 digest →
 Week 23
 v2.1.158–v2.1.165
 June 1–5, 2026
-Auto mode on Bedrock, Vertex, and Foundry
+Auto mode on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
 : auto mode is now available on third-party providers for Opus 4.7 and Opus 4.8, replacing permission prompts with background safety checks.
 Also this week:
 safer automatic edits

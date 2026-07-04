@@ -16,7 +16,7 @@ Network access
 : levels, proxies, and the default allowlist
 Move tasks between web and terminal
 with
---remote
+--cloud
 and
 --teleport
 Work with sessions
@@ -321,8 +321,7 @@ Archive an environment
 Open the environment for editing and select
 Archive
 . Archived environments are hidden from the selector but existing sessions keep running.
-Set the default for
---remote
+Set the default environment for CLI cloud sessions
 Run
 /remote-env
 in your terminal. If you have a single environment, this command shows your current configuration.
@@ -813,25 +812,29 @@ signed in to the same claude.ai account. You can start new cloud sessions from y
 From the CLI, session handoff is one-way: you can pull cloud sessions into your terminal with
 --teleport
 , but you can’t push an existing terminal session to the web. The
---remote
+--cloud
 flag creates a new cloud session for your current repository. The
 Desktop app
 provides a Continue in menu that can send a local session to the web.
 ​
 From terminal to web
 Start a cloud session from the command line with the
---remote
+--cloud
 flag:
 claude
---remote
+--cloud
 "Fix the authentication bug in src/auth/login.ts"
 This creates a new cloud session on claude.ai. The session clones your current directory’s GitHub remote at your current branch, so push first if you have local commits, since the VM clones from GitHub rather than your machine.
+--cloud
+works with a single repository at a time. The task runs in the cloud while you continue working locally. The older
 --remote
-works with a single repository at a time. The task runs in the cloud while you continue working locally.
+spelling still works as a deprecated alias for
+--cloud
+.
 As of v2.1.195, the CLI shows a live checklist of setup steps, such as cloning the repository and running your
 setup script
 , while the cloud container starts. Messages you type while the container is provisioning are queued and sent once the session is ready.
---remote
+--cloud
 creates cloud sessions.
 --remote-control
 is unrelated: it exposes a local CLI session for monitoring from the web. See
@@ -849,7 +852,7 @@ claude
 plan
 In plan mode, Claude reads files, runs commands to explore, and proposes a plan without editing source code. Once you’re satisfied, save the plan to the repo, commit, and push so the cloud VM can clone it. Then start a cloud session for autonomous execution:
 claude
---remote
+--cloud
 "Execute the migration plan in docs/migration-plan.md"
 This pattern gives you control over the strategy while letting Claude execute autonomously in the cloud.
 Plan in the cloud with ultraplan
@@ -858,16 +861,16 @@ ultraplan
 . Claude generates the plan on Claude Code on the web while you keep working, then you comment on sections in your browser and choose to execute remotely or send the plan back to your terminal.
 Run tasks in parallel
 : each
---remote
+--cloud
 command creates its own cloud session that runs independently. You can start multiple tasks and they’ll all run simultaneously in separate sessions:
 claude
---remote
+--cloud
 "Fix the flaky test in auth.spec.ts"
 claude
---remote
+--cloud
 "Update the API documentation"
 claude
---remote
+--cloud
 "Refactor the logger to use structured output"
 Monitor all sessions with
 /tasks
@@ -877,7 +880,7 @@ the session to your terminal to continue working.
 ​
 Send local repositories without GitHub
 When you run
-claude --remote
+claude --cloud
 from a repository that isn’t connected to GitHub, Claude Code bundles your local repository and uploads it directly to the cloud session. The bundle includes your full repository history across all branches, plus any uncommitted changes to tracked files.
 This fallback activates automatically when GitHub access isn’t available. To force it even when GitHub is connected, set
 CCR_FORCE_BUNDLE=1
@@ -886,7 +889,7 @@ CCR_FORCE_BUNDLE
 =
 1
 claude
---remote
+--cloud
 "Run the test suite and fix any failures"
 Bundled repositories must meet these limits:
 The directory must be a git repository with at least one commit
@@ -957,7 +960,7 @@ You must be authenticated to the same claude.ai account used in the cloud sessio
 ​
 --teleport
 is unavailable
-Teleport requires claude.ai subscription authentication. If you’re authenticated via API key, Bedrock, Vertex AI, or Microsoft Foundry, run
+Teleport requires claude.ai subscription authentication. If you’re authenticated via API key, Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry, run
 /login
 to sign in with your claude.ai account instead. If you’re already signed in via claude.ai and
 --teleport

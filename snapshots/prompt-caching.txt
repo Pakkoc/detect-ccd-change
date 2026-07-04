@@ -49,9 +49,9 @@ API key, Claude subscription, or
 Claude Platform on AWS
 : the cache lives in Anthropic’s infrastructure, accessed through the
 Claude API
-Bedrock or Vertex AI
+Amazon Bedrock or Google Cloud’s Agent Platform
 : the cache lives in your cloud provider’s serving infrastructure
-Foundry
+Microsoft Foundry
 : requests route to Anthropic’s infrastructure
 Custom
 ANTHROPIC_BASE_URL
@@ -125,7 +125,7 @@ Deferred tools
 Tools loaded into the prefix
 : any change to them invalidates the cache. This happens when
 tool search is unavailable or disabled
-, such as on Haiku models, on Vertex AI, or with a custom
+, such as on Haiku models, on Google Cloud’s Agent Platform, or with a custom
 ANTHROPIC_BASE_URL
 gateway. It also happens for a server or tool marked
 alwaysLoad
@@ -294,14 +294,14 @@ usage credits
 , you are billed for that usage, so Claude Code automatically drops the TTL to five minutes.
 ​
 On an API key or third-party provider
-On an API key, Bedrock, Vertex, Foundry, or Claude Platform on AWS, you pay the per-token rates, so the TTL stays at the cheaper five minutes by default. To opt into the
+On an API key, Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS, you pay the per-token rates, so the TTL stays at the cheaper five minutes by default. To opt into the
 one-hour TTL
 , set
 ENABLE_PROMPT_CACHING_1H=1
 .
-On Bedrock, prompt caching support, minimum cacheable prefix length, and one-hour TTL availability all vary by model. If cache token counts stay at zero, check
+On Amazon Bedrock, prompt caching support, minimum cacheable prefix length, and one-hour TTL availability all vary by model. If cache token counts stay at zero, check
 supported models, regions, and limits
-in the Bedrock documentation.
+in the Amazon Bedrock documentation.
 ​
 Override the TTL
 Set

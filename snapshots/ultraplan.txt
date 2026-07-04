@@ -13,7 +13,7 @@ Flexible execution
 : approve the plan to run on the web and open a pull request, or send it back to your terminal
 Ultraplan requires a
 Claude Code on the web
-account and a GitHub repository. Because it runs on Anthropic’s cloud infrastructure, it is not available when using Amazon Bedrock, Google Cloud Vertex AI, or Microsoft Foundry. The cloud session runs in your account’s default
+account and a GitHub repository. Because it runs on Anthropic’s cloud infrastructure, it is not available when using Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. The cloud session runs in your account’s default
 cloud environment
 . If you don’t have a cloud environment yet, ultraplan creates one automatically when it first launches.
 ​

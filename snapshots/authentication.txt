@@ -1,4 +1,4 @@
-Claude Code supports multiple authentication methods depending on your setup. Individual users can log in with a Claude.ai account, while teams can use Claude for Teams or Enterprise, the Claude Console, or a cloud provider like Amazon Bedrock, Google Vertex AI, or Microsoft Foundry.
+Claude Code supports multiple authentication methods depending on your setup. Individual users can log in with a Claude.ai account, while teams can use Claude for Teams or Enterprise, the Claude Console, or a cloud provider like Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
 ​
 Log in to Claude Code
 After
@@ -27,7 +27,7 @@ Cloud providers
 : if your organization uses
 Amazon Bedrock
 ,
-Google Vertex AI
+Google Cloud’s Agent Platform
 , or
 Microsoft Foundry
 , set the required environment variables before running
@@ -54,7 +54,7 @@ Claude Console
 Claude apps gateway
 , a self-hosted gateway that signs developers in with your IdP and routes inference to the cloud provider you configure
 Amazon Bedrock
-Google Vertex AI
+Google Cloud’s Agent Platform
 Microsoft Foundry
 ​
 Claude for Teams or Enterprise
@@ -106,13 +106,13 @@ Install Claude Code
 Log in with Console account credentials
 ​
 Cloud provider authentication
-For teams using Amazon Bedrock, Google Vertex AI, or Microsoft Foundry:
+For teams using Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry:
 1
 Follow provider setup
 Follow the
-Bedrock docs
+Amazon Bedrock docs
 ,
-Vertex docs
+Google Cloud’s Agent Platform docs
 , or
 Microsoft Foundry docs
 .
@@ -221,7 +221,7 @@ Subscription OAuth credentials from
 . This is the default for Claude Pro, Max, Team, and Enterprise users.
 A signed-in
 Claude apps gateway
-session sits outside this list: it is a provider selection like Bedrock or Vertex, and it outranks them. When a gateway session exists, the CLI authenticates with the gateway token even if
+session sits outside this list: it is a provider selection like Amazon Bedrock or Google Cloud’s Agent Platform, and it outranks them. When a gateway session exists, the CLI authenticates with the gateway token even if
 CLAUDE_CODE_USE_BEDROCK
 ,
 CLAUDE_CODE_USE_VERTEX

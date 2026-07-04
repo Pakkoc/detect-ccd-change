@@ -1,4 +1,4 @@
-The advisor tool is experimental and requires Claude Code v2.1.98 or later with the Anthropic API. It is not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry. Behavior, pricing, and availability may change.
+The advisor tool is experimental and requires Claude Code v2.1.98 or later with the Anthropic API. It is not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. Behavior, pricing, and availability may change.
 The advisor tool lets Claude consult a second, typically stronger model at key moments during a task, such as before committing to an approach, when stuck on a recurring error, or before declaring a task complete. The advisor receives the full conversation, including every tool call and result, and returns guidance that Claude applies before continuing.
 The advisor runs server-side on Anthropic’s infrastructure as a
 server tool
@@ -176,7 +176,7 @@ Claude Code v2.1.98 or later
 claude update
 to upgrade.
 Anthropic API only
-: the advisor is a server-executed tool. It is not available on Amazon Bedrock, Google Vertex AI, or Microsoft Foundry. Through an
+: the advisor is a server-executed tool. It is not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. Through an
 LLM gateway
 configured with
 ANTHROPIC_BASE_URL

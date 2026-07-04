@@ -37,7 +37,7 @@ claude agents
 stay alive when idle
 claude agents —json
 lists live sessions as JSON for scripting, such as status bars and session pickers
-The PowerShell tool is now enabled by default on Windows for Bedrock, Vertex, and Foundry users; opt out with
+The PowerShell tool is now enabled by default on Windows for Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry users; opt out with
 CLAUDE_CODE_USE_POWERSHELL_TOOL=0
 claude plugin disable
 now refuses when another enabled plugin depends on the target, and

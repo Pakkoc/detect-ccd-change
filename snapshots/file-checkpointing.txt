@@ -243,12 +243,17 @@ for
 message
 in
 client.receive_response():
-# Update checkpoint on each user message (keeps the latest)
+# Capture the first user message UUID as the checkpoint
 if
 isinstance
 (message, UserMessage)
 and
-message.uuid:
+message.uuid
+and
+checkpoint_id
+is
+None
+:
 checkpoint_id
 =
 message.uuid
@@ -301,7 +306,14 @@ If you capture the session ID and checkpoint ID, you can also rewind from the CL
 claude
 executable, which comes from
 installing Claude Code
-and is not installed by the SDK package:
+and is not installed by the SDK package. The SDK enables checkpointing for you, but when you run
+claude -p
+directly you must set the
+CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING
+environment variable:
+CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING
+=
+true
 claude
 -p
 --resume
@@ -314,12 +326,22 @@ d
 checkpoint-uui
 d
 >
+The
+--rewind-files
+flag does not appear in
+claude --help
+output, but the CLI accepts it as shown.
 ​
 Common patterns
 These patterns show different ways to capture and use checkpoint UUIDs depending on your use case.
 ​
 Checkpoint before risky operations
 This pattern keeps only the most recent checkpoint UUID, updating it before each agent turn. If something goes wrong during processing, you can immediately rewind to the last safe state and break out of the loop.
+Before running this example, replace
+your_revert_condition
+(Python) or
+yourRevertCondition
+(TypeScript) with your own check, such as error detection or a validation failure; the placeholder is not defined in the example.
 Python
 TypeScript
 import
@@ -882,6 +904,41 @@ enableFileCheckpointing: true
 (TypeScript) was set on the original session, then use the pattern shown in the examples: capture the first user message UUID, complete the session fully, then resume with an empty prompt and call
 rewindFiles()
 once.
+​
+”File rewinding is not enabled” error
+This error occurs when you attempt a non-interactive rewind without checkpointing enabled: running bare
+claude -p
+with
+--rewind-files
+, or running an SDK session, including a resumed one, whose options don’t enable checkpointing. The SDK sets the
+CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING
+environment variable internally only when
+enable_file_checkpointing
+(Python) or
+enableFileCheckpointing
+(TypeScript) is enabled on the session performing the rewind; the bare CLI never sets it.
+Solution
+: For the bare CLI, set the environment variable when running the command:
+CLAUDE_CODE_ENABLE_SDK_FILE_CHECKPOINTING
+=
+true
+claude
+-p
+--resume
+<
+session-i
+d
+>
+--rewind-files
+<
+checkpoint-uui
+d
+>
+For the SDK, set
+enable_file_checkpointing=True
+(Python) or
+enableFileCheckpointing: true
+(TypeScript) on the resumed session, as the examples on this page do.
 ​
 ”ProcessTransport is not ready for writing” error
 This error occurs when you call

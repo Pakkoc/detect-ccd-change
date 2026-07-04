@@ -92,7 +92,7 @@ or an
 apiKeyHelper
 in the JSON passed to
 --settings
-. Bedrock, Vertex, and Foundry use their usual provider credentials.
+. Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry use their usual provider credentials.
 --bare
 is the recommended mode for scripted and SDK calls, and will become the default for
 -p

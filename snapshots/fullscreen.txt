@@ -363,7 +363,12 @@ tmux -CC
 sessions. Regular tmux inside iTerm2, without
 -CC
 , works fine.
-tmux doesn’t support synchronized output, so you may see more flicker during redraws than when running Claude Code directly in your terminal. If the flicker is noticeable, especially over SSH, run Claude Code in its own terminal tab outside tmux.
+Not every tmux version applies synchronized output from applications, so you may see more flicker during redraws under tmux than when running Claude Code directly in your terminal. If the flicker is noticeable, especially over SSH, upgrade to the newest tmux or run Claude Code in its own terminal tab outside tmux. Check your tmux version with
+tmux -V
+.
+Claude Code turns on synchronized output automatically when it detects tmux 3.4 or later from the
+TERM_PROGRAM_VERSION
+variable, and falls back to querying the terminal directly for synchronized output support when the version can’t be determined. Whether redraws actually become atomic depends on your tmux version honoring synchronized output; if you still see flicker under tmux 3.4 or later, upgrade to the newest tmux. This detection requires Claude Code v2.1.200 or later.
 ​
 Keep native text selection
 Mouse capture is the most common friction point, especially over SSH or inside tmux. When Claude Code captures mouse events, your terminal’s native copy-on-select stops working. The selection you make with click-and-drag exists inside Claude Code, not in your terminal’s selection buffer, so tmux copy mode, Kitty hints, and similar tools don’t see it.

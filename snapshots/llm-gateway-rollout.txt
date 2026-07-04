@@ -338,7 +338,7 @@ Your gateway serves
 and you want developers’ pickers populated from it
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
 Stops Claude Code sending pre-release capability headers and body fields
-Your gateway forwards to a Bedrock or Agent Platform upstream that rejects beta fields; see
+Your gateway forwards to an Amazon Bedrock or Google Cloud’s Agent Platform upstream that rejects beta fields; see
 Gateway requirements
 ANTHROPIC_MODEL
 or
@@ -358,8 +358,8 @@ ANTHROPIC_FOUNDRY_BASE_URL
 ANTHROPIC_AWS_BASE_URL
 with the
 variables for that provider
-Point Claude Code at the gateway through a provider-specific base URL. Bedrock and Agent Platform also switch to those providers’ native request format
-Your gateway fronts Bedrock, Agent Platform, Foundry, or the Claude Platform on AWS; see
+Point Claude Code at the gateway through a provider-specific base URL. Amazon Bedrock and Google Cloud’s Agent Platform also switch to those providers’ native request format
+Your gateway fronts Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or the Claude Platform on AWS; see
 API formats
 ​
 Distribute through managed settings

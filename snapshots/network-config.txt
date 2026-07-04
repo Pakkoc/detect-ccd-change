@@ -186,7 +186,7 @@ for how to disable it before finalizing your allowlist.
 When using
 Amazon Bedrock
 ,
-Google Vertex AI
+Google Cloud’s Agent Platform
 ,
 Microsoft Foundry
 , or a signed-in

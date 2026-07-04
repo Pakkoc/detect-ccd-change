@@ -1539,7 +1539,17 @@ permission mode
 "dontAsk"
 , or
 "bypassPermissions"
-. Not all events receive this field: see each event’s JSON example below to check
+. The mode labeled
+Manual
+arrives as
+"default"
+, never as
+"manual"
+, so scripts that match
+"default"
+keep working. Not all events receive this field. Check the JSON example in each
+hook event
+section
 effort
 Object with a
 level
@@ -4148,8 +4158,15 @@ acceptEdits
 dontAsk
 ,
 bypassPermissions
-, and
+,
 plan
+, and
+manual
+as an alias for
+default
+. The
+manual
+alias requires Claude Code v2.1.200 or later
 addDirectories
 directories
 ,

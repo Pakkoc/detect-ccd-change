@@ -109,7 +109,7 @@ container
 : GKE only
 2
 Create the service account and grant IAM
-The gateway runs as a dedicated service account with permission to call Agent Platform. It reaches Cloud SQL over the VPC with a password user, so no Cloud SQL IAM role is required:
+The gateway runs as a dedicated service account with permission to call Google Cloud’s Agent Platform. It reaches Cloud SQL over the VPC with a password user, so no Cloud SQL IAM role is required:
 gcloud
 iam
 service-accounts
@@ -310,7 +310,7 @@ The Cloud Run or GKE runtime must be on, or routed into, this VPC.
 Write gateway.yaml
 The
 upstreams
-block points at Agent Platform with
+block points at Google Cloud’s Agent Platform with
 auth: {}
 , so the gateway authenticates via Application Default Credentials from the runtime service account. See the
 configuration reference
@@ -523,7 +523,7 @@ Direct VPC egress, via
 --subnet
 , and
 --vpc-egress=private-ranges-only
-, lets the service reach the Cloud SQL private IP directly. Public egress to the Agent Platform endpoints and
+, lets the service reach the Cloud SQL private IP directly. Public egress to Google Cloud’s Agent Platform endpoints and
 accounts.google.com
 goes directly to the internet rather than through the VPC, so no Cloud NAT is needed.
 The invoker IAM check must be open or disabled. The gateway runs its own OIDC and its clients carry no GCP token, so Cloud Run’s invoker check has to admit unauthenticated requests. The gateway’s OIDC sign-in authenticates the request once it reaches the container, with
@@ -777,7 +777,7 @@ for Direct VPC egress, and create the Cloud SQL instance with
 and
 --network
 pointing at the same VPC
-Agent Platform requests return
+Google Cloud’s Agent Platform requests return
 403 PERMISSION_DENIED
 Runtime isn’t using the
 claude-gateway

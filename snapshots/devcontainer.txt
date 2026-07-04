@@ -85,14 +85,14 @@ claude
 What you see at the authentication prompt depends on your provider:
 Anthropic
 : sign in through a browser with your Claude or Anthropic Console account
-Amazon Bedrock, Google Vertex AI, or Microsoft Foundry
+Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 : Claude Code uses your cloud provider credentials, with no browser prompt
 For cloud providers, pass credentials into the container as environment variables through
 containerEnv
 , a Codespaces secret, or your cloud’s workload identity rather than mounting credential files from the host. See
 Amazon Bedrock
 ,
-Google Vertex AI
+Google Cloud’s Agent Platform
 , or
 Microsoft Foundry
 for the credential chain Claude Code reads.

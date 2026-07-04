@@ -169,7 +169,18 @@ parent_tool_use_id:
 str
 |
 None
-# Parent tool ID if from a subagent
+# Always None
+The
+parent_tool_use_id
+field is always
+None
+in Python and
+null
+in TypeScript. Stream events are emitted for the main session only; token-level deltas from subagents aren’t forwarded. To attribute output to a subagent, use complete messages, which carry
+parent_tool_use_id
+. See
+Detect subagent invocation
+.
 The
 event
 field contains the raw streaming event from the

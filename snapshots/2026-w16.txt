@@ -111,7 +111,7 @@ PreCompact
 hooks can block compaction by exiting with code 2 or returning
 “decision”:“block”
 ENABLE_PROMPT_CACHING_1H
-opts API key, Bedrock, Vertex, and Foundry users into 1-hour prompt cache TTL
+opts API key, Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry users into 1-hour prompt cache TTL
 sandbox.network.deniedDomains
 setting carves specific domains out of a broader
 allowedDomains

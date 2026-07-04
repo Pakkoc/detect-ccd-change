@@ -151,7 +151,7 @@ dontAsk
 permission mode is available only in the
 CLI
 .
-Auto mode is a research preview available to all users on the Anthropic API and requires Claude Opus 4.6 or later, or Sonnet 4.6 or later. In Enterprise deployments that route Desktop to Google Cloud Vertex AI, auto mode is off until you
+Auto mode is a research preview available to all users on the Anthropic API and requires Claude Opus 4.6 or later, or Sonnet 4.6 or later. In Enterprise deployments that route Desktop to Google Cloud’s Agent Platform, auto mode is off until you
 set
 CLAUDE_CODE_ENABLE_AUTO_MODE
 , and only Claude Sonnet 5, Opus 4.7, and Opus 4.8 are supported there.
@@ -1282,7 +1282,7 @@ Coming from the CLI?
 If you already use the Claude Code CLI, Desktop runs the same underlying engine with a graphical interface. You can run both simultaneously on the same machine, even on the same project. Each maintains separate session history, but they share configuration and project memory via CLAUDE.md files.
 To move a CLI session into Desktop, run
 /desktop
-in the terminal. Claude saves your session and opens it in the desktop app, then exits the CLI. This command is available on macOS and Windows when you are signed in with a Claude subscription. It is not available with API key authentication or on Bedrock, Vertex, or Foundry.
+in the terminal. Claude saves your session and opens it in the desktop app, then exits the CLI. This command is available on macOS and Windows when you are signed in with a Claude subscription. It is not available with API key authentication or on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
 When to use Desktop vs CLI: use Desktop when you want to manage parallel sessions in one window, arrange panes side by side, or review changes visually. Use the CLI when you need scripting, automation, or prefer a terminal workflow.
 ​
 CLI flag equivalents
@@ -1388,10 +1388,10 @@ Ask permissions, Auto accept edits, Plan mode, Auto, and Bypass permissions via 
 CLI flag
 Bypass permissions mode. Enable in Settings → Claude Code → “Allow bypass permissions mode”
 Third-party providers
-Bedrock, Vertex AI, Foundry
-Anthropic’s API by default. Enterprise deployments can configure Vertex AI and gateway providers. See the
+Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry
+Anthropic’s API by default. Enterprise deployments can configure Google Cloud’s Agent Platform and gateway providers. See the
 enterprise configuration guide
-. To run the Code tab on Bedrock, Vertex AI, Foundry, or a self-hosted LLM gateway, see the
+. To run the Code tab on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or a self-hosted LLM gateway, see the
 Cowork on 3P research preview
 .
 MCP servers
@@ -1436,13 +1436,13 @@ Not available
 What’s not available in Desktop
 The following features are only available in the CLI or VS Code extension, except where noted:
 Third-party providers
-: Desktop connects to Anthropic’s API by default. Enterprise deployments can configure Vertex AI and gateway providers via
+: Desktop connects to Anthropic’s API by default. Enterprise deployments can configure Google Cloud’s Agent Platform and gateway providers via
 managed settings
-. For Bedrock or Foundry in the CLI, see the
+. For Amazon Bedrock or Microsoft Foundry in the CLI, see the
 quickstart
 . As an exception to the section above, the
 Cowork on 3P research preview
-runs the Code tab on Bedrock, Vertex AI, Foundry, or a self-hosted LLM gateway.
+runs the Code tab on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or a self-hosted LLM gateway.
 Linux (beta)
 : Computer Use isn’t yet available in the Linux desktop app. See
 Claude Desktop on Linux

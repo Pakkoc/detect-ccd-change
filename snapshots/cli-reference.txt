@@ -31,7 +31,7 @@ claude update
 claude gateway
 Start the self-hosted
 Claude apps gateway
-server, for administrators deploying SSO and policy in front of Claude Code on Bedrock, Vertex AI, or Foundry. Requires
+server, for administrators deploying SSO and policy in front of Claude Code on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. Requires
 --config
 pointing at a
 gateway.yaml
@@ -348,6 +348,11 @@ Enable
 Chrome browser integration
 for web automation and testing
 claude --chrome
+--cloud
+Create a new
+web session
+on claude.ai with the provided task description
+claude --cloud "Fix the login bug"
 --continue
 ,
 -c
@@ -565,9 +570,19 @@ plan
 auto
 ,
 dontAsk
-, or
+,
 bypassPermissions
-. Overrides
+, or
+manual
+as an alias for
+default
+. The
+manual
+alias selects the mode the UI labels Manual and requires Claude Code v2.1.200 or later;
+claude --help
+lists it in place of
+default
+, and both values work. Overrides
 defaultMode
 from settings files
 claude --permission-mode plan
@@ -610,9 +625,8 @@ message after each turn with a predicted next user prompt. Requires
 Prompt suggestions
 claude -p --prompt-suggestions --output-format stream-json --verbose "query"
 --remote
-Create a new
-web session
-on claude.ai with the provided task description
+Deprecated alias for
+--cloud
 claude --remote "Fix the login bug"
 --remote-control
 ,

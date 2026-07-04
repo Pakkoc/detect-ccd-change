@@ -166,17 +166,17 @@ As of v2.1.196,
 Remote Control
 is disabled when this points at a host other than
 api.anthropic.com
-, matching its behavior on Bedrock, Vertex AI, and Foundry
+, matching its behavior on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
 ANTHROPIC_BEDROCK_BASE_URL
-Override the Bedrock endpoint URL. Use for custom Bedrock endpoints or when routing through an
+Override the Amazon Bedrock endpoint URL. Use for custom Amazon Bedrock endpoints or when routing through an
 LLM gateway
 . See
 Amazon Bedrock
 ANTHROPIC_BEDROCK_MANTLE_BASE_URL
-Override the Bedrock Mantle endpoint URL. See
+Override the Amazon Bedrock Mantle endpoint URL. See
 Mantle endpoint
 ANTHROPIC_BEDROCK_SERVICE_TIER
-Bedrock
+Amazon Bedrock
 service tier
 (
 default
@@ -272,7 +272,7 @@ API key for Microsoft Foundry authentication (see
 Microsoft Foundry
 )
 ANTHROPIC_FOUNDRY_BASE_URL
-Full base URL for the Foundry resource (for example,
+Full base URL for the Microsoft Foundry resource (for example,
 https://my-resource.services.ai.azure.com/anthropic
 ). Alternative to
 ANTHROPIC_FOUNDRY_RESOURCE
@@ -280,7 +280,7 @@ ANTHROPIC_FOUNDRY_RESOURCE
 Microsoft Foundry
 )
 ANTHROPIC_FOUNDRY_RESOURCE
-Foundry resource name (for example,
+Microsoft Foundry resource name (for example,
 my-resource
 ). Required if
 ANTHROPIC_FOUNDRY_BASE_URL
@@ -295,25 +295,25 @@ ANTHROPIC_SMALL_FAST_MODEL
 [DEPRECATED] Name of
 Haiku-class model for background tasks
 ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION
-Override AWS region for the Haiku-class model when using Bedrock or Bedrock Mantle. On Bedrock, this only takes effect when
+Override AWS region for the Haiku-class model when using Amazon Bedrock or Amazon Bedrock Mantle. On Amazon Bedrock, this only takes effect when
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 or the deprecated
 ANTHROPIC_SMALL_FAST_MODEL
-is also set, since Bedrock otherwise uses the primary model for background tasks
+is also set, since Amazon Bedrock otherwise uses the primary model for background tasks
 ANTHROPIC_VERTEX_BASE_URL
-Override the Vertex AI endpoint URL. Use for custom Vertex endpoints or when routing through an
+Override Google Cloud’s Agent Platform endpoint URL. Use for custom Google Cloud’s Agent Platform endpoints or when routing through an
 LLM gateway
 . See
-Google Vertex AI
+Google Cloud’s Agent Platform
 ANTHROPIC_VERTEX_PROJECT_ID
-GCP project ID for Vertex AI requests. Overridden by
+GCP project ID for Google Cloud’s Agent Platform requests. Overridden by
 GCLOUD_PROJECT
 ,
 GOOGLE_CLOUD_PROJECT
 , or the project in your
 GOOGLE_APPLICATION_CREDENTIALS
 credential file. See
-Google Vertex AI
+Google Cloud’s Agent Platform
 ANTHROPIC_WORKSPACE_ID
 Workspace ID for
 workload identity federation
@@ -328,19 +328,19 @@ or local model pauses longer than 5 minutes between chunks. Set to
 to keep the timeout on every provider. When unset, the timeout is inactive on direct Anthropic API and
 Claude Platform on AWS
 connections, where Claude Code’s own byte-level stream watchdog runs, and active on every other provider, including
-Vertex AI
+Google Cloud’s Agent Platform
 ,
-Foundry
+Microsoft Foundry
 ,
 Mantle
 ,
-Bedrock
+Amazon Bedrock
 , and gateway connections, so a stalled stream aborts instead of hanging. As of v2.1.169
 API_TIMEOUT_MS
 Timeout for API requests in milliseconds (default: 600000, or 10 minutes; maximum: 2147483647). Increase this when requests time out on slow networks or when routing through a proxy. Values above the maximum overflow the underlying timer and cause requests to fail immediately
 AWS_BEARER_TOKEN_BEDROCK
-Bedrock API key for authentication (see
-Bedrock API keys
+Amazon Bedrock API key for authentication (see
+Amazon Bedrock API keys
 )
 BASH_DEFAULT_TIMEOUT_MS
 Default timeout for long-running bash commands (default: 120000, or 2 minutes)
@@ -353,7 +353,7 @@ CCR_FORCE_BUNDLE
 Set to
 1
 to force
-claude --remote
+claude --cloud
 to bundle and upload your local repository even when GitHub access is available
 CLAUDECODE
 Set to
@@ -372,19 +372,24 @@ How many milliseconds before auto-continue the on-screen countdown appears on an
 AskUserQuestion
 dialog. Default
 20000
-(20 seconds). See
+(20 seconds), capped at the auto-continue timeout. Has no effect unless auto-continue is on; see the
+askUserQuestionTimeout
+setting and
 CLAUDE_AFK_TIMEOUT_MS
 . Requires Claude Code v2.1.198 or later
 CLAUDE_AFK_TIMEOUT_MS
 How many milliseconds of idle time before an unanswered
 AskUserQuestion
-dialog auto-continues without you. Default
-60000
-(60 seconds). To keep questions open while you’re away, set a large value like
-86400000
-(24 hours). Setting
+dialog auto-continues without you.
+Auto-continue is off by default; opt in with the
+askUserQuestionTimeout
+setting. This variable is an override for demos and automated tests: when set, it takes precedence over that setting and turns auto-continue on even when the setting is unset or
+never
+. Setting
 0
-doesn’t turn the timeout off; it closes the dialog immediately. Requires Claude Code v2.1.198 or later
+doesn’t turn the timeout off; it closes the dialog immediately. In v2.1.198 and v2.1.199, auto-continue was on by default with a
+60000
+(60 seconds) timeout. Requires Claude Code v2.1.198 or later
 CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS
 Set to
 1
@@ -486,7 +491,7 @@ Set to
 0
 to omit the attribution block (client version and prompt fingerprint) from the start of the system prompt. Disabling it improves prompt-cache hit rates when routing through an
 LLM gateway
-. Anthropic API caching is unaffected
+. Caching on a direct connection to the Anthropic API is unaffected either way
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
 Set the context capacity in tokens used for auto-compaction calculations. Defaults to the model’s context window, 200K for standard models or 1M for
 extended context
@@ -808,7 +813,7 @@ setting when set
 CLAUDE_CODE_DISABLE_LEGACY_MODEL_REMAP
 Set to
 1
-to prevent automatic remapping of Opus 4.0 and 4.1 to the current Opus version on the Anthropic API. Use when you intentionally want to pin an older model. The remap does not run on Bedrock, Vertex, or Foundry
+to prevent automatic remapping of Opus 4.0 and 4.1 to the current Opus version on the Anthropic API. Use when you intentionally want to pin an older model. The remap does not run on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 CLAUDE_CODE_DISABLE_MOUSE
 Set to
 1
@@ -914,10 +919,10 @@ Set to
 1
 to make
 auto mode
-available on Amazon Bedrock, Google Cloud Vertex AI, Microsoft Foundry, and signed-in
+available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in
 Claude apps gateway
 sessions. Requires Claude Code v2.1.158 or later. Has no effect on the Anthropic API, where auto mode is available by default. See
-Enable auto mode on Bedrock, Vertex AI, or Foundry
+Enable auto mode on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 CLAUDE_CODE_ENABLE_AWAY_SUMMARY
 Override
 session recap
@@ -957,7 +962,7 @@ is set, and has no effect otherwise.
 CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY
 and the organization product feedback policy take precedence
 CLAUDE_CODE_ENABLE_FINE_GRAINED_TOOL_STREAMING
-Controls whether tool call inputs stream from the API as Claude generates them. With this off, a large tool input such as a long file write arrives only after Claude finishes generating it, which can look like it’s hanging. Enabled by default on the Anthropic API. On Bedrock and Vertex, enabled per model where the deployed container supports it. Set to
+Controls whether tool call inputs stream from the API as Claude generates them. With this off, a large tool input such as a long file write arrives only after Claude finishes generating it, which can look like it’s hanging. Enabled by default on the Anthropic API. On Amazon Bedrock and Google Cloud’s Agent Platform, enabled per model where the deployed container supports it. Set to
 0
 to opt out. Set to
 1
@@ -967,7 +972,7 @@ ANTHROPIC_BASE_URL
 ANTHROPIC_VERTEX_BASE_URL
 , or
 ANTHROPIC_BEDROCK_BASE_URL
-. Off by default on Foundry and
+. Off by default on Microsoft Foundry and
 gateway
 connections
 CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY
@@ -1308,7 +1313,7 @@ CLAUDE_CODE_USE_BEDROCK
 ANTHROPIC_BASE_URL
 , and
 ANTHROPIC_API_KEY
-in settings files are ignored so user settings cannot override the host’s routing. The automatic telemetry opt-out for Bedrock, Vertex, and Foundry is also skipped, so telemetry follows the standard
+in settings files are ignored so user settings cannot override the host’s routing. The automatic telemetry opt-out for Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry is also skipped, so telemetry follows the standard
 DISABLE_TELEMETRY
 opt-out. See
 Default behaviors by API provider
@@ -1484,13 +1489,13 @@ Skip client-side authentication for
 Claude Platform on AWS
 , for gateways that sign requests themselves
 CLAUDE_CODE_SKIP_BEDROCK_AUTH
-Skip AWS authentication for Bedrock (for example, when using an LLM gateway)
+Skip AWS authentication for Amazon Bedrock (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_FOUNDRY_AUTH
 Skip Azure authentication for Microsoft Foundry. For a gateway, set the credential in
 ANTHROPIC_FOUNDRY_API_KEY
-instead; without an API key this variable leaves the Foundry client unable to send requests
+instead; without an API key this variable leaves the Microsoft Foundry client unable to send requests
 CLAUDE_CODE_SKIP_MANTLE_AUTH
-Skip AWS authentication for Bedrock Mantle (for example, when using an LLM gateway)
+Skip AWS authentication for Amazon Bedrock Mantle (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_PROMPT_HISTORY
 Set to
 1
@@ -1500,7 +1505,7 @@ to skip writing prompt history and session transcripts to disk. Sessions started
 --continue
 , or up-arrow history. Useful for ephemeral scripted sessions
 CLAUDE_CODE_SKIP_VERTEX_AUTH
-Skip Google authentication for Vertex (for example, when using an LLM gateway)
+Skip Google authentication for Google Cloud’s Agent Platform (for example, when using an LLM gateway)
 CLAUDE_CODE_STOP_HOOK_BLOCK_CAP
 Maximum number of consecutive times a
 Stop
@@ -1609,12 +1614,12 @@ Use
 Claude Platform on AWS
 CLAUDE_CODE_USE_BEDROCK
 Use
-Bedrock
+Amazon Bedrock
 CLAUDE_CODE_USE_FOUNDRY
 Use
 Microsoft Foundry
 CLAUDE_CODE_USE_MANTLE
-Use the Bedrock
+Use the Amazon Bedrock
 Mantle endpoint
 CLAUDE_CODE_USE_NATIVE_FILE_SEARCH
 Set to
@@ -1637,7 +1642,7 @@ PATH
 PowerShell tool
 CLAUDE_CODE_USE_VERTEX
 Use
-Vertex
+Google Cloud’s Agent Platform
 CLAUDE_CONFIG_DIR
 Override the configuration directory (default:
 ~/.claude
@@ -1678,7 +1683,7 @@ to force-enable the byte-level streaming idle watchdog, or set to
 0
 to force-disable it. When unset, the watchdog is enabled by default for direct Anthropic API and
 Claude Platform on AWS
-connections. The byte watchdog aborts a connection when no bytes arrive on the wire for 180 seconds by default on direct Anthropic API connections, 300 seconds on Claude Platform on AWS and when enabled on Bedrock, or for the value of
+connections. The byte watchdog aborts a connection when no bytes arrive on the wire for 180 seconds by default on direct Anthropic API connections, 300 seconds on Claude Platform on AWS and when enabled on Amazon Bedrock, or for the value of
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 when that is set, which is clamped to a minimum of 5 minutes, independent of the event-level watchdog
 CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK
@@ -1697,7 +1702,7 @@ to force-enable it.
 When unset, the watchdog is on by default for all providers. Before v2.1.196, the unset default was server-controlled on the direct Anthropic API and off on other providers.
 As of v2.1.169, providers other than the direct Anthropic API and Claude Platform on AWS also have a default-on 5-minute body idle timeout independent of this variable; see
 API_FORCE_IDLE_TIMEOUT
-. On Bedrock, you can also enable the independent byte-level watchdog with
+. On Amazon Bedrock, you can also enable the independent byte-level watchdog with
 CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK
 ; the two run together when both are set. Configure the timeout with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
@@ -1724,7 +1729,7 @@ Timeout in milliseconds before the streaming idle watchdog closes a stalled conn
 300000
 (5 minutes); lower values are silently clamped to absorb extended thinking pauses and proxy buffering. When unset, the event-level watchdog defaults to 300 seconds and the byte-level watchdog defaults to 180 seconds on direct Anthropic API connections (300 seconds on Claude Platform on AWS and other providers). The unset 180-second byte-watchdog default is a separate value and is not subject to the 5-minute clamp. The body idle timeout described under
 API_FORCE_IDLE_TIMEOUT
-applies independently. On Bedrock, also applies when
+applies independently. On Amazon Bedrock, also applies when
 CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1
 DEBUG
 Set to
@@ -1809,7 +1814,7 @@ Set to
 1
 to hide the
 /install-github-app
-command. Already hidden when using third-party providers (Bedrock, Vertex, or Foundry)
+command. Already hidden when using third-party providers (Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry)
 DISABLE_INTERLEAVED_THINKING
 Set to
 1
@@ -1892,11 +1897,11 @@ Set to
 to request a 1-hour
 prompt cache TTL
 instead of the default 5 minutes. Intended for API key,
-Bedrock
+Amazon Bedrock
 ,
-Vertex
+Google Cloud’s Agent Platform
 ,
-Foundry
+Microsoft Foundry
 , and
 Claude Platform on AWS
 users. Subscription users within included usage receive 1-hour TTL automatically. 1-hour cache writes are billed at a higher rate
@@ -1907,11 +1912,11 @@ instead
 ENABLE_TOOL_SEARCH
 Controls
 MCP tool search
-. Unset: all MCP tools deferred by default, but loaded upfront on Vertex AI or when
+. Unset: all MCP tools deferred by default, but loaded upfront on Google Cloud’s Agent Platform or when
 ANTHROPIC_BASE_URL
 points to a non-first-party host. Values:
 true
-(always defer and send the beta header, requests fail on Vertex AI models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that do not support
+(always defer and send the beta header, requests fail on Google Cloud’s Agent Platform models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that do not support
 tool_reference
 ),
 auto
@@ -2102,35 +2107,35 @@ instead of
 rg
 included with Claude Code
 VERTEX_REGION_CLAUDE_3_5_HAIKU
-Override region for Claude 3.5 Haiku when using Vertex AI
+Override region for Claude 3.5 Haiku when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_3_5_SONNET
-Override region for Claude 3.5 Sonnet when using Vertex AI
+Override region for Claude 3.5 Sonnet when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_3_7_SONNET
-Override region for Claude 3.7 Sonnet when using Vertex AI
+Override region for Claude 3.7 Sonnet when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_0_OPUS
-Override region for Claude 4.0 Opus when using Vertex AI
+Override region for Claude 4.0 Opus when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_0_SONNET
-Override region for Claude 4.0 Sonnet when using Vertex AI
+Override region for Claude 4.0 Sonnet when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_1_OPUS
-Override region for Claude 4.1 Opus when using Vertex AI
+Override region for Claude 4.1 Opus when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_5_OPUS
-Override region for Claude Opus 4.5 when using Vertex AI
+Override region for Claude Opus 4.5 when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_5_SONNET
-Override region for Claude Sonnet 4.5 when using Vertex AI
+Override region for Claude Sonnet 4.5 when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_6_OPUS
-Override region for Claude Opus 4.6 when using Vertex AI
+Override region for Claude Opus 4.6 when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_6_SONNET
-Override region for Claude Sonnet 4.6 when using Vertex AI
+Override region for Claude Sonnet 4.6 when using Google Cloud’s Agent Platform
 VERTEX_REGION_CLAUDE_4_7_OPUS
-Override region for Claude Opus 4.7 when using Vertex AI. Added in v2.1.111
+Override region for Claude Opus 4.7 when using Google Cloud’s Agent Platform. Added in v2.1.111
 VERTEX_REGION_CLAUDE_4_8_OPUS
-Override region for Claude Opus 4.8 when using Vertex AI. Added in v2.1.154
+Override region for Claude Opus 4.8 when using Google Cloud’s Agent Platform. Added in v2.1.154
 VERTEX_REGION_CLAUDE_5_SONNET
-Override region for Claude Sonnet 5 when using Vertex AI. Added in v2.1.197
+Override region for Claude Sonnet 5 when using Google Cloud’s Agent Platform. Added in v2.1.197
 VERTEX_REGION_CLAUDE_FABLE_5
-Override region for Claude Fable 5 when using Vertex AI. Added in v2.1.170
+Override region for Claude Fable 5 when using Google Cloud’s Agent Platform. Added in v2.1.170
 VERTEX_REGION_CLAUDE_HAIKU_4_5
-Override region for Claude Haiku 4.5 when using Vertex AI
+Override region for Claude Haiku 4.5 when using Google Cloud’s Agent Platform
 Standard OpenTelemetry exporter variables (
 OTEL_METRICS_EXPORTER
 ,

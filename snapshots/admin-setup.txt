@@ -12,11 +12,11 @@ Choose your API provider
 Where Claude Code authenticates and how it’s billed
 Authentication
 ,
-Bedrock
+Amazon Bedrock
 ,
-Vertex AI
+Google Cloud’s Agent Platform
 ,
-Foundry
+Microsoft Foundry
 Decide how settings reach devices
 How managed policy reaches developer machines
 Server-managed settings
@@ -50,7 +50,7 @@ Claude Console
 You’re API-first or want pay-as-you-go billing
 Amazon Bedrock
 You want to inherit existing AWS compliance controls and billing
-Google Vertex AI
+Google Cloud’s Agent Platform
 You want to inherit existing GCP compliance controls and billing
 Microsoft Foundry
 You want to inherit existing Azure compliance controls and billing
@@ -64,7 +64,7 @@ Code Review
 Remote Control
 , and the
 Chrome extension
-aren’t available through Console API keys or cloud-provider credentials alone. If you deploy through Bedrock, Vertex, or Foundry, plan whether developers also need Claude for Teams or Enterprise seats. Each feature page lists its plan requirements.
+aren’t available through Console API keys or cloud-provider credentials alone. If you deploy through Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry, plan whether developers also need Claude for Teams or Enterprise seats. Each feature page lists its plan requirements.
 For the full provider comparison covering authentication, regions, and feature parity, see the
 enterprise deployment overview
 . Each provider’s auth setup is in
@@ -116,7 +116,7 @@ policyHelper
 preempts all four sources: its output becomes the only managed configuration for the run. See
 Settings precedence
 .
-Server-managed settings reach devices at authentication time and refresh hourly during active sessions, with no endpoint infrastructure. Delivery through the claude.ai admin console requires a Claude for Teams or Enterprise plan. Deployments on Bedrock, Vertex AI, or Foundry can get the same remote delivery by running a
+Server-managed settings reach devices at authentication time and refresh hourly during active sessions, with no endpoint infrastructure. Delivery through the claude.ai admin console requires a Claude for Teams or Enterprise plan. Deployments on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry can get the same remote delivery by running a
 Claude apps gateway
 , or use one of the file-based or OS-level mechanisms instead.
 If your organization mixes providers, configure
@@ -351,7 +351,7 @@ Monorepos and large repos
 : per-directory configuration patterns for organizations deploying into a monorepo
 Amazon Bedrock
 ,
-Google Vertex AI
+Google Cloud’s Agent Platform
 ,
 Microsoft Foundry
 : provider-specific deployment

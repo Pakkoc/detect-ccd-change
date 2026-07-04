@@ -206,11 +206,11 @@ GET /readyz
 and the liveness probe at
 GET /healthz
 Workload identity
-Prefer the platform’s workload identity over static keys: IRSA on EKS for Bedrock and for Claude Platform on AWS, Workload Identity on GKE for Agent Platform, and workload identity on AKS for Foundry. Set
+Prefer the platform’s workload identity over static keys: IRSA on EKS for Amazon Bedrock and for Claude Platform on AWS, Workload Identity on GKE for Google Cloud’s Agent Platform, and workload identity on AKS for Microsoft Foundry. Set
 auth: {}
 in the upstream block, or
 use_azure_ad: true
-for Foundry, and the gateway picks up the pod’s identity through that provider’s default credential chain. For a cross-cloud pairing, such as a Bedrock upstream on GKE, set explicit credentials in the upstream’s
+for Microsoft Foundry, and the gateway picks up the pod’s identity through that provider’s default credential chain. For a cross-cloud pairing, such as an Amazon Bedrock upstream on GKE, set explicit credentials in the upstream’s
 auth
 block instead. The
 upstreams
@@ -663,7 +663,7 @@ email
 from the userinfo endpoint but won’t include it in the id_token, such as the Okta org authorization server, set
 oidc.userinfo_fallback: true
 .
-Every Bedrock request returns 502; log shows
+Every Amazon Bedrock request returns 502; log shows
 Could not load credentials from any providers
 On EC2, IMDSv2’s default hop limit of 1 blocks the instance-metadata request from inside the container. Boot and
 /readyz

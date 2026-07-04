@@ -1,9 +1,9 @@
 Releases
 v2.1.158 → v2.1.165
 4 features · June 1–5
-Auto mode on Bedrock, Vertex, and Foundry
+Auto mode on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
 v2.1.158
-Auto mode is now available on Bedrock, Vertex, and Foundry for Opus 4.7 and Opus 4.8, replacing permission prompts with background safety checks on third-party providers. Opt in by setting
+Auto mode is now available on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry for Opus 4.7 and Opus 4.8, replacing permission prompts with background safety checks on third-party providers. Opt in by setting
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 .
 Opt in on a third-party provider, then cycle to auto mode with Shift+Tab:

@@ -535,7 +535,7 @@ CLI
 /privacy-settings
 View and update your privacy settings. Only available for Pro and Max plan subscribers
 /radio
-Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available. Not available on Bedrock, Vertex, or Foundry
+Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available. Not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 /recap
 Generate a one-line summary of the current session on demand. See
 Session recap
@@ -620,13 +620,13 @@ Configure
 Amazon Bedrock
 authentication, region, and model pins through an interactive wizard. Only visible when
 CLAUDE_CODE_USE_BEDROCK=1
-is set. First-time Bedrock users can also access this wizard from the login screen
+is set. First-time Amazon Bedrock users can also access this wizard from the login screen
 /setup-vertex
 Configure
-Google Vertex AI
+Google Cloud’s Agent Platform
 authentication, project, region, and model pins through an interactive wizard. Only visible when
 CLAUDE_CODE_USE_VERTEX=1
-is set. First-time Vertex AI users can also access this wizard from the login screen
+is set. First-time Google Cloud’s Agent Platform users can also access this wizard from the login screen
 /simplify [target]
 Skill
 .

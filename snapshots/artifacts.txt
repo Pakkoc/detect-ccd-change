@@ -146,7 +146,7 @@ Model provider
 Anthropic API. Not available on
 Amazon Bedrock
 ,
-Google Cloud Vertex AI
+Google Cloud’s Agent Platform
 , or
 Microsoft Foundry
 .

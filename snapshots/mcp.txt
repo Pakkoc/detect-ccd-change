@@ -342,7 +342,7 @@ If your request needs tools from a server that is still connecting in the backgr
 tool search
 enabled, which is the default, the wait happens inside the
 ToolSearch
-call. In configurations without tool search, such as Vertex AI, a custom
+call. In configurations without tool search, such as Google Cloud’s Agent Platform, a custom
 ANTHROPIC_BASE_URL
 , or
 ENABLE_TOOL_SEARCH=false
@@ -1319,7 +1319,7 @@ ANTHROPIC_API_KEY
 ANTHROPIC_AUTH_TOKEN
 ,
 apiKeyHelper
-, or a third-party provider such as Bedrock or Vertex is active, even if you previously ran
+, or a third-party provider such as Amazon Bedrock or Google Cloud’s Agent Platform is active, even if you previously ran
 /login
 .
 If
@@ -1678,7 +1678,7 @@ Key capabilities your server provides
 Claude Code truncates tool descriptions and server instructions at 2KB each. Keep them concise to avoid truncation, and put critical details near the start.
 ​
 Configure tool search
-Tool search is enabled by default: MCP tools are deferred and discovered on demand. Claude Code disables it by default on Vertex AI. It is also disabled when
+Tool search is enabled by default: MCP tools are deferred and discovered on demand. Claude Code disables it by default on Google Cloud’s Agent Platform. It is also disabled when
 ANTHROPIC_BASE_URL
 points to a non-first-party host, since most proxies don’t forward
 tool_reference
@@ -1687,18 +1687,18 @@ ENABLE_TOOL_SEARCH
 explicitly to override either fallback.
 Tool search requires a model that supports
 tool_reference
-blocks. Haiku models don’t support it. On Vertex AI, tool search is supported for Claude Sonnet 4.5 and later and Claude Opus 4.5 and later.
+blocks. Haiku models don’t support it. On Google Cloud’s Agent Platform, tool search is supported for Claude Sonnet 4.5 and later and Claude Opus 4.5 and later.
 Control tool search behavior with the
 ENABLE_TOOL_SEARCH
 environment variable:
 Value
 Behavior
 (unset)
-All MCP tools deferred and loaded on demand. Falls back to loading upfront on Vertex AI or when
+All MCP tools deferred and loaded on demand. Falls back to loading upfront on Google Cloud’s Agent Platform or when
 ANTHROPIC_BASE_URL
 is a non-first-party host
 true
-All MCP tools deferred. Claude Code sends the beta header even on Vertex AI and through proxies. Requests fail on Vertex AI models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that don’t support
+All MCP tools deferred. Claude Code sends the beta header even on Google Cloud’s Agent Platform and through proxies. Requests fail on Google Cloud’s Agent Platform models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that don’t support
 tool_reference
 blocks
 auto

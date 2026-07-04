@@ -528,7 +528,7 @@ No commands match "/schedule"
 while you type, and submitting it returns
 Unknown command: /schedule
 . The cause is usually one of the following:
-You are authenticated with a Console API key or a cloud provider such as Bedrock, Vertex, or Foundry.
+You are authenticated with a Console API key or a cloud provider such as Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
 /schedule
 requires a claude.ai subscription login. If
 ANTHROPIC_API_KEY
