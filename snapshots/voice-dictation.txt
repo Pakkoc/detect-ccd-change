@@ -300,7 +300,8 @@ alone pulls in the ALSA backend, which cannot record on WSL because there is no
 /dev/snd
 device.
 Voice input is failing repeatedly and has been paused
-: voice dictation hit several start-up failures in a row and stopped attempting new sessions until one succeeds. This usually means the microphone or audio stack on this host can’t capture audio, for example a headless server, a remote shell with no audio passthrough, or a denied microphone permission. Confirm a working input device, fix the underlying cause from the entries above, then trigger voice again.
+: voice dictation hit several capture failures in a row and stopped attempting new sessions until one succeeds. A failure counts whether the microphone fails to start or the recorder starts and then stops without producing any audio. This usually means the microphone or audio stack on this host can’t capture audio, for example a headless server, a remote shell with no audio passthrough, or a denied microphone permission. Confirm a working input device, fix the underlying cause from the entries above, then trigger voice again.
+Before v2.1.202, only start-up failures counted toward the pause.
 Nothing happens when holding
 Space
 in hold mode

@@ -14,7 +14,7 @@ or
 Higher signal
 : every reported finding is independently reproduced and verified, so the results focus on real bugs rather than style suggestions
 Broader coverage
-: a larger fleet of reviewer agents explores the change in parallel, which surfaces issues that a medium-effort local review can miss
+: a larger fleet of reviewer agents explores the change in parallel, which surfaces issues that a local review can miss
 No local resource use
 : the review runs entirely in a remote sandbox, so your terminal stays free for other work while it runs
 Ultrareview requires authentication with a Claude.ai account because it runs on Claude Code on the web infrastructure. If you are signed in with an API key only, run
@@ -116,13 +116,11 @@ locally in your session
 remotely in a cloud sandbox
 Depth
 scales with the effort argument
-the medium
-/code-review
-engine
+a single-pass review at the session’s effort
 multi-agent fleet with independent verification
 Duration
 seconds to a few minutes
-a few minutes
+seconds to a few minutes
 roughly 5 to 10 minutes
 Cost
 counts toward normal usage

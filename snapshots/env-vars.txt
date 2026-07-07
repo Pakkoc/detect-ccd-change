@@ -2052,7 +2052,7 @@ Monitoring
 OTEL_LOG_TOOL_DETAILS
 Set to
 1
-to include tool input arguments, MCP server names, raw error strings on tool failures, the refusal
+to include tool input arguments, MCP server names, user-authored workflow names, raw error strings on tool failures, the refusal
 category
 on
 api_refusal

@@ -849,6 +849,13 @@ defaultMode
 or
 /effort
 is kept.
+A name you set with
+/rename
+or
+Ctrl+R
+also persists across that restart, so
+claude --resume <name>
+still resolves the session. Before v2.1.202, the restart reverted the session to the name it was dispatched with and the new name stopped resolving.
 To set defaults for every session you dispatch from agent view, pass any of
 --permission-mode
 ,
@@ -1350,6 +1357,12 @@ unknown option
 error. The table below lists when each flag and behavior was added.
 Version
 Change
+v2.1.202
+A name set with
+/rename
+or
+Ctrl+R
+on a background session persists when the supervisor stops and restarts its process, instead of reverting to the name the session was dispatched with.
 v2.1.200
 An older Claude Code version that rewrites the session list in
 roster.json

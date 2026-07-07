@@ -6,6 +6,11 @@ command not found
 EACCES
 , TLS errors
 Troubleshoot installation and login
+Update or install download fails with
+The connection dropped while downloading the update
+or
+aborted
+Error reference
 Login loops, OAuth errors,
 403 Forbidden
 , “organization disabled”, Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry credentials

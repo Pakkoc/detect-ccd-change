@@ -674,6 +674,16 @@ Agent
 tool call.
 null
 for main-session messages and older sessions
+parent_agent_id
+string | null
+For messages from a
+nested subagent
+, the
+agentId
+of the subagent that spawned it.
+null
+for main-session messages, messages from top-level subagents, and older sessions.
+Requires Claude Code v2.1.202 or later
 ​
 Example
 import

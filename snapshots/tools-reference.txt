@@ -167,7 +167,12 @@ ScheduleWakeup
 Reschedules the next iteration of a
 self-paced
 /loop
-. Claude calls this at the end of each iteration to pick when the next one runs, between one minute and one hour out; you don’t call it directly. The pending wakeup appears in
+. Claude calls this at the end of each iteration to pick when the next one runs, between one minute and one hour out; you don’t call it directly. To end the loop instead, Claude calls it with
+stop: true
+, which cancels the pending wakeup.
+The
+stop
+field requires Claude Code v2.1.202 or later. The pending wakeup appears in
 session_crons
 in
 Stop hook input
