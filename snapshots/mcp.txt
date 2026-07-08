@@ -398,6 +398,8 @@ Channels reference
 to build your own.
 Tips:
 Use the
+-s
+or
 --scope
 flag to specify where the configuration is stored:
 local
@@ -411,10 +413,21 @@ user
 : available to you across all projects. Older versions called this scope
 global
 Set environment variables with
+-e
+or
 --env
 flags (for example,
---env KEY=value
+-e KEY=value
 )
+The
+--transport
+and
+--header
+flags also accept
+-t
+and
+-H
+short forms
 Configure MCP server startup timeout using the
 MCP_TIMEOUT
 environment variable (for example,
@@ -573,9 +586,23 @@ Use this full name when referencing the tool in
 permission rules
 , a skill’s
 allowed-tools
-list, or a
+list, a
 subagent’s
 tools
+field
+, or a
+hook matcher
+. A hook matcher written against the bare server key, such as
+mcp__database-tools__.*
+, never fires for a plugin-bundled server.
+The server itself registers under the scoped name
+plugin:<plugin-name>:<server-name>
+, such as
+plugin:my-plugin:database-tools
+. Use that name where a configured server name is expected, such as an
+mcp_tool
+hook’s
+server
 field
 .
 Benefits of plugin MCP servers

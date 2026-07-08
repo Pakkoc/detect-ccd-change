@@ -479,7 +479,6 @@ Never prompts. Tools pre-approved by
 permission rules
 run, everything else is denied
 "auto"
-(TypeScript only)
 Uses a model classifier to approve or deny each tool call. See
 Auto mode
 for availability and behavior

@@ -42,10 +42,10 @@ readOnlyHint: true
 on tools with no side effects. See
 Add tool annotations
 .
-Handle errors without stopping the loop
+Control the error message Claude reads
 Return
 isError: true
-instead of throwing. See
+to compose the message instead of surfacing the raw exception. See
 Handle errors
 .
 Return images or files
@@ -633,24 +633,23 @@ Configure permissions
 for the full evaluation order.
 ​
 Handle errors
-How your handler reports errors determines whether the agent loop continues or stops:
+A handler error doesn’t stop the agent loop. The SDK’s in-process MCP server catches uncaught exceptions and returns them as error results, so how you report an error determines what Claude reads, not whether the query fails:
 What happens
 Result
 Handler throws an uncaught exception
-Agent loop stops. Claude never sees the error, and the
-query
-call fails.
+The MCP server converts it to an error result carrying the raw exception message. Claude sees that message, and the agent loop continues.
 Handler catches the error and returns
 isError: true
 (TS) /
 "is_error": True
 (Python)
-Agent loop continues. Claude sees the error as data and can retry, try a different tool, or explain the failure.
-The example below catches two kinds of failures inside the handler instead of letting them throw. A non-200 HTTP status is caught from the response and returned as an error result. A network error or invalid JSON is caught by the surrounding
+Claude sees the message you compose. You can add context the raw exception lacks, such as which request failed or what to try instead.
+In both cases Claude can retry, try a different tool, or explain the failure. Catch errors yourself when the raw exception message isn’t enough for Claude to act on.
+The example below catches two kinds of failures inside the handler and composes the error message Claude reads. A non-200 HTTP status is caught from the response and returned as an error result. A network error or invalid JSON is caught by the surrounding
 try/except
 (Python) or
 try/catch
-(TypeScript) and also returned as an error result. In both cases the handler returns normally and the agent loop continues.
+(TypeScript) and also returned as an error result. In both cases Claude receives a message that describes the failure instead of a bare exception string.
 Python
 TypeScript
 import
@@ -753,8 +752,8 @@ except
 Exception
 as
 e:
-# Catching here keeps the agent loop alive. An uncaught exception
-# would end the whole query() call.
+# Composes the message Claude reads. An uncaught exception would
+# reach Claude as the raw str(e) with no context.
 return
 {
 "content"
@@ -792,7 +791,7 @@ audio
 resource
 , and
 resource_link
-blocks. You can mix them in the same response. Audio blocks are saved to disk and Claude receives a text block with the saved file path. Resource link blocks are converted to a text block containing the link’s name, URI, and description.
+blocks. You can mix them in the same response. In TypeScript, audio blocks are saved to disk and Claude receives a text block with the saved file path; in Python, the SDK drops audio blocks from the tool result and logs a warning. Resource link blocks are converted to a text block containing the link’s name, URI, and description.
 ​
 Images
 An image block carries the image bytes inline, encoded as base64. There is no URL field. To return an image that lives at a URL, fetch it in the handler, read the response bytes, and base64-encode them before returning. The result is processed as visual input.
@@ -897,7 +896,7 @@ blob
 , not both
 resource.blob
 string
-The content base64-encoded, if it’s binary
+The content base64-encoded, if it’s binary. TypeScript only: the Python SDK drops binary resources from the tool result and logs a warning
 resource.mimeType
 string
 Optional

@@ -1501,6 +1501,10 @@ is the tool it provides. For example,
 mcp__github__search_repositories
 or
 mcp__filesystem__read_file
+. Tools from a
+plugin-bundled server
+use a scoped server segment instead, such as
+mcp__plugin_my-plugin_db__query
 . Use a regex matcher to target all tools from a specific server, or match across servers with a pattern like
 mcp__.*__write.*
 . See

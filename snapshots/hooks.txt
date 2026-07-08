@@ -712,6 +712,26 @@ mcp__brave-search
 is evaluated as an unanchored regular expression and matches every tool from that server. The
 mcp__brave-search__.*
 form works on every version.
+Tools from a
+plugin-bundled MCP server
+use a scoped server segment that includes the plugin name:
+mcp__plugin_<plugin-name>_<server-name>__<tool>
+. A matcher written against the bare server key never fires for these tools. For a plugin named
+my-plugin
+that bundles a server under the key
+db
+, a
+query
+tool appears as
+mcp__plugin_my-plugin_db__query
+, so the matcher for every tool from that server is
+mcp__plugin_my-plugin_db__.*
+. Use the same scoped tool name in a handler’s
+if
+field
+. See
+Plugin-provided MCP servers
+for how the scoped name is built.
 This example logs all memory server operations and validates write operations from any MCP server:
 {
 "hooks"
@@ -1204,7 +1224,13 @@ Required
 Description
 server
 yes
-Name of a configured MCP server. The server must already be connected; the hook never triggers an OAuth or connection flow
+Name of a configured MCP server. For a
+plugin-bundled server
+, this is the scoped name
+plugin:<plugin-name>:<server-name>
+, such as
+plugin:my-plugin:db
+, not the bare server key. The server must already be connected; the hook never triggers an OAuth or connection flow
 tool
 yes
 Name of the tool to call on that server
@@ -1521,7 +1547,13 @@ attribute on OpenTelemetry events
 , so you can correlate hook output with telemetry for a single prompt. Absent until the first user input.
 Requires Claude Code v2.1.196 or later
 transcript_path
-Path to conversation JSON
+Path to conversation JSON. The transcript file is written asynchronously and may lag the in-memory conversation, so it may not yet include the current turn’s most recent messages when a hook fires. Hooks that need the final assistant text of the current turn should use
+last_assistant_message
+on
+Stop
+and
+SubagentStop
+instead of reading the transcript
 cwd
 Current working directory when the hook is invoked
 permission_mode
@@ -5280,7 +5312,9 @@ true
 when Claude Code is already continuing as a result of a stop hook. Check this value or process the transcript to avoid blocking on a condition that will never resolve. Claude Code overrides the hook and ends the turn after 8 consecutive blocks.
 The
 last_assistant_message
-field contains the text content of Claude’s final response, so hooks can access it without parsing the transcript file.
+field contains the text content of Claude’s final response, so hooks can access it without parsing the transcript file. For hooks that act on the just-completed turn, such as read-aloud or notification hooks, use this field rather than reading
+transcript_path
+: the transcript file isn’t guaranteed to include the final message at Stop time on all versions.
 The
 background_tasks
 and
