@@ -261,6 +261,112 @@ error
 "
 )
 asyncio.run(main())
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+try
+{
+for
+await
+(
+const
+message
+of
+query
+({
+prompt:
+"Summarize this project"
+})) {
+if
+(
+message
+.
+type
+===
+"assistant"
+) {
+console
+.
+log
+(
+`Turn completed:
+${
+message
+.
+message
+.
+content
+.
+length
+}
+content blocks`
+);
+}
+if
+(
+message
+.
+type
+===
+"result"
+) {
+if
+(
+message
+.
+subtype
+===
+"success"
+) {
+console
+.
+log
+(
+message
+.
+result
+);
+}
+else
+{
+console
+.
+log
+(
+`Stopped:
+${
+message
+.
+subtype
+}
+`
+);
+}
+}
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result. If the
+// failure was an error result, the error subtype branches above have
+// already run; connection or process failures yield no result message.
+console
+.
+log
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
+}
 ​
 Tool execution
 Tools give your agent the ability to take action. Without tools, Claude can only respond with text. With tools, Claude can read files, run commands, search code, and interact with external services.
@@ -916,6 +1022,204 @@ error
 "
 )
 asyncio.run(run_agent())
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+let
+sessionId
+:
+string
+|
+undefined
+;
+try
+{
+for
+await
+(
+const
+message
+of
+query
+({
+prompt:
+"Find and fix the bug causing test failures in the auth module"
+,
+options:
+{
+allowedTools:
+[
+"Read"
+,
+"Edit"
+,
+"Bash"
+,
+"Glob"
+,
+"Grep"
+],
+// Listing tools here auto-approves them (no prompting)
+settingSources:
+[
+"project"
+],
+// Load CLAUDE.md, skills, hooks from current directory
+maxTurns:
+30
+,
+// Prevent runaway sessions
+effort:
+"high"
+// Thorough reasoning for complex debugging
+}
+})) {
+// Save the session ID to resume later if needed
+if
+(
+message
+.
+type
+===
+"system"
+&&
+message
+.
+subtype
+===
+"init"
+) {
+sessionId
+=
+message
+.
+session_id
+;
+}
+// Handle the final result
+if
+(
+message
+.
+type
+===
+"result"
+) {
+if
+(
+message
+.
+subtype
+===
+"success"
+) {
+console
+.
+log
+(
+`Done:
+${
+message
+.
+result
+}
+`
+);
+}
+else
+if
+(
+message
+.
+subtype
+===
+"error_max_turns"
+) {
+// Agent ran out of turns. Resume with a higher limit.
+console
+.
+log
+(
+`Hit turn limit. Resume session
+${
+sessionId
+}
+to continue.`
+);
+}
+else
+if
+(
+message
+.
+subtype
+===
+"error_max_budget_usd"
+) {
+console
+.
+log
+(
+"Hit budget limit."
+);
+}
+else
+{
+console
+.
+log
+(
+`Stopped:
+${
+message
+.
+subtype
+}
+`
+);
+}
+console
+.
+log
+(
+`Cost: $
+${
+message
+.
+total_cost_usd
+.
+toFixed
+(
+4
+)
+}
+`
+);
+}
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result. If the
+// failure was an error result, the error subtype branches above have
+// already run; connection or process failures yield no result message.
+console
+.
+log
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
+}
 ​
 Next steps
 Now that you understand the loop, here’s where to go depending on what you’re building:

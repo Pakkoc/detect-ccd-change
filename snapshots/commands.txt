@@ -64,7 +64,9 @@ checks the diff for correctness bugs and cleanups and can apply the findings wit
 --fix
 ,
 /review
-gives a read-only review of a GitHub pull request, and
+gives a fast single-pass, read-only review of a GitHub pull request,
+/code-review <level> <pr#>
+runs a multi-agent review of one, and
 /security-review
 checks the diff for security vulnerabilities.
 /code-review ultra
@@ -569,7 +571,13 @@ bg
 . Alias:
 /continue
 /review [PR]
-Review a GitHub pull request by number. With no argument, lists open PRs to pick from. For a cloud-based review, see
+Run a fast single-pass, read-only review of a GitHub pull request by number. With no argument, lists open PRs to pick from; text after the PR number becomes additional review instructions. From v2.1.186 through v2.1.201,
+/review
+instead ran the same multi-agent engine as
+/code-review medium
+. For a multi-agent review at a chosen effort level, use
+/code-review <level> <pr#>
+; for a cloud-based review, see
 /code-review ultra
 /rewind
 Rewind the conversation and/or code to a previous point, or summarize from a selected message. See

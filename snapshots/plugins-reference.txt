@@ -1376,9 +1376,14 @@ ${CLAUDE_PROJECT_DIR}
 CLAUDE_PROJECT_DIR
 variable. Use this to reference project-local scripts or config files. Wrap in quotes to handle paths with spaces, for example
 "${CLAUDE_PROJECT_DIR}/scripts/server.sh"
-. MCP servers can also call the MCP
+.
+MCP servers can also call the
 roots/list
-request, which returns the directory Claude Code was launched from.
+request to read the session’s working directories at runtime. See
+what
+roots/list
+returns and when Claude Code notifies the server of changes
+.
 {
 "hooks"
 : {

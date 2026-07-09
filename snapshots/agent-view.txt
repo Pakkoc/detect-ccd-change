@@ -332,9 +332,17 @@ Background this session?
 dialog appears first, the same as with
 /background
 .
+The ten-second limit doesn’t apply while
+subagents
+are running. Claude Code keeps waiting so their work carries over, and shows a
+Still backgrounding after the current tool
+notice while it waits; press
+←
+again to background without waiting, which restarts the subagents from the beginning. Before v2.1.203, the wait ended after ten seconds and the running subagents were restarted from the beginning without warning.
 The row is created even from a fresh session with no conversation history, so
 →
-returns to it. When that row is the only one, agent view shows an onboarding hint below it.
+returns to it.
+Before v2.1.203, agent view showed an onboarding hint below that row when it was the only one.
 You can turn this shortcut off with the
 leftArrowOpensAgents
 setting in
@@ -515,6 +523,7 @@ Skills, your own commands, and prompt-expanding built-ins such as
 are sent to a new background session as their first prompt. Other built-in commands show an
 attach to a session to run it
 hint instead.
+Everything you typed stays in the input next to the hint so you can edit it. Before v2.1.203, the hint cleared the input and the typed text was lost.
 Packaging a recurring task as a
 skill
 lets you start the same workflow from agent view repeatedly without retyping the prompt.
@@ -535,7 +544,20 @@ in a parent directory and mention a child repository with
 @<repo>
 in the prompt. Typing
 @
-lists git repositories one level below the launch directory, plus any directory that already has a session in the list. A directory whose name contains a space isn’t listed.
+lists these targets:
+Git repositories one level below the launch directory
+The registered
+git worktrees
+of the repository you launched from that live inside its directory tree, such as the ones Claude creates under
+.claude/worktrees/
+, labeled with their checked-out branch. Worktrees added outside the repository, such as with
+git worktree add ../feature
+, aren’t listed
+Any directory that already has a session in the list
+A directory whose name contains a space isn’t listed.
+Before v2.1.203, registered worktrees weren’t listed, so dispatching into one meant running
+claude --bg
+from that worktree’s directory.
 From the shell,
 cd
 into the directory and run
@@ -719,6 +741,7 @@ Outside a git repository, sessions write to the working directory directly and a
 WorktreeCreate
 hook
 and Claude isolates edits the same way it does for git.
+When the hook fails in a directory that isn’t a git repository, the session skips isolation for that directory and edits the working directory in place. Inside a git repository, writes stay blocked until the session isolates. Before v2.1.203, a background session in that state couldn’t edit any file: every write was rejected until it isolated, and the hook could never isolate that directory.
 Deleting a session in agent view with
 Ctrl+X
 twice removes a worktree Claude created for it, including any uncommitted changes, so merge or push the changes you want to keep first. Deleting from the shell with
@@ -806,11 +829,21 @@ or
 CLAUDE_CODE_USE_VERTEX
 , and
 ANTHROPIC_DEFAULT_*_MODEL
-aliases follow the shell that dispatched the session. Gateway endpoint variables such as
+aliases follow the shell that dispatched the session. A gateway
 ANTHROPIC_BASE_URL
-and its paired
-ANTHROPIC_AUTH_TOKEN
-don’t. See
+exported in that shell follows it too, together with
+ANTHROPIC_CUSTOM_HEADERS
+, when the supervisor runs with the same gateway environment and the session runs in the directory you dispatch from or is your own session backgrounded with
+←
+or
+/background
+. That is the normal case when the first shell to open agent view or dispatch a background session is the gateway shell. Dispatching into a different directory with
+@repo
+or
+--cwd
+doesn’t carry the shell’s gateway; that project’s
+settings
+supply the endpoint. See
 the supervisor process
 for how background sessions source provider settings and credentials.
 The
@@ -832,7 +865,7 @@ permissionMode
 from the dispatched
 subagent’s frontmatter
 .
-The permission mode, model, and effort a background session was started with, along with the
+The permission mode, model, and effort you chose for a background session, along with the
 configuration flags it carries
 , all persist when the supervisor later
 stops and restarts
@@ -849,6 +882,26 @@ defaultMode
 or
 /effort
 is kept.
+An effort the session took from the
+effortLevel
+setting
+rather than from
+--effort
+or
+/effort
+isn’t fixed at dispatch: each process started for the session reads the setting again, so editing
+effortLevel
+in
+settings.json
+reaches sessions you background with
+←
+or
+/bg
+and their later restarts. Before v2.1.203, backgrounding a session recorded its settings-derived effort as if you had passed
+--effort
+, so later
+effortLevel
+edits never reached it.
 A name you set with
 /rename
 or
@@ -1074,22 +1127,52 @@ CLAUDE_CODE_USE_BEDROCK
 and
 ANTHROPIC_DEFAULT_*_MODEL
 aliases are read from the shell that dispatched each session and are applied to its worker.
+The dispatching shell’s
+PATH
+is applied to the worker the same way, so shell commands the session runs find the same tools your terminal does. Before v2.1.203, a background session kept the
+PATH
+of the shell that first started the supervisor, so tools added to your
+PATH
+since then could be missing, most often on Windows.
 A background session doesn’t inherit gateway endpoint variables such as
 ANTHROPIC_BASE_URL
-, the equivalent Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry base URL variables, or a paired
-ANTHROPIC_AUTH_TOKEN
-from the shell that started the supervisor or from the dispatching shell. The session uses your stored credentials and any
+or the equivalent Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry base URL variables from the shell that started the supervisor. Without a gateway exported in the shell you dispatch from, the session uses your stored credentials and any
 env
 values in the project directory’s
 settings
-instead. To point background sessions in a project at an
+. To point every session in a project at an
 LLM gateway
 , set
 ANTHROPIC_BASE_URL
 in that project’s
 .claude/settings.json
 env
-block rather than exporting it in your shell.
+block.
+A gateway
+ANTHROPIC_BASE_URL
+exported in the shell you dispatch from reaches that session’s worker, together with
+ANTHROPIC_CUSTOM_HEADERS
+and the credential exported alongside them, when the supervisor was started from an environment with the same gateway. The supervisor captures its environment from the first shell that opens agent view or dispatches a background session, so starting from the gateway shell gives it that environment. The forward also applies only to sessions dispatched into the directory you’re dispatching from, or backgrounded from your own session with
+←
+or
+/background
+: dispatching into a different directory with
+@repo
+or
+--cwd
+doesn’t carry the shell’s gateway, and that project’s
+settings.json
+env
+block supplies the endpoint instead. When the supervisor’s environment carries a different gateway or none, the worker keeps your stored credentials against the default endpoint instead of mixing one environment’s credential with another’s endpoint. Before v2.1.203, the dispatching shell’s
+ANTHROPIC_BASE_URL
+was dropped while the
+ANTHROPIC_API_KEY
+exported alongside it was kept, so the gateway’s key was sent to the default endpoint and every request failed with a 401.
+The forwarded endpoint applies only to that live process and is never written to disk. When the supervisor stops an idle session and later restarts it, the restarted process reads its endpoint from your settings again: with a gateway
+ANTHROPIC_AUTH_TOKEN
+it falls back to your stored credentials, and with a gateway-issued
+ANTHROPIC_API_KEY
+it can fail to authenticate until the gateway is set in settings.
 Each background session is its own Claude Code process, managed by the supervisor rather than tied to your terminal. A session that’s actively working, waiting for your input, or has a terminal attached keeps its process running. A running background shell command, subagent, dynamic workflow, or monitor counts as active work, so a long-running process such as a dev server keeps the session alive.
 Once a session finishes and sits unattached for about an hour, the supervisor stops its process to free resources. A session you have
 pinned
@@ -1195,7 +1278,7 @@ turned off
 by a setting or environment variable.
 ​
 Agent view opens with no sessions
-Before you dispatch your first session, agent view shows a short onboarding hint with example prompts in place of the session list. Type a prompt in the input at the bottom and press
+Before you dispatch your first session, agent view shows the empty section headers with a description under each, plus a one-line explanation above the input, in place of the session list. Type a prompt in the input at the bottom and press
 Enter
 to dispatch your first session.
 ​
@@ -1226,6 +1309,14 @@ investigate the flaky checkout test
 Sessions show as failed after shutdown
 Shutting down or restarting your machine stops running background sessions, so they show as failed when you next open agent view. Attach, peek, or reply to any of them and the session restarts from where it left off.
 Sleep alone doesn’t cause this. Sessions are preserved across sleep and the supervisor reconnects to them on wake.
+​
+Opening a session says the conversation is already open
+Opening a stopped row whose conversation is also held open by another running non-interactive Claude Code process, for example a background worker for the same conversation that is still winding down, shows
+This conversation is already open in another running Claude session
+instead of starting the row’s process, because two processes can’t write to the same transcript. Reply in the session that already has the conversation open, or exit it and open the row again. A reply you typed with the refused attempt isn’t lost; it’s sent the next time the session starts.
+Before v2.1.203, this state started a second process anyway. That process exited with a
+currently running as a background agent
+error and the row showed as failed.
 ​
 A session fails before starting with a
 possibly low memory
@@ -1357,6 +1448,20 @@ unknown option
 error. The table below lists when each flag and behavior was added.
 Version
 Change
+v2.1.203
+A gateway
+ANTHROPIC_BASE_URL
+exported in the dispatching shell reaches the sessions dispatched from it into that same directory when the supervisor shares that gateway environment, instead of being dropped while the API key exported alongside it was kept. The dispatching shell’s
+PATH
+is applied to each session’s worker. Pressing
+←
+while subagents are running waits for them instead of restarting them after ten seconds. The empty list always shows the section headers with a description under each. Typing
+@
+in the dispatch input also lists the launch repository’s registered git worktrees that live inside its directory tree. An effort inherited from the
+effortLevel
+setting follows later edits to that setting instead of being fixed at dispatch. Opening a stopped session whose conversation is already open in another running session is refused with a message instead of failing the row. A command that isn’t available in agent view leaves the typed text in the input. A
+WorktreeCreate
+hook that fails outside a git repository no longer blocks the session from editing files.
 v2.1.202
 A name set with
 /rename

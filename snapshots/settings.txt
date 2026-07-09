@@ -646,19 +646,30 @@ Default
 30
 days, minimum
 1
-. Session files older than this period are deleted at startup. Setting to
+. Claude Code deletes
+session files and other application data
+older than this period at startup. Setting
 0
-is rejected with a validation error. Also controls the age cutoff for automatic removal of
-orphaned subagent worktrees
-at startup. To disable transcript writes entirely, set the
+fails with a validation error. The same age cutoff applies to automatic removal of
+orphaned worktrees
+at startup.
+If Claude Code can’t read or parse a settings file, it pauses the retention cleanup sweep and shows a warning in
+/status
+until you fix the file, unless
+managed settings
+provide
+cleanupPeriodDays
+, in which case the sweep runs at the managed value. Before v2.1.203, cleanup ran at the 30-day default in that state and could delete transcripts a longer
+cleanupPeriodDays
+was meant to keep; files newer than 30 days were never removed. To disable transcript writes entirely, set the
 CLAUDE_CODE_SKIP_PROMPT_HISTORY
-environment variable, or in non-interactive mode (
--p
-) use the
+environment variable. In non-interactive mode, pass
 --no-session-persistence
-flag or the
+alongside
+-p
+or set
 persistSession: false
-SDK option.
+in the Agent SDK.
 20
 companyAnnouncements
 Announcement to display to users at startup. If multiple announcements are provided, they will be cycled through at random.
@@ -1533,13 +1544,16 @@ always use the fullscreen renderer regardless of this setting
 ultracode
 Turn on
 ultracode
-for the session. Session-only and not read from
+for the current session. This key isn’t read from
 settings.json
-. Set through
+. Set it through
 /effort ultracode
 ,
 --settings
-, or an Agent SDK control request
+, or an Agent SDK control request.
+To start a session with ultracode already on, launch with
+claude --effort ultracode
+, which requires Claude Code v2.1.203 or later
 true
 useAutoModeDuringPlan
 Default
@@ -1736,7 +1750,11 @@ as
 Dynamic workflow size
 . You can also set it directly with
 /config workflowSizeGuideline=small
-. Requires Claude Code v2.1.202 or later
+. Requires Claude Code v2.1.202 or later.
+The guideline’s agent count also replaces the default threshold for the
+Large workflow
+warning
+; that behavior requires Claude Code v2.1.203 or later
 "small"
 ​
 Worktree settings
@@ -1779,6 +1797,10 @@ Write
 in the main checkout until
 EnterWorktree
 is called.
+Outside a git repository, a
+WorktreeCreate
+hook
+that fails releases the block so the session can edit the working directory in place; requires Claude Code v2.1.203 or later.
 "none"
 lets background jobs edit the working copy directly. Requires Claude Code v2.1.143 or later
 "none"

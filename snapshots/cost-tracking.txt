@@ -182,6 +182,59 @@ error
 `
 );
 }
+from
+claude_agent_sdk
+import
+query, ResultMessage
+import
+asyncio
+async
+def
+main
+():
+try
+:
+async
+for
+message
+in
+query(
+prompt
+=
+"Summarize this project"
+):
+if
+isinstance
+(message, ResultMessage):
+print
+(
+f
+"Total cost: $
+{
+message.total_cost_usd
+or
+0
+}
+"
+)
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result. If the
+# failure was an error result, it still carried total_cost_usd and the
+# branch above has already run; connection or process failures yield
+# no result message.
+print
+(
+f
+"Session ended with an error:
+{
+error
+}
+"
+)
+asyncio.run(main())
 ​
 Track per-step and per-model usage
 The examples in this section use TypeScript field names. In Python, the equivalent fields are
@@ -617,6 +670,89 @@ toFixed
 }
 `
 );
+from
+claude_agent_sdk
+import
+query, ResultMessage
+import
+asyncio
+async
+def
+main
+():
+# Track cumulative cost across multiple query() calls
+total_spend
+=
+0.0
+prompts
+=
+[
+"Read the files in src/ and summarize the architecture"
+,
+"List all exported functions in src/auth.ts"
+,
+]
+for
+prompt
+in
+prompts:
+try
+:
+async
+for
+message
+in
+query(
+prompt
+=
+prompt):
+if
+isinstance
+(message, ResultMessage):
+cost
+=
+message.total_cost_usd
+or
+0
+total_spend
++=
+cost
+print
+(
+f
+"This call: $
+{
+cost
+}
+"
+)
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result. If
+# the failure was an error result, this call's cost was already
+# counted; connection or process failures yield no result message.
+# Continue with the next prompt.
+print
+(
+f
+"Call failed:
+{
+error
+}
+"
+)
+print
+(
+f
+"Total spend: $
+{
+total_spend
+:.4f}
+"
+)
+asyncio.run(main())
 ​
 Handle errors, caching, and token discrepancies
 For accurate cost tracking, account for failed conversations, cache token pricing, and occasional reporting inconsistencies.
@@ -714,6 +850,52 @@ options):
 print
 (message)
 asyncio.run(main())
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+const
+options
+=
+{
+env:
+{
+...
+process
+.
+env
+,
+CLAUDE_CODE_USE_BEDROCK:
+"1"
+,
+ENABLE_PROMPT_CACHING_1H:
+"1"
+,
+},
+};
+for
+await
+(
+const
+message
+of
+query
+({
+prompt:
+"Summarize this project"
+,
+options
+})) {
+console
+.
+log
+(
+message
+);
+}
 Cache writes with a 1-hour TTL are billed at a higher rate than 5-minute writes, so enabling this trades higher write cost for more cache reads. See
 prompt caching pricing
 for details. Claude subscription users already receive 1-hour TTL automatically and do not need to set this variable.

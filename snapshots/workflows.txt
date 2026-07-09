@@ -181,6 +181,9 @@ xhigh
 reasoning effort
 with automatic workflow orchestration. With it on, Claude plans a workflow for each substantive task instead of waiting for you to ask.
 /effort ultracode
+To start a session with ultracode already on, launch with
+claude --effort ultracode
+. Requires Claude Code v2.1.203 or later.
 With ultracode on, Claude decides when a task warrants a workflow. A single request can turn into several workflows in a row: one to understand the code, one to make the change, and one to verify it. This applies to every task in the session, so each request uses more tokens and takes longer than at lower effort levels.
 Ultracode lasts for the current session and resets when you start a new one. Drop back with
 /effort high
@@ -447,6 +450,18 @@ set a size guideline
 in
 /config
 .
+Claude Code also flags a run that grows unusually large. When a workflow schedules more than 25 agents, or its projected token total passes 1.5 million, its progress line in the task panel below the input box shows a
+Large workflow
+warning. The warning points you to
+/workflows
+, where you can stop the run. Requires Claude Code v2.1.203 or later.
+The warning is advisory: it doesn’t pause or limit the run. Two settings change when you see it:
+If you
+set a size guideline
+, the guideline’s agent count replaces the 25-agent threshold.
+Sessions with
+ultracode
+on don’t show the warning, because turning ultracode on already opts you in to large runs.
 Every agent in a workflow uses your session’s model unless the script routes a stage to a different one. To control the model cost:
 Check
 /model

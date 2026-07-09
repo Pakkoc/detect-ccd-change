@@ -301,7 +301,10 @@ If the plugin was enabled through a project’s
 /plugin
 writes an override to your
 .claude/settings.local.json
-rather than editing the checked-in file, so the plugin stays off for you while teammates are unaffected. If it was enabled through
+rather than editing the checked-in file, so the plugin stays off for you while teammates are unaffected.
+The same dialog also offers to uninstall the plugin for everyone by removing it from the shared
+.claude/settings.json
+; that option requires Claude Code v2.1.203 or later. If it was enabled through
 managed settings
 , only an administrator can disable it.
 ​

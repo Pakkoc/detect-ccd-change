@@ -128,6 +128,13 @@ Remote Control
 session (
 /remote-control
 ). The Customize section provides access to MCP servers, hooks, memory, permissions, and plugins. Items with a terminal icon open in the integrated terminal.
+The Settings section includes
+Enable Remote Control for all sessions
+, which sets
+remoteControlAtStartup
+so
+every new interactive session connects to Remote Control automatically
+. Requires Claude Code v2.1.203 or later.
 Context indicator
 : the prompt box shows how much of Claude’s context window you’re using. Claude automatically compacts when needed, or you can run
 /compact

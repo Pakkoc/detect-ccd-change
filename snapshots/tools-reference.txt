@@ -86,12 +86,14 @@ Creates an isolated
 git worktree
 and switches into it. Pass a
 path
-to switch into an existing worktree of the current repository instead of creating a new one. From within a worktree session, or from a subagent with a pinned working directory such as
+to switch into an existing worktree instead of creating a new one.
+On first entry the target may be a worktree of the current repository or, in a multi-repo workspace, of a repository nested inside it. Before v2.1.203, a nested repository’s worktree was rejected. From within a worktree session, or from a subagent with a pinned working directory such as
 isolation: worktree
 , only the
 path
 form is available and the target must be under
 .claude/worktrees/
+of the session’s repository
 No
 ExitPlanMode
 Presents a plan for approval and exits plan mode
@@ -227,15 +229,17 @@ TaskList
 Lists all tasks with their current status
 No
 TaskOutput
-(Deprecated) Retrieves output from a background task. Prefer
+Retrieves output from a background task. Deprecated in favor of
 Read
-on the task’s output file path
+on the task’s output file path.
+When no task matches the ID, the error lists the running background agents by ID and description. Before v2.1.203, the error named only the missing ID
 No
 TaskStop
 Stops a running background task by ID.
-As of v2.1.198, also accepts an
+It also accepts an
 agent-team teammate
-or a named background agent by agent ID or name
+or a named background agent by agent ID or name. Before v2.1.198, it accepted only a background task ID.
+When no task matches the ID, the error lists the running background agents by ID and description, including agents that another agent spawned. Before v2.1.203, the error listed running teammates and named agents but not background agents another agent spawned, so those couldn’t be identified or stopped from the main conversation
 No
 TaskUpdate
 Updates task status, dependencies, details, or deletes tasks

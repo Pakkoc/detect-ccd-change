@@ -135,6 +135,86 @@ Promise
 string
 []>;
 };
+# Exported from claude_agent_sdk as
+# SessionStore, SessionKey, SessionStoreEntry.
+class
+SessionKey
+(
+TypedDict
+):
+project_key:
+str
+session_id:
+str
+subpath: NotRequired[
+str
+]
+class
+SessionStore
+(
+Protocol
+):
+# Required
+async
+def
+append
+(
+self
+,
+key
+: SessionKey,
+entries
+: list[SessionStoreEntry]
+) ->
+None
+:
+...
+async
+def
+load
+(
+self
+,
+key
+: SessionKey) -> list[SessionStoreEntry]
+|
+None
+:
+...
+# Optional — omit or raise NotImplementedError
+async
+def
+list_sessions
+(
+self
+,
+project_key
+:
+str
+) -> list[SessionStoreListEntry]:
+...
+async
+def
+delete
+(
+self
+,
+key
+: SessionKey) ->
+None
+:
+...
+async
+def
+list_subkeys
+(
+self
+,
+key
+: SessionListSubkeysKey) -> list[
+str
+]:
+...
 SessionKey
 addresses one transcript.
 projectKey
@@ -294,6 +374,80 @@ result
 );
 }
 }
+import
+asyncio
+from
+claude_agent_sdk
+import
+(
+ClaudeAgentOptions,
+InMemorySessionStore,
+ResultMessage,
+query,
+)
+store
+=
+InMemorySessionStore()
+async
+def
+main
+():
+session_id
+=
+None
+async
+for
+message
+in
+query(
+prompt
+=
+"List the Python files under src/"
+,
+options
+=
+ClaudeAgentOptions(
+session_store
+=
+store),
+):
+if
+isinstance
+(message, ResultMessage):
+session_id
+=
+message.session_id
+# Resume from the store. The agent has full context from the first call.
+async
+for
+message
+in
+query(
+prompt
+=
+"Summarize what those files do"
+,
+options
+=
+ClaudeAgentOptions(
+session_store
+=
+store,
+resume
+=
+session_id),
+):
+if
+isinstance
+(message, ResultMessage)
+and
+message.subtype
+==
+"success"
+:
+print
+(message.result)
+asyncio.run(main())
 The second query prints a summary of the files from the first query, which shows the agent resumed with full context from the store.
 ​
 Write your own adapter

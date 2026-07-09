@@ -415,7 +415,15 @@ high
 xhigh
 ,
 max
-; available levels depend on the model. Overrides the
+, or
+ultracode
+. Available levels depend on the model.
+ultracode
+starts the session at
+xhigh
+effort with
+ultracode
+turned on, and requires Claude Code v2.1.203 or later. Overrides the
 effortLevel
 setting for this session and does not persist
 claude --effort high

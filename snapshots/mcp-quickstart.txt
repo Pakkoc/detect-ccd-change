@@ -443,12 +443,22 @@ You edited a configuration file at the wrong path. The correct files are
 and
 <project>/.mcp.json
 . Claude Code doesn’t read paths such as
+~/.claude/.mcp.json
+,
 ~/.claude/config/mcp.json
 ,
 ~/.claude/mcp.json
 , or
 %APPDATA%\Claude\mcp.json
-.
+. For user-scoped servers, run
+claude mcp add --scope user
+, which writes to the
+mcpServers
+key in
+~/.claude.json
+; for project-scoped servers, edit
+.mcp.json
+at the project root.
 Status shows Failed to connect or Connection error
 Both statuses mean the server didn’t start or the URL didn’t respond. They can also appear for HTTP servers that expect a token rather than the browser sign-in covered in
 Connect a server that requires sign-in

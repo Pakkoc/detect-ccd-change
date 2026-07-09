@@ -270,6 +270,11 @@ false
 to never auto-connect, or leave it unset to follow your organization’s default. In the Desktop app, you can also toggle this from
 Settings → Claude Code → Enable remote control by default
 .
+In the
+VS Code extension
+, the same toggle appears as
+Enable Remote Control for all sessions
+in the command menu’s Settings section; requires Claude Code v2.1.203 or later.
 With this setting on, each interactive Claude Code process registers one remote session. If you run multiple instances, each one gets its own environment and session. To run multiple concurrent sessions from a single process, use
 server mode
 instead.

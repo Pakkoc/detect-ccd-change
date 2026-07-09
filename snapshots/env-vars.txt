@@ -271,6 +271,14 @@ ANTHROPIC_FOUNDRY_API_KEY
 API key for Microsoft Foundry authentication (see
 Microsoft Foundry
 )
+ANTHROPIC_FOUNDRY_AUTH_TOKEN
+Bearer token for Microsoft Foundry authentication, such as a Microsoft Entra access token. Claude Code sends it as the
+Authorization: Bearer
+header. Takes precedence over
+ANTHROPIC_FOUNDRY_API_KEY
+and over the Azure default credential chain. See
+Microsoft Foundry
+. Requires Claude Code v2.1.203 or later
 ANTHROPIC_FOUNDRY_BASE_URL
 Full base URL for the Microsoft Foundry resource (for example,
 https://my-resource.services.ai.azure.com/anthropic
@@ -1162,15 +1170,22 @@ to spawn stdio MCP servers with only a safe baseline environment plus the server
 env
 , instead of inheriting your shell environment
 CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT
-Idle timeout in milliseconds for remote MCP tool calls (default: 300000, or 5 minutes). When an HTTP, SSE, WebSocket, or
+Idle timeout in milliseconds for MCP tool calls. When a stdio, HTTP, SSE, WebSocket, or
 claude.ai connector
 MCP server sends no response and no progress notification for this long, the tool call aborts with an error instead of waiting for the overall
 MCP_TOOL_TIMEOUT
-. Set to
+. Overrides the per-transport defaults of 300000 (5 minutes) for network servers and 1800000 (30 minutes) for stdio servers. Set to
 0
 to disable the idle check. Values below 1000 are raised to one second, and the value is capped at the effective
 MCP_TOOL_TIMEOUT
-. Does not apply to stdio or IDE servers. Requires Claude Code v2.1.187 or later
+. A per-server
+timeout
+in
+.mcp.json
+of at least 1000 raises that server’s idle window to at least the
+timeout
+value. Doesn’t apply to IDE servers or SDK in-process servers. Requires Claude Code v2.1.187 or later.
+Before v2.1.203, stdio servers were exempt from the idle timeout
 CLAUDE_CODE_NATIVE_CURSOR
 Set to
 1
@@ -1491,9 +1506,18 @@ Claude Platform on AWS
 CLAUDE_CODE_SKIP_BEDROCK_AUTH
 Skip AWS authentication for Amazon Bedrock (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_FOUNDRY_AUTH
-Skip Azure authentication for Microsoft Foundry. For a gateway, set the credential in
+Skip Azure authentication for Microsoft Foundry, for a proxy or gateway that injects its own
+Authorization
+header. Claude Code sends requests without an Azure credential and preserves the
+Authorization
+header you supply, for example through
+ANTHROPIC_CUSTOM_HEADERS
+. Ignored when
 ANTHROPIC_FOUNDRY_API_KEY
-instead; without an API key this variable leaves the Microsoft Foundry client unable to send requests
+or
+ANTHROPIC_FOUNDRY_AUTH_TOKEN
+is set.
+Before v2.1.203, this variable left the Microsoft Foundry client unable to send requests unless an API key was also set
 CLAUDE_CODE_SKIP_MANTLE_AUTH
 Skip AWS authentication for Amazon Bedrock Mantle (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_PROMPT_HISTORY
@@ -2015,7 +2039,12 @@ Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hou
 timeout
 field in
 .mcp.json
-overrides this for that server. For the env variable, values below 1000 are floored to one second; for the per-server field, values below 1000 are ignored
+overrides this for that server.
+A per-server
+timeout
+of at least 1000 also sets the minimum idle window for that server’s tool calls, so
+CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT
+never aborts them sooner; this floor requires Claude Code v2.1.203 or later. For the env variable, values below 1000 are floored to one second; for the per-server field, values below 1000 are ignored
 NO_PROXY
 List of domains and IPs to which requests will be directly issued, bypassing proxy
 OTEL_LOG_ASSISTANT_RESPONSES

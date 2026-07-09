@@ -184,6 +184,151 @@ result
 );
 }
 }
+from
+claude_agent_sdk
+import
+(
+ClaudeSDKClient,
+ClaudeAgentOptions,
+AssistantMessage,
+TextBlock,
+)
+import
+asyncio
+import
+base64
+async
+def
+streaming_analysis
+():
+async
+def
+message_generator
+():
+# First message
+yield
+{
+"type"
+:
+"user"
+,
+"message"
+: {
+"role"
+:
+"user"
+,
+"content"
+:
+"Analyze this codebase for security issues"
+,
+},
+}
+# Wait for conditions
+await
+asyncio.sleep(
+2
+)
+# Follow-up with image
+with
+open
+(
+"diagram.png"
+,
+"rb"
+)
+as
+f:
+image_data
+=
+base64.b64encode(f.read()).decode()
+yield
+{
+"type"
+:
+"user"
+,
+"message"
+: {
+"role"
+:
+"user"
+,
+"content"
+: [
+{
+"type"
+:
+"text"
+,
+"text"
+:
+"Review this architecture diagram"
+},
+{
+"type"
+:
+"image"
+,
+"source"
+: {
+"type"
+:
+"base64"
+,
+"media_type"
+:
+"image/png"
+,
+"data"
+: image_data,
+},
+},
+],
+},
+}
+# Use ClaudeSDKClient for streaming input
+options
+=
+ClaudeAgentOptions(
+max_turns
+=
+10
+,
+allowed_tools
+=
+[
+"Read"
+,
+"Grep"
+])
+async
+with
+ClaudeSDKClient(options)
+as
+client:
+# Send streaming input
+await
+client.query(message_generator())
+# Process responses
+async
+for
+message
+in
+client.receive_response():
+if
+isinstance
+(message, AssistantMessage):
+for
+block
+in
+message.content:
+if
+isinstance
+(block, TextBlock):
+print
+(block.text)
+asyncio.run(streaming_analysis())
 In the TypeScript SDK, if your message generator throws, for example when a file it reads is missing, the stream ends with an error that reads
 Claude Code process aborted by user
 instead of the original error, so check the code inside your generator first when you see that message. The error may also be preceded by a long minified line of bundled SDK source, so read to the end of the output for the error text.
@@ -318,6 +463,74 @@ result
 );
 }
 }
+from
+claude_agent_sdk
+import
+query, ClaudeAgentOptions, ResultMessage
+import
+asyncio
+async
+def
+single_message_example
+():
+# Simple one-shot query using query() function
+async
+for
+message
+in
+query(
+prompt
+=
+"Explain the authentication flow"
+,
+options
+=
+ClaudeAgentOptions(
+max_turns
+=
+1
+,
+allowed_tools
+=
+[
+"Read"
+,
+"Grep"
+]),
+):
+if
+isinstance
+(message, ResultMessage):
+print
+(message.result)
+# Continue conversation with session management
+async
+for
+message
+in
+query(
+prompt
+=
+"Now explain the authorization process"
+,
+options
+=
+ClaudeAgentOptions(
+continue_conversation
+=
+True
+,
+max_turns
+=
+1
+),
+):
+if
+isinstance
+(message, ResultMessage):
+print
+(message.result)
+asyncio.run(single_message_example())
 Was this page helpful?
 Yes
 No
