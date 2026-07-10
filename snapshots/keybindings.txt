@@ -99,9 +99,13 @@ Plugin
 Plugin dialog (browse, discover, manage)
 Scroll
 Conversation scrolling and text selection in fullscreen mode
+Before v2.1.205, a
 Doctor
+context and a
+doctor:fix
+action existed for the
 /doctor
-diagnostics screen
+diagnostics screen.
 ​
 Available actions
 Actions follow a
@@ -573,17 +577,6 @@ confirm:no
 Escape
 Close the panel. Changes are already saved
 ​
-Doctor actions
-Actions available in the
-Doctor
-context:
-Action
-Default
-Description
-doctor:fix
-F
-Send the diagnostics report to Claude to fix the reported issues. Only active when issues are found
-​
 Voice actions
 Actions available in the
 Chat
@@ -881,9 +874,9 @@ Invalid context names
 Reserved shortcut conflicts
 Terminal multiplexer conflicts
 Duplicate bindings in the same context
-Run
-/doctor
-to see any keybinding warnings.
+Claude Code reports warnings when the file loads and writes each one to the debug log. Start Claude Code with
+--debug
+to see the details.
 Was this page helpful?
 Yes
 No

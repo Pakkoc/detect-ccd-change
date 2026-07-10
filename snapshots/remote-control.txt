@@ -401,11 +401,11 @@ Ultraplan disconnects Remote Control
 ultraplan
 session disconnects any active Remote Control session because both features occupy the claude.ai/code interface and only one can be connected at a time.
 Some commands are local-only
-: commands that open an interactive picker in the terminal, such as
+: commands that only run in the terminal interface, such as
 /plugin
 or
 /resume
-, work only from the local CLI. The following work from mobile and web:
+, work only from the local CLI, whether or not you pass an argument. The following work from mobile and web:
 Text-output commands:
 /compact
 ,
@@ -422,6 +422,24 @@ Text-output commands:
 /recap
 ,
 /reload-plugins
+/model
+,
+/effort
+,
+/fast
+,
+/color
+, and
+/rename
+: pass the value as an argument, for example
+/model sonnet
+or
+/effort high
+. From mobile and web,
+/model
+and
+/effort
+take the argument in place of the terminal picker or slider.
 /mcp
 , from v2.1.166: returns a text summary of server status instead of opening the picker, and accepts the
 reconnect

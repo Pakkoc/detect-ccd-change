@@ -39,8 +39,8 @@ The CLI is the most complete surface for terminal-native work: scripting and the
 VS Code
 . Enterprise
 Desktop
-deployments support Google Cloud’s Agent Platform and gateway providers; for Amazon Bedrock or Microsoft Foundry, use the CLI or VS Code, or the
-Cowork on 3P research preview
+deployments support Google Cloud’s Agent Platform and gateway providers; for Amazon Bedrock or Microsoft Foundry, use the CLI or VS Code, or
+Claude Desktop on 3P
 , which runs the Code tab on those providers. Desktop and the IDE extensions trade some CLI-only features for visual review and tighter editor integration. The web runs in Anthropic’s cloud, so tasks keep going after you disconnect. Mobile is a thin client into those same cloud sessions or into a local session via Remote Control, and can send tasks to Desktop with Dispatch.
 You can mix surfaces on the same project. Configuration, project memory, and MCP servers are shared across the local surfaces.
 ​

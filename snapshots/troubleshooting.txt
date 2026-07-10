@@ -37,11 +37,13 @@ Performance and stability
 below
 If you’re not sure which applies, run
 /doctor
-inside Claude Code for an automated check of your installation, settings, MCP servers, and context usage. If
+inside Claude Code for an automated check of your installation, settings, extensions, and context usage; it proposes fixes it can apply after you confirm. If
 claude
 won’t start at all, run
 claude doctor
-from your shell instead.
+from your shell instead. Run
+/mcp
+to check MCP server status.
 ​
 Performance and stability
 These sections cover issues related to resource usage, responsiveness, and search behavior.
@@ -146,8 +148,8 @@ Slow or incomplete search results on WSL
 Disk read performance penalties when
 working across file systems on WSL
 may result in fewer-than-expected matches when using Claude Code on WSL. Search still functions, but returns fewer results than on a native filesystem.
-/doctor
-will show Search as OK in this case.
+claude doctor
+shows Search as OK in this case.
 Solutions:
 Submit more specific searches
 : reduce the number of files searched by specifying directories or file types: “Search for JWT validation logic in the auth-service package” or “Find use of md5 hash in JS files”.
@@ -164,7 +166,9 @@ Get more help
 If you’re experiencing issues not covered here:
 Run
 /doctor
-to check installation health, settings validity, MCP configuration, and context usage in one pass
+for a setup checkup and
+/mcp
+to check MCP server status
 Use the
 /feedback
 command within Claude Code to report problems directly to Anthropic

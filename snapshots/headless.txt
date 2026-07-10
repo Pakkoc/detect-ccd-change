@@ -198,6 +198,19 @@ json
 \
 --json-schema
 '{"type":"object","properties":{"functions":{"type":"array","items":{"type":"string"}}},"required":["functions"]}'
+If the value isn’t a valid JSON Schema,
+claude
+exits with
+Error: --json-schema is not a valid JSON Schema
+followed by the validator’s diagnostic. Claude Code accepts schemas that use the
+format
+keyword, such as
+"format": "email"
+, but treats
+format
+as an annotation and doesn’t enforce it. Before v2.1.205, Claude Code silently ignored an invalid schema and returned unstructured text, and treated any schema containing
+format
+as invalid.
 Use a tool like
 jq
 to parse the response and extract specific fields:
@@ -320,7 +333,15 @@ event reports session metadata including the model, tools, MCP servers, and load
 CLAUDE_CODE_SYNC_PLUGIN_INSTALL
 is set, in which case
 plugin_install
-events precede it. Use the plugin fields to fail CI when a plugin did not load:
+events precede it.
+The event also carries an optional
+capabilities
+array of strings naming the protocol behaviors this Claude Code version implements, such as
+interrupt_receipt_v1
+. Check it to feature-detect instead of comparing version strings, and ignore values you don’t recognize. The field requires Claude Code v2.1.205 or later and is absent from earlier versions. See
+SDKSystemMessage
+for the capability list.
+Use the plugin fields to fail CI when a plugin did not load:
 Field
 Type
 Description
@@ -463,11 +484,27 @@ and custom commands work in
 -p
 mode: include
 /skill-name
-in the prompt string and Claude Code expands it before running. Built-in commands that open an interactive dialog, such as
+in the prompt string and Claude Code expands it before running. Built-in commands that only run in the terminal interface, such as
 /login
-, are not available in
+, aren’t available in
 -p
 mode.
+/model
+,
+/effort
+,
+/fast
+,
+/color
+, and
+/rename
+accept the value as an argument, for example
+/model sonnet
+, and
+/mcp
+with no argument prints a text summary of server status; these forms require Claude Code v2.1.205 or later and follow each command’s
+availability notes
+.
 To change a setting from a
 -p
 invocation, pass

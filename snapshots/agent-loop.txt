@@ -510,6 +510,9 @@ ClaudeAgentOptions
 /
 Options
 for syntax.
+With
+streaming input
+, a message you send while a turn is still running stays queued when that turn ends at the max-turns limit, and it starts its own turn with its own max-turns limit. Before v2.1.205, a message that arrived on the turn’s final iteration could be consumed into the ending turn and lost without ever reaching the model.
 ​
 Effort level
 The

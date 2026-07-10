@@ -727,9 +727,13 @@ Set to
 1
 to disable the
 skills
-and workflows that ship with Claude Code: bundled skills and workflows are removed entirely, while built-in slash commands like
+and workflows included with Claude Code: bundled skills and workflows are removed entirely, while built-in commands like
 /init
-stay typable but are hidden from the model. Skills from plugins,
+stay typable but are hidden from the model.
+/doctor
+stays typable like the built-in commands; hide it with
+DISABLE_DOCTOR_COMMAND
+instead. Skills from plugins,
 .claude/skills/
 , and
 .claude/commands/
@@ -737,7 +741,7 @@ are unaffected. Equivalent to the
 disableBundledSkills
 setting;
 0
-does not override it
+doesn’t override it
 CLAUDE_CODE_DISABLE_CLAUDE_MDS
 Set to
 1
@@ -922,6 +926,14 @@ and the
 effortLevel
 setting. See
 Adjust effort level
+CLAUDE_CODE_ENABLE_APPEND_SUBAGENT_PROMPT
+Set to
+1
+to enable appending extra text to the end of every
+subagent
+’s system prompt. The
+--append-subagent-system-prompt
+flag supplies the appended text and sets this variable automatically, so you don’t need to set it yourself. Requires Claude Code v2.1.205 or later
 CLAUDE_CODE_ENABLE_AUTO_MODE
 Set to
 1
@@ -1804,7 +1816,14 @@ Set to
 1
 to hide the
 /doctor
-command. Useful for managed deployments where users should not run installation diagnostics
+setup checkup skill and its
+/checkup
+alias. Useful for managed deployments where users shouldn’t run setup diagnostics from a session. Doesn’t affect the
+claude doctor
+terminal command.
+Before v2.1.205, this variable hid the
+/doctor
+diagnostics screen command
 DISABLE_ERROR_REPORTING
 Set to
 1

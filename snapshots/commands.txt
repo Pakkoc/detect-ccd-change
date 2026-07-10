@@ -86,9 +86,9 @@ When something is wrong.
 /rewind
 rolls code and conversation back to a checkpoint, or summarizes part of the conversation.
 /doctor
-and
+runs a setup checkup that diagnoses installation and configuration issues and can fix them,
 /debug
-diagnose install and runtime issues, and
+diagnoses runtime issues, and
 /feedback
 reports a bug with session context attached.
 ​
@@ -263,7 +263,10 @@ cyan
 default
 to reset, or run with no argument to pick a random color. When
 Remote Control
-is connected, the color syncs to claude.ai/code
+is connected, the color syncs to claude.ai/code.
+Also available in non-interactive mode (
+-p
+); requires Claude Code v2.1.205 or later
 /compact [instructions]
 Free up context by summarizing the conversation so far. Optionally pass focus instructions for the summary. See
 how compaction handles rules, skills, and memory files
@@ -345,9 +348,32 @@ Continue the current session in the Claude Code Desktop app. Requires macOS or W
 Open an interactive diff viewer showing uncommitted changes and per-turn diffs. Use left/right arrows to switch between the current git diff and individual Claude turns, and up/down to browse files.
 As of v2.1.198, the open viewer also refreshes automatically when the repository’s git state changes outside the session, such as a branch switch or commit in another terminal
 /doctor
-Diagnose and verify your Claude Code installation and settings. Results show with status icons. Press
+Skill
+.
+Run a setup checkup that diagnoses issues and can fix them. Checks installation health, including duplicate or leftover installs,
+PATH
+problems, and unparseable settings files. Finds unused skills, MCP servers, and plugins versus their context cost, deduplicates local
+CLAUDE.md
+files against checked-in ones, migrates always-loaded guidance into
+skills
+and nested
+CLAUDE.md
+files that load on demand, flags slow
+hooks
+, and checks for a newer version. Also offers to make
+auto mode
+your default and to
+pre-approve
+frequently denied read-only commands. Reports findings first and asks for confirmation before changing anything. From the terminal,
+claude doctor
+prints read-only installation diagnostics without starting a session. Alias:
+/checkup
+.
+Before v2.1.205,
+/doctor
+opened a read-only diagnostics screen and pressing
 f
-to have Claude fix any reported issues
+sent the report to Claude
 /effort [level|auto]
 Set the model
 effort level
@@ -377,7 +403,18 @@ orchestration.
 auto
 resets to the model default. Without an argument, opens an interactive slider; use left and right arrows to pick a level and
 Enter
-to apply. Takes effect immediately without waiting for the current response to finish
+to apply. Takes effect immediately without waiting for the current response to finish.
+Also available in non-interactive mode (
+-p
+) with a level argument, where it applies to the current session only and isn’t saved as your default; requires Claude Code v2.1.205 or later. On Fable 5, Opus 4.8, and Opus 4.7, a non-interactive
+/effort
+reports
+Not applied
+while the
+model-default effort hold
+is in force, so pass
+--effort
+at launch instead
 /exit
 Exit the CLI. In an attached
 background session
@@ -388,7 +425,16 @@ Export the current conversation as plain text. With a filename, writes directly 
 /fast [on|off]
 Toggle
 fast mode
-on or off
+on or off.
+In non-interactive mode (
+-p
+),
+/fast
+works only in a session launched with fast mode in its
+--settings
+value, for example
+claude -p --settings '{"fastMode": true}'
+; the toggle then applies to the current session only and isn’t saved as your default, and in any other non-interactive session the command reports that fast mode isn’t available. Requires Claude Code v2.1.205 or later
 /feedback [report]
 Submit feedback, report a bug, or share your conversation. Aliases:
 /bug
@@ -488,7 +534,10 @@ enable
 disable
 with a server name or
 all
-to change connection state without opening the dialog
+to change connection state without opening the dialog.
+Also available in non-interactive mode (
+-p
+), where running it with no argument prints a text summary of server status instead of opening the list; requires Claude Code v2.1.205 or later
 /memory
 Edit
 CLAUDE.md
@@ -505,7 +554,10 @@ Switch the AI model and save it as your default for new sessions. For models tha
 adjust effort level
 . With no argument, opens a picker; press
 s
-on a row to switch for the current session only. The picker asks for confirmation when the conversation has prior output, since the next response re-reads the full history without cached context. Once confirmed, the change applies without waiting for the current response to finish
+on a row to switch for the current session only. The picker asks for confirmation when the conversation has prior output, since the next response re-reads the full history without cached context. Once confirmed, the change applies without waiting for the current response to finish.
+Also available in non-interactive mode (
+-p
+) with a model argument instead of the picker, where it applies to the current session only and isn’t saved as your default; requires Claude Code v2.1.205 or later
 /passes
 Share a free week of Claude Code with friends. Only visible if your account is eligible
 /permissions
@@ -562,7 +614,10 @@ from claude.ai. Alias:
 Choose the default environment for
 cloud agents
 /rename [name]
-Rename the current session and show the name on the prompt bar. Without a name, auto-generates one from conversation history
+Rename the current session and show the name on the prompt bar. Without a name, auto-generates one from conversation history.
+Also available in non-interactive mode (
+-p
+); requires Claude Code v2.1.205 or later
 /resume [session]
 Resume a conversation by ID or name, or open the session picker. As of v2.1.144,
 background sessions
@@ -732,7 +787,8 @@ and
 /stats
 are aliases
 /usage-credits
-Configure usage credits to keep working when you hit a limit. Previously
+Configure usage credits to keep working when you hit a limit. Opens the usage-credits billing page in your browser.
+When no browser can open, for example over SSH, the command prints the URL to visit instead; this requires Claude Code v2.1.205 or later, and earlier versions showed nothing in that case. Previously
 /extra-usage
 /verify
 Skill

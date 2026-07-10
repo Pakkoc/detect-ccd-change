@@ -85,8 +85,8 @@ Artifacts
 Voice dictation
 Desktop is the partial exception: Enterprise deployments can route Desktop to Google Cloud’s Agent Platform or a gateway provider via
 managed settings
-, and the
-Cowork on 3P research preview
+, and
+Claude Desktop on 3P
 runs the Code tab on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or a self-hosted LLM gateway. For per-plan availability of these features, see
 Availability by subscription plan
 .
@@ -251,8 +251,8 @@ server-managed settings
 .
 Partial support:
 Desktop
-: only via the
-Cowork on 3P research preview
+: only via
+Claude Desktop on 3P
 Auto mode
 : set
 CLAUDE_CODE_ENABLE_AUTO_MODE
@@ -323,8 +323,8 @@ Partial support:
 Desktop
 : via
 managed settings
-or the
-Cowork on 3P research preview
+or
+Claude Desktop on 3P
 Web search
 : Claude 4 models and later
 Auto mode
@@ -364,8 +364,8 @@ server-managed settings
 .
 Partial support:
 Desktop
-: only via the
-Cowork on 3P research preview
+: only via
+Claude Desktop on 3P
 Auto mode
 : set
 CLAUDE_CODE_ENABLE_AUTO_MODE

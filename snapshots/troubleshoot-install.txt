@@ -1227,6 +1227,7 @@ win32-arm64
 . Claude Code does not ship a binary for other platforms; see the
 system requirements
 .
+On FreeBSD, the installer reports the platform as unsupported. Before v2.1.205, it treated FreeBSD as Linux and downloaded a binary that couldn’t run.
 Corporate npm mirror is missing the platform packages.
 Ensure your registry mirrors all eight
 @anthropic-ai/claude-code-*

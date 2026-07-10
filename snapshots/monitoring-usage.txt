@@ -731,7 +731,7 @@ get-api-key.sh
 \"
 }"
 If the helper fails or prints output that doesn’t meet these requirements, Claude Code reports the error in:
-/doctor
+/status
 output
 The debug log, when running with
 --debug

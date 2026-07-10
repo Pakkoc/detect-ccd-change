@@ -25,10 +25,9 @@ Connected MCP servers and their status
 /permissions
 Resolved allow and deny rules currently in effect
 /doctor
-Configuration diagnostics: invalid keys, schema errors, installation health.
-As of v2.1.196, also reports duplicate
+Setup checkup: installation health, invalid settings files, unused extensions, and duplicate
 subagent
-names defined in the same scope and marks which one is active
+names in the same directory, with proposed fixes
 /debug [issue]
 Enables debug logging for the session and prompts Claude to diagnose using the log output and settings paths
 /status
@@ -58,11 +57,14 @@ environment variables
 , which act as another override layer. When a setting doesn’t seem to apply, the value you set is usually being overridden by another scope or an environment variable.
 Run
 /doctor
-to validate your configuration files and surface invalid keys or schema errors. When
+to check your configuration and installation. It reports what it finds, including invalid settings files, duplicate installations, and unused extensions, then proposes fixes it applies only after you confirm. Before v2.1.205,
 /doctor
-reports issues, press
+opened a read-only diagnostics screen and pressing
 f
-to send the diagnostic report to Claude and have it walk through fixes with you.
+sent the report to Claude to fix.
+From the terminal,
+claude doctor
+prints read-only installation and settings diagnostics without starting a session.
 Run
 /status
 to see which settings sources are active, including whether managed settings are in effect. To understand which scope wins for a given key, see
@@ -104,24 +106,29 @@ Run
 to list every hook registered for the current session, grouped by event. If a hook you defined doesn’t appear, it isn’t being read: hooks go under the
 "hooks"
 key in a settings file, not in a standalone file.
-If the hook appears but doesn’t fire, the matcher is the usual cause. The
+If the hook appears but doesn’t fire, the matcher is the usual cause. Check it for these mistakes:
+The
 matcher
 field is a single string that uses
 |
 to match multiple tool names, for example
 "Edit|Write"
 .
-On Claude Code v2.1.191 or later,
+A
 ,
-also works as a separator, so
+separator is equivalent, so
 "Edit,Write"
-is equivalent. On earlier versions a comma falls through to regex evaluation and the matcher never matches, so use
+matches the same tools. Before v2.1.191, a comma fell through to regex evaluation and the matcher never matched, so use
 |
-if you aren’t on v2.1.191 yet. A misspelled tool name fails silently for the same reason. An array value is a schema error: Claude Code shows a settings error notice,
-/doctor
-reports the validation failure, and the hook entry is dropped so it won’t appear in
+if you aren’t on v2.1.191 yet.
+A misspelled tool name produces a matcher that matches nothing, so the hook fails silently.
+An array value is a schema error: Claude Code shows a settings error notice and rejects the whole user, project, or local settings file,
+claude doctor
+reports the validation failure, and no hook from that file appears in
 /hooks
-.
+. In
+managed settings
+, only the invalid entry is stripped and the file’s other hooks still apply.
 Edits to
 settings.json
 take effect in the running session after a brief file-stability delay. You don’t need to restart. If

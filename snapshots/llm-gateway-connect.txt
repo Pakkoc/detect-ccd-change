@@ -528,8 +528,8 @@ is active.
 As of v2.1.196, Remote Control is also disabled while
 ANTHROPIC_BASE_URL
 points at a non-Anthropic host, so signing in with claude.ai isn’t enough on its own.
-To restore either feature, log in with claude.ai and unset the gateway variables it checks.
-/doctor
+To restore either feature, log in with claude.ai and unset the gateway variables that feature checks. The Remote Control section of
+claude doctor
 names the credential variable to unset.
 Voice dictation: unset the gateway credential
 Remote Control: unset the gateway credential and

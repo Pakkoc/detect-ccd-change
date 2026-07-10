@@ -1530,7 +1530,9 @@ interrupt
 :
 Promise
 <
-void
+SDKControlInterruptResponse
+|
+undefined
 >;
 rewindFiles
 (
@@ -1734,7 +1736,16 @@ Methods
 Method
 Description
 interrupt()
-Interrupts the query (only available in streaming input mode)
+Interrupts the query. Only available in streaming input mode.
+When the CLI advertises the
+interrupt_receipt_v1
+capability in
+SDKSystemMessage.capabilities
+, resolves with an
+SDKControlInterruptResponse
+listing the queued messages that survive the interrupt. Resolves
+undefined
+on CLIs before v2.1.205
 rewindFiles(userMessageId, options?)
 Restores files to their state at the specified user message. Pass
 { dryRun: true }
@@ -2009,6 +2020,39 @@ canUseTool
 callback, the same redelivery that
 reinitialize()
 triggers after a transport gap. Handle repeated request IDs idempotently, because an entry can repeat a request the callback already received before the connection dropped.
+​
+SDKControlInterruptResponse
+The interrupt receipt: the value
+interrupt()
+resolves with on a CLI that advertises the
+interrupt_receipt_v1
+capability in
+SDKSystemMessage.capabilities
+. Requires Claude Code v2.1.205 or later. Earlier CLIs answer the interrupt with an empty success payload, so
+interrupt()
+resolves to
+undefined
+.
+type
+SDKControlInterruptResponse
+=
+{
+still_queued
+:
+string
+[];
+};
+still_queued
+lists the UUIDs of user messages that survive the interrupt: messages still in the queue, plus any batch already dequeued for the next turn but not yet reachable by the abort. Each one runs as its own turn after the interrupt unless you cancel it first. Use the receipt to decide whether to resend anything; resending a message that is already listed produces a duplicate turn.
+Interpret the list with these caveats:
+Only messages that were enqueued with a UUID appear. An empty array doesn’t mean nothing else will run.
+Only main-thread messages are listed. Messages addressed to a subagent are out of scope.
+The list can include UUIDs your client never sent, such as
+scheduled task
+triggers. Ignore UUIDs you don’t recognize instead of treating them as an error.
+The receipt is a snapshot taken at the moment the interrupt is processed, and on a clean interrupt it arrives before the interrupted turn’s
+SDKResultMessage
+. Read the receipt rather than inspecting the queue after that result: the loop starts the next queued turn immediately, so the queue you inspect after the result has already changed.
 ​
 AgentDefinition
 Configuration for a subagent defined programmatically.
@@ -3433,7 +3477,23 @@ path
 :
 string
 }[];
+capabilities
+?:
+string
+[];
 };
+The
+capabilities
+array names the protocol behaviors this CLI implements, so you can feature-detect instead of comparing
+claude_code_version
+strings. It is an open set: ignore values you don’t recognize, and check for the specific capability whose behavior you rely on. The field requires Claude Code v2.1.205 or later and is absent on earlier CLIs.
+Capability
+Meaning
+interrupt_receipt_v1
+interrupt()
+resolves with an
+SDKControlInterruptResponse
+receipt naming the queued messages that survive the interrupt
 ​
 SDKPartialAssistantMessage
 Streaming partial message (only when
@@ -3815,6 +3875,11 @@ string
 senderTaskId
 ?:
 string
+;
+body
+?:
+string
+;
 }
 |
 {
@@ -3861,9 +3926,21 @@ is its task ID. For a cross-session peer such as another local Claude Code proce
 from
 is the sender address and
 senderTaskId
-is absent. The
+is absent.
 name
-field is reserved.
+and
+body
+require Claude Code v2.1.205 or later.
+name
+is the sender’s display name, normalized by Claude Code: it strips Unicode control, format, surrogate, and line or paragraph separator code points, then trims the result and caps it at 64 code points with an ellipsis.
+body
+is the decoded message body with the peer envelope stripped, byte-exact with what the model sees. For a teammate message
+body
+is always present; for a cross-session peer it is present only when the turn is exactly one peer envelope formed by Claude Code. Render
+name
+and
+body
+instead of re-parsing the message text.
 task-notification
 Synthetic turn injected after a background task finished. See
 SDKTaskNotificationMessage
@@ -5727,6 +5804,7 @@ type
 ExitPlanModeInput
 =
 {
+/** Deprecated: no longer used. */
 allowedPrompts
 ?:
 Array
@@ -5741,7 +5819,9 @@ string
 ;
 }>;
 };
-Exits planning mode. Optionally specifies prompt-based permissions needed to implement the plan.
+Exits plan mode. The
+allowedPrompts
+field is deprecated and ignored; Claude Code still accepts it so existing callers and transcripts validate. Before v2.1.205, it requested prompt-based Bash permissions for implementing the plan.
 ​
 ListMcpResources
 Tool name:

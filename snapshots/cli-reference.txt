@@ -122,6 +122,10 @@ to leave background sessions running so the next supervisor reconnects to them.
 confirms stopping an on-demand supervisor, which is the default. Use this to recover from an
 unresponsive supervisor
 claude daemon stop --any --keep-workers
+claude doctor
+Print read-only installation and settings diagnostics from the terminal without starting a session, including install health, settings-file validation errors, and Remote Control eligibility. For the in-session setup checkup that can also apply fixes, run
+/doctor
+claude doctor
 claude logs <id>
 Print recent output from a
 background session
@@ -295,6 +299,13 @@ for pattern matching. To restrict which tools are available, use
 --tools
 instead
 "Bash(git log *)" "Bash(git diff *)" "Read"
+--append-subagent-system-prompt
+Append custom text to the end of every
+subagent
+’s system prompt, including nested subagents. Only applies in non-interactive mode with
+-p
+. Requires Claude Code v2.1.205 or later
+claude -p --append-subagent-system-prompt "Cite file paths in every answer" "query"
 --append-system-prompt
 Append custom text to the end of the default system prompt
 claude --append-system-prompt "Always use TypeScript"
@@ -501,9 +512,14 @@ stream-json
 )
 claude -p --output-format json --input-format stream-json
 --json-schema
-Get validated JSON output matching a JSON Schema after agent completes its workflow (print mode only, see
+Get validated JSON output matching a JSON Schema after the agent completes its workflow (print mode only). See
 structured outputs
-)
+.
+Claude Code exits with an error on an invalid schema and accepts the
+format
+keyword as an annotation without client-side validation. Before v2.1.205, an invalid schema produced unstructured output with no error, and schemas using
+format
+were treated as invalid
 claude -p --json-schema '{"type":"object","properties":{...}}' "query"
 --maintenance
 Run
@@ -516,7 +532,10 @@ claude -p --maintenance "query"
 Maximum dollar amount to spend on API calls before stopping (print mode only)
 claude -p --max-budget-usd 5.00 "query"
 --max-turns
-Limit the number of agentic turns (print mode only). Exits with an error when the limit is reached. No limit by default
+Limit the number of agentic turns (print mode only). Exits with an error when the limit is reached. No limit by default.
+With
+--input-format stream-json
+, a message sent while Claude is working stays queued and runs as its own turn, with its own limit, when the limit ends the current one. Before v2.1.205, Claude Code discarded that message
 claude -p --max-turns 3 "query"
 --mcp-config
 Load MCP servers from JSON files or strings (space-separated)

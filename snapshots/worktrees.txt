@@ -73,6 +73,12 @@ trust check
 , so
 claude -p --worktree
 proceeds without it.
+If Claude Code can’t enter the worktree directory at startup, for example because a
+WorktreeCreate
+hook
+printed something other than the directory it created, or because the directory was deleted after it was set up, Claude Code prints an error naming the path and exits with code 1. Before v2.1.205, this crashed the session, and with
+-p
+it stalled for about 30 seconds before exiting with code 0.
 Plugins installed at
 project scope
 from the main checkout also load in worktrees of the same repository, so you don’t need to reinstall them per worktree. This applies whether you create the worktree with
@@ -206,6 +212,7 @@ git worktree remove
 , adding
 --force
 if the worktree has uncommitted changes or untracked files.
+On Windows, before removing a worktree, Claude Code removes any NTFS junction or directory symlink at any depth inside it as a link entry, so removing the worktree doesn’t delete the files a link points to. Before v2.1.205, Claude Code removed only top-level links as link entries, and removing a worktree with a junction nested in a subdirectory could delete the contents of the directory the link pointed to outside the worktree.
 ​
 Manage worktrees manually
 For full control over worktree location and branch configuration, create worktrees with Git directly. This is useful when you need to check out a specific existing branch or place the worktree outside the repository.

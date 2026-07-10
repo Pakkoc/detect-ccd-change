@@ -619,6 +619,13 @@ blockedMarketplaces
 (Managed settings only) Blocklist of marketplace sources. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. Blocked sources are checked before downloading, so they never touch the filesystem. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "untrusted/plugins" }]
+browserExternalPageTools
+(Managed settings only) Set to
+"disabled"
+to prevent Claude from using tools to read or act on external pages in the desktop app’s
+Browser pane
+. Users can still navigate to external sites themselves, and local dev server previews are unaffected
+"disabled"
 channelsEnabled
 (Managed settings only) Allow
 channels
@@ -753,9 +760,13 @@ Set to
 true
 to disable the
 skills
-and workflows that ship with Claude Code: bundled skills and workflows are removed entirely, while built-in slash commands like
+and workflows included with Claude Code: bundled skills and workflows are removed entirely, while built-in commands like
 /init
-stay typable but are hidden from the model. Skills from plugins,
+stay typable but are hidden from the model.
+/doctor
+stays typable like the built-in commands; hide it with
+DISABLE_DOCTOR_COMMAND
+instead. Skills from plugins,
 .claude/skills/
 , and
 .claude/commands/
@@ -1344,11 +1355,11 @@ skillListingBudgetFraction
 Default
 :
 0.01
-(1%). Fraction of the model’s context window reserved for the
+. Fraction of the model’s context window reserved for the
 skill listing
-Claude sees each turn. When the listing exceeds the budget, descriptions for the least-used skills are collapsed to bare names so Claude can still invoke them but won’t see why. Raise to keep more descriptions visible at the cost of more context per turn.
+Claude sees each turn, so the default reserves 1%. When the listing exceeds the budget, descriptions for the least-used skills are dropped and only their names are listed, so Claude can still invoke them but can’t see what they do. Raise to keep more descriptions visible at the cost of more context per turn.
 /doctor
-shows the current truncation count and which skills are affected. Requires Claude Code v2.1.105 or later
+estimates the listing cost against the budget. Requires Claude Code v2.1.105 or later
 0.02
 skillListingMaxDescChars
 Default
@@ -2759,7 +2770,7 @@ contents.
 If a settings file contains errors, such as invalid JSON or a value that fails validation,
 /status
 lists the affected files. Run
-/doctor
+claude doctor
 to see the details for each error.
 ​
 Key points about the configuration system
