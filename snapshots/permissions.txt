@@ -81,7 +81,7 @@ additionalDirectories
 plan
 Claude reads files and runs read-only shell commands to explore but doesn’t edit your source files. Labeled Plan in the CLI and the VS Code extension
 auto
-Auto-approves tool calls with background safety checks that verify actions align with your request. Currently a research preview
+Auto-approves tool calls with background safety checks that verify actions align with your request
 dontAsk
 Auto-denies tools unless pre-approved via
 /permissions

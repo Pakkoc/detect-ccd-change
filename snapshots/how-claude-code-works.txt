@@ -260,7 +260,7 @@ without asking, still asks for other commands
 Plan
 : Claude explores and proposes a plan without editing your source files; permission prompts still apply as in Manual mode
 Auto
-: Claude evaluates all actions with background safety checks. Currently a research preview
+: Claude evaluates all actions with background safety checks
 You can also allow specific commands in
 .claude/settings.json
 so Claude doesn’t ask each time. This is useful for trusted commands like

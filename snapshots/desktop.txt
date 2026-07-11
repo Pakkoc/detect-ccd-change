@@ -156,7 +156,7 @@ dontAsk
 permission mode is available only in the
 CLI
 .
-Auto mode is a research preview available to all users on the Anthropic API and requires Claude Opus 4.6 or later, or Sonnet 4.6 or later. In Enterprise deployments that route Desktop to Google Cloud’s Agent Platform, auto mode is off until you
+Auto mode is available to all users on the Anthropic API and requires Claude Opus 4.6 or later, or Sonnet 4.6 or later. In Enterprise deployments that route Desktop to Google Cloud’s Agent Platform, auto mode is off until you
 set
 CLAUDE_CODE_ENABLE_AUTO_MODE
 , and only Claude Sonnet 5, Opus 4.7, and Opus 4.8 are supported there.
