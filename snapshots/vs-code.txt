@@ -111,7 +111,7 @@ claudeCode.initialPermissionMode
 permission modes
 for every mode the indicator offers.
 Manual
-: Claude asks permission before each action.
+: Claude asks permission before file edits and most shell commands.
 Plan
 : Claude describes what it will do and waits for approval before making changes. VS Code automatically opens the plan as a full Markdown document where you can add inline comments to give feedback before Claude begins.
 Edit automatically

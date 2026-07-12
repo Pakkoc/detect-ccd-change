@@ -99,11 +99,11 @@ If you’d rather skip the terminal entirely, the
 Claude Code Desktop app
 lets you install and use Claude Code through a graphical interface. Download it for
 macOS
-,
+or
 Windows
-, or
-Linux
-and start coding without any command-line setup.
+and start coding without any command-line setup. On Linux, install the app with apt by following the
+Linux install instructions
+.
 ​
 Run diagnostic checks
 ​

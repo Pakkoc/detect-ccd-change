@@ -8,11 +8,13 @@ Approval required
 ”Yes, don’t ask again” behavior
 Read-only
 File reads, Grep
-No
+No, within the
+working directory and additional directories
 N/A
 Bash commands
 Shell execution
-Yes
+Yes, except a built-in set of
+read-only commands
 Permanently per project directory and command
 File modification
 Edit/write files
