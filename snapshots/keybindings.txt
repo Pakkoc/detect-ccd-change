@@ -1,6 +1,3 @@
-Customizable keyboard shortcuts require Claude Code v2.1.18 or later. Check your version with
-claude --version
-.
 Claude Code supports customizable keyboard shortcuts. Run
 /keybindings
 to create or open your configuration file at
@@ -268,7 +265,9 @@ Shift+Tab
 Cycle permission modes
 confirm:toggleExplanation
 Ctrl+E
-Toggle permission explanation
+Toggle a model-generated
+explanation of the command
+on Bash and PowerShell permission prompts
 ​
 Permission actions
 Actions available in the
@@ -445,7 +444,7 @@ Default
 Description
 diff:dismiss
 Escape
-Close diff viewer
+Close diff viewer; from the detail view, returns to the file list instead
 diff:previousSource
 Left
 Previous diff source
@@ -462,8 +461,10 @@ diff:viewDetails
 Enter
 View diff details
 diff:back
-(context-specific)
-Go back in diff viewer
+(unbound)
+Go back in diff viewer. Escape performs the back action via
+diff:dismiss
+. The previous default of Left in the detail view was removed in v2.1.203
 The diff detail view also binds pager-style keys to the standard
 scroll actions
 . These bindings are part of the

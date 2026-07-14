@@ -1,7 +1,7 @@
 Speak your prompts instead of typing them in the Claude Code CLI. Your speech is transcribed live into the prompt input, so you can mix voice and typing in the same message. Enable dictation with
 /voice
 , then either hold a key while you speak or tap once to start and again to send.
-Voice dictation requires Claude Code v2.1.69 or later. Tap mode requires v2.1.116 or later. Check your version with
+Tap mode requires Claude Code v2.1.116 or later. Check your version with
 claude --version
 .
 Dictation also works in
@@ -385,7 +385,7 @@ Commands
 Was this page helpful?
 Yes
 No
-Fullscreen rendering
+Screen reader mode
 Customize status line
 ⌘
 I

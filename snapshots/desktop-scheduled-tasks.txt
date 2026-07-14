@@ -184,7 +184,7 @@ Use Claude Code Desktop
 Was this page helpful?
 Yes
 No
-Linux (beta)
+Windows (WSL)
 Chrome extension
 ⌘
 I

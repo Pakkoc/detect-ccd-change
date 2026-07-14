@@ -28,7 +28,9 @@ Data export
 : download contribution data as CSV for custom reporting
 For per-user token counts and cost estimates, configure
 OpenTelemetry export
-.
+, or export the
+spend report
+from your organization’s analytics settings, which lists token usage and estimated usage-credit spend per user and per model.
 ​
 Enable contribution metrics
 Contribution metrics are in public beta and available on Claude for Teams and Claude for Enterprise plans. These metrics only cover users within your claude.ai organization. Usage through the Claude Console API or third-party integrations is not included.
@@ -170,14 +172,23 @@ Provide feedback on what’s working well
 Help onboard new users
 ​
 Access data programmatically
-To query this data through GitHub, search for PRs labeled with
+On the Enterprise plan, the
+Claude Enterprise Analytics API
+returns per-user engagement, usage, and cost reports for your organization across Claude surfaces, including Claude Code. A Primary Owner creates a key with the
+read:analytics
+scope at
+claude.ai/analytics/api-keys
+. The API is not available on the Teams plan.
+To query contribution data through GitHub instead, search for PRs labeled with
 claude-code-assisted
 .
 ​
 Access analytics for API customers
 API customers using the Claude Console can access analytics at
 platform.claude.com/claude-code
-. You need the UsageView permission to access the dashboard, which is granted to Developer, Billing, Admin, Owner, and Primary Owner roles.
+. You need the UsageView permission to access the dashboard, which is granted to Developer, Billing, Admin, Owner, and Primary Owner roles. To pull the same daily per-user metrics programmatically, use the
+Claude Code Analytics API
+with an Admin API key.
 Contribution metrics with GitHub integration are not currently available for API customers. The Console dashboard shows usage and spend metrics only.
 The Console dashboard displays:
 Lines of code accepted

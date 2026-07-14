@@ -53,8 +53,8 @@ claude-desktop
 from a terminal, and sign in with your Anthropic account.
 The Linux app signs in the same way as on macOS and Windows: with a claude.ai subscription, or through your organization’s SSO. Desktop doesn’t accept a Claude Console API key directly; use the
 CLI
-for API-key authentication. For enterprise deployments that route Desktop to Google Cloud’s Agent Platform or an LLM gateway, see the
-enterprise configuration guide
+for API-key authentication. For enterprise deployments that route Desktop to Google Cloud’s Agent Platform or an LLM gateway, see
+Claude Desktop on 3P
 and
 network configuration
 .
@@ -205,6 +205,6 @@ Was this page helpful?
 Yes
 No
 Reference
-Scheduled tasks
+Windows (WSL)
 ⌘
 I

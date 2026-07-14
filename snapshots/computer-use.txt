@@ -1,4 +1,4 @@
-Computer use is a research preview on macOS that requires a Pro or Max plan. It is not available on Team or Enterprise plans. It requires Claude Code v2.1.85 or later and an interactive session, so it is not available in non-interactive mode with the
+Computer use is a research preview on macOS that requires a Pro or Max plan. It is not available on Team or Enterprise plans. It requires an interactive session, so it is not available in non-interactive mode with the
 -p
 flag.
 Computer use lets Claude open apps, control your screen, and work on your machine the way you would. From the CLI, Claude can compile a Swift app, launch it, click through every button, and screenshot the result, all in the same conversation where it wrote the code.
@@ -202,9 +202,6 @@ The server only appears on eligible setups. Check that:
 You’re on macOS. Computer use in the CLI is not available on Linux or Windows. On Windows, use
 computer use in Desktop
 instead.
-You’re running Claude Code v2.1.85 or later. Run
-claude --version
-to check.
 You’re on a Pro or Max plan. Run
 /status
 to confirm your subscription.

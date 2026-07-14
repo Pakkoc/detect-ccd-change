@@ -28,8 +28,10 @@ Anthropic Usage Policy
 Authentication and credential use
 Claude Code authenticates with Anthropic’s servers using OAuth tokens or API keys. These authentication methods serve different purposes:
 OAuth authentication
-is intended exclusively for purchasers of Claude Free, Pro, Max, Team, and Enterprise subscription plans and is designed to support ordinary use of Claude Code and other native Anthropic applications. More information about how users can authenticate with OAuth tokens can be found in
+is intended exclusively for purchasers of Claude Free, Pro, Max, Team, and Enterprise subscription plans and is designed to support ordinary use of Claude Code and other native Anthropic applications. For the sign-in steps, see
 Logging in to your Claude account
+; for how Claude Code performs OAuth authentication, see
+Authentication
 .
 Developers
 building products or services that interact with Claude’s capabilities, including those using the

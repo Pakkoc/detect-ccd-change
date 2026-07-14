@@ -307,7 +307,9 @@ Override AWS region for the Haiku-class model when using Amazon Bedrock or Amazo
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 or the deprecated
 ANTHROPIC_SMALL_FAST_MODEL
-is also set, since Amazon Bedrock otherwise uses the primary model for background tasks
+is also set, since Amazon Bedrock otherwise runs background tasks on the
+default Sonnet model or the primary model
+in the session region
 ANTHROPIC_VERTEX_BASE_URL
 Override Google Cloud’s Agent Platform endpoint URL. Use for custom Google Cloud’s Agent Platform endpoints or when routing through an
 LLM gateway
@@ -522,6 +524,20 @@ true
 to force a connection attempt when auto-detection fails, such as when tmux obscures the parent terminal. Takes precedence over the
 autoConnectIde
 global config setting
+CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS
+Time in milliseconds Claude Code waits for the AWS default credential provider chain to produce credentials before the request fails with
+AWS default-chain credential resolve timed out
+(default:
+60000
+). Raise it when a step in your chain legitimately needs longer, such as a browser-based SSO sign-in with MFA through a wrapper like
+aws-vault
+. Applies wherever Claude Code signs with the default chain:
+Amazon Bedrock
+,
+Claude Platform on AWS
+, and the
+Mantle endpoint
+. Requires Claude Code v2.1.207 or later
 CLAUDE_CODE_BRIDGE_SESSION_ID
 Set automatically in Bash tool and
 hook command
@@ -638,7 +654,7 @@ command becomes unavailable, any configured
 advisorModel
 is ignored, and the
 --advisor
-flag is accepted but has no effect, so existing scripts that pass it continue to work without errors. Requires Claude Code v2.1.98 or later
+flag is accepted but has no effect, so existing scripts that pass it continue to work without errors
 CLAUDE_CODE_DISABLE_AGENT_VIEW
 Set to
 1
@@ -935,14 +951,13 @@ subagent
 --append-subagent-system-prompt
 flag supplies the appended text and sets this variable automatically, so you don’t need to set it yourself. Requires Claude Code v2.1.205 or later
 CLAUDE_CODE_ENABLE_AUTO_MODE
-Set to
-1
-to make
-auto mode
-available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in
+Accepted for compatibility with older releases and has no effect. Auto mode is available by default on every provider, including Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in
 Claude apps gateway
-sessions. Requires Claude Code v2.1.158 or later. Has no effect on the Anthropic API, where auto mode is available by default. See
-Enable auto mode on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
+sessions. In v2.1.158 through v2.1.206, setting this to
+1
+was required to make
+auto mode
+available on those providers
 CLAUDE_CODE_ENABLE_AWAY_SUMMARY
 Override
 session recap
@@ -1055,7 +1070,14 @@ to enable
 agent teams
 . Agent teams are experimental and disabled by default
 CLAUDE_CODE_EXTRA_BODY
-JSON object to merge into the top level of every API request body. Useful for passing provider-specific parameters that Claude Code does not expose directly
+JSON object to merge into the top level of every API request body. Useful for passing provider-specific parameters that Claude Code doesn’t expose directly.
+A value exported in your shell also applies to the
+background sessions
+you dispatch with
+claude agents
+or
+--bg
+. Before v2.1.206, background sessions ignored a shell-exported value and used whatever copy the background supervisor process inherited
 CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS
 Override the default token limit for file reads. Useful when you need to read larger files in full
 CLAUDE_CODE_FORCE_SESSION_PERSISTENCE
@@ -1278,9 +1300,9 @@ Git operations time out
 CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE
 Set to
 1
-to keep the existing marketplace cache when a
+to skip the re-clone attempt and keep using the existing marketplace cache when a
 git pull
-fails instead of wiping and re-cloning. Useful in offline or airgapped environments where re-cloning would fail the same way. See
+fails. Useful in offline or airgapped environments where re-cloning would fail the same way. See
 Marketplace updates fail in offline environments
 CLAUDE_CODE_PLUGIN_PREFER_HTTPS
 Set to
@@ -1515,6 +1537,12 @@ CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH
 Skip client-side authentication for
 Claude Platform on AWS
 , for gateways that sign requests themselves
+CLAUDE_CODE_SKIP_AWS_CRED_CACHE
+Set to
+1
+to turn off the in-process cache of credentials resolved from the AWS default credential provider chain, so Claude Code resolves the chain on every API request. With the cache off, an SSO-backed profile requests credentials from IAM Identity Center on every request. See
+credential caching and resolution timeout
+. Requires Claude Code v2.1.207 or later
 CLAUDE_CODE_SKIP_BEDROCK_AUTH
 Skip AWS authentication for Amazon Bedrock (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_FOUNDRY_AUTH
@@ -1616,6 +1644,10 @@ CLAUDE_CODE_TEAM_NAME
 Name of the agent team this teammate belongs to. Set automatically on
 agent team
 members
+CLAUDE_CODE_TEAM_TEARDOWN_PARK_TIMEOUT_MS
+Override, in milliseconds, how long a non-interactive session waits at exit for its
+agent team
+to finish tearing down. Accepts 1000 to 60000; an out-of-range value is ignored and the default of 10000 applies. Requires Claude Code v2.1.206 or later
 CLAUDE_CODE_TMPDIR
 Override the temp directory used for internal temp files. Claude Code appends
 /claude-{uid}/
@@ -2054,7 +2086,9 @@ Maximum number of local MCP servers (stdio) to connect in parallel during startu
 MCP_TIMEOUT
 Timeout in milliseconds for MCP server startup (default: 30000, or 30 seconds)
 MCP_TOOL_TIMEOUT
-Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hours). A per-server
+Timeout in milliseconds for MCP tool execution (default: 100000000, about 28 hours). For an HTTP, SSE, or claude.ai connector server, each request also times out after 60 seconds by default; set this variable, or the per-server
+timeout
+, above 60000 to raise that per-request limit. A lower value still shortens the overall tool-execution timeout but leaves the per-request limit at 60 seconds. Stdio and WebSocket servers have no per-request timer. A per-server
 timeout
 field in
 .mcp.json

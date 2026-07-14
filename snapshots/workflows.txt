@@ -121,7 +121,13 @@ or
 →
 Drill into the selected phase, then into an agent to read its prompt, recent tool calls, and result
 Esc
-Back out one level
+or
+←
+Back out one level. In v2.1.203 through v2.1.205,
+←
+didn’t step back out of a phase or agent; use
+Esc
+on those versions
 j
 /
 k

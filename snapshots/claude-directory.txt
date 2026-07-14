@@ -271,7 +271,7 @@ taken before config migrations
 feedback-bundles/
 Redacted transcript archives written by
 /feedback
-on third-party providers, for sending to your Anthropic account team
+on third-party providers or when no Anthropic credentials are configured, for sending to your Anthropic account team
 todos/
 ,
 statsig/

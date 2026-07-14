@@ -1,4 +1,4 @@
-Ultraplan is in research preview and requires Claude Code v2.1.91 or later. Behavior and capabilities may change based on feedback.
+Ultraplan is in research preview. Behavior and capabilities may change based on feedback.
 Ultraplan hands a planning task from your local CLI to a
 Claude Code on the web
 session running in

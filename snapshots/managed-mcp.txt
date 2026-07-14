@@ -347,7 +347,7 @@ serverName
 match counts only when the allowlist contains no
 serverCommand
 entries
-Two matching rules apply inside those checks:
+Three matching rules apply inside those checks:
 Commands match exactly.
 Every argument, in order.
 ["npx", "-y", "server"]
@@ -356,6 +356,26 @@ does not match
 or
 ["npx", "-y", "server", "--flag"]
 .
+serverCommand
+and
+serverUrl
+values expand before matching.
+Both the policy entry and the server’s configured value go through the same
+${VAR}
+and
+${VAR:-default}
+expansion
+as
+.mcp.json
+, so an entry written as
+["${HOME}/bin/server"]
+matches a server config that uses either the same reference or the expanded path. On Windows, reference an environment variable that is set there, such as
+${USERPROFILE}
+instead of
+${HOME}
+.
+serverName
+values match literally and never expand.
 URLs support
 *
 wildcards
@@ -377,6 +397,13 @@ http://localhost:*/*
 Any port on localhost
 *://mcp.example.com/*
 Any scheme to a specific domain
+Because
+${VAR}
+expansion reads Claude Code’s own process environment, a
+serverCommand
+or
+serverUrl
+policy entry that references a variable expands to whatever value a user sets. Use literal URLs and commands for entries you rely on for enforcement.
 ​
 Example configuration
 The configuration below sets up a hard allowlist with a denylist. The highlighted lines change how the rest of the list is evaluated, and the callouts after the block explain each one:

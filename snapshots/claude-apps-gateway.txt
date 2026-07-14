@@ -91,6 +91,14 @@ configuration reference
 to.
 Deploy on your private network.
 Claude Code only connects to a gateway whose address is private. This is a security guard, because a trusted gateway can push settings that run commands on developer machines. Put the gateway behind an internal load balancer or VPN and give it a hostname that resolves to private IPs only.
+Anthropic-operated public gateway endpoints are the exception:
+/login
+accepts them over
+https://
+. These are a small fixed set of gateways that Anthropic itself operates; they aren’t a deployment option you can select or configure. The list is compiled into Claude Code, so no configuration can add a hostname to it and no gateway you host qualifies for the exemption.
+Before v2.1.206,
+/login
+rejected those endpoints like any other public address.
 ​
 Prerequisites
 Have these in place before you start:
@@ -137,6 +145,13 @@ fc00::/7
 rejects the URL. If developer machines route HTTPS through a corporate proxy, sign-in also requires the proxy host to resolve to private addresses; if it doesn’t, add the gateway host to
 NO_PROXY
 so the CLI connects directly.
+Anthropic-operated public gateway endpoints are exempt from the private-address and proxy checks:
+/login
+accepts them over
+https://
+by exact hostname match, so the private-network requirement applies only to a gateway you host yourself. Before v2.1.206,
+/login
+rejected an Anthropic-operated endpoint like any other public address.
 Linux runtime
 The gateway server runs only on the native Linux binary. macOS works for local development. Windows isn’t supported as a server platform.
 The gateway server requires the native
@@ -652,14 +667,15 @@ breakpoints are forwarded to every upstream
 Not available
 The CLI omits the extended-cache-ttl beta on gateway sessions, because not every upstream the gateway can route to supports the 1-hour TTL, so prompt caching through the gateway uses the 5-minute TTL; see the beta-header note above
 Auto mode
-Available with opt-in
+Available
 Follows the
 third-party provider rules
-: set
+: only the models eligible on third-party providers can use it.
+Before v2.1.207, auto mode on gateway sessions required setting
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 , deliverable through the managed policy
 env
-block, and only the models eligible on third-party providers can use it
+block
 First-party-only optimizations such as global cache scope and token-efficient tools
 Not available
 The CLI doesn’t enable them on gateway sessions; see the beta-header note above

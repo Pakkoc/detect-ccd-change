@@ -287,9 +287,7 @@ If you typed it inside Claude Code and the command menu shows
 No commands match "/web-setup"
 , or submitting it returns
 Unknown command: /web-setup
-, the command is hidden because a requirement isn’t met. The cause is usually that your CLI is older than v2.1.80 or you’re authenticated with an API key or third-party provider instead of a claude.ai subscription. Run
-claude update
-, then
+, the command is hidden because a requirement isn’t met. The cause is usually that you’re authenticated with an API key or third-party provider instead of a claude.ai subscription. Run
 /login
 to sign in with your claude.ai account.
 ​

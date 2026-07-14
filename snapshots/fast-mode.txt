@@ -6,9 +6,6 @@ Fast mode is a high-speed configuration for Claude Opus, making the model up to 
 when you need speed for interactive work like rapid iteration or live debugging, and toggle it off when cost matters more than latency.
 Fast mode is not a different model. It uses Claude Opus with a different API configuration that prioritizes speed over cost efficiency. You get identical quality and capabilities with faster responses. Fast mode is supported on Opus 4.8 and Opus 4.7. It is not available on Sonnet, Haiku, or other models.
 Fast mode for Opus 4.7 is deprecated as of June 25, 2026, and will be removed on July 24, 2026. After removal, fast mode requests on Opus 4.7 return an error and do not fall back to standard Opus 4.7. Migrate to Opus 4.8 to keep the speedup.
-Fast mode requires Claude Code v2.1.36 or later. Check your version with
-claude --version
-.
 What to know:
 Use
 /fast
@@ -37,7 +34,7 @@ works only in a session launched with fast mode in its
 --settings
 value, for example
 claude -p --settings '{"fastMode": true}'
-; the toggle then applies to that session only and isn’t saved as your default, and in any other non-interactive session the command reports that fast mode isn’t available. Administrators can configure fast mode to reset each session. See
+; the toggle then applies to that session only and isn’t saved as your default, and in any other non-interactive session the command reports that fast mode isn’t available. You can configure fast mode to reset each session. See
 require per-session opt-in
 for details.
 For the best cost efficiency, enable fast mode at the start of a session rather than switching mid-conversation. See
@@ -137,20 +134,20 @@ Environment variables
 .
 ​
 Require per-session opt-in
-By default, fast mode a user turns on in an interactive session persists across sessions: it stays on in future sessions. Administrators on
-Team
-or
-Enterprise
-plans can prevent this by setting
+By default, fast mode a user turns on in an interactive session persists across sessions: it stays on in future sessions. To change this, set
 fastModePerSessionOptIn
 to
 true
-in
-managed settings
-or
-server-managed settings
-. This causes each session to start with fast mode off, requiring users to explicitly enable it with
+in any
+settings file
+, which causes each session to start with fast mode off and requires users to explicitly enable it with
 /fast
+. Owners on
+Team
+or
+Enterprise
+plans can deploy it organization-wide through
+server-managed settings
 .
 {
 "fastModePerSessionOptIn"

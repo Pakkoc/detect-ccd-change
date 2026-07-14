@@ -24,6 +24,8 @@ Cowork
 Code
 : An interactive coding assistant with direct access to your local files. You review and approve each change in real time.
 Chat and Cowork are covered in the
+Claude Help Center
+; installing and deploying the desktop app is covered in the
 Claude Desktop support articles
 . This page focuses on the
 Code
@@ -69,6 +71,10 @@ Claude Code on the web
 .
 SSH
 : Connect to a remote machine over SSH, such as your own servers, cloud VMs, or dev containers. Desktop installs Claude Code on the remote machine automatically the first time you connect.
+WSL
+(Windows): Run the session inside a
+WSL 2 distribution
+; Claude Code, tools, and git execute on the Linux side with native paths.
 2
 Choose a model
 Select a model from the dropdown next to the send button. See

@@ -161,8 +161,23 @@ claude.ai
 claude.ai account authentication
 platform.claude.com
 Anthropic Console account authentication
+mcp-proxy.anthropic.com
+MCP connectors from claude.ai
+, including connectors an organization administrator configures. Connector traffic routes through this proxy; connectors are enabled by default for claude.ai-authenticated users. To disable, set
+ENABLE_CLAUDEAI_MCP_SERVERS=false
+or the
+disableClaudeAiConnectors
+setting
 downloads.claude.ai
 Plugin executable downloads; native installer and native auto-updater
+storage.googleapis.com
+Install counts and plugin metadata shown in
+/plugin
+. Signed
+artifact
+uploads try this host first; publishing falls back to
+api.anthropic.com
+when it is blocked
 storage.googleapis.com
 Native installer and native auto-updater on versions prior to 2.1.116
 bridge.claudeusercontent.com
@@ -175,12 +190,10 @@ on claude.ai. The viewer loads each artifact’s content from a sandboxed subdom
 raw.githubusercontent.com
 Changelog feed for
 /release-notes
-and the release notes shown after updating; plugin marketplace install counts
-If you install Claude Code through npm or manage your own binary distribution, end users may not need access to
+and the release notes shown after updating
+If you install Claude Code through npm or manage your own binary distribution, end users do not need the native installer and auto-updater uses of
 downloads.claude.ai
-or
-storage.googleapis.com
-.
+. The other uses in the table apply regardless of install method.
 Claude Code also sends optional operational telemetry by default, which you can disable with environment variables. See
 Telemetry services
 for how to disable it before finalizing your allowlist.
@@ -222,6 +235,15 @@ GitHub Enterprise Server
 instances behind a firewall, allowlist the same
 Anthropic API IP addresses
 so Anthropic infrastructure can reach your GHES host to clone repositories and post review comments.
+​
+Desktop and claude.ai
+The preceding table primarily covers the standalone CLI. The Claude Desktop app and claude.ai in a browser load their application code from additional Anthropic CDN hosts, including
+assets-proxy.anthropic.com
+. Allowing
+claude.ai
+while blocking those hosts produces a blank page rather than an error. See
+network access requirements
+on the Desktop page.
 ​
 Additional resources
 Claude Code settings

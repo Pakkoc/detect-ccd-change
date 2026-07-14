@@ -3,7 +3,7 @@ Artifacts are available on Pro, Max, Team, and Enterprise plans and require a se
 . See
 Availability
 for the full set of requirements.
-An artifact is a live, interactive web page that Claude Code publishes from your session to a private URL on claude.ai. You open it in a browser, and it updates in place as the session continues. On Team and Enterprise plans, share it from the page header when you want a teammate to see it too. For example, use an artifact to walk a reviewer through a pull request with annotated diffs, build a dashboard from session data, or keep an investigation timeline that fills in as Claude works.
+An artifact is a live, interactive web page that Claude Code publishes from your session to a private URL on claude.ai. You open it in a browser, and it updates in place as the session continues. Share it from the page header when you want someone else to see it too. For example, use an artifact to walk a reviewer through a pull request with annotated diffs, build a dashboard from session data, or keep an investigation timeline that fills in as Claude works.
 ​
 When to use an artifact
 Use an artifact when terminal text is the wrong medium for what Claude produced: output that is easier to look at and interact with than to read line by line. Claude builds the page from anything your session can reach, including your codebase and data it pulls through your
@@ -57,13 +57,28 @@ To update an artifact from a different session, give Claude the artifact’s URL
 Update https://claude.ai/code/artifact/5fbea6f3-... with today's numbers.
 ​
 Share an artifact
-A new artifact is visible only to you. On Pro and Max plans, artifacts stay private to you. On Team and Enterprise plans, open the artifact in your browser and use the
+A new artifact is visible only to you. To share it, open the artifact in your browser and use the
 Share
-control in the page header to grant access to specific people in your organization, or to everyone in it. The header names you as the artifact’s author, so anyone you share it with can see who published the page. It also links to your gallery at
+control in the page header. The header names you as the artifact’s author, so anyone you share it with can see who published the page. It also links to your gallery at
 claude.ai/code/artifacts
 , which lists every artifact you have created.
-Sharing stops at your organization. Viewers must sign in to claude.ai as a member of the same organization that published the artifact, and there is no option to make an artifact viewable outside it. To send the underlying content to someone outside your organization, ask Claude for the HTML file and share that file directly.
-Artifacts are viewable, not co-edited. People you share with see each version you publish but cannot change the page; you remain the only writer.
+Who you can share with depends on your plan:
+Within your organization
+: on Team and Enterprise plans, grant access to specific people in your organization, or to everyone in it. Viewers sign in to claude.ai as members of your organization to see the page.
+Publicly
+: share a link that anyone on the internet can open, with no claude.ai sign-in required. On Pro and Max plans, a public link is the only way to share an artifact. On Team and Enterprise plans, public sharing is off until an Owner
+enables it for the organization
+.
+​
+Let someone edit with you
+People you share with are viewers by default: they see each version you publish but can’t change the page. On Team and Enterprise plans, you can also make someone an editor. In the share dialog, add a person and switch their role from
+viewer
+to
+editor
+.
+An editor publishes new versions the same way you
+update the artifact from another session
+: they give Claude the artifact’s URL in their own session, and Claude pulls the current content and republishes with their changes. Everyone with the page open sees each update live.
 ​
 What you can build
 An artifact is a single HTML page, so anything you can express in HTML, CSS, and inline JavaScript is in scope. The patterns below come up most often.
@@ -89,7 +104,7 @@ Ask Claude to keep an artifact current while a long task runs, so anyone with th
 Turn this migration plan into a checklist artifact. Check items off as you complete them and add a note for anything you skip.
 ​
 Improve the visual design
-Claude applies a built-in design skill when it builds an artifact, so pages get a deliberate palette, typography, and layout without extra prompting. That skill also looks for an existing design system in your project before choosing its own. To keep artifacts consistent with your product’s branding, record your design tokens where Claude can find them, such as the project’s
+As of Claude Code v2.1.183, Claude applies a built-in design skill when it builds an artifact, so pages get a deliberate palette, typography, and layout without extra prompting. That skill also looks for an existing design system in your project before choosing its own. To keep artifacts consistent with your product’s branding, record your design tokens where Claude can find them, such as the project’s
 CLAUDE.md
 or a theme file in your repository:
 ## Design system
@@ -133,13 +148,13 @@ Artifacts require every condition below. When one is not met, Claude writes a lo
 Requirement
 Available when
 Plan
-Pro, Max, Team, or Enterprise. On Pro and Max plans, artifacts are private to you, and no admin management applies. On Team plans, artifacts are on by default. On Enterprise plans, an Owner
+Pro, Max, Team, or Enterprise. On Pro and Max plans, artifacts are private to you until you share them, and no admin management applies. On Team plans, artifacts are on by default. On Enterprise plans, an Owner
 enables them
 in claude.ai admin settings.
 Authentication
-Signed in to claude.ai with
+The session is backed by a claude.ai account: sign in with
 /login
-. Sessions using an API key,
+in the CLI or desktop app. Claude Tag sessions are signed in through the agent’s identity, so no step is needed there. Sessions using an API key,
 gateway token
 , or cloud-provider credential cannot publish.
 Model provider
@@ -155,7 +170,9 @@ Customer-managed encryption keys (CMEK), HIPAA, and
 Zero Data Retention
 are not enabled for the organization.
 Surface
-Claude Code CLI, or the Claude desktop app version 1.13576.0 or later. Off by default in
+Claude Code CLI version 2.1.183 or later, or the Claude desktop app version 1.13576.0 or later.
+Claude Tag
+sessions can also publish artifacts when both Claude Tag and artifacts are enabled for the organization. Off by default in
 Agent SDK
 , GitHub Action, and MCP-server contexts, and when
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
@@ -178,7 +195,9 @@ permissions.deny
 Manage artifacts for your organization
 Owners on Team and Enterprise plans control artifacts from
 claude.ai admin settings
-. Artifact content is stored on Anthropic-operated infrastructure and is visible only to authenticated members of the publishing organization.
+. Artifact content is stored on Anthropic-operated infrastructure and is visible only to authenticated members of the publishing organization, unless the artifact is
+shared publicly
+.
 ​
 Enable or disable artifacts
 To enable or disable artifacts for the whole organization, go to
@@ -192,6 +211,15 @@ Artifacts
 permission under the
 Claude Code
 group.
+​
+Control public sharing
+Public sharing is off by default on Team and Enterprise plans, so members can share artifacts only within the organization until an Owner turns it on. To let members publish artifacts to public links that anyone can view without signing in, go to
+Settings > Claude Code > Capabilities
+and turn on
+External sharing
+under the
+Artifacts
+toggle. Turning it back off blocks access through existing public links without changing each artifact’s audience; access resumes if you re-enable it.
 ​
 Set a retention policy
 To set how long artifacts are kept before automatic deletion, go to

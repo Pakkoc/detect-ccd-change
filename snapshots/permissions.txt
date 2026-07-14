@@ -20,6 +20,26 @@ File modification
 Edit/write files
 Yes
 Until session end
+On a Bash or PowerShell permission prompt, press
+Ctrl+E
+to show an explanation of the command: what it does, why Claude is running it, and what could go wrong, labeled
+Low risk
+,
+Med risk
+, or
+High risk
+. Claude Code sends the command and Claude’s own description of the call to the model to generate the explanation only when you press
+Ctrl+E
+, not on every prompt. Showing the explanation doesn’t run the command; press
+Ctrl+E
+again to hide it.
+To turn the shortcut off, set
+permissionExplainerEnabled
+to
+false
+in
+~/.claude.json
+.
 ​
 Manage permissions
 You can view and manage Claude Code’s tool permissions with
@@ -66,9 +86,9 @@ Mode
 Description
 default
 Standard behavior: prompts for permission on first use of each tool.
-Labeled Manual in the CLI and the VS Code and JetBrains extensions, and Claude Code accepts
+Labeled Manual in the CLI, the VS Code and JetBrains extensions, and the desktop app, and Claude Code accepts
 manual
-as an alias. The label and alias require Claude Code v2.1.200 or later
+as an alias. The label and alias require Claude Code v2.1.200 or later. The desktop app’s label doesn’t depend on your CLI version
 acceptEdits
 Automatically accepts file edits and common filesystem commands such as
 mkdir
@@ -558,6 +578,22 @@ git
 in a new directory can execute that directory’s hooks. A
 cd
 whose target resolves to the current working directory is a no-op and doesn’t trigger this prompt.
+Combining
+cd
+with an output redirect in one compound command also prompts when Claude Code can’t determine which directory the redirect target resolves against after the
+cd
+runs. A command whose only redirect target is
+/dev/null
+, such as
+cd app; grep -r pattern . 2>/dev/null
+, doesn’t trigger this prompt, because
+/dev/null
+doesn’t depend on the working directory.
+Before v2.1.207, a compound command containing
+cd
+prompted for any output redirect, including one whose only target was
+/dev/null
+.
 Bash permission patterns that try to constrain command arguments are fragile. For example,
 Bash(curl http://github.com/ *)
 intends to restrict curl to GitHub URLs, but won’t match variations like:
@@ -1306,6 +1342,11 @@ note. Trusting a parent directory doesn’t apply a nested project’s allow rul
 is your own file, so the workspace trust check usually doesn’t apply to it. When a repository could have supplied the file, such as when it is committed to git or
 .claude
 is a symlink, its allow rules and additional directories go through the trust check like project settings.
+Claude Code runs git to check whether the repository supplied the file, and it runs that check only in a folder covered by an accepted trust dialog, for that folder or for one of its parent directories. In an interactive session in a folder you haven’t trusted yet, allow rules and additional directories in
+.claude/settings.local.json
+go through the trust check like project settings until you accept the dialog, unless the session runs in your own configuration home as described below. Of the two exceptions below, only the configuration-home exception applies before the dialog, because it doesn’t need to run git. Determining that a directory isn’t inside a git repository uses the same git check, so the not-inside-a-repository exception takes effect once a trust dialog covering the folder is accepted. Before v2.1.207, an untracked
+.claude/settings.local.json
+applied its allow rules in that folder before you accepted the dialog.
 Allow rules and additional directories in
 .claude/settings.local.json
 also apply without workspace trust in two cases:

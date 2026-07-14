@@ -368,7 +368,7 @@ advisor tool
 (
 v2.1.170+), or a full model ID. Written automatically when you run
 /advisor
-. Unset to disable the advisor. Requires Claude Code v2.1.98 or later
+. Unset to disable the advisor
 "opus"
 agent
 Run the main thread as a named subagent, and set the default agent for sessions dispatched from
@@ -537,7 +537,16 @@ arrays of prose rules. Include the literal string
 "$defaults"
 in an array to inherit the built-in rules at that position. See
 Configure auto mode
-. Not read from shared project settings
+. Read from user settings, the
+--settings
+flag, and managed settings only. Ignored in project
+.claude/settings.json
+and local
+.claude/settings.local.json
+.
+Before v2.1.207,
+.claude/settings.local.json
+was also read
 {"soft_deny": ["$defaults", "Never run terraform apply"]}
 autoMode.classifyAllShell
 Default
@@ -607,9 +616,11 @@ advanced credential configuration
 )
 /bin/generate_aws_grant.sh
 axScreenReader
-Render screen-reader friendly output: flat text without decorative borders or animations. Screen-reader mode always uses the classic renderer, so the
+Render screen-reader friendly output: flat text without decorative borders or animations. Screen-reader mode uses the classic renderer, so the
 tui
-setting has no effect while it is active. The
+setting has no effect while it is active; attached
+background sessions
+still render fullscreen. The
 CLAUDE_AX_SCREEN_READER
 environment variable and the
 --ax-screen-reader
@@ -1727,6 +1738,18 @@ Ctrl+G
 as
 Show last response in external editor
 true
+permissionExplainerEnabled
+Default
+:
+true
+. Show a model-generated
+explanation of the command
+when you press
+Ctrl+E
+on a Bash or PowerShell permission prompt. Set to
+false
+to turn the shortcut off
+false
 teammateDefaultModel
 Default model for
 agent team
@@ -1794,7 +1817,12 @@ worktree.symlinkDirectories
 Directories to symlink from the main repository into each worktree to avoid duplicating large directories on disk. No directories are symlinked by default
 ["node_modules", ".cache"]
 worktree.sparsePaths
-Directories to check out in each worktree via git sparse-checkout. Only the listed directories plus root-level files are written to disk, which is faster in large monorepos
+Directories to check out in each worktree via git sparse-checkout. Only the listed directories plus root-level files are written to disk, which is faster in large monorepos. While a sparse worktree exists, git enables
+extensions.worktreeConfig
+in the repository’s shared
+.git/config
+; see
+Check out only the directories you need
 ["packages/my-app", "shared/utils"]
 worktree.bgIsolation
 Isolation mode for
@@ -1878,7 +1906,7 @@ bypassPermissions
 manual
 as an alias for
 default
-, the mode labeled Manual in the CLI and the VS Code and JetBrains extensions. The
+, the mode labeled Manual in the CLI, the VS Code and JetBrains extensions, and the desktop app. The
 manual
 alias requires Claude Code v2.1.200 or later.
 auto
@@ -2940,6 +2968,38 @@ false
 }
 }
 ​
+pluginConfigs
+Stores the non-sensitive option values a plugin’s
+userConfig
+prompt collects, keyed by plugin ID. Claude Code writes this key to user settings when you fill in the plugin’s configuration dialog, so you don’t need to edit it by hand. Sensitive options are stored in the macOS Keychain instead, or in
+~/.claude/.credentials.json
+on platforms without a supported keychain.
+This example stores one option for a plugin installed from the
+acme-tools
+marketplace:
+{
+"pluginConfigs"
+: {
+"deployer@acme-tools"
+: {
+"options"
+: {
+"api_endpoint"
+:
+"https://api.example.com"
+}
+}
+}
+}
+pluginConfigs
+is read from user settings, the
+--settings
+flag, and managed settings only. Entries in a project’s
+.claude/settings.json
+or
+.claude/settings.local.json
+are ignored, because these values are substituted into plugin hook, MCP, and LSP configurations, and a cloned repository must not be able to supply them. Before v2.1.207, project and local settings were also read.
+​
 extraKnownMarketplaces
 Defines additional marketplaces that should be made available for the repository. Typically used in repository-level settings to ensure team members have access to required plugin sources.
 When a repository includes
@@ -3010,7 +3070,9 @@ The
 git
 source type works with any git hosting service, including self-hosted GitLab and Bitbucket. Claude Code clones the repository with the same authentication that
 git clone
-would use on that machine: configured credential helpers, SSH keys, or a host-specific token environment variable. See
+would use on that machine: configured credential helpers or SSH keys. A provider token such as
+GITHUB_TOKEN
+takes effect only through a credential helper that reads it. See
 Private repositories
 for setup details.
 For
@@ -3033,7 +3095,7 @@ Boolean. Set
 "autoUpdate": true
 alongside
 source
-to make Claude Code refresh that marketplace and update its installed plugins at startup. When omitted, official Anthropic marketplaces default to
+to make Claude Code refresh that marketplace and update its installed plugins in the background after startup. When omitted, official Anthropic marketplaces default to
 true
 and all other marketplaces default to
 false
@@ -3675,8 +3737,6 @@ Managed settings only
 : blocks skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings. Combine it with
 strictKnownMarketplaces
 to control the full customization supply chain: the marketplace allowlist controls which plugins users can install, and this setting blocks everything that doesn’t come from a plugin or from managed settings.
-strictPluginOnlyCustomization
-requires Claude Code v2.1.82 or later. Earlier versions ignore the key and keep loading user and project customizations, so the lockdown isn’t enforced until clients update.
 The value is either
 true
 to lock all four surfaces, or an array naming the surfaces to lock:

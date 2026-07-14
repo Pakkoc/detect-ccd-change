@@ -16,20 +16,25 @@ MCP servers
 @
 autocompletes file paths from your local project
 Work from both surfaces at once
-: the conversation stays in sync across all connected devices, so you can send messages from your terminal, browser, and phone interchangeably
+: the conversation and the progress of
+subagents
+and
+dynamic workflows
+stay in sync across all connected devices, so you can send messages from your terminal, browser, and phone interchangeably.
+Before v2.1.207, sessions hosted by the
+Desktop app
+didn’t send subagent or workflow progress to connected devices.
 Send images and files from your phone or browser
 : when you add an attachment in the Claude app or at claude.ai/code, Claude Code downloads it to your machine and passes it to Claude as an
 @
 file reference, with or without a caption.
 Before v2.1.202, Claude Code could drop an attachment sent without a caption before it reached the session.
 Survive interruptions
-: if your laptop sleeps or your network drops, the session reconnects automatically when your machine comes back online
+: if your laptop sleeps or your network drops, the session reconnects automatically when your machine comes back online. Claude Code queues status updates from subagents and workflows while the connection is rebuilding and delivers them once it recovers.
+Before v2.1.207, an update sent during a reconnection or credential refresh could be lost, so the connected device kept showing a finished task as running.
 Unlike
 Claude Code on the web
 , which runs on cloud infrastructure, Remote Control sessions run directly on your machine and interact with your local filesystem. The web and mobile interfaces are just a window into that local session.
-Remote Control requires Claude Code v2.1.51 or later. Check your version with
-claude --version
-.
 This page covers setup, how to start and connect to sessions, and how Remote Control compares to Claude Code on the web.
 ​
 Requirements
@@ -181,7 +186,7 @@ or
 /rc
 in the prompt box, or open the command menu with
 /
-and select it. Requires Claude Code v2.1.79 or later.
+and select it.
 /remote-control
 A banner appears above the prompt box showing connection status. Once connected, click
 Open in browser
@@ -418,7 +423,7 @@ Text-output commands:
 /exit
 ,
 /usage-credits
-,
+(runs the text form instead of opening the in-CLI dialog),
 /recap
 ,
 /reload-plugins
@@ -464,6 +469,11 @@ claude auth login
 and choose the claude.ai option. If
 ANTHROPIC_API_KEY
 is set in your environment, unset it first.
+Before v2.1.206, running
+/remote-control
+while signed out reported
+Unknown command: /remote-control
+instead of this message.
 ​
 ”Remote Control requires a full-scope login token”
 You’re authenticated with a long-lived token from

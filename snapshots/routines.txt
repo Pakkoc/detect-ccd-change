@@ -158,6 +158,9 @@ in any session to create a scheduled routine conversationally. You can also pass
 or a one-off like
 /schedule clean up feature flag in one week
 . Claude walks through the same information the web form collects, then saves the routine to your account.
+A successful start looks like a conversation: Claude asks follow-up questions about the schedule, repositories, and prompt before saving. If Claude instead replies that you need to authenticate or that it can’t connect to your remote claude.ai account, no routine was created; see
+Troubleshooting
+.
 /schedule
 in the CLI creates scheduled routines only. To add an API or GitHub trigger, edit the routine on the web at
 claude.ai/code/routines
@@ -188,6 +191,11 @@ Schedule a one-off run
 A one-off schedule fires the routine a single time at a specific timestamp. Use it to remind yourself later in the week, to open a cleanup PR after a rollout finishes, or to kick off a follow-up task when an upstream change lands. After the routine fires, it auto-disables and the web UI marks it as
 Ran
 . To run it again, edit the routine and set a new one-off time.
+One-off scheduling from the CLI is rolling out gradually and may not be available on your account yet. If
+/schedule
+only offers recurring schedules, create the one-off run from the web at
+claude.ai/code/routines
+instead.
 Create a one-off run from the CLI by describing the time in natural language. Claude resolves the phrase against the current time and confirms the absolute timestamp before saving.
 /schedule tomorrow at 9am, summarize yesterday's merged PRs
 /schedule in 2 weeks, open a cleanup PR that removes the feature flag
@@ -243,7 +251,11 @@ Authorization
 header. The request body accepts an optional
 text
 field for run-specific context such as an alert body or a failing log, passed to the routine alongside its saved prompt. The value is freeform text and is not parsed: if you send JSON or another structured payload, the routine receives it as a literal string.
-The example below triggers a routine from a shell:
+The example below triggers a routine from a shell. The routine ID and token shown are placeholders: replace them with the URL and token you copied when
+adding the API trigger
+, or the request fails with a
+401
+authentication error:
 curl
 -X
 POST
@@ -520,10 +532,10 @@ One-off runs do not count against the daily routine cap. They draw down your reg
 Troubleshooting
 ​
 /schedule
-shows “No commands match” or “Unknown command”
+returns “Unknown command”
 The CLI hides
 /schedule
-when one of its requirements isn’t met, so the command menu shows
+when one of its requirements isn’t met: the command menu shows
 No commands match "/schedule"
 while you type, and submitting it returns
 Unknown command: /schedule
@@ -557,11 +569,19 @@ depends on
 You are inside a Claude Code on the web session. Manage routines from the
 web UI
 instead
-Your CLI is older than v2.1.81. Run
-claude update
 You can always create and manage routines at
 claude.ai/code/routines
 regardless of how the CLI is configured.
+​
+/schedule
+asks you to authenticate
+If
+/schedule
+runs but Claude responds that you need to authenticate with a claude.ai account first, the CLI has no stored claude.ai login. API accounts aren’t supported for routines. Run
+/login
+, sign in with your claude.ai account, then run
+/schedule
+again.
 ​
 ”Routines are disabled by your organization’s policy”
 An Owner in your Team or Enterprise organization has likely turned off the

@@ -41,7 +41,9 @@ No
 Artifact
 Publishes an HTML or Markdown file as an
 artifact
-: a private, interactive page on claude.ai. On Team and Enterprise plans, you can share it inside your organization.
+: a private, interactive page on claude.ai. You can share it with a public link, or inside your organization on Team and Enterprise plans, where public sharing requires an Owner to
+enable it
+.
 Requires a Pro, Max, Team, or Enterprise plan and
 /login
 authentication; see
@@ -100,14 +102,23 @@ git worktree
 and switches into it. Pass a
 path
 to switch into an existing worktree instead of creating a new one.
-On first entry the target may be a worktree of the current repository or, in a multi-repo workspace, of a repository nested inside it. Before v2.1.203, a nested repository’s worktree was rejected. From within a worktree session, or from a subagent with a pinned working directory such as
+On first entry the target may be a worktree of the current repository or, in a multi-repo workspace, of a repository nested inside it. Before v2.1.203, a nested repository’s worktree was rejected.
+A
+path
+outside
+.claude/worktrees/
+prompts for your approval before entering, since it moves the session’s working directory and write access to that location. New-worktree creation and paths under
+.claude/worktrees/
+don’t prompt. Before v2.1.206, Claude entered paths outside
+.claude/worktrees/
+without a prompt. From within a worktree session, or from a subagent with a pinned working directory such as
 isolation: worktree
 , only the
 path
 form is available and the target must be under
 .claude/worktrees/
 of the session’s repository
-No
+Yes
 ExitPlanMode
 Presents a plan for approval and exits plan mode
 Yes
@@ -201,7 +212,9 @@ Sends a message to an
 agent team
 teammate, or
 resumes a subagent
-by its agent ID or name. Stopped subagents auto-resume in the background. Structured team-protocol messages require agent teams. A receiver never treats a message from another agent as your consent or approval.
+by its agent ID or name. A completed subagent auto-resumes in the background; a subagent you stopped from
+/tasks
+doesn’t and the call returns a refusal. Structured team-protocol messages require agent teams. A receiver never treats a message from another agent as your consent or approval.
 As of v2.1.198, a subagent treats a message from the agent that launched it as normal task direction rather than as a peer request.
 As of v2.1.199, a send to a name that now resolves to a different agent than it did earlier in the conversation is refused instead of delivered; see
 Resume subagents
@@ -615,7 +628,6 @@ code intelligence plugin
 for your language. The plugin bundles the language server configuration, and you install the server binary separately.
 ​
 Monitor tool
-The Monitor tool requires Claude Code v2.1.98 or later.
 The Monitor tool lets Claude watch something in the background and react when it changes, without pausing the conversation. Ask Claude to:
 Tail a log file and flag errors as they appear
 Poll a PR or CI job and report when its status changes

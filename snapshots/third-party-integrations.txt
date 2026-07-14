@@ -113,8 +113,10 @@ ANTHROPIC_BASE_URL
 ANTHROPIC_BEDROCK_BASE_URL
 ,
 ANTHROPIC_AWS_BASE_URL
-, or
+,
 ANTHROPIC_VERTEX_BASE_URL
+, or
+ANTHROPIC_FOUNDRY_BASE_URL
 environment variables. Learn more in
 LLM gateways
 .
@@ -261,16 +263,29 @@ CLOUD_ML_REGION
 us-east5
 Use
 /status
-in Claude Code to verify your proxy and gateway configuration is applied correctly.
+in Claude Code to verify your proxy and gateway configuration is applied correctly. For example, with the Bedrock gateway configuration above, the output includes lines like:
+API provider: Amazon Bedrock
+Bedrock base URL: https://your-llm-gateway.com/bedrock
+AWS region: us-east-1
+AWS auth skipped
+If you configured a corporate proxy,
+/status
+also shows a
+Proxy
+line with your proxy URL.
 ​
 Best practices for organizations
 ​
 Invest in documentation and memory
 We strongly recommend investing in documentation so that Claude Code understands your codebase. Organizations can deploy CLAUDE.md files at multiple levels:
 Organization-wide
-: Deploy to system directories like
+: Deploy to system directories such as
 /Library/Application Support/ClaudeCode/CLAUDE.md
-(macOS) for company-wide standards
+(macOS),
+/etc/claude-code/CLAUDE.md
+(Linux and WSL), or
+C:\Program Files\ClaudeCode\CLAUDE.md
+(Windows) for company-wide standards
 Repository-level
 : Create
 CLAUDE.md

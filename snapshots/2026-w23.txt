@@ -12,7 +12,7 @@ export
 CLAUDE_CODE_ENABLE_AUTO_MODE
 =
 1
-Enable auto mode on third-party providers
+Auto mode on third-party providers
 Safer automatic edits
 v2.1.160
 Claude Code now prompts before writing files that can run code, even in

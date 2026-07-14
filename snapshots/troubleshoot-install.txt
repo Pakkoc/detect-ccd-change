@@ -337,6 +337,11 @@ install:
 ls
 -la
 ~/.local/bin/claude
+A native install shows a symlink into
+~/.local/share/claude/versions/
+. A script or a symlink you created yourself at this path is a custom launcher, which
+auto-update leaves in place
+.
 If either
 ls
 command prints

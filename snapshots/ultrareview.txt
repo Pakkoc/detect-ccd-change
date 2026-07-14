@@ -1,4 +1,4 @@
-Ultrareview is a research preview feature available in Claude Code v2.1.86 and later. The feature, pricing, and availability may change based on feedback. The command is now invoked as
+Ultrareview is a research preview feature. The feature, pricing, and availability may change based on feedback. The command is now invoked as
 /code-review ultra
 , and
 /ultrareview

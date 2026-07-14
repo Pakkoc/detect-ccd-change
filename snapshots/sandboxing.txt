@@ -146,7 +146,9 @@ Claude Code offers two sandbox modes:
 Auto-allow mode
 : Bash commands will attempt to run inside the sandbox and are automatically allowed without requiring permission. Commands that cannot be sandboxed, such as those needing network access to non-allowed hosts, fall back to the regular permission flow, where Claude Code checks your
 permission rules
-and prompts you for any command those rules do not already allow.
+and gates any command those rules do not already allow, with a prompt in default mode or the classifier in
+auto mode
+.
 Even in auto-allow mode, the following still apply:
 Explicit
 deny rules
@@ -179,7 +181,13 @@ $TMPDIR
 to different directories. To pass temporary files between the two, write them under the working directory instead.
 Some commands cannot run inside the sandbox at all, such as tools that are incompatible with it or that need a host you have not allowed. Rather than failing the task or requiring you to turn sandboxing off, Claude Code includes an escape hatch: when a command fails because of sandbox restrictions, Claude analyzes the failure and may retry the command with the
 dangerouslyDisableSandbox
-parameter. The retried command runs outside the sandbox, so it goes through the regular permission flow and requires your approval.
+parameter. The retried command runs outside the sandbox, so it goes through the regular permission flow: in default mode you get a confirmation prompt; in
+auto mode
+the classifier evaluates the underlying command instead of prompting you. To be prompted on every unsandboxed retry even in auto mode, add an
+ask rule
+for
+Bash(dangerouslyDisableSandbox:true)
+.
 You can disable this escape hatch by setting
 "allowUnsandboxedCommands": false
 in your

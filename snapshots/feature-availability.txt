@@ -170,7 +170,7 @@ Claude Platform on AWS
 Google Cloud’s Agent Platform
 Microsoft Foundry
 Analytics dashboard and API
-✓ (Team and Enterprise)
+✓ (dashboard: Team and Enterprise; API: Enterprise)
 ✓
 5
 ✗
@@ -197,11 +197,12 @@ See note
 1
 On Google Cloud’s Agent Platform, web search is available for Claude 4 models and later.
 2
-Requires
-CLAUDE_CODE_ENABLE_AUTO_MODE
-. See
+On these providers, auto mode supports only Claude Sonnet 5, Opus 4.7, and Opus 4.8. See
 Auto mode configuration
 .
+In v2.1.158 through v2.1.206, auto mode on these providers also required setting
+CLAUDE_CODE_ENABLE_AUTO_MODE=1
+; v2.1.207 removed the requirement.
 3
 Explicit intervals such as
 /loop every 2 hours
@@ -254,8 +255,7 @@ Desktop
 : only via
 Claude Desktop on 3P
 Auto mode
-: set
-CLAUDE_CODE_ENABLE_AUTO_MODE
+: Sonnet 5, Opus 4.7, and Opus 4.8 only
 /loop
 : explicit intervals only
 Zero Data Retention
@@ -286,12 +286,9 @@ analytics dashboard
 , and
 server-managed settings
 .
-Available
-where Amazon Bedrock is not:
+Available where Amazon Bedrock is not:
 web search
-,
-auto mode
-without an opt-in flag, and
+and
 /loop
 self-pacing
 .
@@ -328,8 +325,7 @@ Claude Desktop on 3P
 Web search
 : Claude 4 models and later
 Auto mode
-: set
-CLAUDE_CODE_ENABLE_AUTO_MODE
+: Sonnet 5, Opus 4.7, and Opus 4.8 only
 /loop
 : explicit intervals only
 Zero Data Retention
@@ -367,8 +363,7 @@ Desktop
 : only via
 Claude Desktop on 3P
 Auto mode
-: set
-CLAUDE_CODE_ENABLE_AUTO_MODE
+: Sonnet 5, Opus 4.7, and Opus 4.8 only
 /loop
 : explicit intervals only
 Zero Data Retention
@@ -439,10 +434,15 @@ Artifacts
 ✓
 ✓
 Admin-enabled
-Analytics dashboard, API, and contribution metrics
+Analytics dashboard and contribution metrics
 ✗
 ✗
 ✓
+✓
+Enterprise Analytics API
+✗
+✗
+✗
 ✓
 Server-managed settings
 ✗

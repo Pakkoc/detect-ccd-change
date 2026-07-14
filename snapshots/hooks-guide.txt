@@ -1587,9 +1587,6 @@ if
 field
 The
 if
-field requires Claude Code v2.1.85 or later. Earlier versions ignore it and run the hook on every matched call.
-The
-if
 field uses
 permission rule syntax
 to filter hooks by tool name and arguments together, so the hook process only spawns when the tool call matches. This goes beyond

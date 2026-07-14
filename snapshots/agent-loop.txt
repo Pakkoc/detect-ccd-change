@@ -99,7 +99,15 @@ session lifecycle events. The
 subtype
 field distinguishes them:
 "init"
-: the first message with session metadata
+: session metadata for the run. When a
+SessionStart
+or
+Setup
+hook runs during session startup, its
+hook lifecycle messages
+arrive before the
+init
+message
 "compact_boundary"
 : fires after
 compaction
