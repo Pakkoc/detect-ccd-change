@@ -1,4 +1,5 @@
 [
+  "https://code.claude.com/docs/en/accessibility",
   "https://code.claude.com/docs/en/admin-setup",
   "https://code.claude.com/docs/en/advisor",
   "https://code.claude.com/docs/en/agent-sdk/agent-loop",
@@ -69,6 +70,7 @@
   "https://code.claude.com/docs/en/desktop-linux",
   "https://code.claude.com/docs/en/desktop-quickstart",
   "https://code.claude.com/docs/en/desktop-scheduled-tasks",
+  "https://code.claude.com/docs/en/desktop-wsl",
   "https://code.claude.com/docs/en/devcontainer",
   "https://code.claude.com/docs/en/discover-plugins",
   "https://code.claude.com/docs/en/env-vars",
