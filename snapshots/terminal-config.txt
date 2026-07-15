@@ -549,7 +549,12 @@ c
 y
 with text objects. See the
 Vim editor mode reference
-for the full key table. Vim motions are not remappable through the keybindings file.
+for the full key table.
+Vim motions aren’t remappable through the keybindings file. To map a two-key INSERT-mode sequence such as
+jj
+to Escape, set
+vimInsertModeRemaps
+in your user settings.
 Pressing Enter still submits your prompt in INSERT mode, unlike standard Vim. Use
 o
 or

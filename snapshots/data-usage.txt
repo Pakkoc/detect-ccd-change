@@ -108,7 +108,9 @@ and
 remote Claude Code
 .
 Remote Control
-sessions follow the local data flow since all execution happens on your machine. Note for remote Claude Code, Claude accesses the repository where you initiate your Claude Code session. Claude does not access repositories that you have connected but have not started a session in.
+sessions follow the local data flow since all execution happens on your machine; while connected, the session transcript is also stored on Anthropic servers to sync the conversation across devices, as described in
+Connection and security
+. Note for remote Claude Code, Claude accesses the repository where you initiate your Claude Code session. Claude does not access repositories that you have connected but have not started a session in.
 ​
 Local Claude Code: Data flow and dependencies
 The diagram below shows how Claude Code connects to external services during installation and normal operation. Solid lines indicate required connections, while dashed lines represent optional or user-initiated data flows.

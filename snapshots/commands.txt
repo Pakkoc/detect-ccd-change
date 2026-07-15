@@ -10,6 +10,13 @@ skills
 are the exception: a skill invocation followed by more skills, such as
 /skill-a /skill-b do XYZ
 , loads every skill named at the start and passes the trailing text to each as arguments. Up to six skills can be chained.
+If you send a command while Claude is responding, it queues and runs after the current turn finishes. Some commands, such as
+/status
+,
+/tasks
+, and
+/usage
+, run immediately without interrupting the response.
 ​
 Commands across a typical workflow
 Most commands are useful at a specific point in a session, from setting up a project to shipping a change.
@@ -45,7 +52,7 @@ Claude delegates side tasks to
 subagents
 , and
 /tasks
-lists what’s running in the background of the current session.
+lists the current session’s background work, including subagents that have finished.
 /background
 detaches the whole session to keep running as a
 background agent
@@ -611,7 +618,8 @@ Generate a one-line summary of the current session on demand. See
 Session recap
 for the automatic recap that appears after you’ve been away
 /release-notes
-View the changelog in an interactive version picker. Select a specific version to see its release notes, or choose to show all versions
+View the changelog in an interactive version picker. Select a specific version to see its release notes, or choose to show all versions.
+The notes appear in your transcript without entering the conversation Claude sees. Before v2.1.208, the viewed notes entered the conversation, including the entire changelog when showing all versions
 /reload-plugins [--force]
 Reload all active
 plugins
@@ -642,7 +650,9 @@ Resume a conversation by ID or name, or open the session picker. As of v2.1.144,
 background sessions
 appear in the picker marked with
 bg
-. Alias:
+; one that is still running can’t be resumed here, so attach to it from
+claude agents
+or stop it there first. Alias:
 /continue
 /review [PR]
 Run a fast single-pass, read-only review of a GitHub pull request by number. With no argument, lists open PRs to pick from; text after the PR number becomes additional review instructions. From v2.1.186 through v2.1.201,
@@ -754,7 +764,7 @@ background session
 or press
 ←
 /tasks
-View and manage everything running in the background. Also available as
+View and manage background work in the current session, including subagents that have finished. Also available as
 /bashes
 /team-onboarding
 Generate a team onboarding guide from your Claude Code usage history. Claude analyzes your sessions, commands, and MCP server usage from the past 30 days and produces a markdown guide a teammate can paste as a first message to get set up quickly. For claude.ai subscribers on Pro, Max, Team, and Enterprise plans, also returns a share link teammates can open directly in Claude Code
@@ -796,7 +806,7 @@ ultrareview
 remains as an alias. Includes 3 free runs on Pro and Max, then requires
 usage credits
 /upgrade
-Open the upgrade page to switch to a higher plan tier
+Open the upgrade page in your browser to switch to a higher plan tier. When the browser fails to open, the command shows a sign-in prompt without printing the URL
 /usage
 Show session cost, plan usage limits, and activity stats. On a Pro, Max, Team, or Enterprise plan, includes a breakdown of usage by skill, subagent, plugin, and MCP server. See the
 cost tracking guide

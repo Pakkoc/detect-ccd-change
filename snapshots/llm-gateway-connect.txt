@@ -925,6 +925,12 @@ The credential isn’t one the gateway issued, or it’s in a header the gateway
 Confirm the variable matches your credential kind in the
 credential table
 , and regenerate the key at the gateway if it was revoked
+Your apiKeyHelper script is failing
+The command in the
+apiKeyHelper
+setting exited with an error, timed out, or printed nothing, so requests carry a placeholder key
+Run the command directly to see why it fails, and re-authenticate with your credential provider if it reports an expired session; see
+the error reference
 Unable to connect to API (ConnectionRefused)
 , or
 (ECONNREFUSED)

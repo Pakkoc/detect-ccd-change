@@ -8,7 +8,7 @@ iOS
 and
 Android
 to a Claude Code session running on your machine. Start a task at your desk, then pick it up from your phone on the couch or a browser on another computer.
-When you start a Remote Control session on your machine, Claude keeps running locally the entire time, so nothing moves to the cloud. With Remote Control you can:
+When you start a Remote Control session on your machine, Claude keeps running locally the entire time, so your code execution and filesystem access stay on your machine. With Remote Control you can:
 Use your full local environment remotely
 : your filesystem,
 MCP servers
@@ -34,7 +34,7 @@ Survive interruptions
 Before v2.1.207, an update sent during a reconnection or credential refresh could be lost, so the connected device kept showing a finished task as running.
 Unlike
 Claude Code on the web
-, which runs on cloud infrastructure, Remote Control sessions run directly on your machine and interact with your local filesystem. The web and mobile interfaces are just a window into that local session.
+, which runs on cloud infrastructure, Remote Control sessions run directly on your machine and interact with your local filesystem. The web and mobile interfaces are a window into that local session.
 This page covers setup, how to start and connect to sessions, and how Remote Control compares to Claude Code on the web.
 ​
 Requirements
@@ -226,6 +226,8 @@ or the Claude app
 and find the session by name in the session list. In the Claude mobile app, tap
 Code
 in the navigation to reach the session list. Remote Control sessions show a computer icon with a green status dot when online.
+When you connect, the device shows any subagents and workflows the session already has running in the background.
+Before v2.1.208, a device connecting to a session hosted in an interactive terminal didn’t show subagents and workflows that were already running until one of them started or stopped.
 The remote session title is chosen in this order:
 The name you passed to
 --name
@@ -287,6 +289,12 @@ instead.
 Connection and security
 Your local Claude Code session makes outbound HTTPS requests only and never opens inbound ports on your machine. When you start Remote Control, it registers with the Anthropic API and polls for work. When you connect from another device, the server routes messages between the web or mobile client and your local session over a streaming connection.
 All traffic travels through the Anthropic API over TLS, the same transport security as any Claude Code session. The connection uses multiple short-lived credentials, each scoped to a single purpose and expiring independently.
+While Remote Control is connected, the session transcript, including your messages, Claude’s responses, and tool activity, is stored on Anthropic servers. The stored transcript keeps the conversation in sync across your devices and lets the session reconnect after a network drop. Execution and filesystem access stay on your machine, and stored transcripts are retained under the
+Data usage
+policy.
+To turn Remote Control off entirely, use the
+disableRemoteControl
+setting. Organizations with compliance requirements such as Zero Data Retention can’t enable Remote Control.
 ​
 Trusted Devices
 Trusted Devices is currently in beta. Features and functionality may evolve as the experience is refined.

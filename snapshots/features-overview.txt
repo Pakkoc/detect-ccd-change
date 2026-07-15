@@ -114,7 +114,9 @@ plugin
 The same triggers tell you when to update what you already have. A repeated mistake or a recurring review comment is a CLAUDE.md edit, not a one-off correction in chat. A workflow you keep tweaking by hand is a skill that needs another revision.
 ​
 Compare similar features
-Some features can seem similar. Here’s how to tell them apart.
+Some features can seem similar. For a deeper walkthrough of choosing between them, see
+Steering Claude Code: when to use CLAUDE.md, skills, hooks, and subagents
+on the blog. Here’s how to tell them apart.
 Skill vs Subagent
 CLAUDE.md vs Skill
 CLAUDE.md vs Rules vs Skills

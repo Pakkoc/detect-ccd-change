@@ -41,7 +41,11 @@ When the mode is on, the first thing Claude Code prints is a confirmation line n
 [Screen Reader Mode: on via env]
 , or
 [Screen Reader Mode: on via settings]
-; this method-naming format requires Claude Code v2.1.206 or later.
+. The method-naming format requires Claude Code v2.1.206 or later. When Claude Code relaunches itself, for example to finish installing an update, the new process inherits the mode through the
+CLAUDE_AX_SCREEN_READER
+environment variable, so its confirmation line reads
+[Screen Reader Mode: on via env]
+regardless of which method you used.
 Earlier versions print
 [Accessible screen reader mode: on]
 .

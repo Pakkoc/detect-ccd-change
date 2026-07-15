@@ -143,7 +143,14 @@ rules still force a prompt, and removals targeting the filesystem root or home d
 rm -rf /
 and
 rm -rf ~
-, still prompt as a circuit breaker against model error. Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage.
+, still prompt as a circuit breaker against model error,
+including in commands that contain command substitution with
+$(...)
+or backticks, or process substitution with
+<(...)
+. The plain form, such as
+rm -rf ~
+typed as its own command, has prompted in this mode since the circuit breaker was introduced; v2.1.208 extends the same check to commands that reach the removal through a substitution. Before v2.1.208, commands containing those forms didn’t prompt in this mode. Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage.
 To prevent
 bypassPermissions
 or
@@ -690,6 +697,13 @@ rules to all built-in tools that read files like Grep and Glob, to
 mentions in your prompts, and to the selection and open-file context that a connected
 IDE
 shares with Claude.
+A
+Read
+deny rule also blocks the
+Edit tool
+on the same path, including creating a new file there. Write and NotebookEdit aren’t covered, so add an
+Edit
+deny rule for paths no tool may change. Requires Claude Code v2.1.208 or later.
 Read and Edit deny rules apply to Claude’s built-in file tools and to file commands Claude Code recognizes in Bash, such as
 cat
 ,

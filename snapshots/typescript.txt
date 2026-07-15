@@ -1766,7 +1766,9 @@ setMaxThinkingTokens()
 Deprecated:
 Use the
 thinking
-option instead. Changes the maximum thinking tokens
+option instead. Changes the maximum thinking tokens. Passing
+null
+resets thinking to the session default: a mid-session override is cleared, and thinking stays off for sessions that have it disabled
 applyFlagSettings(settings)
 Merges settings into the session’s flag settings layer at runtime (only available in streaming input mode). See
 applyFlagSettings()
@@ -2900,6 +2902,8 @@ SDKTaskProgressMessage
 SDKTaskUpdatedMessage
 |
 SDKBackgroundTasksChangedMessage
+|
+SDKThinkingTokensMessage
 |
 SDKSessionStateChangedMessage
 |
@@ -9012,6 +9016,45 @@ description
 string
 ;
 }[];
+uuid
+:
+UUID
+;
+session_id
+:
+string
+;
+};
+​
+SDKThinkingTokensMessage
+Emitted while Claude is producing a thinking block, including a redacted one, carrying a running estimate of the thinking tokens generated so far.
+estimated_tokens
+is the running total for the current thinking block and
+estimated_tokens_delta
+is the increment carried by this frame. Use it for progress display; the authoritative billed count is the result message’s
+usage.output_tokens
+.
+Requires Claude Code v2.1.153 or later.
+type
+SDKThinkingTokensMessage
+=
+{
+type
+:
+"system"
+;
+subtype
+:
+"thinking_tokens"
+;
+estimated_tokens
+:
+number
+;
+estimated_tokens_delta
+:
+number
+;
 uuid
 :
 UUID

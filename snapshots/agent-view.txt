@@ -82,6 +82,26 @@ claude
 : dispatch every task from agent view, attach when you want the full conversation, and press
 ←
 to return to the table.
+Inside a regular
+claude
+session, the prompt footer’s
+←
+hint counts the background agents that are waiting on you, such as
+← 2 agents
+, and returns to
+← for agents
+when none need input. Counts above 99 show as
+99+
+. The count refreshes about every ten seconds while the terminal is focused and immediately when focus returns. It briefly changes color when it moves and when an agent completes, unless the
+prefersReducedMotion
+setting
+is on, and it is hidden in
+screen reader mode
+. On
+Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
+, the hint stays in its plain
+← for agents
+form without the count. Requires Claude Code v2.1.205 or later.
 ​
 Monitor sessions with agent view
 Run
@@ -287,6 +307,9 @@ Tab
 to fill the input with a suggested reply you can edit before sending. Prefix a reply with
 !
 to send a Bash command instead.
+A reply that can’t be delivered, because the background service is unreachable or the send fails, is saved and sent to the session as its next prompt when its process starts again, and the error message says the reply was saved. A reply prefixed with
+!
+isn’t saved, because the saved text would reach the session as a plain prompt rather than run as a Bash command.
 With
 voice dictation
 enabled, hold or tap your push-to-talk key while the reply input is focused to dictate a reply instead of typing it. The same works in the dispatch input at the bottom of agent view.
@@ -304,9 +327,22 @@ Enter
 or
 →
 on a selected row to attach. Agent view is replaced by the full interactive session. When you attach, Claude posts a short recap of what happened while you were away.
-While attached, the session behaves like any other Claude Code session: every
-command
-, keyboard shortcut, and feature works.
+While attached, the session behaves like any other Claude Code session:
+commands
+, keyboard shortcuts, and features all work, with the exceptions below.
+A background session refuses
+/install-github-app
+and the
+/mcp
+settings list, including its authentication actions, whether you’re attached or replying from the peek panel. The message directs you to a regular
+claude
+session, and
+/mcp reconnect <server>
+,
+/mcp enable
+, and
+/mcp disable
+still work.
 Attached sessions always render in
 fullscreen mode
 , regardless of your
@@ -426,9 +462,10 @@ Ctrl+X
 on a group header deletes every session in that group after confirmation.
 Deleting removes the session from agent view. If Claude
 created a worktree
-for the session, deleting removes that worktree too, including any uncommitted changes in it, so push or commit work you want to keep first. A worktree you created yourself and started the session inside is left in place. The conversation transcript stays on your local machine and remains available through
+for the session, deleting removes that worktree too, including any uncommitted changes in it, so commit work you want to keep first. A worktree you created yourself and started the session inside is left in place. The conversation transcript stays on your local machine and remains available through
 claude --resume
 .
+Deleting never removes a worktree with commits that aren’t pushed anywhere, or one that another running session claims or has locked. Claude Code keeps the worktree and the session, and the footer names the kept path and the reason. Push the commits, or close the other session, then delete again.
 Deleting also clears the session from the
 supervisor’s
 session list, whether you delete with
@@ -792,11 +829,17 @@ WorktreeCreate
 hook
 and Claude isolates edits the same way it does for git.
 When the hook fails in a directory that isn’t a git repository, the session skips isolation for that directory and edits the working directory in place. Inside a git repository, writes stay blocked until the session isolates. Before v2.1.203, a background session in that state couldn’t edit any file: every write was rejected until it isolated, and the hook could never isolate that directory.
-Deleting a session in agent view with
+Deleting a session removes or keeps the worktree Claude created for it, depending on how you delete it and what the worktree holds:
+Deleting in agent view with
 Ctrl+X
-twice removes a worktree Claude created for it, including any uncommitted changes, so merge or push the changes you want to keep first. Deleting from the shell with
+twice removes the worktree, including any uncommitted changes, so commit the changes you want to keep first.
+Deleting from the shell with
 claude rm
-keeps a worktree that has uncommitted changes and prints its path so you can clean it up yourself. A worktree you created yourself and started the session inside is left in place either way.
+keeps a worktree that has uncommitted changes, along with its session row.
+Neither path removes a worktree with commits that aren’t pushed anywhere: the worktree is
+kept together with its session
+and the output names the kept path and the reason.
+A worktree you created yourself and started the session inside is left in place either way.
 To find a session’s worktree path, peek the session or attach and check its working directory.
 A
 subagent
@@ -851,11 +894,13 @@ From the shell, pass
 with
 claude --bg
 .
-Attach to a running session, open
+Attach to a running session and run
 /model
-, and press
+to switch: a pick from the picker, or a typed
+/model <name>
+, saves as your default for new sessions unless you press
 s
-on a model to switch for that session only. The change persists if the session is respawned.
+in the picker for a session-only switch. A session-only switch persists if the session is respawned.
 Dispatch a
 subagent
 whose frontmatter sets a
@@ -1151,7 +1196,9 @@ Restart a session, running or stopped, with its conversation intact, e.g. to pic
 claude respawn --all
 Restart every running session, e.g. to move all sessions onto an updated Claude Code binary at once
 claude rm <id>
-Remove a session from the list. Removes a worktree Claude created for the session if it has no uncommitted changes; otherwise prints the worktree path so you can clean it up. Leaves a worktree you created yourself in place. The conversation transcript stays on your local machine and remains available through
+Remove a session from the list. Removes a worktree Claude created for the session if it has no uncommitted changes and no commits that aren’t pushed anywhere; otherwise the session is kept too, and the command prints the worktree path and the reason so you can resolve it and run
+claude rm
+again. Leaves a worktree you created yourself in place. The conversation transcript stays on your local machine and remains available through
 claude --resume
 claude daemon status
 Print the
@@ -1175,6 +1222,9 @@ send it to the background
 ​
 The supervisor process
 Background sessions are hosted by a per-user supervisor process, separate from your terminal and from agent view. The supervisor starts automatically the first time you background a session or open agent view, and you don’t manage it directly.
+When an update has replaced or removed the binary a running Claude Code process was launched from, that process starts the supervisor from another installed copy, such as the installed
+claude
+launcher or the newest version on disk.
 The supervisor keeps one pre-warmed worker process ready so a dispatch from agent view or
 claude --bg
 starts without the delay of a cold launch. When you dispatch, the supervisor assigns the pre-warmed worker to your session, applies that session’s directory, settings, and credentials to it, and then starts a replacement for the next dispatch. If no healthy pre-warmed worker is available, the supervisor launches a fresh process instead.
@@ -1266,6 +1316,7 @@ The supervisor watches the installed Claude Code binary on disk and restarts int
 auto-updater
 replaces it. This is a local file watch, not a network check. Background sessions are detached processes, so they keep running through the restart and the new supervisor reconnects to them. An idle pinned session is also restarted in place onto the new version so it picks up the update without you reattaching.
 Once the new supervisor takes over, it also restarts the remaining idle sessions onto the new version, a few at a time in the background, after a short delay that lets terminals attached across the restart reconnect first. A session that is working, waiting on your input, or has a terminal attached isn’t interrupted; it moves to the new version the next time its process restarts. Before v2.1.206, the supervisor moved only a few idle sessions per minute onto a new version, so sessions could keep running the old one for a while after an update.
+These restarts only ever move a session onto a newer version. A supervisor running an older Claude Code version than the one a session’s process was started with leaves that process alone; the session keeps running the newer version until a newer supervisor takes over.
 Running
 claude attach
 while the supervisor is restarting a session, whether for an update, a stall, or a migration, waits for the replacement process instead of failing. A status line such as
@@ -1472,12 +1523,17 @@ pinned
 aren’t stopped this way, so pin a session with
 Ctrl+T
 to keep it responsive.
+While the process starts, the last screenful of the session’s transcript is shown with a
+Session is starting
+note below it, and the live session replaces it as soon as it’s ready.
 ​
 .claude/worktrees/
 is filling up
-Deleting a session in agent view removes the worktree Claude created for it.
+Deleting a session in agent view removes the worktree Claude created for it, and a worktree that can’t be removed safely
+keeps its session row
+so it isn’t orphaned.
 claude rm
-keeps a worktree that has uncommitted changes and prints its path. List leftover entries with
+keeps a worktree that has uncommitted changes, and its session row, and prints the kept path. List leftover entries with
 git worktree list
 in the project directory and remove each with
 git worktree remove <path>
@@ -1492,9 +1548,9 @@ Rate limits apply
 Sessions are local
 : background sessions run on your machine. They are preserved across sleep but stop if the machine shuts down.
 Claude-created worktrees are deleted with the session in agent view
-: merge or push changes before deleting a session that edited files in its own worktree.
+: commit changes before deleting a session that edited files in its own worktree. A worktree with commits that aren’t pushed anywhere is kept along with the session.
 claude rm
-keeps a worktree that has uncommitted changes; a worktree you created yourself is left in place.
+also keeps a worktree that has uncommitted changes together with its session, and a worktree you created yourself is left in place.
 ​
 Related resources
 For other ways to run Claude in parallel, see:
@@ -1513,6 +1569,20 @@ unknown option
 error. The table below lists when each flag and behavior was added.
 Version
 Change
+v2.1.208
+Attaching to a session whose process has stopped shows the last screenful of its transcript while the process starts, instead of only a
+Session is starting
+note. A reply that can’t be delivered because the background service is unreachable or the send fails is saved and sent as the session’s next prompt when its process starts again; before this release, a reply lost while the background service was unreachable was discarded. A process whose own binary was replaced by an update can still start the supervisor, from the installed
+claude
+launcher or the newest version on disk, instead of failing until Claude Code was restarted. A supervisor running an older version never restarts an idle session started by a newer version onto its own older binary. Deleting a session removes its worktree even after the session moved the worktree onto a different branch, and keeps the worktree together with the session row when the worktree has commits that aren’t pushed anywhere or another session claims it, instead of destroying the commits or orphaning the worktree.
+/install-github-app
+and the
+/mcp
+settings list and its authentication actions are refused in a background session with a message naming the alternative; in v2.1.208 only, the
+/model
+picker was refused the same way and a typed
+/model <name>
+switched that session only instead of also saving your default model.
 v2.1.207
 The peek panel opens with the sentence the row truncates, such as the exact question for a session that’s waiting on you, and shows how long a blocked session has been waiting as a single
 waiting 3m

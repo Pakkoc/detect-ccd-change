@@ -179,6 +179,11 @@ Slow helper notice
 : if
 apiKeyHelper
 takes longer than 10 seconds to return a key, Claude Code displays a warning notice in the prompt bar showing the elapsed time. If you see this notice regularly, check whether your credential script can be optimized.
+Helper failures
+:
+when the script exits with an error, times out, or prints nothing, requests fail with
+Your apiKeyHelper script is failing
+within three attempts. Before v2.1.208, helper failures surfaced as a generic 401 after about ten silent retries.
 apiKeyHelper
 ,
 ANTHROPIC_API_KEY

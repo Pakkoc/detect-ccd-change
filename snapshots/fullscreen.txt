@@ -90,6 +90,11 @@ to choose it. This covers permission prompts,
 /config
 , and other dialogs that show a list of options. Hovering shows a pointer on the row under your cursor.
 Requires Claude Code v2.1.187 or later.
+Click an option in a multi-select menu
+to toggle it, and click the submit button to confirm your choices. Clicking a free-text row, such as the
+Other
+row in a multiple-choice question, focuses its input field so you can type an answer.
+Requires Claude Code v2.1.208 or later.
 Click a collapsed tool result
 to expand it and see the full output. Click again to collapse. The tool call and its result expand together. Only messages that have more to show are clickable.
 Hold

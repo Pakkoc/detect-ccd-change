@@ -73,6 +73,13 @@ file in Chrome DevTools under Memory → Load. Attach both files when reporting 
 GitHub
 .
 ​
+Large tables are cut off in the terminal
+A Markdown table with more than 200 rows renders its first 200 rows followed by a
+… N more rows not shown
+line. Only the display is capped: the full table stays in the conversation, and
+/copy
+copies every row. For a table too large to read in the terminal, ask Claude to write it to a file instead. Before v2.1.208, Claude Code rendered every row, so resuming a session that contained a very large table could stall while it re-rendered.
+​
 Auto-compaction stops with a thrashing error
 If you see
 Autocompact is thrashing: the context refilled to the limit...

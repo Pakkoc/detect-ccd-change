@@ -89,7 +89,7 @@ claude agents
 .
 For anything running in the background of the current session,
 /tasks
-lists each item and lets you check on, attach to, or stop it.
+lists each item and lets you check on, attach to, or stop it. The list also includes subagents that have finished.
 For dynamic workflows,
 /workflows
 lists running and completed runs, the phase each is in, and how many agents have finished.

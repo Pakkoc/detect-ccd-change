@@ -992,6 +992,15 @@ expands to the default model. Chains are capped at three models; extra entries a
 flag overrides this for one session. See
 Fallback model chains
 ["claude-sonnet-5", "claude-haiku-4-5"]
+fastMode
+Turn
+fast mode
+on for sessions where it’s available. Toggling with
+/fast
+writes
+true
+here in user settings and removes the key when you turn fast mode off
+true
 fastModePerSessionOptIn
 When
 true
@@ -1370,7 +1379,7 @@ Default
 skill listing
 Claude sees each turn, so the default reserves 1%. When the listing exceeds the budget, descriptions for the least-used skills are dropped and only their names are listed, so Claude can still invoke them but can’t see what they do. Raise to keep more descriptions visible at the cost of more context per turn.
 /doctor
-estimates the listing cost against the budget. Requires Claude Code v2.1.105 or later
+estimates the listing cost against the budget
 0.02
 skillListingMaxDescChars
 Default
@@ -1384,7 +1393,6 @@ text in the
 skill listing
 Claude sees each turn. Text longer than this is truncated. Raise to keep long descriptions intact at the cost of more context per turn; lower to fit more skills under
 skillListingBudgetFraction
-. Requires Claude Code v2.1.105 or later
 2048
 skillOverrides
 Per-skill visibility overrides keyed by skill name. Value is
@@ -1610,6 +1618,21 @@ selection when set. The
 --verbose
 flag overrides this for one session
 "verbose"
+vimInsertModeRemaps
+Map two-key INSERT-mode sequences to Escape in
+vim editor mode
+. Each key is exactly two printable characters typed in sequence, and
+"<Esc>"
+is the only supported target; other entries are ignored. Read from user,
+--settings
+flag, and managed settings only, so a repository’s checked-in settings can’t remap your keystrokes. Has no effect unless
+editorMode
+is
+"vim"
+. See
+Remap INSERT-mode key sequences
+. Requires Claude Code v2.1.208 or later
+{"jj": "<Esc>"}
 voice
 Voice dictation
 settings:
@@ -2327,7 +2350,9 @@ Permission rules
 Edit
 allow/deny rules to control Claude’s file tool access,
 Read
-deny rules to block reads, and
+deny rules to block reads (a
+Read
+deny rule also blocks the Edit tool on the matching paths), and
 WebFetch
 allow/deny rules to control network domains. Paths from these rules are also merged into the sandbox configuration.
 ​

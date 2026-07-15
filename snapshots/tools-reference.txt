@@ -387,6 +387,11 @@ Edit(...)
 allow rule also grants read access to the same path, so you don’t need a matching
 Read(...)
 rule.
+A
+Read(...)
+deny rule also blocks the Edit tool on the same path, including creating a new file there, because editing requires reading the result back. The
+Read
+deny check on edits requires Claude Code v2.1.208 or later.
 Hook
 matcher
 fields use bare tool names, not the parenthesized rule format. See
@@ -426,6 +431,10 @@ Both set
 :
 disallowedTools
 takes precedence. A tool listed in both is removed.
+When a subagent’s
+tools
+list resolves to no tools at all, for example because every entry is misspelled or names a tool that isn’t available to subagents, the Agent tool returns an error listing those entries instead of launching the subagent.
+Before v2.1.208, the subagent launched with no tools and could return an empty or confusing result.
 Launching the subagent doesn’t itself prompt for permission. Claude Code checks the subagent’s own tool calls against your permission rules as it runs.
 As of v2.1.198, subagents run in the background by default; Claude runs one in the foreground when it needs the result before continuing.
 Foreground subagents
@@ -501,9 +510,16 @@ old_string
 and a
 new_string
 and replaces the first with the second. It doesn’t use regex or fuzzy matching.
-Three checks must pass for an edit to apply:
+Three checks must pass for an edit to apply.
+Before any of them, a path matched by a
+Read
+deny rule
+is refused, including creating a new file there. The refusal requires Claude Code v2.1.208 or later.
 Read-before-edit
-: Claude must have read the file in the current conversation, and the file must not have changed on disk since that read. This check runs first, before any string matching.
+: Claude reads the file in the current conversation before editing it, and a read cut short with a
+PARTIAL view
+notice
+doesn’t count. Claude Opus 4.6, Claude Haiku 4.5, and older models always require the read. Newer models can edit an unread file when reading it wouldn’t need a permission prompt and the Read tool is available.
 Match
 :
 old_string
@@ -514,6 +530,14 @@ old_string
 must appear exactly once. When it appears more than once, Claude either supplies a longer string with enough surrounding context to pin down one occurrence, or sets
 replace_all: true
 to replace them all.
+A file that changed on disk after Claude last read it can still be edited when
+old_string
+matches the current content exactly and unambiguously and Claude Code can read the file without prompting. Matching against the file’s current content keeps this safe, and the result notes that the file carries other changes so Claude re-reads it before edits that depend on surrounding content. In any other case, such as a stale
+old_string
+or one that matches more than once without
+replace_all
+, Claude reads the file again before editing.
+The relaxed handling of unread and changed files requires Claude Code v2.1.208 or later; before that, Claude Code refused any edit to a file it hadn’t read in the conversation or that changed on disk after the read.
 Viewing a file with Bash also satisfies the read-before-edit requirement when the command is
 cat
 ,
@@ -528,7 +552,7 @@ grep
 egrep
 , or
 fgrep
-on a single file with no pipes or redirects. Piped output and other Bash commands don’t count, and Claude must use Read before editing in those cases.
+on a single file with no pipes or redirects. Piped output and other Bash commands don’t count toward the read-before-edit check.
 This affects edit eligibility only, not permissions.
 Read and Edit deny rules
 also apply to file commands Claude Code recognizes in Bash, such as
@@ -578,6 +602,11 @@ Grep
 , set
 CLAUDE_CODE_GLOB_NO_IGNORE=false
 before launching Claude Code.
+A
+pattern
+or
+path
+value that contains a null byte returns an error asking Claude to remove it.
 ​
 Grep tool behavior
 The Grep tool searches file contents for patterns. Where
@@ -590,13 +619,22 @@ interface{}
 in Go code takes the pattern
 interface\{\}
 .
+A pattern, glob, or file type that ripgrep rejects returns an error that includes ripgrep’s diagnostic, so Claude can correct the input and search again.
+Before v2.1.208, Claude Code reported a rejected input as
+No files found
+instead of an error, even when the searched-for text existed in the target files.
 Three output modes control what comes back:
 files_with_matches
 : file paths only, no line content. This is the default.
 content
 : matching lines with file and line number.
 count
-: match count per file.
+: match count per file, followed by a total across all matching files.
+The total covers every match even when the tool’s
+head_limit
+or
+offset
+parameters truncate the listed per-file entries. Before v2.1.208, the total only summed the listed entries.
 Claude can scope results by file with the
 glob
 parameter, such as
@@ -832,6 +870,18 @@ offset
 or
 limit
 and still exceeds the token limit returns an error.
+A read with an explicit
+limit
+stops as soon as the selected lines exceed what the token limit could ever fit and returns an error without loading the rest of the range. The error tells Claude to use a smaller
+limit
+, or to search for specific content with
+Grep
+instead when a single line is that large.
+Before v2.1.208, Claude Code loaded the whole range into memory before rejecting it, so a file with an extremely long single line could exhaust memory.
+Reading an empty file returns a notice that the file exists but its contents are empty, and an
+offset
+past the last line returns a notice giving the file’s line count.
+Before v2.1.208, reading an empty file returned the past-the-end notice instead.
 Read handles several file types beyond plain text:
 Images
 : PNG, JPG, and other image formats are returned as visual content that Claude can see, not as raw bytes. Claude Code resizes and recompresses large images to fit the model’s image size limits before sending them, so Claude may see a downscaled version of a large screenshot.

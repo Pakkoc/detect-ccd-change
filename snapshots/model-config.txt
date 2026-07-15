@@ -12,6 +12,9 @@ model name
 Amazon Bedrock: an inference profile ARN
 Microsoft Foundry: a deployment name
 Google Cloud’s Agent Platform: a version name
+For guidance on which model and effort level fit different kinds of work, see
+Choosing a Claude model and effort level in Claude Code
+on the blog.
 ANTHROPIC_BASE_URL
 changes where requests are sent, not which model answers them. To route Claude through an LLM gateway, see
 LLM gateways
@@ -1384,9 +1387,13 @@ background functionality
 CLAUDE_CODE_SUBAGENT_MODEL
 The model to use for all
 subagents
-and
+,
 agent teams
-. Overrides the per-invocation
+, and the agents a
+workflow
+runs. Accepts an alias such as
+haiku
+or a full model name, and overrides the per-invocation
 model
 parameter and the subagent definition’s
 model

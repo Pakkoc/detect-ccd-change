@@ -295,6 +295,10 @@ Common workflows
 and
 best practices
 : patterns for getting the most out of Claude Code
+A harness for every task
+: how the Claude Code team uses
+dynamic workflows
+to orchestrate subagents at scale
 Settings
 : customize Claude Code for your workflow
 Troubleshooting

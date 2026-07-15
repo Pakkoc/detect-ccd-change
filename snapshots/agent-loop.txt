@@ -1257,7 +1257,9 @@ subagents
 to keep your main context lean.
 For the broader conceptual picture of the agentic loop (not SDK-specific), see
 How Claude Code works
-.
+. For a practical guide to designing loops in Claude Code, from turn-based to goal-based and proactive loops, see
+Loop engineering: getting started with loops
+on the blog.
 Was this page helpful?
 Yes
 No

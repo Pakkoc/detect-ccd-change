@@ -102,6 +102,19 @@ CLAUDE_CODE_AUTO_CONNECT_IDE
 overrides
 autoConnectIde
 . The settings field applies when the environment variable is not set.
+When the same variable is set in both your shell and a settings file
+env
+block, the settings file value applies. Claude Code writes each
+env
+entry into the process environment at startup, replacing the value inherited from the shell. A few variables are special-cased; the
+env
+setting
+lists the exceptions.
+Between settings files,
+env
+values follow
+settings precedence
+, so a managed settings entry overrides the same variable in user or project settings.
 How an environment variable interacts with CLI flags and in-session commands varies per feature:
 --model
 and
@@ -717,6 +730,20 @@ Set to
 to disable all background task functionality, including the
 run_in_background
 parameter on Bash and subagent tools, auto-backgrounding, and the Ctrl+B shortcut
+CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_GUARD
+Set to
+1
+to skip the check that an
+Amazon Bedrock
+streaming response carries the
+application/vnd.amazon.eventstream
+content-type. Without this variable, a response with a different content-type fails with an error naming that content-type, which means a
+gateway or proxy is transforming the response
+. Set it only when the gateway rewrites the
+Content-Type
+header but passes the binary event-stream body through unmodified; if the body itself was transformed, requests fail with
+Truncated event message received
+instead. Requires Claude Code v2.1.208 or later
 CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF
 Set to
 1
@@ -1344,6 +1371,25 @@ flag waits after the final turn for background subagents and workflows whose res
 , or 10 minutes. When the cap is exceeded, remaining background tasks are terminated and the process exits. Set to
 0
 to wait indefinitely. This cap is separate from the five-second grace period that applies to plain background shells
+CLAUDE_CODE_PROCESS_WRAPPER
+Launch the processes Claude Code starts from its own binary through a wrapper executable, given as an argv prefix such as
+/opt/corp/launcher
+. Covers the background service that hosts
+agent view
+sessions, every session it spawns, and the relaunch Claude Code performs of itself to finish installing an update. The first token must be the absolute path of an executable that ends by running
+exec "$@"
+, and most launchers are that single path. The value is an argument list, not a shell command: whitespace separates tokens, double quotes group a path that contains spaces, and a value that starts with
+[
+is read as a JSON string array. Set it in the
+env
+block of user or
+managed settings
+, not as a shell export, so the detached background service inherits it; project and local settings can’t set it. The VS Code extension configures its own launcher separately through its
+claudeProcessWrapper
+setting. Ignored on Windows.
+CLAUDE_CODE_SHELL_PREFIX
+is a separate control: it wraps the shell commands Claude runs as a single quoted string, while this variable wraps Claude Code’s own processes as an argv prefix. See
+Run Claude Code behind a corporate launcher
 CLAUDE_CODE_PROPAGATE_TRACEPARENT
 Set to
 1
