@@ -101,6 +101,15 @@ mode routes the call back to a prompt. For logic that must apply to every tool c
 PreToolUse
 hook
 , which executes before the rest of the flow and can allow, deny, or modify requests.
+AskUserQuestion
+, MCP tools marked
+requiresUserInteraction
+, and connector tools
+your organization set to
+ask
+reach the callback even when an allow rule matches. In
+dontAsk
+mode these calls are denied instead, without invoking the callback.
 You can also use the
 PermissionRequest
 hook

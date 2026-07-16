@@ -1672,7 +1672,11 @@ environment variable. A hook process inherits the parent environment, so it can 
 $ANTHROPIC_MODEL
 if you set it in your shell, but that value doesn’t change when you switch models with
 /model
-during a session.
+during a session. One set of variables is not inherited: Claude Code
+removes
+OTEL_*
+exporter variables from every subprocess it spawns
+, including hooks.
 For example, a
 PreToolUse
 hook for a Bash command receives this on stdin:
@@ -3418,7 +3422,9 @@ Optional description of what the command does
 timeout
 number
 120000
-Optional timeout in milliseconds
+Optional timeout in milliseconds. Values above the
+maximum
+are reduced to the maximum rather than rejected
 run_in_background
 boolean
 false
@@ -3734,6 +3740,9 @@ permissionDecision
 "allow"
 skips the permission prompt, except for
 tools that require user interaction
+and connector tools
+your organization set to
+ask
 .
 "deny"
 prevents the tool call.
@@ -3836,6 +3845,12 @@ questions
 array and add an
 answers
 object mapping each question’s text to the chosen answer.
+Connector tools
+your organization set to
+ask
+prompt even when a hook returns
+"allow"
+.
 As of v2.1.199, an MCP tool whose server marks it with
 _meta["anthropic/requiresUserInteraction"]
 is stricter: a hook can’t skip its approval prompt with

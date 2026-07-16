@@ -1147,7 +1147,11 @@ works the same as in your terminal. SSH access works as long as the host is alre
 known_hosts
 file and the key is loaded in
 ssh-agent
-, since Claude Code suppresses interactive SSH prompts for the host fingerprint and key passphrase.
+, since Claude Code suppresses interactive SSH prompts for the host fingerprint and key passphrase. GitHub
+owner/repo
+shorthand sources clone over SSH by default; set
+CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1
+to clone them over HTTPS instead.
 Background auto-updates work differently. By default, the background refresh disables git credential helpers for its
 git pull
 , so the pull can’t authenticate to private repositories over HTTPS even when a helper is configured. SSH remotes aren’t affected: a key loaded in
@@ -1333,6 +1337,8 @@ For organizations requiring strict control over plugin sources, administrators c
 strictKnownMarketplaces
 setting in managed settings. To also reject the CLI flags that sideload plugins, agents, and MCP servers for a single run, pair it with
 disableSideloadFlags
+. To allowlist which marketplaces’ plugins can appear as contextual install suggestions, set
+pluginSuggestionMarketplaces
 .
 When
 strictKnownMarketplaces
@@ -1962,7 +1968,9 @@ claude plugin marketplace update
 instead.
 ​
 Plugin marketplace update
-Refresh marketplaces from their sources to retrieve new plugins and version changes.
+Refresh marketplaces from their sources to retrieve new plugins and version changes. A marketplace added with a branch or tag
+ref
+updates to the latest commit of that ref, not the repository’s default branch.
 claude
 plugin
 marketplace

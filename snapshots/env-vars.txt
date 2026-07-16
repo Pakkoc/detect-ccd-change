@@ -816,7 +816,11 @@ description
 input_schema
 ,
 cache_control
-) are preserved
+) are preserved.
+MCP tool search
+is disabled and all MCP tools load upfront, even when
+ENABLE_TOOL_SEARCH
+is set
 CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS
 Set to
 1
@@ -1137,7 +1141,11 @@ to force-enable DEC private mode 2026
 synchronized output
 when your terminal supports it but is not auto-detected. Useful for emulators such as Emacs
 eat
-that implement BSU/ESU but do not reply to the capability probe. Has no effect under tmux
+that implement BSU/ESU but do not reply to the capability probe. Has no effect under tmux. Unlike
+CLAUDE_CODE_NO_FLICKER
+, which switches to
+fullscreen rendering
+, this doesn’t change the renderer
 CLAUDE_CODE_FORK_SUBAGENT
 Set to
 1
@@ -2047,7 +2055,9 @@ auto:N
 auto:5
 for 5%),
 false
-(load all upfront)
+(load all upfront). Ignored when
+CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
+is set, which forces all tools to load upfront
 FALLBACK_FOR_ALL_PRIMARY_MODELS
 Set to any non-empty value to make all models, not only Opus, stop retrying with a repeated-overload error when no fallback model is configured.
 As of v2.1.160, a configured
@@ -2058,6 +2068,12 @@ Set to
 1
 to force plugin auto-updates even when the main auto-updater is disabled via
 DISABLE_AUTOUPDATER
+FORCE_HYPERLINK
+Set to
+1
+to enable clickable OSC 8 hyperlinks when your terminal supports them but isn’t auto-detected, or
+0
+to disable them
 FORCE_PROMPT_CACHING_5M
 Set to
 1

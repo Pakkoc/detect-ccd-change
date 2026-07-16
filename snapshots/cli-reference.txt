@@ -388,7 +388,10 @@ Skip permission prompts. Equivalent to
 --permission-mode bypassPermissions
 . See
 permission modes
-for what this does and does not skip
+for what this does and does not skip. For sessions started with
+--bg
+, the mode
+persists when the supervisor restarts the session
 claude --dangerously-skip-permissions
 --debug
 Enable debug mode with optional category filtering (for example,

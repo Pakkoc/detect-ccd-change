@@ -1287,7 +1287,7 @@ Set to
 disable
 to block
 bypassPermissions
-, the mode that auto-approves every tool call, and the
+, the mode that skips permission prompts, and the
 --dangerously-skip-permissions
 flag
 allowManagedPermissionRulesOnly

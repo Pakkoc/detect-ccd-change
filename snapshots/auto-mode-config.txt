@@ -333,11 +333,11 @@ array without
 "$defaults"
 discards every built-in soft block rule, including force push,
 curl | bash
-, and production deploys. A
+, production deploys, and auto-mode bypass. A
 hard_deny
 array without
 "$defaults"
-discards the built-in data exfiltration and auto-mode bypass rules.
+discards the built-in data exfiltration rule.
 Each section is evaluated independently, so setting
 environment
 alone leaves the default

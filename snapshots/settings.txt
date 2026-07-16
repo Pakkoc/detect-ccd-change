@@ -299,7 +299,9 @@ outputStyle
 or restart
 ​
 Invalid entries in managed settings
-Managed settings parse tolerantly. When a managed configuration contains an entry that fails schema validation, Claude Code strips that entry, records a warning, and enforces every remaining valid policy. A single typo cannot disable the rest of your organization’s policy.
+Managed settings parse tolerantly. When a managed configuration contains an entry that fails schema validation, Claude Code strips that entry, records a warning, and enforces every remaining valid policy. A single typo cannot disable the rest of your organization’s policy. Run
+/doctor
+to list stripped entries with their source file and field.
 This behavior is consistent across all three delivery mechanisms:
 server-managed settings
 , plist and registry policies deployed through MDM, and
@@ -766,6 +768,17 @@ at startup. Most useful in
 managed settings
 where users cannot override it
 "disable"
+disableBrowserExternalNavigation
+(Managed settings only) Set to
+true
+to turn off external browsing in the desktop app’s
+Browser pane
+. Neither users nor Claude can navigate to external sites, and localhost dev server previews are unaffected. The value must be the JSON boolean
+true
+; the string
+"true"
+is ignored
+true
 disableBundledSkills
 Set to
 true
@@ -970,14 +983,15 @@ Enforce the allowlist for the Default model
 . Requires Claude Code v2.1.175 or later
 true
 env
-Environment variables applied to every session and to subprocesses Claude Code spawns from it.
-As of v2.1.143,
+Environment variables applied to every session and to subprocesses Claude Code spawns from it. Set a variable to
+""
+to override a shell export with an empty string, which Claude Code treats as unset for provider selection. Subprocesses still inherit the empty value.
 NO_COLOR
 and
 FORCE_COLOR
-set here are passed to subprocesses but do not change Claude Code’s own interface colors. Set those in your shell before launching
+set here reach only subprocesses; to change Claude Code’s own interface colors, set them in your shell before launching
 claude
-to change interface colors.
+.
 As of v2.1.195, identity variables that Claude Code’s hosting environments set, for example
 CLAUDE_CODE_REMOTE
 and
@@ -1830,7 +1844,11 @@ for a clean tree matching the remote.
 "head"
 branches from your current local
 HEAD
-, so unpushed commits and feature-branch state are present in the worktree. Applies to
+, so unpushed commits and feature-branch state are present in the worktree. Inside a linked worktree,
+"head"
+resolves to that worktree’s
+HEAD
+, not the main checkout’s. Applies to
 --worktree
 , the
 EnterWorktree
@@ -2040,9 +2058,17 @@ deny permission rules.
 filesystem.allowRead
 Paths to re-allow reading within
 denyRead
-regions. Takes precedence over
+regions. An
+allowRead
+path re-opens reading inside a broader
 denyRead
-. Arrays are merged across all settings scopes. Use this to create workspace-only read access patterns.
+region, and an exact path in
+denyRead
+stays blocked inside a broader
+allowRead
+; see the
+overlap table
+for examples. Arrays are merged across all settings scopes. Use this to create workspace-only read access patterns.
 ["."]
 filesystem.allowManagedReadPathsOnly
 (Managed settings only) Only

@@ -203,7 +203,7 @@ session_crons
 in
 Stop hook input
 .
-Not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry, where a
+Not available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, where a
 /loop
 prompt with no interval runs on a fixed schedule instead
 No
@@ -502,6 +502,10 @@ For long-running processes such as dev servers or watch builds, Claude can set
 run_in_background: true
 to start the command as a background task and continue working while it runs. List and stop background tasks with
 /tasks
+. In non-interactive mode with the
+-p
+flag,
+background tasks end shortly after the run’s final result
 .
 ​
 Edit tool behavior

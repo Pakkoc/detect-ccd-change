@@ -902,7 +902,14 @@ auto
 Auto mode
 : a background classifier reviews commands and protected-directory writes
 dontAsk
-Auto-deny permission prompts (explicitly allowed tools still work)
+Auto-deny permission prompts. Explicitly allowed tools still work;
+AskUserQuestion
+, connector tools
+your organization set to
+ask
+, and MCP tools marked
+requiresUserInteraction
+are denied even if you’ve allowed them
 bypassPermissions
 Skip permission prompts
 plan
@@ -929,10 +936,16 @@ with caution. It skips permission prompts, allowing the subagent to execute oper
 .yarn
 , and
 .mvn
-. Explicit
+.
+Explicit
 ask
 rules
-and root and home directory removals such as
+, connector tools
+your organization set to
+ask
+, MCP tools marked
+requiresUserInteraction
+, and root and home directory removals such as
 rm -rf /
 still prompt. See
 permission modes

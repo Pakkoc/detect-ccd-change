@@ -2,9 +2,7 @@ Fullscreen rendering is an opt-in
 research preview
 . Run
 /tui fullscreen
-to switch in your current conversation, or set
-CLAUDE_CODE_NO_FLICKER=1
-on versions before v2.1.110. Behavior may change based on feedback.
+to switch in your current conversation. Behavior may change based on feedback.
 Fullscreen rendering is an alternative rendering path for the Claude Code CLI that eliminates flicker, keeps memory usage flat in long conversations, and adds mouse support. It draws the interface on the terminal’s alternate screen buffer, like
 vim
 or

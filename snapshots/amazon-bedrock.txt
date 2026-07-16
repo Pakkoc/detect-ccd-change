@@ -44,7 +44,13 @@ user settings file
 , so you don’t need to export environment variables yourself.
 After you’ve signed in, run
 /setup-bedrock
-any time to reopen the wizard and change your credentials, region, or model pins.
+any time to reopen the wizard and change your credentials, region, or model pins. The model pin step starts from your currently pinned models. The wizard writes to
+~/.claude/settings.json
+, or to
+$CLAUDE_CONFIG_DIR/settings.json
+when
+CLAUDE_CONFIG_DIR
+is set.
 ​
 Set up manually
 To configure Amazon Bedrock through environment variables instead of the wizard, for example in CI or a scripted enterprise rollout, follow the steps below.
@@ -83,13 +89,13 @@ AWS_SESSION_TOKEN
 =
 your-session-token
 Option C: Environment variables (SSO profile)
+Replace
+your-profile-name
+with the name of your AWS profile before running these commands.
 aws
 sso
 login
---profile=
-<
-your-profile-name
->
+--profile=your-profile-name
 export
 AWS_PROFILE
 =

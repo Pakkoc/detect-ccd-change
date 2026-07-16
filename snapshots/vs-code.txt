@@ -499,7 +499,9 @@ claudeProcessWrapper
 -
 Executable used to launch the Claude process. The bundled binary path is passed as an argument when present. Set this to a separately installed
 claude
-binary if the extension build doesn’t include one for your platform.
+binary if the extension build doesn’t include one for your platform. An “Unsupported platform” error at activation means no binary is bundled for your platform; see
+which platforms have prebuilt binaries
+.
 ​
 VS Code extension vs. Claude Code CLI
 Claude Code is available as both a VS Code extension (graphical panel) and a CLI (command-line interface in the terminal). Some features are only available in the CLI. If you need a CLI-only feature, run

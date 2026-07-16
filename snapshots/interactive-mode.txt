@@ -340,6 +340,13 @@ plugins
 and
 MCP servers
 . Not all built-in commands are visible to every user since some depend on your platform or plan.
+In
+fullscreen rendering
+, the
+/
+command and
+@
+file suggestion lists also respond to the mouse: hovering highlights a row and clicking accepts it.
 See the
 commands reference
 for the full list of commands included in Claude Code.

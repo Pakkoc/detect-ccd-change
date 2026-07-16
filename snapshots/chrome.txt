@@ -51,6 +51,9 @@ Ask Claude to use the browser
 This example navigates to a page, interacts with it, and reports what it finds, all from your terminal or editor:
 Go to code.claude.com/docs, click on the search box,
 type "hooks", and tell me what results appear
+The first browser action asks for permission to use the
+claude-in-chrome
+skill. Approve it and Claude opens a new tab and starts the task.
 Run
 /chrome
 at any time to check the connection status, manage permissions, reconnect the extension, or choose which connected browser to use. If more than one browser is connected when a browser action starts, Claude prompts you to pick one.
@@ -103,8 +106,10 @@ call runs without a prompt only when every action inside it is read-only.
 Example workflows
 These examples show common ways to combine browser actions with coding tasks. Run
 /mcp
-and select
+, select
 claude-in-chrome
+, then select
+View tools
 to see the full list of available browser tools.
 ​
 Test a local web application

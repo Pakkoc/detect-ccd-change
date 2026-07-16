@@ -109,11 +109,23 @@ Auto-denies tools unless pre-approved via
 /permissions
 or
 permissions.allow
-rules
+rules.
+AskUserQuestion
+, connector tools
+your organization set to
+ask
+, and MCP tools marked
+requiresUserInteraction
+are denied even if you’ve allowed them
 bypassPermissions
 Skips permission prompts, except those forced by explicit
 ask
-rules. Root and home directory removals such as
+rules, connector tools
+your organization set to
+ask
+, and MCP tools marked
+requiresUserInteraction
+. Root and home directory removals such as
 rm -rf /
 also still prompt as a circuit breaker
 bypassPermissions
@@ -137,20 +149,26 @@ mode skips permission prompts, including for writes to
 .yarn
 , and
 .mvn
-. Explicit
+. Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage.
+A few prompts still fire in this mode. Explicit
 ask
-rules still force a prompt, and removals targeting the filesystem root or home directory, such as
+rules, connector tools
+your organization set to
+ask
+, and MCP tools marked
+requiresUserInteraction
+still prompt. Removals targeting the filesystem root or home directory, such as
 rm -rf /
 and
 rm -rf ~
-, still prompt as a circuit breaker against model error,
-including in commands that contain command substitution with
+, also prompt as a circuit breaker against model error,
+including when the command contains command substitution with
 $(...)
 or backticks, or process substitution with
 <(...)
-. The plain form, such as
+. Before v2.1.208, only the plain form, such as
 rm -rf ~
-typed as its own command, has prompted in this mode since the circuit breaker was introduced; v2.1.208 extends the same check to commands that reach the removal through a substitution. Before v2.1.208, commands containing those forms didn’t prompt in this mode. Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage.
+typed as its own command, prompted; commands that reached the removal through a substitution didn’t.
 To prevent
 bypassPermissions
 or
@@ -923,6 +941,19 @@ puppeteer_navigate
 tool provided by the
 puppeteer
 server
+If your organization has set a
+claude.ai connector
+tool to
+ask
+, allow rules for that tool don’t take effect: Claude Code prompts on every call, even in
+auto
+and
+bypassPermissions
+modes. In
+dontAsk
+mode, which never prompts, Claude Code denies the call instead. Connector tools appear as
+mcp__claude_ai_<server>__<tool>
+.
 ​
 Agent (subagents)
 Use
@@ -1017,13 +1048,21 @@ node_modules/pkg
 Extend permissions with hooks
 Claude Code hooks
 provide a way to register custom shell commands to perform permission evaluation at runtime. When Claude Code makes a tool call, PreToolUse hooks run before the permission prompt. The hook output can deny the tool call, force a prompt, or skip the prompt to let the call proceed.
-Hook decisions don’t bypass permission rules. Deny and ask rules are evaluated regardless of what a PreToolUse hook returns, so a matching deny rule blocks the call and a matching ask rule still prompts even when the hook returned
+Hook decisions don’t bypass permission rules. Claude Code evaluates deny and ask rules regardless of what a PreToolUse hook returns: a matching deny rule blocks the call, and a matching ask rule still prompts even when the hook returned
 "allow"
 or
 "ask"
 . This preserves the deny-first precedence described in
 Manage permissions
 , including deny rules set in managed settings.
+Connector tools
+your organization set to
+ask
+and MCP tools marked
+requiresUserInteraction
+also still prompt when a hook returns
+"allow"
+.
 A blocking hook also takes precedence over allow rules. A hook that exits with code 2 stops the tool call before permission rules are evaluated, so the block applies even when an allow rule would otherwise let the call proceed. To run all Bash commands without prompts except for a few you want blocked, add
 "Bash"
 to your allow list and register a PreToolUse hook that rejects those specific commands. See
@@ -1046,6 +1085,17 @@ additionalDirectories
 in
 settings files
 Files in additional directories follow the same permission rules as the original working directory: they become readable without prompts, and file editing permissions follow the current permission mode.
+In background sessions on macOS, the session host requests access to protected folders such as
+~/Desktop
+,
+~/Documents
+, and
+~/Downloads
+separately from your terminal when Claude needs to read or write files there; if reads there fail with
+Operation not permitted
+, see
+how to grant folder access to background sessions
+.
 To change the session’s primary working directory instead of adding another, use
 /cd
 . The

@@ -77,7 +77,7 @@ Verify the connection
 Configure each surface
 : if you are using a surface besides the Claude Code CLI, such as VS Code, see how to configure it with your gateway credentials
 Additional configuration
-: variables some gateways need beyond the base URL and credential, such as a custom header, a credential helper, model discovery, or a provider-format base URL. Set these only if your administrator named them
+: variables some gateways need beyond the base URL and credential, such as a custom header, a credential helper, model discovery, a provider-format base URL, or turning off traffic outside the gateway path. Set these only if your administrator named them or your network restricts egress
 ​
 Set the credential variable
 To authenticate Claude Code to the gateway, set your credential in an environment variable. Which variable depends on what your gateway team told you:
@@ -352,15 +352,19 @@ reach the spawned process but not the extension’s own login check.
 }
 ​
 Desktop app
-The desktop app reads gateway routing from an
-administrator-distributed configuration
+The desktop app reads gateway routing from its
+third-party inference configuration
 , not from
 ANTHROPIC_BASE_URL
 or
 settings.json
-. If your organization has distributed it, the desktop app routes through the gateway with no setup on your part; if not, use the terminal CLI or VS Code extension for gateway sessions. Administrators distribute the configuration as described in the
-organization rollout
-.
+. That configuration can come from your organization or from a form in the app itself:
+Distributed by an administrator
+: if your organization has
+deployed the configuration
+, the desktop app routes through the gateway with no setup on your part
+Configured locally
+: for devices without an administrator-distributed configuration, open Help → Troubleshooting → Enable Developer Mode, which restarts the app with a Developer menu. Then open Developer → Configure Third-Party Inference and enter your gateway base URL. An administrator-distributed configuration takes precedence and makes this form read-only
 With the gateway configuration active, the desktop app runs sessions on your local machine only: the environment picker doesn’t offer SSH sessions or Anthropic-hosted cloud environments, and
 Remote Control
 is unavailable. To use Claude Code on a remote host through the gateway, run the CLI on that host with
@@ -542,7 +546,7 @@ Remote Control: unset the gateway credential and
 ANTHROPIC_BASE_URL
 ​
 Additional configuration
-These settings cover cases beyond the base URL and credential. Set them only if your administrator’s instructions or the
+These settings cover cases beyond the base URL and credential. Set them only if your administrator’s instructions, your network’s egress rules, or the
 troubleshooting table
 call for one.
 ​
@@ -674,6 +678,47 @@ Authorization
 and
 x-api-key
 headers, so it works whichever header your gateway reads.
+​
+Turn off traffic outside the gateway path
+The gateway carries model requests, but Claude Code also sends nonessential background traffic outside the gateway path, to Anthropic and to third-party services such as GitHub: version checks, telemetry, error reports, release notes, and similar requests. On a network that only allows egress to the gateway, these requests fail and can appear as blocked connections in your egress monitoring.
+To turn that traffic off, set
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+alongside the gateway variables, in the same shell exports or settings-file
+env
+block:
+Bash or Zsh
+PowerShell
+export
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+=
+1
+$
+env:
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+=
+"1"
+Setting the variable has these effects and limits:
+It disables auto-updates, so plan for another update path, such as your package manager or managed distribution.
+It suppresses the
+fast mode
+availability check. Unless a previous check already enabled fast mode on the machine,
+/fast
+reports that fast mode is unavailable.
+It turns off
+gateway model discovery
+, even though discovery queries the gateway itself. Previously discovered models stay available from the local cache, but the list isn’t refreshed.
+The WebFetch tool’s
+domain safety check
+isn’t affected and still calls
+api.anthropic.com
+. Turn it off separately with
+skipWebFetchPreflight: true
+in
+settings
+if your network blocks that host.
+For each telemetry stream and the variable that controls it, see
+telemetry services
+.
 ​
 Route to a cloud provider through a gateway
 These configurations point Claude Code at a gateway through a provider-specific base URL variable in place of

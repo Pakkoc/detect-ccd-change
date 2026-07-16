@@ -211,12 +211,14 @@ allowManagedMcpServersOnly
 managed-mcp.json
 file
 Plugin marketplace control
-Restrict which marketplace sources users can add and install from, and reject the CLI flags that sideload plugins, agents, and MCP servers for a single run
+Restrict which marketplace sources users can add and install from, reject the CLI flags that sideload plugins, agents, and MCP servers for a single run, and allowlist which marketplaces’ plugins can be suggested
 strictKnownMarketplaces
 ,
 blockedMarketplaces
 ,
 disableSideloadFlags
+,
+pluginSuggestionMarketplaces
 Customization lockdown
 Block skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings
 strictPluginOnlyCustomization
@@ -225,6 +227,17 @@ Only managed hooks load; restrict HTTP hook URLs
 allowManagedHooksOnly
 ,
 allowedHttpHookUrls
+Login enforcement
+Restrict interactive login to a specific method or Anthropic organization. When set, sessions authenticated by
+ANTHROPIC_API_KEY
+,
+ANTHROPIC_AUTH_TOKEN
+, or
+apiKeyHelper
+are blocked at startup; cloud provider sessions aren’t affected
+forceLoginMethod
+,
+forceLoginOrgUUID
 Disable agent view
 Turn off
 claude agents

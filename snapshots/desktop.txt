@@ -154,7 +154,12 @@ Bypass permissions
 bypassPermissions
 Claude runs without permission prompts, except those forced by explicit
 ask rules
-or by safety classifiers when Claude
+, connector tools
+your organization set to
+ask
+, MCP tools marked
+requiresUserInteraction
+, or safety classifiers when Claude
 acts on external sites
 ; equivalent to
 --dangerously-skip-permissions
@@ -262,6 +267,16 @@ as the Claude in Chrome extension. If your organization already configured those
 browserExternalPageTools
 managed setting
 . With tools disabled, users can still navigate to external sites; Claude’s tools can’t read or act on them.
+To turn off external browsing entirely, set the
+disableBrowserExternalNavigation
+managed setting
+to
+true
+. This blocks all external navigation in the Browser, including sites on your organization’s allowlist; localhost dev servers and file previews keep working. Use
+browserExternalPageTools
+to let users keep browsing external sites without Claude’s tools, and
+disableBrowserExternalNavigation
+to block external sites for both users and Claude.
 ​
 Review changes with diff view
 After Claude makes changes to your code, the diff view lets you review modifications file by file before creating a pull request.
@@ -1266,6 +1281,16 @@ set to
 to prevent Claude from using tools to read or act on external pages in the
 Browser pane
 . Users can still navigate to external sites themselves, and local dev server previews are unaffected.
+disableBrowserExternalNavigation
+set to
+true
+to turn off external browsing in the
+Browser pane
+entirely. Neither users nor Claude can navigate to external sites, and localhost dev server previews are unaffected. The value must be the JSON boolean
+true
+; the string
+"true"
+is ignored.
 sshConfigs
 pre-configure
 SSH connections
@@ -1517,7 +1542,9 @@ CLI flag
 Bypass permissions mode. On Pro and Max plans, enable it in Settings → Claude Code → “Allow bypass permissions mode”; on Team and Enterprise plans, organization policy controls it
 Third-party providers
 Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry
-Anthropic’s API by default. To run the Code tab on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or a self-hosted LLM gateway, see
+Anthropic’s API by default. For gateway routing, see
+connect the desktop app to a gateway
+. To run the Code tab on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or a self-hosted LLM gateway, see
 Claude Desktop on 3P
 .
 MCP servers
@@ -1562,7 +1589,9 @@ Not available
 What’s not available in Desktop
 The following features are only available in the CLI or VS Code extension, except where noted:
 Third-party providers
-: Desktop connects to Anthropic’s API by default. Enterprise deployments can configure Google Cloud’s Agent Platform and gateway providers via
+: Desktop connects to Anthropic’s API by default. To route Desktop through a gateway, see
+connect the desktop app to a gateway
+. Enterprise deployments can configure Google Cloud’s Agent Platform and gateway providers via
 managed settings
 . For Amazon Bedrock or Microsoft Foundry in the CLI, see the
 quickstart

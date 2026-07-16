@@ -217,7 +217,12 @@ Allowlists and denylists filter which configured servers are allowed to load. Th
 managed-mcp.json
 before the allowlist or denylist applies to it. To deploy servers to users, use
 managed-mcp.json
-.
+. Both lists also filter servers passed with the
+--mcp-config
+CLI flag
+;
+--strict-mcp-config
+limits which configuration files load and doesn’t bypass either list.
 To make the allowlist authoritative, set
 allowedMcpServers
 and
@@ -275,6 +280,9 @@ deniedMcpServers
 No servers blocked
 No servers blocked
 Matching servers blocked
+See
+Invalid entries in managed settings
+for what happens when an entry fails schema validation.
 A
 serverName
 entry, in either list, is not a security control. The name is the label a user assigns when running

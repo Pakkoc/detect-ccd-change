@@ -124,7 +124,7 @@ Deferred tools
 Tools loaded into the prefix
 : any change to them invalidates the cache. This happens when
 tool search is unavailable or disabled
-, such as on Haiku models, on Google Cloud’s Agent Platform, or with a custom
+, such as on Google Cloud’s Agent Platform or with a custom
 ANTHROPIC_BASE_URL
 gateway. It also happens for a server or tool marked
 alwaysLoad

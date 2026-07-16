@@ -281,7 +281,19 @@ and
 sandbox.filesystem.denyRead
 , and re-allow specific paths within a denied region using
 sandbox.filesystem.allowRead
-.
+. When read rules overlap, the more specific path wins:
+Example rules
+Result
+"denyRead": ["~/"]
+with
+"allowRead": ["~/projects"]
+~/projects
+is readable and the rest of the home directory stays blocked. The narrower allow re-opens that part of the denied region
+"allowRead": ["~/"]
+with
+"denyRead": ["~/.env"]
+~/.env
+stays blocked and the rest of the home directory is readable. An exact deny holds inside a wider allow, so a broad allow can’t silently re-expose a secret
 The example below blocks reading from the entire home directory while still allowing reads from the current project. Place it in your project’s
 .claude/settings.json
 , because the relative path
@@ -684,7 +696,12 @@ Nothing.
 Protected path
 checks are also skipped; only explicit
 ask rules
-and removing
+, connector tools
+your organization set to
+ask
+, MCP tools marked
+requiresUserInteraction
+, and removing
 /
 or your home directory still prompt
 The sandbox’s

@@ -68,6 +68,13 @@ find the session there afterward. Worktrees created by a
 WorktreeCreate
 hook
 are excluded and keep the transcript at the launch directory.
+Worktrees work with
+sandboxing
+enabled: the sandbox allows writes to the main repository’s shared
+.git
+directory so commands such as
+git commit
+can update refs and the index from inside a linked worktree.
 Before using
 --worktree
 interactively in a directory for the first time, accept the workspace trust dialog by running
@@ -127,7 +134,11 @@ settings
 baseRef
 to
 "head"
-makes new worktrees carry your unpushed commits and feature-branch state, which is useful when isolating subagents that need to operate on in-progress work. The setting accepts only
+makes new worktrees carry your unpushed commits and feature-branch state, which is useful when isolating subagents that need to operate on in-progress work. When the session runs inside a linked worktree,
+"head"
+resolves to that worktree’s
+HEAD
+, not the main checkout’s. The setting accepts only
 "fresh"
 or
 "head"

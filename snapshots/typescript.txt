@@ -1093,7 +1093,16 @@ falls through to a prompt. Not invoked for calls auto-approved by
 allowedTools
 , allow rules, or
 permissionMode
-. See
+.
+AskUserQuestion
+, connector tools
+your organization set to
+ask
+, and MCP tools marked
+requiresUserInteraction
+reach it even if you’ve allowed them; in
+dontAsk
+mode these are denied instead. See
 CanUseTool
 for details
 continue
@@ -1838,8 +1847,6 @@ skillOverrides
 ,
 fastMode
 ,
-awaySummaryEnabled
-,
 agent
 . Switching
 agent
@@ -2477,6 +2484,15 @@ bypassPermissions
 PreToolUse
 hook
 instead.
+AskUserQuestion
+, MCP tools marked
+requiresUserInteraction
+, and connector tools
+your organization set to
+ask
+reach the function even when an allow rule matches. In
+dontAsk
+mode these calls are denied instead, without invoking it.
 type
 CanUseTool
 =
@@ -5248,6 +5264,7 @@ timeout
 ?:
 number
 ;
+// milliseconds, max 600000; higher values are clamped to the max
 description
 ?:
 string
@@ -9031,9 +9048,13 @@ Emitted while Claude is producing a thinking block, including a redacted one, ca
 estimated_tokens
 is the running total for the current thinking block and
 estimated_tokens_delta
-is the increment carried by this frame. Use it for progress display; the authoritative billed count is the result message’s
+is the increment carried by this frame. Use it for progress display. The final count for the top-level agent loop is the result message’s
 usage.output_tokens
-.
+, which
+doesn’t include subagent tokens
+; use
+modelUsage
+for whole-tree accounting.
 Requires Claude Code v2.1.153 or later.
 type
 SDKThinkingTokensMessage
@@ -9675,7 +9696,9 @@ is enabled, the model can request to run commands outside the sandbox by setting
 dangerouslyDisableSandbox: true
 in the tool input. These requests fall back to the existing permissions system, meaning your
 canUseTool
-handler is invoked, allowing you to implement custom authorization logic.
+handler is invoked, allowing you to implement custom authorization logic. In the example below,
+isCommandAuthorized
+stands in for an authorization check you define.
 excludedCommands
 vs
 allowUnsandboxedCommands

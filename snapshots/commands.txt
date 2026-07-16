@@ -227,13 +227,16 @@ to upgrade existing Claude API code to a newer model: Claude asks which files to
 /claude-api managed-agents-onboard
 for an interactive walkthrough that creates a new Managed Agent from scratch
 /clear [name]
-Start a new conversation with empty context. The previous conversation stays available in
-/resume
-. Pass a name to label the previous conversation in the
+Start a new conversation with empty context. Pass a name to label the previous conversation in the
 /resume
 picker. To free up context while continuing the same conversation, use
 /compact
-instead. Aliases:
+instead. Resume the previous conversation with
+/resume
+, or, in the same Claude Code process,
+restore it from
+the rewind menu’s previous-session entry
+. Aliases:
 /reset
 ,
 /new
@@ -352,12 +355,12 @@ Convert your repo’s React design system and upload it to
 Claude Design
 , so designs it produces use your real components. Optionally name the design system, for example
 /design-sync Acme DS
-. A first-time sync verifies every component and can take a few hours on a large repo. Available on the Anthropic API; on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry the underlying tool can’t reach claude.ai, so the command is unavailable
+. A first-time sync verifies every component and can take a few hours on a large repo. Available on the Anthropic API; on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and Claude Platform on AWS the underlying tool can’t reach claude.ai, so the command is unavailable
 /desktop
 Continue the current session in the Claude Code Desktop app. Requires macOS or Windows and a Claude subscription. Alias:
 /app
 /diff
-Open an interactive diff viewer showing uncommitted changes and per-turn diffs. Use left/right arrows to switch between the current git diff and individual Claude turns, and up/down to browse files.
+Open an interactive diff viewer showing uncommitted changes and per-turn diffs. Use left/right arrows to switch between the current git diff and individual Claude turns, and up/down to browse files. Press Enter to open the selected file’s diff, scroll it with up/down or PageUp/PageDown, and press Esc to return to the file list.
 As of v2.1.198, the open viewer also refreshes automatically when the repository’s git state changes outside the session, such as a branch switch or commit in another terminal
 /doctor
 Skill
@@ -612,7 +615,7 @@ CLI
 /privacy-settings
 View and update your privacy settings. Only available for Pro and Max plan subscribers
 /radio
-Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available. Not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
+Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available. Not available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS
 /recap
 Generate a one-line summary of the current session on demand. See
 Session recap

@@ -53,7 +53,13 @@ protected paths
 are never auto-approved, guarding repository state and Claude’s own configuration against accidental corruption.
 Modes set the baseline. Layer
 permission rules
-on top to pre-approve or block specific tools. Deny rules and explicit ask rules apply in every mode, including
+on top to pre-approve or block specific tools. Deny rules, explicit ask rules, the
+org
+ask
+setting on connector tools
+, and the
+requiresUserInteraction
+marker apply in every mode, including
 bypassPermissions
 . Allow rules have no effect in that mode because everything else is already approved.
 ​
@@ -272,7 +278,9 @@ nohup
 additionalDirectories
 . Paths outside that scope, writes to
 protected paths
-, and all other Bash commands still prompt.
+, and all other Bash commands except the
+built-in read-only set
+still prompt.
 When the
 PowerShell tool
 is enabled,
@@ -650,15 +658,23 @@ How the classifier evaluates actions
 Each action goes through a fixed decision order. The first matching step wins:
 Actions matching your
 allow, ask, or deny rules
-resolve immediately, except writes to
+resolve immediately. Writes to
 protected paths
-, which route to the classifier even when an allow rule matches. Content-scoped ask rules fall back to a permission prompt
+route to the classifier even when an allow rule matches. Connector tools
+your organization set to
+ask
+and MCP tools marked
+requiresUserInteraction
+prompt you directly even when an allow rule matches. Content-scoped ask rules fall back to a permission prompt
 Read-only actions and file edits in your working directory are auto-approved, except writes to
 protected paths
-Everything else goes to the classifier.
+Everything else goes to the classifier. A connector tool
+your organization set to
+ask
+skips the classifier and prompts you directly, so an org-required approval is never auto-approved.
 As of v2.1.199, an MCP tool marked with
 _meta["anthropic/requiresUserInteraction"]
-skips the classifier and prompts you directly, so a consent step is never auto-approved on the tool author’s behalf
+also skips the classifier and prompts you directly, so a consent step is never auto-approved on the tool author’s behalf
 If the classifier blocks, Claude receives the reason and tries an alternative
 On entering auto mode, broad allow rules that grant arbitrary code execution are dropped:
 Blanket
@@ -697,20 +713,30 @@ What the classifier blocks by default
 describes how long an allow and a deny last.
 ​
 Allow only pre-approved tools with dontAsk mode
+If you set
 dontAsk
-mode auto-denies every tool call that would otherwise prompt. The status bar shows
-⏵⏵ don't ask on
-while this mode is active. Only actions matching your
+mode, Claude Code auto-denies every tool call that would otherwise prompt you. Claude runs only actions matching your
 permissions.allow
-rules and
+rules,
 read-only Bash commands
-can execute; explicit
+, and calls approved by a
+PreToolUse hook
+. Use this mode for CI pipelines or restricted environments where you pre-define exactly what Claude may do; the session never waits for input. The status bar shows
+⏵⏵ don't ask on
+while this mode is active.
+Claude Code denies calls matching your explicit
 ask
 rules
-are denied rather than prompting.
-As of v2.1.199, an MCP tool marked with
+rather than prompting. It also denies the built-in
+AskUserQuestion
+tool and connector tools
+your organization set to
+ask
+, even if your allow rules match them.
+It denies MCP tools marked
 _meta["anthropic/requiresUserInteraction"]
-is also denied in this mode even when an allow rule matches it, because its approval card needs an answer this mode never collects. This makes the mode fully non-interactive for CI pipelines or restricted environments where you pre-define exactly what Claude may do. Cloud sessions on
+the same way, because their approval card needs an answer this mode never collects; this requires Claude Code v2.1.199 or later.
+Cloud sessions on
 Claude Code on the web
 ignore
 defaultMode: "dontAsk"
@@ -729,6 +755,9 @@ protected paths
 . Before v2.1.126, protected-path writes still prompted in this mode.
 Explicit
 ask rules
+and connector tools
+your organization set to
+ask
 still force a prompt in this mode.
 MCP tools marked with
 _meta["anthropic/requiresUserInteraction"]

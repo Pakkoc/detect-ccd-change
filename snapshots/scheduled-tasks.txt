@@ -157,7 +157,7 @@ jitter rules
 don’t apply to it, but the
 seven-day expiry
 does: the loop ends automatically seven days after you start it.
-On Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry, a prompt with no interval runs on a fixed 10-minute schedule instead.
+On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry, a prompt with no interval runs on a fixed 10-minute schedule instead.
 ​
 Run the built-in maintenance prompt
 When you omit the prompt, Claude uses a built-in maintenance prompt instead of one you supply. On each iteration it works through the following, in order:
@@ -175,7 +175,7 @@ dynamically chosen interval
 , to run it on a fixed schedule instead. To replace the built-in prompt with your own default, see
 Customize the default prompt with loop.md
 .
-On Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry,
+On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry,
 /loop
 with no prompt prints the usage message instead of running the maintenance prompt.
 ​
@@ -211,7 +211,7 @@ loop.md
 take effect on the next iteration, so you can refine the instructions while a loop is running. When no
 loop.md
 exists in either location, the loop falls back to the built-in maintenance prompt. Keep the file concise: content beyond 25,000 bytes is truncated.
-On Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry,
+On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry,
 loop.md
 isn’t read and
 /loop

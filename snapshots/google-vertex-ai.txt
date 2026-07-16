@@ -46,7 +46,13 @@ user settings file
 , so you don’t need to export environment variables yourself.
 After you’ve signed in, run
 /setup-vertex
-any time to reopen the wizard and change your credentials, project, region, or model pins.
+any time to reopen the wizard and change your credentials, project, region, or model pins. The model pin step starts from your currently pinned models. The wizard writes to
+~/.claude/settings.json
+, or to
+$CLAUDE_CONFIG_DIR/settings.json
+when
+CLAUDE_CONFIG_DIR
+is set.
 ​
 Region configuration
 Claude Code supports Google Cloud’s Agent Platform

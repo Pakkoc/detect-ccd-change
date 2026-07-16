@@ -264,7 +264,9 @@ Per-session environment metadata
 tasks/
 Per-session task lists written by the task tools
 shell-snapshots/
-Captured shell environment used by the Bash tool. Removed on clean exit. The sweep clears any left after a crash.
+Aliases, functions, and shell options captured at startup and applied by the
+Bash tool
+to each command. Removed on clean exit. The sweep clears any left after a crash.
 backups/
 Timestamped copies of
 ~/.claude.json

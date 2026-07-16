@@ -452,6 +452,13 @@ permissions.allow
 rules or the
 read-only command set
 , which is useful for locked-down CI runs.
+AskUserQuestion
+, connector tools
+your organization set to
+ask
+, and MCP tools marked
+requiresUserInteraction
+are denied even when an allow rule matches.
 acceptEdits
 lets Claude write files without prompting and also auto-approves common filesystem commands such as
 mkdir
