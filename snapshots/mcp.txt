@@ -45,9 +45,13 @@ plugin
 Install the plugin
 In a Claude Code session, run:
 /plugin install mcp-server-dev@claude-plugins-official
-If Claude Code reports that the marketplace is not found, run
+If Claude Code reports
+Marketplace "claude-plugins-official" not found
+, add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-first, then retry the install. Once installed, run
+. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+/plugin marketplace update claude-plugins-official
+. Then retry the install. Once installed, run
 /reload-plugins
 to activate it in the current session.
 2
@@ -189,11 +193,14 @@ notifications/roots/list_changed
 .
 This variable is set in the server’s environment, not in Claude Code’s own environment, so referencing it via
 ${VAR}
-expansion in a project- or user-scoped
-.mcp.json
+expansion in the
 command
 or
 args
+of a project-scoped
+.mcp.json
+entry or a local- or user-scoped server entry in
+~/.claude.json
 requires a default such as
 ${CLAUDE_PROJECT_DIR:-.}
 . Plugin-provided MCP configurations substitute
@@ -324,16 +331,16 @@ Project-scoped servers from
 .mcp.json
 that are awaiting your approval appear in
 claude mcp list
+and
+claude mcp get <name>
 as
-⏸ Pending approval
+⏸ Pending approval (run `claude` to approve)
 . Run
 claude
 interactively to review and approve them.
 claude mcp get <name>
-shows pending servers as
-⏸ Pending approval
-and rejected servers as
-✗ Rejected
+shows rejected servers as
+✘ Rejected (see disabledMcpjsonServers in settings)
 .
 As of v2.1.196,
 claude mcp list
@@ -621,9 +628,15 @@ plugin.json
 Plugin MCP features
 :
 Automatic lifecycle
-: at session startup, servers for enabled plugins connect automatically. If you enable or disable a plugin during a session, run
+: servers connect and disconnect at these points:
+At session startup, servers for enabled plugins connect automatically
+If you enable or disable a plugin during a session, run
 /reload-plugins
 to connect or disconnect its MCP servers
+In
+web sessions
+, an MCP call to a plugin server that isn’t connected yet, such as right after an idle session wakes, starts the server on demand and waits for it to connect.
+Before v2.1.211, plugin servers in a web session reconnected only when the next message started a turn, so MCP calls after an idle session woke failed until then
 Path placeholders
 :
 ${CLAUDE_PLUGIN_ROOT}
@@ -914,9 +927,11 @@ Example with variable expansion:
 }
 }
 }
-If a referenced environment variable isn’t set and has no default value, Claude Code leaves the literal
+If a referenced environment variable isn’t set and has no default value, the config still loads: Claude Code reports a missing-variable warning for that server in
+claude mcp list
+output and uses the unexpanded
 ${VAR}
-text in the value and reports a missing-variable warning for that server. The config still loads, so set the variable or add a
+text as-is. Set the variable or add a
 :-default
 fallback so the server starts with the value you intend.
 ​

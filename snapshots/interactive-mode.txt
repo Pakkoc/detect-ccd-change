@@ -13,8 +13,6 @@ Alt+F
 ,
 Alt+Y
 ,
-Alt+M
-,
 Alt+P
 ) require configuring Option as Meta in your terminal:
 iTerm2
@@ -43,18 +41,22 @@ in this session. Press twice within 3 seconds to confirm
 Subagent control
 Ctrl+D
 Exit Claude Code session
-EOF signal
+The first press shows a confirmation hint and a second press within 800ms exits. When the prompt has text,
+Ctrl+D
+deletes the character after the cursor instead
 Ctrl+G
 or
 Ctrl+X Ctrl+E
 Open in default text editor
 Edit your prompt or custom response in your default text editor.
 Ctrl+X Ctrl+E
-is the readline-native binding. Turn on Show last response in external editor in
+is the readline-native binding. Turn on
+Show last response in external editor
+in
 /config
 to prepend Claude’s previous reply as
 #
--commented context above your prompt; the comment block is stripped when you save
+-commented context above your prompt; Claude Code strips the comment block when you save
 Ctrl+L
 Redraw screen
 Forces a full terminal redraw. Input and conversation history are kept. Use this to recover if the display becomes garbled or partially blank
@@ -91,6 +93,14 @@ Claude’s to-do checklist
 in the status area. This is not the background-task view; use
 /tasks
 to see running shells and subagents
+Ctrl+S
+Stash or restore prompt
+With text in the input, stashes it and clears the prompt. Pressed again on an empty prompt, restores the stashed text, cursor position, and pasted content
+Ctrl+Z
+Suspend Claude Code
+Unix only. Suspends the process to your shell; run
+fg
+to resume
 Left/Right arrows
 Cycle through dialog tabs
 Navigate between tabs in permission dialogs and menus
@@ -124,9 +134,9 @@ opens the
 rewind menu
 to restore or summarize code and conversation from a previous point
 Shift+Tab
-or
+, or
 Alt+M
-(some configurations)
+on Windows when the Node or Bun runtime doesn’t enable VT input mode
 Cycle permission modes
 Cycle through
 default
@@ -211,6 +221,11 @@ Move cursor forward one word
 Word navigation. Requires
 Option as Meta
 on macOS
+Ctrl+_
+or
+Ctrl+Shift+-
+Undo last input edit
+Restores the previous input text and cursor position
 ​
 Theme and display
 Shortcut
@@ -267,11 +282,24 @@ Run a command directly, add its output to the session, and have Claude respond t
 @
 File path mention
 Trigger file path autocomplete
+?
+on empty input
+Toggle the shortcut help panel
+Typing
+?
+when the input already contains text inserts the character.
+Before v2.1.211, an edit that left a lone
+?
+in the input, such as backspacing from
+?x
+, also toggled the panel and discarded the edit
 ​
 Transcript viewer
 When the transcript viewer is open (toggled with
 Ctrl+O
-), these shortcuts are available. In
+), these shortcuts are available. Run
+/tui
+with no argument to check which renderer is active. In
 fullscreen rendering
 , press
 ?
@@ -291,7 +319,8 @@ fullscreen rendering
 Jump to the previous or next user prompt, like vim paragraph motion. Requires
 fullscreen rendering
 Ctrl+E
-Toggle show all content
+Toggle show all content. Available in the default renderer only, not in
+fullscreen rendering
 [
 Write the full conversation to your terminal’s native scrollback so
 Cmd+F
@@ -509,6 +538,12 @@ ce
 /
 cb
 Change word/to end/back
+s
+Substitute character: delete the character under the cursor and enter INSERT mode.
+Requires Claude Code v2.1.211 or later
+S
+Substitute line: clear the line and enter INSERT mode.
+Requires Claude Code v2.1.211 or later
 yy
 /
 Y
@@ -640,7 +675,23 @@ is disabled by default
 Reverse search with Ctrl+R
 Press
 Ctrl+R
-to interactively search through your command history:
+to interactively search through your command history. In
+fullscreen rendering
+,
+Ctrl+R
+opens a search dialog instead: type to filter, press
+Up
+and
+Down
+to move through matches, and press
+Ctrl+S
+to cycle the scope through this session, this project, and all projects. Press
+Enter
+or
+Tab
+to place a match in the prompt input, or
+Esc
+to cancel. The steps below describe the default inline search:
 Start search
 : press
 Ctrl+R
@@ -651,10 +702,8 @@ Navigate matches
 : press
 Ctrl+R
 again to cycle through older matches
-Change scope
-: search defaults to prompts from all projects. Press
-Ctrl+S
-to cycle the scope through this session, this project, and all projects
+Search scope
+: the inline search always searches prompts from all projects
 Accept match
 :
 Press
@@ -673,7 +722,7 @@ to cancel and restore your original input
 Press
 Backspace
 on empty search to cancel
-The search loads the 100 most recent unique prompts in the selected scope, with duplicates collapsed to the newest occurrence. Matching prompts display with the search term highlighted, so you can find and reuse previous inputs.
+The inline search scans your full prompt history, newest first, with duplicates collapsed to the newest occurrence. The fullscreen dialog lists the 100 most recent unique prompts in the selected scope. Matching prompts display with the search term highlighted, so you can find and reuse previous inputs.
 Accepting a match or canceling the search takes effect immediately, even while Claude Code is still loading the history. Before v2.1.202, accepting or canceling during that load could report an internal error.
 ​
 Background Bash commands
@@ -789,7 +838,7 @@ Suggestions are automatically skipped after the first turn of a conversation and
 In print mode they are off by default. Pass
 --prompt-suggestions
 with
---output-format stream-json --verbose
+-p "<prompt>" --output-format stream-json --verbose
 to emit a
 prompt_suggestion
 message after each turn instead.

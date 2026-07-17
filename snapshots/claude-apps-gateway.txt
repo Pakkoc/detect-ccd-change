@@ -136,11 +136,13 @@ origin is accepted only on loopback, for local development.
 Private-network address
 At
 /login
-, Claude Code requires the gateway’s hostname or IP address to resolve only to private addresses: RFC 1918, CGNAT
+, Claude Code requires the gateway’s hostname or IP address to resolve only to private addresses: RFC 1918, link-local, CGNAT
 100.64.0.0/10
 , IPv6 ULA
 fc00::/7
-, or loopback for local development. The check runs on each resolved IP, so if any address the name resolves to is public,
+, or loopback for local development. For a gateway you host, any public address is rejected; see the
+threat model
+in the deployment guide. The check runs on each resolved IP, so if any address the name resolves to is public,
 /login
 rejects the URL. If developer machines route HTTPS through a corporate proxy, sign-in also requires the proxy host to resolve to private addresses; if it doesn’t, add the gateway host to
 NO_PROXY
@@ -290,7 +292,9 @@ Build a container image around the
 claude
 binary that meets the
 image requirements
-, then run it alongside Postgres:
+, then run it alongside Postgres. The Compose file references the image as
+registry.example.com/claude-gateway:2.1.198
+; substitute your own registry and image tag:
 docker-compose.yaml
 services
 :
@@ -298,7 +302,7 @@ gateway
 :
 image
 :
-<your-registry>/claude-gateway:<version>
+registry.example.com/claude-gateway:2.1.198
 ports
 : [
 "8080:8080"

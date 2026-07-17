@@ -266,7 +266,9 @@ plugin.json
 goes inside
 .claude-plugin/
 . All other directories must be at the plugin root level.
-The plugin root is the individual plugin’s own directory: the one containing
+The plugin root is the individual plugin’s own directory: the one you pass to
+--plugin-dir
+or that contains
 .claude-plugin/plugin.json
 . It is never
 ~/.claude/

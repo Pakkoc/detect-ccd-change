@@ -88,7 +88,11 @@ Teach
 and
 /verify
 how to build and launch your project
-All three skills require Claude Code v2.1.145 or later.
+All three skills require Claude Code v2.1.145 or later. Check your version with
+claude --version
+or the
+/status
+command.
 /run
 and
 /verify
@@ -349,7 +353,11 @@ gives Claude step-by-step instructions for a specific action, like deployments, 
 /skill-name
 rather than letting Claude decide when to run them. Add
 disable-model-invocation: true
-to prevent Claude from triggering it automatically.
+to prevent Claude from triggering it automatically. The example below adds
+context: fork
+, which runs the skill in its own subagent context; see
+Run skills in a subagent
+.
 ---
 name
 :
@@ -462,7 +470,9 @@ true
 .
 allowed-tools
 No
-Tools Claude can use without asking permission when this skill is active. Accepts a space- or comma-separated string, or a YAML list.
+Tools Claude can use without asking permission during the turn that invokes this skill. The grant clears when you send your next message. Accepts a space- or comma-separated string, or a YAML list. See
+Pre-approve tools for a skill
+.
 disallowed-tools
 No
 Tools removed from Claude’s available pool while this skill is active. Use for autonomous skills that should never call certain tools, such as
@@ -495,7 +505,9 @@ context
 No
 Set to
 fork
-to run in a forked subagent context.
+to run in a forked subagent context. See
+Run skills in a subagent
+.
 agent
 No
 Which subagent type to use when
@@ -523,9 +535,11 @@ bash
 powershell
 . Setting
 powershell
-runs inline shell commands via PowerShell on Windows. Requires
+runs inline shell commands via PowerShell when the
+PowerShell tool
+is enabled: it’s on by default on Windows without Git Bash, and
 CLAUDE_CODE_USE_POWERSHELL_TOOL=1
-.
+enables it elsewhere.
 ​
 How a skill gets its command name
 The command you type to invoke a skill comes from where the skill file lives. The frontmatter
@@ -665,6 +679,11 @@ second
 . The
 $ARGUMENTS
 placeholder always expands to the full argument string as typed.
+An indexed placeholder with no corresponding argument, such as
+$2
+when only one argument was passed, stays in the content unchanged. A named placeholder from the
+arguments
+frontmatter with no matching argument expands to an empty string.
 To include a literal
 $
 before a digit,
@@ -741,9 +760,9 @@ legacy-system-context
 skill explains how an old system works. Claude should know this when relevant, but
 /legacy-system-context
 isn’t a meaningful action for users to take.
-This example creates a deploy skill that only you can trigger. The
+This example creates a deploy skill that only you can trigger. If you set
 disable-model-invocation: true
-field prevents Claude from running it automatically:
+, Claude can’t run the skill automatically:
 ---
 name
 :
@@ -785,7 +804,9 @@ work differently: the full skill content is injected at startup.
 Skill content lifecycle
 When you or Claude invoke a skill, the rendered
 SKILL.md
-content enters the conversation as a single message and stays there for the rest of the session. Claude Code does not re-read the skill file on later turns, so write guidance that should apply throughout a task as standing instructions rather than one-time steps.
+content enters the conversation as a single message and stays there for the rest of the session. This persistence applies to the skill’s instructions, not its permissions: an
+allowed-tools
+grant clears when you send your next message. Claude Code does not re-read the skill file on later turns, so write guidance that should apply throughout a task as standing instructions rather than one-time steps.
 When Claude re-invokes a skill whose rendered content is identical to the copy already in context, Claude Code adds a short note that the skill is already loaded rather than a second copy of the content. When the rendered content differs, because the arguments changed or a
 dynamic context
 command produced new output, Claude Code appends the full content again. Before v2.1.202, every re-invocation appended another full copy of the skill’s instructions.
@@ -800,9 +821,11 @@ to enforce behavior deterministically. If the skill is large or you invoked seve
 Pre-approve tools for a skill
 The
 allowed-tools
-field grants permission for the listed tools while the skill is active, so Claude can use them without prompting you for approval. It does not restrict which tools are available: every tool remains callable, and your
+field grants permission for the listed tools during the turn that invokes the skill, so Claude can use them without prompting you for approval. The grant clears when you send your next message, even though the skill content
+stays in context
+; invoking the skill again re-applies it for that turn. It does not restrict which tools are available: every tool remains callable, and your
 permission settings
-still govern tools that are not listed.
+still govern tools that are not listed. To pre-approve tools for the whole session rather than a single turn, add allow rules to those permission settings instead.
 For skills checked into a project’s
 .claude/skills/
 directory,
@@ -1089,7 +1112,7 @@ By default, Claude can invoke any skill that doesn’t have
 disable-model-invocation: true
 set. Skills that define
 allowed-tools
-grant Claude access to those tools without per-use approval when the skill is active. Your
+grant Claude access to those tools without per-use approval during the turn that invokes the skill; the grant clears when you send your next message. Your
 permission settings
 still govern baseline approval behavior for all other tools. A few built-in commands are also available through the Skill tool, including
 /init
@@ -1136,7 +1159,7 @@ The
 skillOverrides
 setting controls skill visibility from your
 settings
-instead of the skill’s own frontmatter. Use it for skills whose SKILL.md you don’t want to edit, such as ones checked into a shared project repo or provided by an MCP server. The
+instead of the skill’s own frontmatter. Use it for skills whose SKILL.md you don’t want to edit, such as ones checked into a shared project repo. The
 /skills
 menu writes it for you: highlight a skill and press
 Space
@@ -1163,6 +1186,13 @@ Yes
 "off"
 Hidden
 Hidden
+The
+/skills
+menu labels the
+"user-invocable-only"
+state
+user-only
+.
 As of v2.1.199,
 "off"
 also hides the skill from the command lists advertised to
@@ -1209,11 +1239,13 @@ skill-creator
 plugin
 automates the comparison loop inside Claude Code. Install it from the official marketplace:
 /plugin install skill-creator@claude-plugins-official
-If Claude Code reports that the plugin is not found in any marketplace, your marketplace is either missing or outdated. Run
-/plugin marketplace update claude-plugins-official
-to refresh it, or
+If Claude Code reports
+Marketplace "claude-plugins-official" not found
+, add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-if you haven’t added it before. Then retry the install.
+. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+/plugin marketplace update claude-plugins-official
+. Then retry the install.
 After installing, run
 /reload-plugins
 to make the plugin’s skills available in the current session. Then ask Claude to evaluate an existing skill, for example
@@ -1932,8 +1964,8 @@ out.absolute()
 '
 )
 See all 133 lines
-To test, open Claude Code in any project and ask “Visualize this codebase.” Claude runs the script, generates
-codebase-map.html
+To test, open Claude Code in any project and ask “Visualize this codebase.” Claude runs the script, which prints the generated file’s path, such as
+Generated /path/to/codebase-map.html
 , and opens it in your browser.
 This pattern works for any visual output: dependency graphs, test coverage reports, API documentation, or database schema visualizations. The bundled script does the work while Claude handles orchestration.
 ​

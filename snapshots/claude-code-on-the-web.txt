@@ -499,8 +499,6 @@ $CLAUDE_PROJECT_DIR
 }
 Create the script at
 scripts/install_pkgs.sh
-and make it executable with
-chmod +x
 . The
 CLAUDE_CODE_REMOTE
 environment variable is set to
@@ -527,6 +525,10 @@ install
 requirements.txt
 exit
 0
+Then make the script executable:
+chmod
++x
+scripts/install_pkgs.sh
 SessionStart hooks have some limitations in cloud sessions:
 No cloud-only scoping
 : hooks run in both local and cloud sessions. To skip local execution, check the
@@ -877,7 +879,13 @@ Model Context Protocol
 Move tasks between web and terminal
 These workflows require the
 Claude Code CLI
-signed in to the same claude.ai account. You can start new cloud sessions from your terminal, or pull cloud sessions into your terminal to continue locally. Cloud sessions persist even if you close your laptop, and you can monitor them from anywhere including the Claude mobile app.
+signed in to the same claude.ai account. You can start new cloud sessions from your terminal, or pull cloud sessions into your terminal to continue locally. Cloud sessions persist even if you close your laptop, and you can monitor them from anywhere including the Claude mobile app. The
+--cloud
+and
+--teleport
+flags don’t appear in
+claude --help
+output, but the CLI accepts them as shown below.
 From the CLI, session handoff is one-way: you can pull cloud sessions into your terminal with
 --teleport
 , but you can’t push an existing terminal session to the web. The
@@ -1029,9 +1037,13 @@ You must be authenticated to the same claude.ai account used in the cloud sessio
 ​
 --teleport
 is unavailable
-Teleport requires claude.ai subscription authentication. If you’re authenticated via API key, Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry, run
+Teleport requires claude.ai subscription authentication. If you’re authenticated via API key, run
 /login
-to sign in with your claude.ai account instead. If you’re already signed in via claude.ai and
+to sign in with your claude.ai account instead. On Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry,
+--teleport
+stops with
+Cloud sessions aren't available with <provider>
+because cloud sessions run on Anthropic’s infrastructure and aren’t available through those providers. If you’re already signed in via claude.ai and
 --teleport
 is still unavailable, your organization may have disabled cloud sessions.
 ​
@@ -1045,7 +1057,7 @@ that produce text output. Commands that only run in the terminal interface, such
 /plugin
 or
 /resume
-, aren’t available.
+, aren’t available. Commands that open a picker or panel in the terminal behave differently in cloud sessions:
 /model
 ,
 /effort
@@ -1055,23 +1067,27 @@ or
 /color
 , and
 /rename
-work with the value as an argument, for example
+: pass the value as an argument, for example
 /model sonnet
-, instead of opening the terminal picker or slider; the argument forms require Claude Code v2.1.205 or later in the session’s environment and follow each command’s
+, instead of opening the terminal picker or slider. The argument forms require Claude Code v2.1.205 or later in the session’s environment and follow each command’s
 availability notes
-, so
+:
 /effort
 reports
 Not applied
 while a model’s
 launch-default effort hold
-is in force and
+is in force, and
 /fast
 works only in a session that started with fast mode turned on.
 /config
-sets a setting when you pass
+: on the web, opens the Claude Code section of your settings instead of setting a value, and text after the command, including
 key=value
-.
+, is ignored. To change settings for a cloud session, use
+environment variables
+or commit
+settings files
+to the repository.
 For context management specifically:
 Command
 Works in cloud sessions
@@ -1228,6 +1244,20 @@ token synced via
 . Installing the App on the repository isn’t required. See
 GitHub authentication options
 .
+​
+Unable to get organization UUID
+claude --cloud
+and
+claude --teleport
+require sign-in with a claude.ai account. If you authenticate with an API key, or your stored account details are stale, these commands fail with
+Unable to get organization UUID
+or a message that API key authentication is not sufficient.
+Run
+/login
+to sign in with your claude.ai account, then retry the command.
+On Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry, the commands stop earlier with
+Cloud sessions aren't available with <provider>
+. Cloud sessions run on Anthropic’s infrastructure and aren’t available through those providers.
 ​
 Remote Control session expired or access denied
 --teleport

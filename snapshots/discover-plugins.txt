@@ -29,11 +29,23 @@ To install a plugin from the official marketplace, use
 /plugin
 install
 github@claude-plugins-official
-If Claude Code reports that the plugin is not found in any marketplace, your marketplace is either missing or outdated. Run
-/plugin marketplace update claude-plugins-official
-to refresh it, or
+/plugin
+opens an interactive panel in the terminal CLI. If Claude replies that
+/plugin
+isn’t available in this environment, use the
+plugin browser
+in the Claude desktop app, or declare the plugin under
+enabledPlugins
+in
+.claude/settings.json
+for cloud sessions.
+If Claude Code reports
+Marketplace "claude-plugins-official" not found
+, add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-if you haven’t added it before. Then retry the install.
+. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+/plugin marketplace update claude-plugins-official
+. Then retry the install.
 The official marketplace is curated by Anthropic, and inclusion is at Anthropic’s discretion. The in-app submission forms add plugins to the
 community marketplace
 , not the official one. To distribute plugins independently,

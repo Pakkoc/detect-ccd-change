@@ -128,6 +128,8 @@ required:
 "company_name"
 ]
 };
+try
+{
 for
 await
 (
@@ -181,6 +183,24 @@ structured_output
 // { company_name: "Anthropic", founded_year: 2021, headquarters: "San Francisco, CA" }
 }
 }
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result, such as
+// error_max_structured_output_retries; see the Error handling section.
+console
+.
+error
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
+}
 import
 asyncio
 from
@@ -225,6 +245,8 @@ async
 def
 main
 ():
+try
+:
 async
 for
 message
@@ -257,6 +279,21 @@ message.structured_output:
 print
 (message.structured_output)
 # {'company_name': 'Anthropic', 'founded_year': 2021, 'headquarters': 'San Francisco, CA'}
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result, such as
+# error_max_structured_output_retries; see the Error handling section.
+print
+(
+f
+"Session ended with an error:
+{
+error
+}
+"
+)
 asyncio.run(main())
 ​
 Type-safe schemas with Zod and Pydantic
@@ -369,6 +406,8 @@ toJSONSchema
 FeaturePlan
 );
 // Use in query
+try
+{
 for
 await
 (
@@ -499,6 +538,24 @@ description
 }
 }
 }
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result, such as
+// error_max_structured_output_retries; see the Error handling section.
+console
+.
+error
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
+}
 import
 asyncio
 from
@@ -538,6 +595,8 @@ async
 def
 main
 ():
+try
+:
 async
 for
 message
@@ -607,6 +666,21 @@ step.estimated_complexity
 ]
 {
 step.description
+}
+"
+)
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result, such as
+# error_max_structured_output_retries; see the Error handling section.
+print
+(
+f
+"Session ended with an error:
+{
+error
 }
 "
 )
@@ -745,6 +819,8 @@ required:
 ]
 };
 // Agent uses Grep to find TODOs, Bash to get git blame info
+try
+{
 for
 await
 (
@@ -896,6 +972,24 @@ date
 });
 }
 }
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result, such as
+// error_max_structured_output_retries; see the Error handling section.
+console
+.
+error
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
+}
 import
 asyncio
 from
@@ -988,6 +1082,8 @@ def
 main
 ():
 # Agent uses Grep to find TODOs, Bash to get git blame info
+try
+:
 async
 for
 message
@@ -1080,6 +1176,21 @@ todo[
 }
 "
 )
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result, such as
+# error_max_structured_output_retries; see the Error handling section.
+print
+(
+f
+"Session ended with an error:
+{
+error
+}
+"
+)
 asyncio.run(main())
 ​
 Error handling
@@ -1102,6 +1213,40 @@ subtype
 field to determine whether the output was generated successfully or if you need to handle a failure:
 TypeScript
 Python
+import
+{
+query
+}
+from
+"@anthropic-ai/claude-agent-sdk"
+;
+const
+contactSchema
+=
+{
+type:
+"object"
+,
+properties:
+{
+name:
+{
+type:
+"string"
+},
+email:
+{
+type:
+"string"
+}
+},
+required:
+[
+"name"
+]
+};
+try
+{
 for
 await
 (
@@ -1164,7 +1309,6 @@ subtype
 ===
 "error_max_structured_output_retries"
 ) {
-// Handle the failure - retry with simpler prompt, fall back to unstructured, etc.
 console
 .
 error
@@ -1174,6 +1318,66 @@ error
 }
 }
 }
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result.
+// If the failure was an error result, the subtype branches above
+// have already run; connection or process failures yield no result
+// message. Handle the failure here - retry with a simpler prompt,
+// fall back to unstructured, etc.
+console
+.
+log
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
+}
+import
+asyncio
+from
+claude_agent_sdk
+import
+query, ClaudeAgentOptions, ResultMessage
+contact_schema
+=
+{
+"type"
+:
+"object"
+,
+"properties"
+: {
+"name"
+: {
+"type"
+:
+"string"
+},
+"email"
+: {
+"type"
+:
+"string"
+},
+},
+"required"
+: [
+"name"
+],
+}
+async
+def
+main
+():
+try
+:
 async
 for
 message
@@ -1214,11 +1418,29 @@ message.subtype
 ==
 "error_max_structured_output_retries"
 :
-# Handle the failure
 print
 (
 "Could not produce valid output"
 )
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result.
+# If the failure was an error result, the subtype branches above
+# have already run; connection or process failures yield no
+# result message. Handle the failure here - retry with a simpler
+# prompt, fall back to unstructured, etc.
+print
+(
+f
+"Session ended with an error:
+{
+error
+}
+"
+)
+asyncio.run(main())
 Tips for avoiding errors:
 Keep schemas focused.
 Deeply nested schemas with many required fields are harder to satisfy. Start simple and add complexity as needed.

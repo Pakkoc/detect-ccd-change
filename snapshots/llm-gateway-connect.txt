@@ -28,7 +28,7 @@ below.
 Check the Status tab
 If Claude Code started a session without showing the login screen, run
 /status
-, open the
+, which opens on the
 Status
 tab, and check two lines:
 Anthropic base URL
@@ -139,20 +139,27 @@ env:
 ANTHROPIC_AUTH_TOKEN
 =
 "sk-gateway-key"
-Shell exports apply only to that terminal session and programs started from it; an editor launched from the dock or Start menu won’t see them. To make them persist across new terminals, add the same lines to your shell profile, such as
+Shell exports apply only to that terminal session and programs started from it. An editor launched from the dock or Start menu won’t see them. To make the values persist across new terminals, add the same lines to your shell profile, such as
 ~/.zshrc
 ,
 ~/.bashrc
 , or your PowerShell
 $PROFILE
-, or use a settings file instead.
+.
+If you export the gateway only in your shell, it doesn’t reliably reach background agents hosted by the
+supervisor
+; see
+how each background session sources its gateway
+. Use a settings file for any gateway that background agents must always route through.
 ​
 Set in a settings file
-To make the configuration apply everywhere Claude Code runs without depending on your shell, set the variables in the
+To make the configuration apply everywhere Claude Code runs, including
+background agents
+, set the variables in the
 env
 block of a
 settings file
-. Settings files have different scopes:
+instead of relying on your shell. Settings files have different scopes:
 ~/.claude/settings.json
 applies to all your projects. On Windows the path is
 %USERPROFILE%\.claude\settings.json
@@ -977,7 +984,9 @@ setting exited with an error, timed out, or printed nothing, so requests carry a
 Run the command directly to see why it fails, and re-authenticate with your credential provider if it reports an expired session; see
 the error reference
 Unable to connect to API (ConnectionRefused)
-, or
+when nothing answers at the address,
+Unable to connect to API (FailedToOpenSocket)
+when the hostname doesn’t resolve, or
 (ECONNREFUSED)
 from npm installs, often after a silent pause while Claude Code
 retries with backoff

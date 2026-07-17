@@ -1,6 +1,6 @@
-Agent teams are experimental and disabled by default. Enable them by adding
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
-to your
+Agent teams are experimental and disabled by default. Enable them by setting
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+in your
 settings.json
 or environment. Without that variable, no team is set up at session start, no team directories are written, and Claude does not spawn or propose teammates. Agent teams have
 known limitations
@@ -94,6 +94,9 @@ one on UX, one on technical architecture, one playing devil's advocate.
 From there, Claude populates a
 shared task list
 , spawns teammates for each perspective, has them explore the problem, and synthesizes findings when finished.
+Claude may sometimes use
+subagents
+instead of creating a team. Subagents appear in the same agent panel as teammates, so the panel alone doesn’t confirm a team formed. If Claude spawned subagents instead, ask again and explicitly request an agent team.
 The lead’s terminal lists teammates in the agent panel below the prompt input. From the panel:
 Up and down arrows
 : select a teammate
@@ -163,6 +166,11 @@ To set the mode for a single session, pass it as a flag:
 claude
 --teammate-mode
 auto
+The
+--teammate-mode
+flag is experimental and doesn’t appear in
+claude --help
+.
 Split-pane mode requires either
 tmux
 or iTerm2 with the
@@ -305,7 +313,11 @@ subagent definitions
 instead.
 The team config contains a
 members
-array with each teammate’s name, agent ID, and agent type. Teammates can read this file to discover other team members.
+array with each member’s name and agent ID. The lead’s entry always carries the agent type
+team-lead
+; a teammate’s entry includes an agent type only when the teammate was spawned from a
+subagent definition
+. Teammates can read this file to discover other team members.
 There is no project-level equivalent of the team config. A file like
 .claude/teams/teams.json
 in your project directory is not recognized as configuration; Claude treats it as an ordinary file.

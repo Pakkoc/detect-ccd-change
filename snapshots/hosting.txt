@@ -213,7 +213,26 @@ sessionStore
 from
 claude_agent_sdk
 import
-query, ClaudeAgentOptions
+query, ClaudeAgentOptions, SessionStore
+import
+asyncio
+user_input:
+str
+=
+...
+session_id:
+str
+=
+...
+# looked up from your database by user
+session_store: SessionStore
+=
+...
+# S3, Redis, Postgres, or your own adapter
+async
+def
+main
+():
 async
 for
 message
@@ -228,14 +247,13 @@ ClaudeAgentOptions(
 resume
 =
 session_id,
-# looked up from your database by user
 session_store
 =
 session_store,
-# S3, Redis, Postgres, or your own adapter
 ),
 ):
 ...
+asyncio.run(main())
 See
 Session storage
 for the full
@@ -516,6 +534,24 @@ from
 claude_agent_sdk
 import
 query, ClaudeAgentOptions
+import
+asyncio
+prompt:
+str
+=
+...
+tenant_dir:
+str
+=
+...
+config_dir:
+str
+=
+...
+async
+def
+main
+():
 async
 for
 message
@@ -546,6 +582,7 @@ env
 ),
 ):
 ...
+asyncio.run(main())
 For per-tenant network controls, see
 Secure Deployment
 .

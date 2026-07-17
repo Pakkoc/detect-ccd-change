@@ -247,6 +247,13 @@ claude agents
 /background
 , and the on-demand supervisor
 disableAgentView
+Configure the corporate launcher
+Prefix the
+background-agent supervisor
+, its workers, and the
+other covered background processes
+with a required corporate launcher instead of turning agent view off
+processWrapper
 Model restrictions
 availableModels
 filters which models appear in the picker. Adding

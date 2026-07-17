@@ -82,7 +82,7 @@ After:
 : {
 "@anthropic-ai/claude-agent-sdk"
 :
-"^0.2.0"
+"^0.3.0"
 }
 }
 5. Review
@@ -93,7 +93,11 @@ For Python Projects
 1. Uninstall the old package:
 pip
 uninstall
+-y
 claude-code-sdk
+If the old package isn’t installed, pip prints
+WARNING: Skipping claude-code-sdk as it is not installed.
+That’s expected and you can continue to the next step.
 2. Install the new package:
 pip
 install
@@ -253,6 +257,16 @@ systemPrompt:
 "You are a helpful coding assistant"
 }
 });
+from
+claude_agent_sdk
+import
+query, ClaudeAgentOptions
+import
+asyncio
+async
+def
+main
+():
 # BEFORE (v0.0.x) - Used Claude Code's system prompt by default
 async
 for
@@ -267,10 +281,6 @@ print
 (message)
 # AFTER (v0.1.0) - Uses minimal system prompt by default
 # To get the old behavior, explicitly request Claude Code's preset:
-from
-claude_agent_sdk
-import
-query, ClaudeAgentOptions
 async
 for
 message
@@ -319,6 +329,7 @@ system_prompt
 ):
 print
 (message)
+asyncio.run(main())
 Why this changed:
 Provides better control and isolation for SDK applications. You can now build agents with custom behavior without inheriting Claude Code’s CLI-focused instructions.
 ​
@@ -383,6 +394,12 @@ from
 claude_agent_sdk
 import
 query, ClaudeAgentOptions
+import
+asyncio
+async
+def
+main
+():
 async
 for
 message
@@ -425,6 +442,7 @@ setting_sources
 ):
 print
 (message)
+asyncio.run(main())
 Isolation is especially important for CI/CD pipelines, deployed applications, test environments, and multi-tenant systems where local customizations should not leak in.
 SDK v0.1.0 briefly defaulted to no settings loaded; this was reverted in subsequent releases. Python SDK 0.1.59 and earlier treated an empty list the same as omitting the option, so upgrade before relying on
 setting_sources=[]

@@ -94,7 +94,9 @@ ask
 requiresUserInteraction
 , and removals targeting
 /
-or your home directory. With no prompts to catch mistakes, the isolation boundary you choose is what protects your system. Always run this flag inside a container, a VM, or the
+or your home directory. With no prompts to catch mistakes, the isolation boundary you choose is what protects your system. Always run
+--dangerously-skip-permissions
+sessions inside a container, a VM, or the
 sandbox runtime
 , so that file tools, MCP servers, and hooks are also inside the boundary.
 Auto mode
@@ -141,11 +143,13 @@ The runtime denies all write and network access by default, so configure it befo
 ~/.srt-settings.json
 , or a file you pass with
 --settings
-, allow write access to at least your project directory and Claude Code’s configuration paths
+, allow write access to at least your project directory, Claude Code’s configuration paths
 ~/.claude
 and
 ~/.claude.json
-. Allow the network domains your session needs, including
+, and
+/tmp
+, where Claude Code writes runtime files. Allow the network domains your session needs, including
 api.anthropic.com
 or your configured provider’s endpoint. See the package
 README

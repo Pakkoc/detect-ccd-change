@@ -825,7 +825,11 @@ ENABLE_PROMPT_CACHING_1H
 environment variable. You can export it in your shell or container environment, or pass it through
 options.env
 .
-The following example enables 1-hour TTL for an agent running on Amazon Bedrock:
+The following example enables 1-hour TTL for an agent running on Amazon Bedrock. Because it sets
+CLAUDE_CODE_USE_BEDROCK
+, it requires working AWS credentials for
+Amazon Bedrock
+; without them the query fails.
 Python
 TypeScript
 from

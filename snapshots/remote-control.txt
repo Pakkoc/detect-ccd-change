@@ -48,7 +48,11 @@ Authentication
 claude
 and use
 /login
-to sign in through claude.ai if you haven’t already.
+to sign in through claude.ai if you haven’t already. Without an eligible login,
+claude remote-control
+exits with an error, while
+claude --remote-control
+still starts an interactive session and shows a Remote Control failure notification shortly after launch.
 API endpoint
 : not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
 As of v2.1.196, Remote Control is also disabled when
@@ -189,10 +193,10 @@ in the prompt box, or open the command menu with
 and select it.
 /remote-control
 A banner appears above the prompt box showing connection status. Once connected, click
-Open in browser
+claude.ai/code
 in the banner to go directly to the session, or find it in the session list at
 claude.ai/code
-. The session URL is also posted in the conversation.
+. Claude Code also posts the session URL in the conversation.
 To disconnect, click the close icon on the banner or run
 /remote-control
 again.
@@ -453,20 +457,31 @@ and
 /effort
 take the argument in place of the terminal picker or slider.
 /mcp
-, from v2.1.166: returns a text summary of server status instead of opening the picker, and accepts the
+, from v2.1.166: from the mobile app, returns a text summary of server status instead of opening the picker. On the web,
+/mcp
+on its own opens a directory of
+claude.ai connectors
+instead of returning the summary. The
 reconnect
 ,
 enable
 , and
 disable
 subcommands
-. Unlike the local CLI,
+work from both. Unlike the local CLI,
 /mcp reconnect
 without a server name reconnects every server that has failed or needs authentication.
 /config
-, from v2.1.181: pass
+, from v2.1.181: from the mobile app, pass
 key=value
-to set a setting, or run it with no argument to list the keys you can set.
+to set a setting, or run it with no argument to list the keys you can set. On the web,
+/config
+opens the Claude Code section of your settings instead, and ignores text after the command.
+On Team and Enterprise,
+/usage-credits
+from mobile or web doesn’t send a
+usage-credits request to your admin
+. Sending requires a confirmation that appears only in the interactive CLI, so the command tells you to run it there instead. Before v2.1.211, the text form sent the request without confirmation.
 ​
 Troubleshooting
 ​

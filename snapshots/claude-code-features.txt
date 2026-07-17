@@ -35,6 +35,12 @@ from
 claude_agent_sdk
 import
 query, ClaudeAgentOptions, AssistantMessage, ResultMessage
+import
+asyncio
+async
+def
+main
+():
 async
 for
 message
@@ -101,6 +107,7 @@ message.result
 }
 "
 )
+asyncio.run(main())
 import
 {
 query
@@ -207,6 +214,7 @@ result
 );
 }
 }
+When this runs, the assistant’s response prints to stdout, followed by a final result line once the run completes.
 Each source loads settings from a specific location, where
 <cwd>
 is the working directory you pass via the
@@ -428,8 +436,14 @@ from
 claude_agent_sdk
 import
 query, ClaudeAgentOptions, ResultMessage
+import
+asyncio
 # Skills in .claude/skills/ are discovered automatically
 # when settingSources includes "project"
+async
+def
+main
+():
 async
 for
 message
@@ -474,6 +488,7 @@ message.subtype
 :
 print
 (message.result)
+asyncio.run(main())
 import
 {
 query
@@ -592,10 +607,12 @@ from
 claude_agent_sdk
 import
 query, ClaudeAgentOptions, HookMatcher, ResultMessage
+import
+asyncio
 # PreToolUse hook callback. Positional args:
 #   input_data: HookInput dict with tool_name, tool_input, hook_event_name
 #   tool_use_id: str | None, the ID of the tool call being intercepted
-#   context: HookContext, carries session metadata
+#   context: HookContext, reserved for future abort-signal support
 async
 def
 audit_bash
@@ -643,6 +660,10 @@ return
 # Filesystem hooks from .claude/settings.json run automatically
 # when settingSources loads them. You can also add programmatic hooks:
 async
+def
+main
+():
+async
 for
 message
 in
@@ -687,6 +708,7 @@ message.subtype
 :
 print
 (message.result)
+asyncio.run(main())
 import
 {
 query
@@ -852,11 +874,11 @@ Programmatic
 (callbacks in
 query()
 )
-Application-specific logic, structured decisions, and in-process integration. These also fire inside subagents. The callback receives
+Application-specific logic, structured decisions, and in-process integration. These also fire inside subagents. The hook input, the callback’s first argument, carries
 agent_id
 and
 agent_type
-to distinguish.
+fields that identify which agent fired the hook.
 The TypeScript SDK supports additional hook events beyond Python, including
 SessionStart
 ,

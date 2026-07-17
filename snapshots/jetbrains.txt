@@ -85,11 +85,24 @@ claude
 Enter the
 /config
 command
-Set the diff tool to
+Set
+Diff tool
+to
 auto
 to show diffs in the IDE, or
 terminal
 to keep them in the terminal
+The
+Diff tool
+entry appears in
+/config
+only when Claude Code is connected to the IDE, so run
+claude
+from the JetBrains terminal or run
+/ide
+first from an external terminal. See
+diffTool
+for the underlying setting.
 ​
 Plugin settings
 Configure the Claude Code plugin by going to

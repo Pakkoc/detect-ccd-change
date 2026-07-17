@@ -18,7 +18,7 @@ Start a Claude Code session and run the
 /sandbox
 command:
 /sandbox
-This opens the sandbox panel with three tabs:
+This opens the sandbox panel with three tabs, plus a Dependencies tab on Linux when the optional seccomp filter is missing:
 Mode
 : choose how sandboxed commands are approved, covered in the next step
 Overrides
@@ -79,27 +79,30 @@ dnf
 install
 bubblewrap
 socat
-After installing, the Dependencies tab in
+When a dependency is missing, the Dependencies tab in
 /sandbox
-shows whether
+lists which of
 ripgrep
 ,
 bubblewrap
 ,
 socat
-, and the seccomp filter are available on your platform. Ripgrep is bundled with the native Claude Code binary. The seccomp filter is optional and adds Unix domain socket blocking. Install it with
+, and the seccomp filter your platform lacks. If you don’t see the tab after installing and restarting Claude Code, all dependencies are present.
+Ripgrep is bundled with the native Claude Code binary. The seccomp filter is optional and adds Unix domain socket blocking. Install it with
 npm install -g @anthropic-ai/sandbox-runtime
 if it is missing.
-When a required dependency is missing, the Dependencies tab is the only tab shown until you install it. The dependency check runs at startup, so restart Claude Code after installing packages for
+When a required dependency is missing, the Dependencies tab is the only tab shown until you install it. When only the optional seccomp filter is missing, the Dependencies tab appears alongside the other tabs. The dependency check runs at startup, so restart Claude Code after installing packages for
 /sandbox
 to detect them.
 Ubuntu 24.04 and later: allow bubblewrap to create user namespaces
 On Ubuntu 24.04 and later, the default AppArmor policy prevents bubblewrap from creating the user namespaces it needs for isolation.
 To check whether your environment enforces this restriction, including inside WSL2, run
 sysctl kernel.apparmor_restrict_unprivileged_userns
-. If the key does not exist or returns
+. If the command returns
 0
-, skip this step. If it returns
+, skip this step. If it prints a
+No such file or directory
+error, the key doesn’t exist and you can skip this step. If it returns
 1
 , add an AppArmor profile that grants
 bwrap
@@ -578,16 +581,22 @@ npm
 Network isolation
 Network access is controlled through a proxy server running outside the sandbox:
 Domain restrictions
-: no domains are pre-allowed. The first time a command needs a new domain, Claude Code prompts for approval.
+: no domains are pre-allowed by default. The first time a command needs a new domain, Claude Code prompts for approval.
 As of v2.1.191, choosing Yes allows the host for the rest of the current session, so later connections to the same host do not prompt again. Pre-allow domains with
 allowedDomains
 to avoid the prompt entirely.
+WebFetch
+allow rules also pre-allow domains, as described in
+Permission rules
+.
 Managed lockdown
 : if
 allowManagedDomainsOnly
 is set in managed settings, non-allowed domains are blocked automatically instead of prompting, and only
 allowedDomains
-from managed settings are honored.
+and
+WebFetch(domain:...)
+allow rules from managed settings are honored.
 Custom proxy support
 : advanced users can implement custom rules on outgoing traffic
 Comprehensive coverage
@@ -873,9 +882,9 @@ mount would hide.
 Seccomp filter on Linux
 : the seccomp filter is required to block Unix domain sockets. The Dependencies tab in
 /sandbox
-shows whether it is available. If it is missing, run
+appears only when a dependency is missing; if you don’t see the tab after a restart, the filter is already installed. If the filter is missing, run
 npm install -g @anthropic-ai/sandbox-runtime
-to install the helper.
+to install the helper, then restart Claude Code so the startup dependency check detects it.
 --dangerously-skip-permissions
 fails as root
 : this flag is blocked when running as root or via sudo on Linux and macOS, because root access combined with no permission prompts can modify any file or service on the system. The check is skipped automatically inside a recognized sandbox. To run autonomously in a container, use the
@@ -930,6 +939,7 @@ Settings files protected
 : the sandbox automatically denies write access to Claude Code’s
 settings.json
 files at every scope and to the managed settings directory, so a sandboxed command cannot modify its own policy.
+In v2.1.210 and later, the deny rules resolve symlinks: when a symlink appears at a protected settings file path after startup, the sandbox adds its target to the deny list for the next command, so a linked settings file can’t be edited through the link.
 ​
 Platform and tool compatibility
 Platform support

@@ -338,7 +338,10 @@ remote, for example
 origin
 remote is configured
 cost.total_cost_usd
-Estimated session cost in USD, computed client-side. May differ from your actual bill
+Estimated session cost in USD, computed client-side. May differ from your actual bill.
+Resets to $0 when
+/clear
+starts a new session
 cost.total_duration_ms
 Total wall-clock time since the session started, in milliseconds
 cost.total_api_duration_ms

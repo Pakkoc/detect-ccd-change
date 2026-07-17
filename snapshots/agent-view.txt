@@ -70,11 +70,16 @@ on an empty prompt to detach and return to the table.
 Bring an existing session in
 This step needs a running session. If you followed the earlier steps you don’t have one open in this terminal, so open a regular
 claude
-session in another terminal and send it a message first. To move a session you already have open into agent view, run
+session in another terminal and send it a message first.
+To move a session you already have open into agent view, run
 /bg
 inside it, or press
 ←
-on an empty prompt to background it and open agent view in one step. The session keeps running and appears as a row alongside the ones you dispatched.
+on an empty prompt to background it and open agent view in one step. In a fresh session with no messages yet,
+/bg
+asks you to send a message first, while
+←
+works right away. The session keeps running and appears as a row alongside the ones you dispatched.
 You can use
 claude agents
 as your primary entry point instead of
@@ -97,11 +102,10 @@ prefersReducedMotion
 setting
 is on, and it is hidden in
 screen reader mode
-. On
+. Requires Claude Code v2.1.205 or later.
+The count appears on every provider, including
 Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
-, the hint stays in its plain
-← for agents
-form without the count. Requires Claude Code v2.1.205 or later.
+.
 ​
 Monitor sessions with agent view
 Run
@@ -178,6 +182,8 @@ The session was stopped with
 Ctrl+X
 or
 claude stop
+, or
+its process was ended from outside Claude Code
 Separately, the icon’s shape shows whether the underlying process is running:
 Shape
 What it means
@@ -302,7 +308,7 @@ Most of the time the peek panel is enough and you don’t need to open the full 
 Before v2.1.207, every peek opened with the status sentence and a bare timestamp, and a blocked session’s question appeared below them prefixed with the same timestamp a second time.
 Type a reply in the peek panel and press
 Enter
-to send it to that session. When the session is asking a multiple-choice question, the peek panel shows the options and you can press a number key to pick one. For other blocked sessions, press
+to send it to that session. When the session asks a question with predefined choices, the peek panel shows them as a numbered list and you can press a number key to pick one. A permission prompt shows as text describing what the session wants to run, without numbered options. Type a reply to answer it, or attach to answer with the standard prompt. For other blocked sessions, press
 Tab
 to fill the input with a suggested reply you can edit before sending. Prefix a reply with
 !
@@ -391,6 +397,11 @@ all leave it running. To end a session from inside it, run
 In a session running in the foreground, one you started in the terminal rather than attached to from agent view, pressing
 ←
 on an empty prompt backgrounds it and opens agent view with that row selected, so you can switch sessions without leaving the terminal. The same single press detaches an attached session.
+Claude’s task list
+moves to the background session with the conversation, so the checklist is intact when you return to that row.
+The row you pressed
+←
+from also keeps a bold, undimmed name after you move the selection with the arrow keys or the mouse, so you can tell which session you came from.
 If a tool is running when you press
 ←
 , Claude Code waits up to about ten seconds for it to finish before backgrounding, and the response continues in the background session. Press
@@ -466,6 +477,11 @@ for the session, deleting removes that worktree too, including any uncommitted c
 claude --resume
 .
 Deleting never removes a worktree with commits that aren’t pushed anywhere, or one that another running session claims or has locked. Claude Code keeps the worktree and the session, and the footer names the kept path and the reason. Push the commits, or close the other session, then delete again.
+When a delete is refused, the session’s row shows
+not deleted
+with the reason, and a worktree that couldn’t be removed is reported with the underlying git error. A worktree that git no longer recognizes, for example one removed from git’s records by
+git worktree prune
+, doesn’t block deletion: the session is deleted, the worktree directory is left untouched on disk, and the footer names its path. Before v2.1.211, a session whose worktree git no longer recognized could never be deleted: every attempt was refused without the underlying error, and the row reappeared with no notice.
 Deleting also clears the session from the
 supervisor’s
 session list, whether you delete with
@@ -554,6 +570,11 @@ Enter
 to start a new background session. The session is named automatically from the prompt; rename it later with
 Ctrl+R
 .
+The automatic name is a short label written by a
+Haiku-class model
+. When the model’s reply answers or refuses the prompt instead of labeling it, which a prompt that’s mostly a link can provoke, Claude Code discards the reply, keeps a name taken from the prompt text on the row, and retries the naming later. Before v2.1.211, Claude Code could save such a reply as the session’s name, so a row could show a refusal such as
+i don't have access to…
+as its title.
 A name the session gets later also appears on its row, including the name Claude derives when you
 accept a plan
 in that session. Before v2.1.207, a background session named by accepting a plan showed that name in
@@ -732,7 +753,11 @@ is rejected with an error before any session is created, because
 never starts the interactive session that
 claude agents
 attaches to.
-To run a specific subagent as the session’s main agent, combine
+To run a specific
+subagent
+you have defined, such as a
+code-reviewer
+, as the session’s main agent, combine
 --bg
 with
 --agent
@@ -742,6 +767,9 @@ claude
 code-reviewer
 --bg
 "address review comments on PR 1234"
+If the name doesn’t match any of your subagents, Claude Code prints a stderr warning,
+warning: no agent named '<name>' — spawning with default template
+, and runs the session with the default agent.
 Pass
 --name
 to set the session’s display name in agent view instead of the auto-generated one:
@@ -925,14 +953,14 @@ CLAUDE_CODE_USE_VERTEX
 , and
 ANTHROPIC_DEFAULT_*_MODEL
 aliases follow the shell that dispatched the session.
-A
+If you export a
 CLAUDE_CODE_EXTRA_BODY
-request-body override exported in that shell reaches the session the same way. Before v2.1.206, background workers ignored a shell-exported
+request-body override in that shell, it reaches the session the same way. Before v2.1.206, background workers ignored a shell-exported
 CLAUDE_CODE_EXTRA_BODY
 .
-A gateway
+If you export a gateway
 ANTHROPIC_BASE_URL
-exported in the dispatching shell reaches the session too, together with
+in the dispatching shell, it reaches the session too, together with
 ANTHROPIC_CUSTOM_HEADERS
 , when the supervisor runs with the same gateway environment and the session runs in the directory you dispatch from or is your own session backgrounded with
 ←
@@ -1027,6 +1055,14 @@ plan
 opus
 --effort
 high
+--effort
+here accepts the same values as the
+top-level
+--effort
+flag
+, including
+ultracode
+.
 --agent
 sets the
 subagent
@@ -1118,6 +1154,10 @@ agents
 ./ci-settings.json
 --add-dir
 ../shared-lib
+--settings
+accepts a file path or an inline JSON string. A file path must point to an existing file; Claude Code exits with a
+Settings file not found
+error if it doesn’t.
 ​
 Manage sessions from the shell
 Every background session has a short ID you can use from the shell. The ID is printed when you start a session with
@@ -1198,7 +1238,8 @@ Restart every running session, e.g. to move all sessions onto an updated Claude 
 claude rm <id>
 Remove a session from the list. Removes a worktree Claude created for the session if it has no uncommitted changes and no commits that aren’t pushed anywhere; otherwise the session is kept too, and the command prints the worktree path and the reason so you can resolve it and run
 claude rm
-again. Leaves a worktree you created yourself in place. The conversation transcript stays on your local machine and remains available through
+again.
+A worktree git no longer recognizes doesn’t block removal: the session is removed and the directory is left on disk, with its path printed. Leaves a worktree you created yourself in place. The conversation transcript stays on your local machine and remains available through
 claude --resume
 claude daemon status
 Print the
@@ -1254,11 +1295,11 @@ in that project’s
 .claude/settings.json
 env
 block.
-A gateway
+If you export a gateway
 ANTHROPIC_BASE_URL
-exported in the shell you dispatch from reaches that session’s worker, together with
+in the shell you dispatch from, it reaches that session’s worker.
 ANTHROPIC_CUSTOM_HEADERS
-and the credential exported alongside them, when the supervisor was started from an environment with the same gateway. The supervisor captures its environment from the first shell that opens agent view or dispatches a background session, so starting from the gateway shell gives it that environment. The forward also applies only to sessions dispatched into the directory you’re dispatching from, or backgrounded from your own session with
+and the credential exported alongside them are forwarded with it. This happens when the supervisor was started from an environment with the same gateway. The supervisor captures its environment from the first shell that opens agent view or dispatches a background session, so starting from the gateway shell gives it that environment. The forward also applies only to sessions dispatched into the directory you’re dispatching from, or backgrounded from your own session with
 ←
 or
 /background
@@ -1274,17 +1315,37 @@ ANTHROPIC_BASE_URL
 was dropped while the
 ANTHROPIC_API_KEY
 exported alongside it was kept, so the gateway’s key was sent to the default endpoint and every request failed with a 401.
-The forwarded endpoint applies only to that live process and is never written to disk. When the supervisor stops an idle session and later restarts it, the restarted process reads its endpoint from your settings again: with a gateway
+The forwarded endpoint applies only to that live process and is never written to disk.
+When the supervisor stops an idle session and you later wake it by attaching, peeking, or replying, your environment’s gateway is forwarded again under the same conditions as a fresh dispatch: the session runs in the directory you wake it from and the supervisor shares that gateway environment. Waking a session from a shell without the gateway restarts it against your settings and stored credentials instead. Before v2.1.211, a wake never carried the gateway: a session authenticated through a gateway
 ANTHROPIC_AUTH_TOKEN
-it falls back to your stored credentials, and with a gateway-issued
+restarted onto your stored credentials, or reported
+Not logged in
+when there were none, and a gateway-issued
 ANTHROPIC_API_KEY
-it can fail to authenticate until the gateway is set in settings.
+could fail to authenticate until the gateway was set in settings.
 Each background session is its own Claude Code process, managed by the supervisor rather than tied to your terminal. A session that’s actively working, waiting for your input, or has a terminal attached keeps its process running. A running background shell command, subagent, dynamic workflow, or monitor counts as active work, so a long-running process such as a dev server keeps the session alive.
 Once a session finishes and sits unattached for about an hour, the supervisor stops its process to free resources. A session you have
 pinned
 with
 Ctrl+T
 is exempt and keeps its process running while idle. The transcript and state stay on disk either way, and the next time you attach, peek, or reply to a stopped session, the supervisor starts a fresh process from where it left off. When every session has finished and no terminal is connected, the supervisor itself exits and starts again the next time you need it.
+The supervisor also restarts a session whose process exits unexpectedly, with three safeguards so a restart never overrides a stop or acts on stale input:
+A session whose state on disk already shows it as done, failed, or stopped isn’t restarted, unless a reply you sent is still waiting to be delivered.
+Ending the process of a session you backgrounded with
+←
+or
+/background
+yourself, for example with
+kill
+, marks the session stopped instead of restarting it. A session dispatched with a task, from the agent view input or
+claude --bg
+, is still restarted so the dispatched work completes.
+A session the supervisor restarts is told it was restarted and that you haven’t sent a new message since, so it can re-verify time-sensitive context such as branch state before continuing. A restarted
+←
+or
+/background
+session also doesn’t resume an interrupted response older than about an hour; it waits for your next message instead.
+Before v2.1.211, the supervisor treated an externally ended process as a crash and restarted the session, and a restarted session could resume a stale interrupted response inherited from the conversation it was backgrounded from.
 Background work the session itself started at the top level is handed off when its process is stopped, restarted, or updated, including on Windows. The next process started for that session picks the work back up:
 A background shell command that finished in the meantime is reported as completed with its output
 A dynamic workflow resumes from where it left off
@@ -1324,6 +1385,8 @@ Agent is updating to the new Claude Code…
 names what it’s waiting for and counts the elapsed seconds, and the command connects as soon as the session is ready. After about 60 seconds it stops waiting and reports an error. Before v2.1.205,
 claude attach
 stopped retrying after a few seconds and printed an error while the session was still restarting.
+claude attach
+also waits while the background service itself is starting or reconnecting, and a session that finished during that wait is reported as exited rather than as an error. A terminal resize you make during a slow attach is applied when the attach completes.
 ​
 Where state is stored
 Session state is stored under your Claude Code config directory. If you set
@@ -1434,6 +1497,21 @@ Before v2.1.203, this state started a second process anyway. That process exited
 currently running as a background agent
 error and the row showed as failed.
 ​
+Opening a session says it has no saved transcript
+Opening a stopped session that was
+backgrounded from another conversation
+and stopped before its first response finished shows
+This session has no saved transcript
+instead of starting the session. Until that first response finishes, the conversation still lives only in the session it was backgrounded from, so there’s nothing for the stopped row to resume.
+The original conversation is intact; resume it with
+claude --resume
+or keep working in it. To start the row’s session fresh anyway, run
+claude respawn <id>
+.
+Before v2.1.211, opening the row silently started a blank conversation under the same session id. See the
+error reference
+for details.
+​
 A session fails before starting with a
 possibly low memory
 note
@@ -1532,8 +1610,10 @@ is filling up
 Deleting a session in agent view removes the worktree Claude created for it, and a worktree that can’t be removed safely
 keeps its session row
 so it isn’t orphaned.
+A worktree directory that git no longer recognizes is left on disk when its session is deleted, so remove leftover directories you don’t need by hand.
 claude rm
-keeps a worktree that has uncommitted changes, and its session row, and prints the kept path. List leftover entries with
+keeps a worktree that has uncommitted changes, and its session row, and prints the kept path.
+List leftover entries with
 git worktree list
 in the project directory and remove each with
 git worktree remove <path>
@@ -1569,6 +1649,43 @@ unknown option
 error. The table below lists when each flag and behavior was added.
 Version
 Change
+v2.1.211
+Waking a stopped session by attaching, peeking, or replying from the directory it runs in forwards your shell’s gateway
+ANTHROPIC_BASE_URL
+again, under the same conditions as a fresh dispatch, so a session authenticated through a gateway
+ANTHROPIC_AUTH_TOKEN
+resumes on the gateway instead of reporting
+Not logged in
+. Opening a stopped session that was backgrounded from another conversation before its first response finished is refused with
+This session has no saved transcript
+instead of silently starting a blank conversation under the same session id. Ending the process of a
+←
+or
+/background
+session from outside Claude Code marks it stopped instead of the supervisor restarting it, a stop already recorded on disk is honored unless a reply you sent is still waiting to be delivered, a session restarted after a crash is told it was restarted, and a restarted
+←
+or
+/background
+session doesn’t resume an interrupted response older than about an hour. A session-naming reply that answers or refuses the prompt instead of labeling it, such as for a prompt that’s mostly a link, is discarded and the row keeps a name taken from the prompt text. Deleting a session whose worktree git no longer recognizes succeeds, leaving the worktree directory on disk and naming its path, instead of every attempt being refused. A refused delete shows the reason on the session’s row, including the underlying git error when the worktree couldn’t be removed, instead of the row silently reappearing.
+v2.1.210
+claude attach
+waits while the background service is starting or reconnecting instead of failing with a
+job not found
+or
+still starting
+error, reports a session that finished during the attach as exited, and applies a terminal resize made during a slow attach when the attach completes. The prompt footer’s
+←
+needs-input count appears on every provider, including third-party providers that previously showed the plain
+← for agents
+form. Backgrounding a session with
+←
+carries Claude’s task list to the background session instead of dropping it. The row you pressed
+←
+from keeps a bold, undimmed name after the selection moves.
+claude agents --effort
+accepts
+ultracode
+instead of silently dropping it.
 v2.1.208
 Attaching to a session whose process has stopped shows the last screenful of its transcript while the process starts, instead of only a
 Session is starting

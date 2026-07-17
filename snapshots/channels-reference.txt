@@ -89,7 +89,9 @@ MCP SDK
 .
 1
 Create the project
-Create a new directory and install the MCP SDK:
+The permission relay examples later on this page import
+zod
+directly, so it installs alongside the MCP SDK. Create a new directory and install both:
 mkdir
 webhook-channel
 &&
@@ -98,6 +100,7 @@ webhook-channel
 bun
 add
 @modelcontextprotocol/sdk
+zod
 2
 Write the channel server
 Create a file called
@@ -276,14 +279,19 @@ During the research preview, custom channels aren’t on the allowlist, so start
 claude
 --dangerously-load-development-channels
 server:webhook
-The first time you start a session in this project, Claude Code asks for consent before using the new server from
+Claude Code first shows a full-screen warning dialog listing the development channels you’re loading. Select
+I am using this for local development
+to continue, or
+Exit
+to quit.
+The first time you start a session in this project, Claude Code also asks for consent before using the new server from
 .mcp.json
 . The dialog reports “New MCP server found in this project: webhook”. Select
 Use this MCP server
 to continue.
-When Claude Code starts, it reads your MCP config, spawns your
+After you accept, Claude Code spawns your
 webhook.ts
-as a subprocess, and the HTTP listener starts automatically on the port you configured (8788 in this example). You don’t need to run the server yourself.
+as a subprocess, and the HTTP listener starts automatically on the port you configured, 8788 in this example. You don’t need to run the server yourself.
 A dim notice below the startup banner confirms the channel is registered:
 Channels (experimental) messages from server:webhook inject directly in this session · restart without --dangerously-load-development-channels to stop
 .
@@ -297,11 +305,13 @@ POST
 localhost:8788
 -d
 "build failed on main: https://ci.example.com/run/1234"
-The payload arrives in your Claude Code session as a
+The payload arrives in Claude’s context as a
 <channel>
 tag:
 <channel source="webhook" path="/" method="POST">build failed on main: https://ci.example.com/run/1234</channel>
-In your Claude Code terminal, you’ll see Claude receive the message and start responding: reading files, running commands, or whatever the message calls for. This is a one-way channel, so Claude acts in your session but doesn’t send anything back through the webhook. To add replies, see
+Your terminal renders the event as a one-line summary,
+← webhook: build failed on main: https://ci.example.com/run/1234
+, rather than the raw tag. You’ll then see Claude start responding: reading files, running commands, or whatever the message calls for. This is a one-way channel, so Claude acts in your session but doesn’t send anything back through the webhook. To add replies, see
 Expose a reply tool
 .
 If the event doesn’t arrive, the diagnosis depends on what
@@ -1256,9 +1266,22 @@ or
 Write
 .
 description
-Human-readable summary of what this specific tool call does, the same text the local terminal dialog shows. For a Bash call this is Claude’s description of the command, or the command itself if none was given.
+Human-readable summary of what this specific tool call does, never the command itself. For a Bash call this is Claude’s description of the command; when the model gives no description, the field is the constant
+Run shell command
+and carries zero command detail. Render
 input_preview
-The tool’s arguments as a JSON string, truncated to 200 characters. For Bash this is the command; for Write it’s the file path and a prefix of the content. Omit it from your prompt if you only have room for a one-line message. Your server decides what to show.
+when you have room.
+input_preview
+The tool’s arguments as JSON-shaped display text, keyed per top-level field. For Bash this is the command; for Write, the file path and the content. Omit it from your prompt if you only have room for a one-line message. Your server decides what to show.
+Clients on Claude Code v2.1.211 or later sanitize both fields before relaying them: they neutralize direction-override and invisible characters and quote and angle-bracket lookalikes, fold whitespace runs to a single space, and relay text whole up to 3,500 code points, applied per top-level field for
+input_preview
+, which also keeps the JSON’s own structural quotes. A longer value keeps its start and end visible around a counted
+⋯ N code points elided ⋯
+marker, so the end of a long command still reaches the approver. Earlier clients relay
+description
+raw and cut
+input_preview
+to 200 UTF-16 units with a trailing ellipsis. Treat both fields as untrusted unless you control the client fleet.
 The verdict your server sends back is
 notifications/claude/channel/permission
 with two fields:
@@ -1373,13 +1396,13 @@ z
 .
 string
 (),
-// human-readable summary of this call
+// summary of this call. Treat as untrusted.
 input_preview:
 z
 .
 string
 (),
-// tool args as JSON, truncated to ~200 chars
+// tool args as JSON-shaped text. Treat as untrusted.
 }),
 })
 mcp
@@ -1409,6 +1432,18 @@ ${
 params
 .
 description
+}
+\n
+`
++
+// input_preview carries the actual arguments; render it when you
+// have room: for Bash the description alone may be just
+// "Run shell command" with zero command detail
+`
+${
+params
+.
+input_preview
 }
 \n\n
 `
@@ -1947,6 +1982,15 @@ params
 .
 description
 }
+\n
+`
++
+`
+${
+params
+.
+input_preview
+}
 \n\n
 `
 +
@@ -2263,7 +2307,7 @@ Response
 )
 },
 })
-See all 132 lines
+See all 133 lines
 Test the verdict path in three terminals. The first is your Claude Code session, started with the
 development flag
 so it spawns

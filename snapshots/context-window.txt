@@ -89,9 +89,9 @@ for its auto-compaction thresholds and the LLM gateway exception. Compaction wor
 Check your own session
 The visualization uses representative numbers. To see your actual context usage at any point, run
 /context
-for a live breakdown by category with optimization suggestions. Run
+for a live breakdown by category with optimization suggestions, including which CLAUDE.md and auto memory files loaded. Run
 /memory
-to check which CLAUDE.md and auto memory files loaded at startup.
+to open and edit those files.
 ​
 Related resources
 For deeper coverage of the features shown in the timeline, see these pages:

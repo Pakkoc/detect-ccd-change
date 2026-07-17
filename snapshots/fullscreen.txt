@@ -239,8 +239,8 @@ A value of
 3
 matches the default in
 vim
-and similar applications. The setting accepts values from 1 to 20, and fractional values below 1 such as
-0.5
+and similar applications. The setting accepts any positive value up to 20, including fractional values below 1 such as
+0.25
 to slow accelerated trackpad and wheel scrolling in terminals that already amplify wheel events.
 To adjust scroll speed interactively, run
 /scroll-speed
@@ -248,16 +248,17 @@ To adjust scroll speed interactively, run
 ←
 and
 →
-to adjust,
+to adjust the speed,
 r
 to reset to the auto-detected default, and
 Enter
-to save.
+to save. The dialog steps in whole numbers up to 10, and on terminals that support finer control it also offers quarter steps down to 0.25.
+Quarter steps require Claude Code v2.1.172 or later.
 The command writes the same value the
 CLAUDE_CODE_SCROLL_SPEED
 environment variable sets, persisted to
 ~/.claude/settings.json
-. The command isn’t available in the JetBrains IDE terminal.
+. The dialog’s maximum is 10: if you set a higher value through the environment variable, the dialog shows 10, and saving from the dialog persists 10. The command isn’t available in the JetBrains IDE terminal.
 Separately from the base speed, Claude Code accelerates the scroll rate when you spin the wheel quickly, so a fast spin covers more distance than the same number of slow notches.
 To turn acceleration off and keep a constant rate per notch, set
 wheelScrollAccelerationEnabled
@@ -312,6 +313,10 @@ Home
 /
 End
 Jump to top or bottom
+{
+/
+}
+Jump to the previous or next prompt
 Ctrl+u
 /
 Ctrl+d
@@ -499,7 +504,13 @@ To turn fullscreen rendering off, run
 /tui default
 , or unset
 CLAUDE_CODE_NO_FLICKER
-if you enabled it that way. To force the classic renderer regardless of the saved
+if you enabled it that way. When you switch back with
+/tui default
+, Claude Code may first show an optional feedback prompt asking what made you switch. Type a reason and press
+Enter
+to send it, or press
+Esc
+to skip. The CLI relaunches into the classic renderer either way. To force the classic renderer regardless of the saved
 tui
 setting, set
 CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1

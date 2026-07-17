@@ -40,11 +40,13 @@ bot
 Install the plugin
 In Claude Code, run:
 /plugin install telegram@claude-plugins-official
-If Claude Code reports that the plugin is not found in any marketplace, your marketplace is either missing or outdated. Run
-/plugin marketplace update claude-plugins-official
-to refresh it, or
+If Claude Code reports
+Marketplace "claude-plugins-official" not found
+, add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-if you haven’t added it before. Then retry the install.
+. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+/plugin marketplace update claude-plugins-official
+. Then retry the install.
 After installing, run
 /reload-plugins
 to activate the plugin’s configure command.
@@ -112,11 +114,13 @@ Open the generated URL to add the bot to your server.
 Install the plugin
 In Claude Code, run:
 /plugin install discord@claude-plugins-official
-If Claude Code reports that the plugin is not found in any marketplace, your marketplace is either missing or outdated. Run
-/plugin marketplace update claude-plugins-official
-to refresh it, or
+If Claude Code reports
+Marketplace "claude-plugins-official" not found
+, add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-if you haven’t added it before. Then retry the install.
+. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+/plugin marketplace update claude-plugins-official
+. Then retry the install.
 After installing, run
 /reload-plugins
 to activate the plugin’s configure command.
@@ -165,11 +169,13 @@ authorization denied
 Install the plugin
 In Claude Code, run:
 /plugin install imessage@claude-plugins-official
-If Claude Code reports that the plugin is not found in any marketplace, your marketplace is either missing or outdated. Run
-/plugin marketplace update claude-plugins-official
-to refresh it, or
+If Claude Code reports
+Marketplace "claude-plugins-official" not found
+, add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-if you haven’t added it before. Then retry the install.
+. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+/plugin marketplace update claude-plugins-official
+. Then retry the install.
 3
 Restart with channels enabled
 Exit Claude Code and restart with the channel flag:
@@ -222,11 +228,13 @@ in managed settings
 Install the fakechat channel plugin
 Start a Claude Code session and run the install command:
 /plugin install fakechat@claude-plugins-official
-If Claude Code reports that the plugin is not found in any marketplace, your marketplace is either missing or outdated. Run
-/plugin marketplace update claude-plugins-official
-to refresh it, or
+If Claude Code reports
+Marketplace "claude-plugins-official" not found
+, add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-if you haven’t added it before. Then retry the install.
+. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+/plugin marketplace update claude-plugins-official
+. Then retry the install.
 2
 Restart with the channel enabled
 Exit Claude Code, then restart with
@@ -374,9 +382,9 @@ true
 }
 When
 allowedChannelPlugins
-is set, it replaces the Anthropic allowlist entirely: only the listed plugins can register. Leave it unset to fall back to the default Anthropic allowlist. An empty array blocks all channel plugins from the allowlist, but
+is set, it replaces the Anthropic allowlist entirely: only the listed plugins can register. Leave it unset to fall back to the default Anthropic allowlist. If you set an empty array, you block all channel plugins from the allowlist, but
 --dangerously-load-development-channels
-can still bypass it for local testing. To block channels entirely including the development flag, leave
+can still bypass that block for local testing. To block channels entirely including the development flag, leave
 channelsEnabled
 unset instead.
 This setting requires

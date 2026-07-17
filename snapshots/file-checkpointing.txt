@@ -227,6 +227,8 @@ string
 undefined
 ;
 // Step 2: Capture checkpoint UUID from the first user message
+try
+{
 for
 await
 (
@@ -273,6 +275,26 @@ message
 session_id
 ;
 }
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result. If the
+// failure was an error result, sessionId and checkpointId were already
+// captured by the loop above; connection or process failures yield no
+// result message.
+console
+.
+error
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
 }
 // Step 3: Later, rewind by resuming the session with an empty prompt
 if
@@ -548,6 +570,8 @@ for
 message
 in
 client.receive_response():
+if
+checkpoint_id:
 await
 client.rewind_files(checkpoint_id)
 break
@@ -577,6 +601,10 @@ msg
 of
 rewindQuery
 ) {
+if
+(
+checkpointId
+) {
 await
 rewindQuery
 .
@@ -584,6 +612,7 @@ rewindFiles
 (
 checkpointId
 );
+}
 break
 ;
 }
@@ -1027,6 +1056,8 @@ string
 |
 undefined
 ;
+try
+{
 for
 await
 (
@@ -1089,6 +1120,26 @@ message
 session_id
 ;
 }
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result. If the
+// failure was an error result, sessionId and the checkpoints array were
+// already populated by the loop above; connection or process failures
+// yield no result message.
+console
+.
+error
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
 }
 // Later: rewind to any checkpoint by resuming the session
 if
@@ -1568,6 +1619,8 @@ prompt:
 options:
 opts
 });
+try
+{
 for
 await
 (
@@ -1613,6 +1666,26 @@ message
 session_id
 ;
 }
+}
+}
+catch
+(
+error
+) {
+// A single-shot query() throws after yielding an error result. If the
+// failure was an error result, checkpointId and sessionId were already
+// captured by the loop above; connection or process failures yield no
+// result message.
+console
+.
+error
+(
+`Session ended with an error:
+${
+error
+}
+`
+);
 }
 console
 .
@@ -1912,6 +1985,8 @@ for
 message
 in
 client.receive_response():
+if
+checkpoint_id:
 await
 client.rewind_files(checkpoint_id)
 break
@@ -1933,6 +2008,8 @@ resume:
 sessionId
 }
 });
+try
+{
 for
 await
 (
@@ -1941,6 +2018,10 @@ msg
 of
 rewindQuery
 ) {
+if
+(
+checkpointId
+) {
 await
 rewindQuery
 .
@@ -1948,8 +2029,27 @@ rewindFiles
 (
 checkpointId
 );
+}
 break
 ;
+}
+}
+catch
+(
+error
+) {
+// An error here means the rewind didn't complete, for example the checkpoint
+// wasn't found or the session couldn't be resumed.
+console
+.
+error
+(
+`Rewind session ended with an error:
+${
+error
+}
+`
+);
 }
 ​
 Next steps

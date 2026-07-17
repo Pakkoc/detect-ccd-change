@@ -53,15 +53,33 @@ claude
 To set it for every session, run
 setx API_TIMEOUT_MS "1200000"
 and open a new terminal.
+The assignment line prints nothing on success, so confirm the variable is set by printing it in the same shell before you run
+claude
+:
+macOS, Linux, WSL
+Windows PowerShell
+Windows CMD
+echo
+$API_TIMEOUT_MS
+echo
+$
+env:
+API_TIMEOUT_MS
+echo
+%API_TIMEOUT_MS%
 ​
 In settings files
 Add variables under the
 env
 key in a
 settings.json
-file. Claude Code reads them directly from the file at startup, so they take effect no matter how
+file, creating the file if it doesn’t exist. Claude Code reads them directly from the file, so they take effect no matter how
 claude
-was launched.
+was launched. A running session applies new and changed values to its environment when you save the file, but a feature that reads its variables once at startup, such as
+OpenTelemetry monitoring
+, keeps its startup values until you relaunch. Removing a variable from the file doesn’t unset it in a running session; the removal takes effect the next time you launch
+claude
+.
 ~/.claude/settings.json
 {
 "env"
@@ -106,7 +124,7 @@ When the same variable is set in both your shell and a settings file
 env
 block, the settings file value applies. Claude Code writes each
 env
-entry into the process environment at startup, replacing the value inherited from the shell. A few variables are special-cased; the
+entry into the process environment at startup and again when the file changes, replacing the value inherited from the shell. A few variables are special-cased; the
 env
 setting
 lists the exceptions.
@@ -128,11 +146,22 @@ overrides
 . When a variable interacts with another configuration source, its row in the
 Variables
 list states the precedence or links to the page that documents it.
-Claude Code reads environment variables at startup, so changes take effect the next time you launch
+Claude Code reads shell environment variables at startup, so changes to them take effect the next time you launch
 claude
+. Variables set under the
+env
+key in settings files are reapplied to a running session when the file changes, with the startup-only exception described in
+In settings files
 .
 ​
 Variables
+Numeric variables such as timeouts, token budgets, and retry counts accept scientific notation and digit-separator spellings in addition to plain digits. For example, Claude Code reads
+2e3
+as 2000 and
+64_000
+as 64000. Before v2.1.211, these spellings could silently set a much smaller value, such as
+1e6
+setting a timeout to 1.
 Variable
 Purpose
 ANTHROPIC_API_KEY
@@ -1159,6 +1188,18 @@ subagent type to spawn a fork, a subagent that inherits the full conversation co
 /fork
 command works without this variable. Works in interactive mode and via the SDK or
 claude -p
+CLAUDE_CODE_FORWARD_SUBAGENT_TEXT
+Set to
+1
+to emit
+subagent
+text and thinking blocks in
+claude -p --output-format stream-json
+output, the same behavior as the
+--forward-subagent-text
+flag. Use the variable when a harness invokes
+claude
+and can’t pass the flag itself. Unlike the flag, which exits with an error outside non-interactive mode with stream-json output, the variable is ignored there so that nested invocations keep working when it’s set process-wide. Requires Claude Code v2.1.211 or later
 CLAUDE_CODE_GIT_BASH_PATH
 Windows only: path to the Git Bash executable (
 bash.exe
@@ -1380,24 +1421,23 @@ flag waits after the final turn for background subagents and workflows whose res
 0
 to wait indefinitely. This cap is separate from the five-second grace period that applies to plain background shells
 CLAUDE_CODE_PROCESS_WRAPPER
-Launch the processes Claude Code starts from its own binary through a wrapper executable, given as an argv prefix such as
-/opt/corp/launcher
-. Covers the background service that hosts
+Launch the processes Claude Code starts from its own binary, such as the background service that hosts
 agent view
-sessions, every session it spawns, and the relaunch Claude Code performs of itself to finish installing an update. The first token must be the absolute path of an executable that ends by running
-exec "$@"
-, and most launchers are that single path. The value is an argument list, not a shell command: whitespace separates tokens, double quotes group a path that contains spaces, and a value that starts with
-[
-is read as a JSON string array. Set it in the
+sessions, through a corporate launcher given as an argv prefix like
+/opt/corp/launcher
+. Set it in the
 env
 block of user or
 managed settings
-, not as a shell export, so the detached background service inherits it; project and local settings can’t set it. The VS Code extension configures its own launcher separately through its
+, not as a shell export, so the detached background service inherits it; project and local settings can’t set it.
+Equivalent to the
+processWrapper
+setting
+, which requires Claude Code v2.1.210 or later; this variable takes precedence when both are set. The VS Code extension configures its own launcher separately through its
 claudeProcessWrapper
-setting. Ignored on Windows.
-CLAUDE_CODE_SHELL_PREFIX
-is a separate control: it wraps the shell commands Claude runs as a single quoted string, while this variable wraps Claude Code’s own processes as an argv prefix. See
+setting. Ignored on Windows. See
 Run Claude Code behind a corporate launcher
+for the value format, what the launcher covers, and the contract the launcher must satisfy. Requires Claude Code v2.1.208 or later
 CLAUDE_CODE_PROPAGATE_TRACEPARENT
 Set to
 1
@@ -1439,6 +1479,16 @@ CLAUDE_CODE_RESUME_INTERRUPTED_TURN
 Set to
 1
 to automatically resume if the previous session ended mid-turn. Used in SDK mode so the model continues without requiring the SDK to re-send the prompt
+CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS
+Maximum age in milliseconds of the last transcript message for a session that ended mid-turn to continue automatically on resume. When the last message is older than this bound, Claude Code skips both the
+CLAUDE_CODE_RESUME_INTERRUPTED_TURN
+automatic resume and the injected
+CLAUDE_CODE_RESUME_PROMPT
+continuation message, and the session starts idle so you continue explicitly. Unset or
+0
+means no bound; a negative or non-numeric value applies a one-hour bound. Spawn scripts for long-running agents can set this so a restart against an old transcript doesn’t re-run a stale prompt. Claude Code sets a one-hour bound itself when it restarts a crashed
+agent view
+session that inherited its conversation from an interactive session. Requires Claude Code v2.1.211 or later
 CLAUDE_CODE_RESUME_PROMPT
 Override the continuation message injected when resuming a session that ended mid-turn. Defaults to
 Continue from where you left off.
@@ -1479,7 +1529,7 @@ is not detected; this is a defense-in-depth control
 CLAUDE_CODE_SCROLL_SPEED
 Set the mouse wheel scroll multiplier in
 fullscreen rendering
-. Accepts values from 1 to 20, and fractional values below 1 such as
+. Accepts any positive value up to 20, including fractional values below 1 such as
 0.5
 to slow accelerated trackpad and wheel scrolling in terminals that already amplify wheel events. Set to
 3
@@ -1694,10 +1744,6 @@ setting
 CLAUDE_CODE_TASK_LIST_ID
 Share a task list across sessions. Set the same ID in multiple Claude Code instances to coordinate on a shared task list. See
 Task list
-CLAUDE_CODE_TEAM_NAME
-Name of the agent team this teammate belongs to. Set automatically on
-agent team
-members
 CLAUDE_CODE_TEAM_TEARDOWN_PARK_TIMEOUT_MS
 Override, in milliseconds, how long a non-interactive session waits at exit for its
 agent team
@@ -1913,7 +1959,7 @@ diagnostics screen command
 DISABLE_ERROR_REPORTING
 Set to
 1
-to opt out of Sentry error reporting
+to opt out of error reporting
 DISABLE_EXTRA_USAGE_COMMAND
 Set to
 1

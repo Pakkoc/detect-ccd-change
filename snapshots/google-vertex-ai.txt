@@ -34,7 +34,9 @@ claude
 3rd-party platform
 , then
 Google Vertex AI
-, the label the login prompt still uses for Google Cloud’s Agent Platform.
+, the label the login prompt still uses for Google Cloud’s Agent Platform. If you’re already signed in, run
+/login
+to open the same menu.
 3
 Follow the wizard prompts
 Choose how you authenticate to Google Cloud: Application Default Credentials from
@@ -82,7 +84,9 @@ Set up manually
 To configure Google Cloud’s Agent Platform through environment variables instead of the wizard, for example in CI or a scripted enterprise rollout, follow the steps below.
 ​
 1. Enable Agent Platform API
-Enable Google Cloud’s Agent Platform API in your GCP project:
+Enable Google Cloud’s Agent Platform API in your GCP project. Replace
+YOUR-PROJECT-ID
+with your GCP project ID here and in the configuration step below:
 # Set your project ID
 gcloud
 config
@@ -128,7 +132,11 @@ configuration or the attached service account.
 Advanced credential configuration
 Claude Code supports automatic credential refresh for GCP through the
 gcpAuthRefresh
-setting. When Claude Code detects that your GCP credentials are expired or cannot be loaded, it runs the configured command to obtain new credentials before retrying the request.
+setting. Add it to your Claude Code
+settings file
+, for example
+~/.claude/settings.json
+. When Claude Code detects that your GCP credentials are expired or cannot be loaded, it runs the configured command to obtain new credentials before retrying the request.
 {
 "gcpAuthRefresh"
 :
@@ -165,15 +173,9 @@ YOUR-PROJECT-ID
 # Optional: Override the Agent Platform endpoint URL for custom endpoints or gateways
 # export ANTHROPIC_VERTEX_BASE_URL=https://aiplatform.googleapis.com
 # Optional: Disable prompt caching if needed
-export
-DISABLE_PROMPT_CACHING
-=
-1
+# export DISABLE_PROMPT_CACHING=1
 # Optional: Request 1-hour prompt cache TTL instead of the 5-minute default
-export
-ENABLE_PROMPT_CACHING_1H
-=
-1
+# export ENABLE_PROMPT_CACHING_1H=1
 # When CLOUD_ML_REGION=global, override region for models that don't support global endpoints
 export
 VERTEX_REGION_CLAUDE_HAIKU_4_5
@@ -281,6 +283,27 @@ ANTHROPIC_DEFAULT_HAIKU_MODEL
 =
 'claude-haiku-4-5@20251001'
 ​
+6. Verify your configuration
+Start Claude Code and run
+/status
+to confirm the setup. The
+API provider
+line shows
+Google Vertex AI
+, and the
+GCP project
+,
+Default region
+, and
+Model
+lines show your project ID, region, and resolved model. If the provider line is missing, the environment variables aren’t reaching the process. Confirm they are exported in the shell where you launched
+claude
+, or set them in the
+env
+block of your
+settings file
+.
+​
 Startup model checks
 When Claude Code starts with Google Cloud’s Agent Platform configured, it verifies that the models it intends to use are accessible in your project.
 If you have pinned a model version that is older than the current Claude Code default, and your project can invoke the newer version, Claude Code prompts you to update the pin. Accepting writes the new model ID to your
@@ -291,6 +314,22 @@ Model Garden
 or
 pin a version
 to make the choice permanent.
+When you start the session on a specific Sonnet or Opus version, with
+--model
+,
+ANTHROPIC_MODEL
+, or the
+model
+setting
+, that version acts as the session’s pinned default for the matching
+sonnet
+or
+opus
+alias. Claude Code skips the availability check for the built-in default your model replaces and starts on the model you configured, with no fallback notice.
+Model aliases such as
+opus
+don’t act as pins, and neither does a model ID Claude Code doesn’t recognize.
+Before v2.1.211, Claude Code checked the default model’s availability even when a session model was explicitly configured, and could show a fallback notice for a default the session didn’t use.
 ​
 IAM configuration
 Assign the required IAM permissions:

@@ -46,7 +46,7 @@ Claude Code
 Paste the PR URL into the picker. The first character of the paste drops you into search mode, and the list filters to the session that created that PR. Press Enter to resume it. GitHub, GitHub Enterprise, GitLab, and Bitbucket pull and merge request URLs all work.
 Claude Code
 https://github.com/your-org/your-repo/pull/1234
-To skip the picker, pass the PR number on the command line instead:
+To open the picker already filtered to the PR, pass the PR number on the command line:
 claude
 --from-pr
 1234

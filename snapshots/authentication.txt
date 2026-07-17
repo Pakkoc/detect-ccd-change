@@ -46,17 +46,9 @@ Claude apps gateway
 , sign in with corporate SSO through
 /login
 . The gateway-issued token is the session’s only credential.
-Admins can restrict interactive login with the
-forceLoginMethod
-and
-forceLoginOrgUUID
-managed settings. When either is set, sessions authenticated by
-ANTHROPIC_API_KEY
-,
-ANTHROPIC_AUTH_TOKEN
-, or
-apiKeyHelper
-are blocked at startup; cloud provider sessions aren’t affected.
+Admins can restrict which login methods and organizations are accepted; see
+Restrict login to your organization
+.
 To log out and re-authenticate, type
 /logout
 at the Claude Code prompt. Logging out also resets your first-launch setup state, so the next time you run
@@ -147,6 +139,35 @@ Users can
 install Claude Code
 .
 ​
+Restrict login to your organization
+To require that developer sessions authenticate into a specific Anthropic organization, set
+forceLoginMethod
+and
+forceLoginOrgUUID
+in
+managed settings
+. Set
+forceLoginOrgUUID
+to your organization ID, shown in
+claude.ai admin settings
+for Claude for Teams or Enterprise organizations, or at
+platform.claude.com/settings/organization
+for Console organizations. With both keys set, Claude Code restricts login to the listed organization and exits at startup if the active credential belongs to a different one.
+Deploy the keys through your device management tooling.
+Server-managed settings
+reach only accounts that are already authenticated into your organization, so they can’t redirect a developer’s first login. If your organization distributes server-managed settings as well, set the keys in both places: managed-settings sources
+don’t merge
+, and cached server-managed settings replace the device-managed file entirely.
+The keys also block sessions authenticated by
+ANTHROPIC_API_KEY
+,
+ANTHROPIC_AUTH_TOKEN
+, or
+apiKeyHelper
+, since organization membership can’t be verified for an environment credential. Cloud provider sessions such as Amazon Bedrock authenticate against your cloud provider and aren’t blocked; restrict those through your cloud IAM policies. See
+forceLoginOrgUUID
+in the settings reference for the full behavior. Before v2.1.146, the pin applied only to the login flow and didn’t block API-key credentials.
+​
 Credential management
 Claude Code securely manages your authentication credentials:
 Storage location
@@ -220,6 +241,13 @@ to renew. The warning is informational and never blocks a request: authenticatio
 Once the stored login expires and can’t be refreshed, each request fails with
 Login expired · Please run /login
 until you sign in again. Before v2.1.206, an expired login surfaced as a model error instead.
+You can check for this state before a request fails:
+/status
+shows a
+Login
+row reading
+Expired — log in again
+, plus the organization and email it has saved for the expired login. The row appears only when the saved claude.ai or Claude Console login is the active credential. The row requires Claude Code v2.1.210 or later.
 The warning appears only when a claude.ai or Claude Console login is the active credential, and not when a cloud provider,
 ANTHROPIC_API_KEY
 ,
@@ -294,11 +322,11 @@ row shows your subscription account, and an
 API key
 row appears when an API key is in use.
 Claude Code on the Web
-always uses your subscription credentials.
+always uses your subscription credentials. If you set
 ANTHROPIC_API_KEY
-and
+or
 ANTHROPIC_AUTH_TOKEN
-in the sandbox environment do not override them.
+in the sandbox environment, it doesn’t override your subscription credentials.
 ​
 Generate a long-lived token
 For CI pipelines, scripts, or other environments where interactive browser login isn’t available, generate a one-year OAuth token with

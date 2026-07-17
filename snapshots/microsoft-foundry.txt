@@ -19,6 +19,9 @@ Create deployments for the Claude models, noting the deployment name you give ea
 Claude Opus
 Claude Sonnet
 Claude Haiku
+When you configure a deployment, you also choose its
+hosting option
+, which determines whether inference runs on Azure or on Anthropic infrastructure.
 ​
 2. Configure Azure credentials
 Claude Code supports three authentication methods for Microsoft Foundry. Choose the method that best fits your security requirements.

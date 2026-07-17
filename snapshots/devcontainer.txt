@@ -306,7 +306,7 @@ Permission modes
 Was this page helpful?
 Yes
 No
-Network configuration
+Corporate launcher
 Overview
 ⌘
 I

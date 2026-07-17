@@ -7789,10 +7789,16 @@ block.name
 asyncio.run(create_project())
 ​
 Error handling
+import
+asyncio
 from
 claude_agent_sdk
 import
 query, CLINotFoundError, ProcessError, CLIJSONDecodeError
+async
+def
+main
+():
 try
 :
 async
@@ -7838,6 +7844,7 @@ e
 }
 "
 )
+asyncio.run(main())
 ​
 Streaming mode with client
 from
@@ -8216,11 +8223,15 @@ with
 subtype="error_during_execution"
 and the reason in
 errors
-. Watch for that subtype rather than expecting
+. Because this is a single-shot
 query()
-to raise before yielding messages.
+call, the SDK raises after yielding that error result, so wrap the loop in a try block to continue past it. See
+Handle the result
+for the error contract.
 ​
 Example usage
+import
+asyncio
 from
 claude_agent_sdk
 import
@@ -8244,6 +8255,12 @@ True
 },
 }
 async
+def
+main
+():
+try
+:
+async
 for
 message
 in
@@ -8261,6 +8278,22 @@ sandbox_settings),
 ):
 print
 (message)
+except
+Exception
+as
+error:
+# A single-shot query() raises after yielding an error result,
+# such as when failIfUnavailable is set and the sandbox can't start.
+print
+(
+f
+"Session ended with an error:
+{
+error
+}
+"
+)
+asyncio.run(main())
 Unix socket security
 : The
 allowUnixSockets

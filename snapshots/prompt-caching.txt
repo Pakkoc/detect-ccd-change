@@ -52,12 +52,18 @@ Claude API
 Amazon Bedrock or Google Cloud’s Agent Platform
 : the cache lives in your cloud provider’s serving infrastructure
 Microsoft Foundry
-: requests route to Anthropic’s infrastructure
+: depends on the deployment’s
+hosting option
+. Hosted on Azure deployments are served on Azure infrastructure; Hosted on Anthropic deployments are served on Anthropic’s infrastructure
 Custom
 ANTHROPIC_BASE_URL
 or
 LLM gateway
 : the cache lives wherever your requests are forwarded, and whether caching works depends on the gateway
+System context that Claude Code appends mid-conversation, such as file-change notices, is cached on Amazon Bedrock and its
+Mantle endpoint
+, Google Cloud’s Agent Platform, and Microsoft Foundry the same way it is on the Claude API.
+Before v2.1.211, these providers billed that appended system context as uncached input tokens on every request.
 For what each provider stores and processes, see
 data usage
 . Wherever the cache lives, entries expire after a period of inactivity, and

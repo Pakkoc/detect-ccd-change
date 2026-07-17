@@ -170,14 +170,14 @@ dontAsk
 permission mode is available only in the
 CLI
 .
-Auto mode is available to all users on the Anthropic API and requires Claude Opus 4.6 or later, or Sonnet 4.6 or later. Organization administrators can turn auto mode off with the
+Auto mode is available to all users on the Anthropic API and requires Claude Opus 4.6 or later, Sonnet 4.6 or later, or Fable 5. Organization administrators can turn auto mode off with the
 disableAutoMode
 key in
 managed settings
 .
 In Enterprise deployments that route Desktop to Google Cloud’s Agent Platform, auto mode is
 available by default
-, and only Claude Sonnet 5, Opus 4.7, and Opus 4.8 are supported there.
+, and only Claude Sonnet 5, Opus 4.7, Opus 4.8, and Fable 5 are supported there.
 Before Claude Code v2.1.207, Enterprise deployments on Google Cloud’s Agent Platform had to set
 CLAUDE_CODE_ENABLE_AUTO_MODE
 to enable auto mode.
@@ -746,7 +746,11 @@ marketplaces
 including the official Anthropic marketplace. Select
 Manage plugins
 to enable, disable, or uninstall plugins.
-Plugins can be scoped to your user account, a specific project, or local-only. If your organization manages plugins centrally, those plugins are available in desktop sessions the same way they are in the CLI. Plugins are not available for cloud or WSL sessions. For the full plugin reference including creating your own plugins, see
+Plugins can be scoped to your user account, a specific project, or local-only. If your organization manages plugins centrally, those plugins are available in desktop sessions the same way they are in the CLI. The plugin browser is not available in cloud sessions, but plugins declared in the repository’s
+.claude/settings.json
+under
+enabledPlugins
+still load. Plugins aren’t available in WSL sessions. For the full plugin reference including creating your own plugins, see
 plugins
 .
 ​
@@ -1611,21 +1615,18 @@ CLI
 dynamic workflows
 , which run in Desktop.
 Terminal-dialog commands
-: built-in commands that open an interactive panel in the terminal, such as
+: built-in commands that open an interactive panel in the terminal behave differently in the Code tab. Edit
+settings files
+directly to manage permission rules and configuration, or run the commands from the standalone CLI.
+Commands with no argument form, such as
 /permissions
-and
-/config
-, are not available in the Code tab and reply with
+, reply with
 isn't available in this environment
 .
 /config
-sets a setting when you pass
-key=value
-, for example
+opens Settings → Claude Code. Text after the command is ignored, so
 /config theme=dark
-; only its picker form is unavailable. Edit
-settings files
-directly to manage permission rules and configuration, or run the command from the standalone CLI.
+doesn’t set the theme.
 ​
 Troubleshooting
 The sections below cover issues specific to the desktop app. For runtime API errors that appear in the chat such as

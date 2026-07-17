@@ -117,7 +117,6 @@ deny rule
 MCP prompts
 such as
 /mcp__github__list_prs
-; skills an MCP server exposes still run
 ​
 Run on a fixed interval
 When you supply an interval, Claude converts it to a cron expression, schedules the job, and confirms the cadence and job ID.

@@ -143,7 +143,7 @@ prompt_suggestion
 , can arrive after it, so iterate the stream to completion rather than breaking on the result. See
 Handle the result
 .
-These five types cover the full agent loop lifecycle in both SDKs. The TypeScript SDK also yields additional observability events (hook events, tool progress, rate limits, task notifications) that provide extra detail but are not required to drive the loop. See the
+These five types cover the full agent loop lifecycle. Both SDKs also yield observability events such as rate-limit status and task notifications that are not required to drive the loop. See the
 Python message types reference
 and
 TypeScript message types reference
@@ -648,7 +648,11 @@ for available IDs.
 The context window
 The context window is the total amount of information available to Claude during a session. It does not reset between turns within a session. Everything accumulates: the system prompt, tool definitions, conversation history, tool inputs, and tool outputs. Content that stays the same across turns (system prompt, tool definitions, CLAUDE.md) is automatically
 prompt cached
-, which reduces cost and latency for repeated prefixes.
+, which reduces cost and latency for repeated prefixes. For how a custom system prompt or
+append
+text affects cache reuse across sessions, see
+Modifying system prompts
+.
 ​
 What consumes context
 Here’s how each component affects context in the SDK:
@@ -764,7 +768,16 @@ SystemMessage.data
 When you resume, the full context from previous turns is restored: files that were read, analysis that was performed, and actions that were taken. You can also fork a session to branch into a different approach without modifying the original.
 See
 Session management
-for the full guide on resume, continue, and fork patterns.
+for the full guide on resume, continue, and fork patterns. To resume sessions across stateless containers or serverless hosts, pass a
+session_store
+/
+sessionStore
+adapter
+so transcripts are mirrored to your own backend and any host can resume them. The Claude Code subprocess still writes to local disk first; point
+CLAUDE_CONFIG_DIR
+at a temp directory in
+options.env
+if the local copy needs to be ephemeral.
 In Python,
 ClaudeSDKClient
 handles session IDs automatically across multiple calls. See the
@@ -1265,6 +1278,12 @@ Running long or expensive tasks?
 Offload isolated work to
 subagents
 to keep your main context lean.
+Deploying as a service?
+See
+Hosting the Agent SDK
+for container and serverless guidance, and
+Session storage
+to persist sessions to your own backend.
 For the broader conceptual picture of the agentic loop (not SDK-specific), see
 How Claude Code works
 . For a practical guide to designing loops in Claude Code, from turn-based to goal-based and proactive loops, see

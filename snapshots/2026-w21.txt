@@ -4,11 +4,18 @@ v2.1.143 → v2.1.149
 Auto mode on the Pro plan
 CLI
 Auto mode is now available on the Pro plan and supports Sonnet 4.6 alongside Opus. It replaces permission prompts with background safety checks: routine actions run without interrupting you, and destructive or suspicious ones are blocked and surfaced.
-Update Claude Code, then cycle modes with Shift+Tab; auto mode appears once your account meets the requirements:
+Update Claude Code, then cycle modes with Shift+Tab; auto mode appears in the cycle once your account meets the requirements:
 terminal
 claude
 update
-Auto mode
+The command prints
+Successfully updated
+with the new version number, or
+Claude Code is up to date
+if no update is needed. Once auto mode is active, the prompt footer shows
+auto mode on
+.
+Auto mode requirements
 Other wins
 /usage
 now shows a per-category breakdown of what’s driving your plan limits, attributing recent usage to skills, subagents, plugins, and individual MCP servers
@@ -16,7 +23,9 @@ now shows a per-category breakdown of what’s driving your plan limits, attribu
 /extra-usage
 is now
 /usage-credits
-. The old name still works.
+. The old name still works. The command requires signing in with your claude.ai subscription through
+/login
+and isn’t available with API key authentication.
 New
 /code-review
 command reports correctness bugs at a chosen effort level such as
