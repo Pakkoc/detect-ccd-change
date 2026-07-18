@@ -35,6 +35,7 @@ command accepts natural language instructions describing what you want displayed
 ~/.claude/
 and updates your settings automatically:
 /statusline show model name and context percentage with a progress bar
+Approve the file edit prompts if Claude Code asks for permission during setup.
 ​
 Manually configure a status line
 Add a
@@ -366,6 +367,10 @@ Token counts from the last API call, described in
 context window fields
 exceeds_200k_tokens
 Whether the total token count (input, cache, and output tokens combined) from the most recent API response exceeds 200k. This is a fixed threshold regardless of actual context window size.
+fast_mode
+Whether
+fast mode
+is enabled for the session
 effort.level
 Current reasoning effort (
 low
@@ -395,11 +400,15 @@ Unix epoch seconds when the 5-hour or 7-day rate limit window resets
 session_id
 Unique session identifier
 session_name
-Custom session name set with the
+Session name. Uses the custom name set with the
 --name
 flag or
 /rename
-. Absent if no custom name has been set
+when one exists, otherwise the AI-generated session title. The
+default display name
+, such as
+my-app-3f
+, doesn’t populate this field. Absent when the session has neither a custom name nor an AI-generated title
 prompt_id
 UUID identifying the user prompt currently being processed. Matches the
 prompt.id
@@ -428,6 +437,10 @@ agent.name
 Agent name when running with the
 --agent
 flag or agent settings configured
+remote.session_id
+Session identifier for remote sessions, such as sessions started with
+--cloud
+. Absent for local sessions
 pr.number
 ,
 pr.url
@@ -599,6 +612,10 @@ Your status line command receives this JSON structure via stdin:
 :
 false
 ,
+"fast_mode"
+:
+false
+,
 "effort"
 : {
 "level"
@@ -646,6 +663,12 @@ true
 :
 "security-reviewer"
 },
+"remote"
+: {
+"session_id"
+:
+"abc123..."
+},
 "pr"
 : {
 "number"
@@ -686,10 +709,13 @@ true
 Fields that may be absent
 (not present in JSON):
 session_name
-: appears only when a custom name has been set with
+: appears when a custom name has been set with
 --name
 or
 /rename
+, or once an AI-generated session title exists. The default display name, such as
+my-app-3f
+, doesn’t populate it
 prompt_id
 : appears only after the first user input
 workspace.git_worktree
@@ -706,6 +732,11 @@ agent
 : appears only when running with the
 --agent
 flag or agent settings configured
+remote
+: appears only for remote sessions, meaning
+cloud sessions
+such as those started with
+--cloud
 pr
 : appears only while an open PR is found for the current branch, and is removed once the PR merges or closes.
 pr.review_state
@@ -3587,14 +3618,17 @@ $CACHE_FILE
 ]
 ||
 \
-# stat -f %m is macOS, stat -c %Y is Linux
+# stat -c %Y (Linux) or stat -f %m (macOS) prints the file's last-modified
+# time. The Linux form must run first: on Linux, the macOS form prints a
+# filesystem report to stdout before failing, and that output would be
+# captured by the command substitution and break the arithmetic.
 [ $(($(
 date
 +%s
 ) - $(
 stat
--f
-%m
+-c
+%Y
 "
 $CACHE_FILE
 "
@@ -3602,8 +3636,8 @@ $CACHE_FILE
 /dev/null
 ||
 stat
--c
-%Y
+-f
+%m
 "
 $CACHE_FILE
 "
@@ -4605,9 +4639,13 @@ Workspace trust required
 The status line command only runs if you’ve accepted the workspace trust dialog for the current directory. Because
 statusLine
 executes a shell command, it requires the same trust acceptance as hooks and other shell-executing settings.
-If trust isn’t accepted, you’ll see the notification
-statusline skipped · restart to fix
-instead of your status line output. Restart Claude Code and accept the trust prompt to enable it.
+If you haven’t accepted the
+workspace trust dialog
+for this folder, the status line stays blank, and
+claude --debug
+logs
+Status line command skipped: workspace trust not accepted
+. Restart Claude Code and accept the trust dialog to enable it.
 Script errors or hangs
 Scripts that exit with non-zero codes or produce no output cause the status line to go blank
 Slow scripts block the status line from updating until they complete. Keep scripts fast to avoid stale output.

@@ -64,6 +64,13 @@ System context that Claude Code appends mid-conversation, such as file-change no
 Mantle endpoint
 , Google Cloud’s Agent Platform, and Microsoft Foundry the same way it is on the Claude API.
 Before v2.1.211, these providers billed that appended system context as uncached input tokens on every request.
+When your requests pass through an
+LLM gateway
+or a custom
+ANTHROPIC_BASE_URL
+, Claude Code marks that appended system context for caching the same way, and whether the cache takes effect depends on the gateway. If the gateway rejects the
+cache breakpoint
+on that block, Claude Code retries the request without it and leaves that block uncached for the rest of the conversation.
 For what each provider stores and processes, see
 data usage
 . Wherever the cache lives, entries expire after a period of inactivity, and

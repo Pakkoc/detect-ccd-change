@@ -155,6 +155,10 @@ Then set
 USE_BUILTIN_RIPGREP=0
 in your
 environment
+. To confirm the switch took effect, run
+claude doctor
+in your terminal and check that the Search line shows the path of your system ripgrep instead of
+OK (bundled)
 .
 ​
 Slow or incomplete search results on WSL
@@ -189,6 +193,15 @@ Check the
 GitHub repository
 for known issues
 Ask Claude directly about its capabilities and features. Claude has built-in access to its documentation.
+For account, billing, or subscription problems, contact Anthropic support instead: sign in at
+claude.ai
+(Console users:
+platform.claude.com
+), click your initials in the lower left, and select
+Get help
+. See
+How to get support
+for the full flow, including who can reach a human agent on each plan.
 Was this page helpful?
 Yes
 No

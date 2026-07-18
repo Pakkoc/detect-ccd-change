@@ -79,7 +79,17 @@ default
 acceptEdits
 →
 plan
-. The current mode appears in the status bar.
+. The status bar shows the active mode as
+⏸ plan mode on
+,
+⏵⏵ accept edits on
+,
+⏵⏵ auto mode on
+,
+⏵⏵ don't ask on
+, or
+⏵⏵ bypass permissions on
+.
 Manual mode,
 default
 in that cycle, shows a gray
@@ -243,7 +253,7 @@ The dropdown shows the mode the local session is in, including a mode set from t
 or
 claude --remote-control
 didn’t report their mode at all, so claude.ai and the mobile app could show a mode the session wasn’t in. The mismatch affected only the label: Claude Code generated permission prompts from the session’s actual mode, and they still appeared in the app for approval.
-For Remote Control, you can also set the starting mode when launching the host:
+For Remote Control, the host must be signed in with your claude.ai account; API keys are not supported. You can also set the starting mode when launching the host:
 claude
 remote-control
 --permission-mode
@@ -318,6 +328,15 @@ auto mode
 is available and
 useAutoModeDuringPlan
 is on, which is the default. With auto mode active, the classifier approves read-only commands such as searches and file reads without prompting. Edits stay blocked either way until you approve the plan.
+Shell commands outside the
+built-in read-only set
+, including file-modifying ones such as
+touch
+and
+rm
+, prompt for approval in plan mode, including when auto mode is active during planning and when the sandbox’s
+auto-allow mode
+is enabled.
 Enter plan mode by pressing
 Shift+Tab
 or prefixing a single prompt with

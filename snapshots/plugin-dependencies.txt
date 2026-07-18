@@ -259,9 +259,30 @@ The
 claude plugin tag
 command derives the tag name from the plugin’s manifest and the enclosing marketplace entry. Before creating the tag, it validates the plugin contents, checks that
 plugin.json
-and the marketplace entry agree on the version, requires a clean working tree under the plugin directory, and refuses if the tag already exists. Add
+and the marketplace entry agree on the version, requires a clean working tree under the plugin directory, and refuses if the tag already exists.
+--push
+pushes the tag to the
+origin
+remote, so the repository needs a configured
+origin
+remote. Pass
+--remote
+to push to a different one.
+If the push fails, the tag is still created locally and the command exits with an error.
+With
+--push
+, a successful run ends with
+Created tag secrets-vault--v2.1.0
+and
+Pushed to origin
+, where the last line names the remote it pushed to. Without
+--push
+, the command prints the
+git push
+command to run instead.
 --dry-run
-to see what would be tagged without creating it. Running
+prints what would be tagged without creating it.
+Running
 git tag secrets-vault--v2.1.0
 directly is equivalent if you keep
 plugin.json
@@ -368,17 +389,20 @@ to list the auto-installed dependencies that no longer have any installed plugin
 claude
 plugin
 prune
-By default, prune operates at user scope. Use
+If nothing qualifies for removal, the command prints
+Nothing to prune
+with the reason and exits. This is the expected output on a fresh install, not an error.
+By default, prune operates at user scope and asks for confirmation before removing anything:
 --scope project
 or
 --scope local
-to target a different scope. Pass
+targets a different scope.
 --dry-run
-to list what would be removed without changing anything. Pass
+lists what would be removed without changing anything.
 -y
-to skip the confirmation prompt. When stdin or stdout is not a terminal, prune lists the orphans and exits without removing them unless
+skips the confirmation prompt. When stdin or stdout isn’t a terminal, prune lists the orphans and exits without removing them unless you pass
 -y
-is passed.
+.
 To prune as part of an uninstall, pass
 --prune
 to
@@ -386,6 +410,11 @@ claude plugin uninstall
 . After removing the named plugin, Claude Code scans for and removes any auto-installed dependencies that are now orphaned. Plugins you installed yourself are never pruned, only those installed automatically through another plugin’s
 dependencies
 array.
+The same confirmation behavior applies: pass
+-y
+to skip the prompt. When stdin or stdout isn’t a terminal, the uninstall still completes, but the prune step lists the orphans and removes nothing unless you pass
+-y
+.
 For example, to uninstall
 deploy-kit
 and clean up the dependencies it leaves behind:
@@ -400,7 +429,7 @@ Dependency problems appear in
 claude plugin list
 and in the
 /plugin
-interface. Claude Code disables the affected plugin until you resolve the error. The table below lists the most common errors and how to resolve them.
+interface, as descriptive error messages rather than the literal codes in this table. Claude Code disables the affected plugin until you resolve the error. The table below lists the most common errors and how to resolve them.
 Error
 Meaning
 How to resolve
@@ -430,9 +459,9 @@ tag satisfying the range.
 Check that the upstream has tagged releases using the convention above, or relax your range.
 To check for these errors programmatically, run
 claude plugin list --json
-and read the
+. Plugins with problems include an
 errors
-field on each plugin.
+field listing them. Plugins that loaded cleanly omit the field.
 ​
 See also
 Create plugins

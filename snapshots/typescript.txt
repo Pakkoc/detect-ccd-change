@@ -932,13 +932,15 @@ when the host passes it, or read from the CLI’s on-disk cache otherwise; the s
 options.managedSettings
 Settings
 undefined
-Restrictive policy-tier settings supplied by the embedding host. Dropped by default when an admin-deployed managed tier is present; merged under that tier when
-parentSettingsBehavior
-is
-"merge"
-. Non-restrictive keys such as
-model
-are silently dropped so this option can tighten managed policy but not loosen it
+Policy-tier settings supplied by the embedding host. Follows the same rules as
+managedSettings
+in
+Options
+, except that
+resolveSettings()
+doesn’t execute a configured
+policyHelper
+, so the snapshot can include settings that a live session drops
 options.serverManagedSettings
 Settings
 undefined
@@ -1230,9 +1232,15 @@ is not set
 managedSettings
 Settings
 undefined
-Policy-tier settings supplied by the spawning parent process. Dropped when an IT-controlled managed-settings tier already exists on the machine, unless that admin opts in with
+Policy-tier settings your host process supplies to the spawned session. On machines with admin-deployed managed settings, Claude Code ignores these unless the admin’s highest-priority managed source sets
 parentSettingsBehavior: 'merge'
-. Filtered to restrictive-only keys regardless
+, and never merges them while a
+policyHelper
+is configured. Merged values pass through a restrictive-only filter;
+Restrict parent settings
+covers what the filter admits and the
+allowManaged*Only
+locks
 maxBudgetUsd
 number
 undefined
@@ -1807,7 +1815,7 @@ toggleMcpServer(serverName, enabled)
 Enable or disable an MCP server by name
 setMcpServers(servers)
 Dynamically replace the set of MCP servers for this session. Returns which servers were added and removed, and any errors.
-The call keeps plugin-provided servers it doesn’t name; naming one replaces it.
+The call keeps plugin-provided servers it doesn’t name; naming one replaces it. The promise resolves after newly added stdio, HTTP, and SSE servers connect or fail, so tools from servers that connected are available on the next turn.
 streamInput(stream)
 Stream input messages to the query for multi-turn conversations
 stopTask(taskId)
@@ -1834,8 +1842,6 @@ setModel()
 Only some keys take effect mid-session:
 Applied on the next turn
 :
-model
-,
 effortLevel
 ,
 ultracode
@@ -1852,6 +1858,13 @@ agent
 . Switching
 agent
 also applies that agent’s model override, hooks, and system prompt on the next turn.
+Applied during the current turn
+:
+model
+.
+If you switch
+model
+while Claude is working on a turn, the response Claude is already generating finishes on the old model, and the rest of the turn, starting with the next call Claude Code makes to the model, uses the new one. Subagents keep their own model. Before v2.1.212, a mid-turn switch waited for the next turn.
 No effect mid-session
 : the system prompt options. These are resolved once at startup, so the running session keeps the original value even though the call succeeds. To change them, start a new session.
 effortLevel
@@ -2469,7 +2482,7 @@ PermissionMode
 |
 "auto"
 ;
-// Use a model classifier to approve or deny each tool call
+// Model classifier approves or denies permission prompts
 ​
 CanUseTool
 Custom permission function type for controlling tool usage.
@@ -5172,6 +5185,19 @@ Agent
 (previously
 Task
 , which is still accepted as an alias)
+The
+mode
+field is deprecated and ignored on Claude Code v2.1.212 or later: subagents
+inherit the parent session’s permission mode
+, and a subagent definition’s
+permissionMode
+can override it, except when the parent uses
+bypassPermissions
+,
+acceptEdits
+, or
+auto
+.
 type
 AgentInput
 =
@@ -5223,6 +5249,8 @@ mode
 isolation
 ?:
 "worktree"
+|
+"remote"
 ;
 };
 Launches a new agent to handle complex, multi-step tasks autonomously.
@@ -6076,6 +6104,10 @@ resolvedModel
 ?:
 string
 ;
+modelsUsed
+?:
+string
+[];
 totalToolUseCount
 :
 number
@@ -6235,6 +6267,10 @@ resolvedModel
 ?:
 string
 ;
+modelsUsed
+?:
+string
+[];
 prompt
 :
 string
@@ -6300,6 +6336,18 @@ input when
 availableModels
 or another override applies.
 This field requires Claude Code v2.1.174 or later.
+On
+async_launched
+, it names the model in use when the task moved to the background.
+modelsUsed
+lists the models the subagent used, in order. The field is present only when a mid-run swap happened, and a model appears again when the run swapped back to it. On
+async_launched
+, the list covers the models used before backgrounding.
+Both
+modelsUsed
+and the backgrounding behavior of
+resolvedModel
+require Claude Code v2.1.212 or later.
 On the
 completed
 variant,

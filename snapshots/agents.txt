@@ -39,7 +39,19 @@ background bash command
 runs one shell command without blocking the conversation. It doesn’t spawn an agent.
 A
 forked subagent
-is a subagent that inherits your full conversation context instead of starting fresh. It’s a way to spawn a subagent, not a separate surface.
+, started with
+/subtask
+, is a subagent that inherits your full conversation context instead of starting fresh. It’s a way to spawn a subagent, not a separate surface. To copy the whole session into a new
+background session
+that runs alongside it, use
+/fork
+. With
+agent view turned off
+, the forked-subagent command is
+/fork
+instead and
+/subtask
+isn’t available.
 A
 routine
 runs a session on a schedule in Anthropic’s cloud, not in parallel on your machine.

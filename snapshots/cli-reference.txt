@@ -109,6 +109,22 @@ to see your effective config with settings applied.
 --label <prefix>
 prints only the rules whose label starts with that prefix, matched case-insensitively. Requires Claude Code v2.1.208 or later
 claude auto-mode defaults --label 'Git Destructive'
+claude auto-mode reset
+Restore the default
+auto mode
+configuration by removing the
+autoMode
+section from your user settings file. Prompts for confirmation before writing; pass
+-y
+/
+--yes
+to skip the prompt. Rules from
+managed settings
+or the
+--settings
+flag still apply. Requires Claude Code v2.1.212 or later. See
+Inspect the defaults and your effective config
+claude auto-mode reset --yes
 claude daemon status
 Print the background-session
 supervisor’s

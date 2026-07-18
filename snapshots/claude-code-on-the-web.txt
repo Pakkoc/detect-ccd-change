@@ -153,6 +153,15 @@ No
 Those write to your local user config, not the repo. Declare the server in
 .mcp.json
 instead
+Transport variables in your repo’s
+.claude/settings.json
+env
+block, such as
+NODE_EXTRA_CA_CERTS
+and the
+mTLS client certificate variables
+No
+The hosting environment manages the session’s API connection, so Claude Code ignores these keys and notes each ignored key in the session’s debug log
 Static API tokens and credentials
 No
 No dedicated secrets store exists yet. See below

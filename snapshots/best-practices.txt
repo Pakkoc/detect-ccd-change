@@ -167,7 +167,9 @@ Destructure imports when possible (eg. import { foo } from 'bar')
 Be sure to typecheck when you're done making a series of code changes
 -
 Prefer running single tests, and not the whole test suite, for performance
-CLAUDE.md is loaded every session, so only include things that apply broadly. For domain knowledge or workflows that are only relevant sometimes, use
+Run
+/context
+to confirm Claude loaded the file. CLAUDE.md is loaded every session, so only include things that apply broadly. For domain knowledge or workflows that are only relevant sometimes, use
 skills
 instead. Claude loads them on demand without bloating every conversation.
 Keep it concise. For each line, ask:
@@ -435,7 +437,9 @@ Let Claude interview you
 For larger features, have Claude interview you first. Start with a minimal prompt and ask Claude to interview you using the
 AskUserQuestion
 tool.
-Claude asks about things you might not have considered yet, including technical implementation, UI/UX, edge cases, and tradeoffs.
+Claude asks about things you might not have considered yet, including technical implementation, UI/UX, edge cases, and tradeoffs. Replace
+[brief description]
+with your feature before sending the prompt.
 I want to build [brief description]. Interview me in detail using the AskUserQuestion tool.
 Ask about technical implementation, UI/UX, edge cases, concerns, and tradeoffs. Don't ask obvious questions, dig into the hard parts I might not have considered.
 Keep interviewing until we've covered everything, then write a complete spec to SPEC.md.
@@ -571,6 +575,13 @@ claude
 --output-format
 stream-json
 --verbose
+The first command prints plain text. The
+json
+format returns a single JSON object with a
+result
+field. The
+stream-json
+format prints one JSON object per line, starting with an init event.
 ​
 Run multiple Claude sessions
 Run multiple Claude sessions in parallel to speed up development, run isolated experiments, or start complex workflows.

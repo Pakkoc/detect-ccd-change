@@ -82,9 +82,13 @@ Between sessions.
 /clear
 starts fresh on a new task while keeping project memory.
 /resume
-and
+returns to an earlier conversation,
 /branch
-let you return to or fork an earlier conversation.
+branches the current one to try a different direction, and
+/fork
+copies it into a new
+background session
+.
 /teleport
 pulls a web session into this terminal, and
 /remote-control
@@ -119,7 +123,7 @@ Not every command appears for every user. Availability depends on your platform,
 /desktop
 only shows on macOS and Windows when signed in with a Claude subscription, and
 /upgrade
-only shows on Pro and Max plans.
+doesn’t show on Enterprise plans.
 Command
 Purpose
 /add-dir <path>
@@ -173,6 +177,8 @@ Detach the current session to run as a
 background agent
 and free this terminal. Pass a prompt to send one more instruction before detaching. Monitor the session with
 claude agents
+. To copy the conversation into a new background session while this one keeps running, use
+/fork
 . Alias:
 /bg
 /batch <instruction>
@@ -187,12 +193,33 @@ git worktree
 /branch [name]
 Create a branch of the current conversation at this point, so you can try a different direction without losing the conversation as it stands. Switches you into the branch and preserves the original, which you can return to with
 /resume
-. To hand a side task to a background subagent instead of switching into a copy yourself, use
+. To run a copy as a separate
+background session
+instead of switching into it, use
 /fork
-/btw <question>
+; to hand a side task to a
+subagent
+that reports back into this conversation, use
+/subtask
+/btw [question]
 Ask a quick
 side question
-without adding to the conversation
+without adding to the conversation.
+Without a question, reopens the overlay on your most recent side question from this session so you can browse earlier answers; with no side questions yet, it asks for one. Before v2.1.212,
+/btw
+required a question
+/bug [report]
+Report a bug or share your conversation. You choose how much session history to include and confirm on a consent screen before anything is sent. When you’re signed in to Anthropic on a first-party connection, the report goes to Anthropic; on a third-party provider, or without Anthropic credentials, Claude Code writes the report to a
+local archive under
+~/.claude/feedback-bundles/
+that you forward yourself. Alias:
+/share
+. Before v2.1.212,
+/bug
+and
+/share
+were aliases of
+/feedback
 /cd <path>
 Move this session to a new working directory. The conversation’s prompt cache is preserved: the new directory’s
 CLAUDE.md
@@ -462,12 +489,9 @@ value, for example
 claude -p --settings '{"fastMode": true}'
 ; the toggle then applies to the current session only and isn’t saved as your default, and in any other non-interactive session the command reports that fast mode isn’t available. Requires Claude Code v2.1.205 or later
 /feedback [report]
-Submit feedback, report a bug, or share your conversation. Sending to Anthropic requires
-authentication
-. Aliases:
+Send product feedback about Claude Code. Opens the same dialog as
 /bug
-,
-/share
+with the same consent step and sending rules
 /fewer-permission-prompts
 Skill
 .
@@ -480,15 +504,30 @@ As of v2.1.198, the tool-call summary also counts the subagents launched in the 
 viewMode
 in settings to override it. Only available in
 fullscreen rendering
-/fork <directive>
-Spawn a
-forked subagent
-: a background subagent that inherits the full conversation and works on the directive while you keep going. Its result returns to your conversation when it finishes. To switch into a copy of the conversation yourself, use
+/fork [prompt]
+Copy the current conversation into a new
+background session
+and keep working here. The copy starts with everything in this conversation up to now and runs as its own row in
+agent view
+; the two sessions are independent from that point on. Pass a prompt and the copy starts working on it immediately; without one it waits in agent view for its first prompt. To hand a side task to a subagent whose result comes back into this conversation, use
+/subtask
+. To switch into a copy yourself, use
 /branch
-. Before v2.1.161,
+. Requires Claude Code v2.1.212 or later; on v2.1.161 through v2.1.211
 /fork
-is an alias for
+starts a
+forked subagent
+instead, and before v2.1.161 it is an alias for
 /branch
+unless forked subagents were enabled, by setting
+CLAUDE_CODE_FORK_SUBAGENT
+to
+1
+from v2.1.117 or by a server-side rollout. When
+agent view is turned off
+,
+/fork
+keeps the forked-subagent behavior
 /goal [condition|clear]
 Set a
 goal
@@ -768,6 +807,20 @@ background session
 /exit
 or press
 ←
+/subtask <task>
+Spawn a
+forked subagent
+: a background subagent that inherits the full conversation and works on the task while you keep working. Its result returns to this conversation when it finishes. To copy the conversation into a separate background session instead, use
+/fork
+. Requires Claude Code v2.1.212 or later; on v2.1.161 through v2.1.211 this command is
+/fork
+. When
+agent view is turned off
+,
+/subtask
+isn’t available and
+/fork
+keeps the forked-subagent behavior
 /tasks
 View and manage background work in the current session, including subagents that have finished. Also available as
 /bashes
@@ -801,10 +854,10 @@ flicker-free alt-screen renderer
 Draft a plan in an
 ultraplan
 session, review it in your browser, then execute remotely or send it back to your terminal
-/ultrareview [PR]
+/ultrareview [PR or branch]
 Run a deep, multi-agent code review in a cloud sandbox with
 ultrareview
-. The preferred invocation is now
+. Pass a PR reference to review that pull request, or a branch name to change the comparison base. The preferred invocation is now
 /code-review ultra
 , and
 /ultrareview

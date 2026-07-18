@@ -27,7 +27,7 @@ Open
 ~/.claude/settings.json
 and add a
 Notification
-hook. The example below uses
+hook. If the file doesn’t exist, create it. The example below uses
 osascript
 for macOS; see
 Get notified when Claude needs input
@@ -1849,7 +1849,11 @@ Agent hooks use the same
 "ok"
 /
 "reason"
-response format as prompt hooks, but with a longer default timeout of 60 seconds and up to 50 tool-use turns.
+response format as prompt hooks, but with a longer default timeout of 60 seconds and up to 50 tool-use turns. The
+$ARGUMENTS
+placeholder in the prompt is replaced with the hook’s JSON input. See
+prompt and agent hook fields
+.
 This example verifies that tests pass before allowing Claude to stop:
 {
 "hooks"
@@ -1987,7 +1991,11 @@ to rewrite a tool’s arguments, the last one to finish takes effect. Since hook
 ​
 Hooks and permission modes
 PreToolUse
-hooks fire before any permission-mode check. A hook that returns
+hooks fire before any permission-mode check, in every
+permission mode
+, including
+dontAsk
+. A hook that returns
 permissionDecision: "deny"
 blocks the tool even in
 bypassPermissions

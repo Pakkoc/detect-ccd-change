@@ -60,6 +60,10 @@ Artifacts
 Requires storing published page content on Anthropic-operated infrastructure.
 Feedback submission (
 /feedback
+,
+/bug
+,
+/share
 )
 Submitting feedback sends conversation data to Anthropic.
 Remote Control

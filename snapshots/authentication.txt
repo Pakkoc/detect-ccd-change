@@ -153,6 +153,27 @@ claude.ai admin settings
 for Claude for Teams or Enterprise organizations, or at
 platform.claude.com/settings/organization
 for Console organizations. With both keys set, Claude Code restricts login to the listed organization and exits at startup if the active credential belongs to a different one.
+Developers can log in from several paths: the terminal
+/login
+flow, the
+VS Code extension
+, the Agent SDK,
+claude setup-token
+, and
+/install-github-app
+. On Claude Code v2.1.212 or later, every path enforces
+forceLoginMethod
+; before v2.1.212, only terminal logins enforced either key. The paths differ on
+forceLoginOrgUUID
+:
+Terminal, VS Code extension, and Agent SDK logins
+: enforce both keys
+claude setup-token
+and
+/install-github-app
+: enforce only
+forceLoginMethod
+, so they can mint a token in a different organization
 Deploy the keys through your device management tooling.
 Server-managed settings
 reach only accounts that are already authenticated into your organization, so they can’t redirect a developer’s first login. If your organization distributes server-managed settings as well, set the keys in both places: managed-settings sources
@@ -334,16 +355,20 @@ claude setup-token
 :
 claude
 setup-token
-The command walks you through OAuth authorization and prints a token to the terminal. It does not save the token anywhere; copy it and set it as the
+The command opens the same browser authorization flow as
+/login
+, and the token prints to the terminal after you approve access in the browser. It does not save the token anywhere; copy it and set it as the
 CLAUDE_CODE_OAUTH_TOKEN
 environment variable wherever you want to authenticate:
 export
 CLAUDE_CODE_OAUTH_TOKEN
 =
 your-token
-This token authenticates with your Claude subscription and requires a Pro, Max, Team, or Enterprise plan. It is scoped to inference only and cannot establish
+This token authenticates with your Claude subscription and requires a Pro, Max, Team, or Enterprise plan. It can only make model requests, so it can’t establish
 Remote Control
-sessions.
+sessions or fetch
+claude.ai connectors
+. MCP servers you configure locally still work.
 Bare mode
 does not read
 CLAUDE_CODE_OAUTH_TOKEN

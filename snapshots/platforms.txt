@@ -138,7 +138,8 @@ JetBrains
 : the extension for IntelliJ, PyCharm, and other JetBrains IDEs
 Claude Code on the web
 : cloud sessions that keep running when you disconnect
-Mobile: the Claude app for
+Mobile
+: the Claude app for
 iOS
 and
 Android

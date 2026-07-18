@@ -690,13 +690,15 @@ The gateway logs a boot warning that the metadata endpoint is reachable and sugg
 Push the gateway URL to developer machines
 The gateway is now running, but developers can’t reach it from
 /login
-until the gateway URL is on their machines. Set
+until the gateway URL is on their machines. Deploy the full
+managed settings snippet
+, with
 forceLoginMethod
-and
+,
 forceLoginGatewayUrl
-in the
-managed settings file
-you deploy to each device via MDM. There is no gateway option in the login picker for a developer to select manually.
+, and the
+parentSettingsBehavior: "merge"
+opt-in, to each device via MDM. There is no gateway option in the login picker for a developer to select manually.
 ​
 Terraform reference
 The

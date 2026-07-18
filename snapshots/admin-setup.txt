@@ -77,9 +77,11 @@ LLM gateway
 .
 ​
 Decide how settings reach devices
-Managed settings define policy that takes precedence over local developer configuration. Claude Code checks the four sources below in priority order and applies the first one that returns a non-empty configuration, with one exception: a small set of
+Managed settings define policy that takes precedence over local developer configuration. Claude Code checks the four sources below in priority order and applies the first one that returns a non-empty configuration. A small set of
 cross-source lock keys
-, such as the sandbox allowlist locks, is honored when any admin-controlled source sets them.
+, such as the sandbox allowlist locks, is honored when any admin-controlled source sets them; when a
+policyHelper
+is configured, its output is the only source these checks read.
 Mechanism
 Delivery
 Priority
@@ -228,7 +230,12 @@ allowManagedHooksOnly
 ,
 allowedHttpHookUrls
 Login enforcement
-Restrict interactive login to a specific method or Anthropic organization. When set, sessions authenticated by
+Restrict login to a specific method or Anthropic organization. The method restriction is enforced across the terminal, VS Code extension, Agent SDK,
+claude setup-token
+, and
+/install-github-app
+; the organization restriction covers the terminal, VS Code extension, and Agent SDK.
+Before v2.1.212, only terminal logins enforced either key. When set, sessions authenticated by
 ANTHROPIC_API_KEY
 ,
 ANTHROPIC_AUTH_TOKEN

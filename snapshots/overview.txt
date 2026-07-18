@@ -120,7 +120,9 @@ tab to start coding. A
 paid subscription
 is required.
 Learn more about the desktop app →
-Run Claude Code in your browser with no local setup. Kick off long-running tasks and check back when they’re done, work on repos you don’t have locally, or run multiple tasks in parallel. Available on desktop browsers and the Claude iOS app.
+Run Claude Code in your browser with no local setup. Kick off long-running tasks and check back when they’re done, work on repos you don’t have locally, or run multiple tasks in parallel. Available on desktop browsers and
+the Claude app for iOS and Android
+.
 Start coding at
 claude.ai/code
 .
@@ -227,8 +229,8 @@ Dispatch
 a task from your phone and open the Desktop session it creates
 Kick off a long-running task on the
 web
-or
-iOS app
+or the
+Claude mobile app
 , then pull it into your terminal with
 claude --teleport
 . Teleport requires a claude.ai subscription.
@@ -265,9 +267,9 @@ Remote Control
 Push events from Telegram, Discord, iMessage, or my own webhooks into a session
 Channels
 Start a task locally, continue on mobile
-Web
-or
-Claude iOS app
+claude --cloud
+, then the
+Claude mobile app
 Run Claude on a recurring schedule
 Routines
 or

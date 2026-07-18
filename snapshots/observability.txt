@@ -322,6 +322,20 @@ TRACESTATE
 into the child process environment, and the CLI reads them so its
 claude_code.interaction
 span becomes a child of your span. The agent run then appears inside your application’s trace instead of as a disconnected root.
+OTLP event log records emitted during the run carry the same trace context: with
+TRACEPARENT
+set, each record’s
+trace_id
+and
+span_id
+match your application’s trace, so you can join
+events
+to spans in your backend.
+Before v2.1.212, event records emitted outside an active span didn’t carry
+trace_id
+or
+span_id
+.
 When trace-context propagation is enabled, the CLI also forwards
 TRACEPARENT
 to every Bash and PowerShell command it runs. If a command launched through the Bash tool emits its own OpenTelemetry spans, those spans nest under the

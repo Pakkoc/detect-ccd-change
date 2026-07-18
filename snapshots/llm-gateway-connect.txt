@@ -1058,6 +1058,36 @@ gateway model discovery
 or add names with the
 model configuration
 variables
+/fast
+reports
+Fast mode unavailable due to network connectivity issues
+while inference requests work
+The
+fast mode
+availability check goes directly to
+api.anthropic.com
+and doesn’t follow
+ANTHROPIC_BASE_URL
+, so blocked direct egress fails the check. The same message appears on an open network when the check presents a gateway-issued key from
+ANTHROPIC_API_KEY
+or an
+apiKeyHelper
+and Anthropic rejects it
+Allowlist
+api.anthropic.com
+if egress is blocked, or set a skip variable; for a rejected gateway key only the skip variables help. See
+use fast mode behind proxies and LLM gateways
+/fast
+reports
+Fast mode has been disabled by your organization
+in a session authenticated with
+ANTHROPIC_AUTH_TOKEN
+, even though the organization has fast mode enabled
+The availability check requires a claude.ai login or an Anthropic API key; with only a bearer token, Claude Code treats fast mode as disabled without sending the check
+Set
+CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK=1
+; see
+use fast mode behind proxies and LLM gateways
 Claude Code asks you to log in even though the
 curl test
 succeeds

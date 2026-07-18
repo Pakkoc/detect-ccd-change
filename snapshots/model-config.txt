@@ -1208,9 +1208,9 @@ or
 , and the managed value re-asserts as the default in new sessions.
 The effort slider appears in
 /model
-when a supported model is selected. The current effort level is also displayed next to the logo and spinner, for example “with low effort”, so you can confirm which setting is active without opening
+when a supported model is selected. The current effort level is also shown in the session header next to the model name, for example “with low effort”, so you can confirm which setting is active without opening
 /model
-.
+. The footer also briefly shows the effort level at startup and when it changes.
 ​
 Adaptive reasoning and fixed thinking budgets
 Adaptive reasoning makes thinking optional on each step, so Claude can respond faster to routine prompts and reserve deeper thinking for steps that benefit from it. If you want Claude to think more or less often than the current level produces, you can say so directly in your prompt or in
@@ -1303,13 +1303,10 @@ You can also use the
 [1m]
 suffix with model aliases or full model names:
 # Use the opus[1m] or sonnet[1m] alias
-/model
-opus[1m]
-/model
-sonnet[1m]
+/model opus[1m]
+/model sonnet[1m]
 # Or append [1m] to a full model name
-/model
-claude-opus-4-8[1m]
+/model claude-opus-4-8[1m]
 ​
 Sonnet 5 context window
 On the Anthropic API, Sonnet 5 always runs with the 1M context window. There is no 200K variant, no

@@ -1413,6 +1413,15 @@ for an automated diagnostic report
 If you can start a session, use
 /feedback
 inside Claude Code to report the problem
+If the problem is with your account rather than the install, such as a login loop, a subscription that isn’t recognized, or a disabled organization, contact Anthropic support: sign in at
+claude.ai
+(Console users:
+platform.claude.com
+), click your initials in the lower left, and select
+Get help
+. See
+How to get support
+for the full flow.
 Was this page helpful?
 Yes
 No

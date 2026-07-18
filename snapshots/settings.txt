@@ -1107,13 +1107,16 @@ to restrict login to Claude Console accounts, or
 gateway
 to restrict login to a cloud gateway; see
 Claude apps gateway
-. When set to any value in managed settings, sessions authenticated by
-ANTHROPIC_API_KEY
-,
-ANTHROPIC_AUTH_TOKEN
-, or
-apiKeyHelper
-are blocked at startup, since an environment credential cannot satisfy the required login method. Third-party provider sessions such as Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry are not blocked: they authenticate against your cloud provider rather than Anthropic
+.
+On Claude Code v2.1.212 or later, every first-party login path enforces the restriction, including the
+VS Code extension
+, the Agent SDK,
+claude setup-token
+, and
+/install-github-app
+; before v2.1.212, only terminal logins enforced it. See
+Restrict login to your organization
+for how each login path, environment credentials, and third-party providers are handled
 claudeai
 forceLoginGatewayUrl
 Pre-fills and locks the gateway URL on the
@@ -1124,13 +1127,9 @@ surfaces that screen; set both so the URL is filled in. Honored only at the mana
 Claude apps gateway
 "https://claude-gateway.example.com"
 forceLoginOrgUUID
-Require login to belong to a specific Anthropic organization. Accepts a single UUID string, which also pre-selects that organization during login, or an array of UUIDs where any listed organization is accepted without pre-selection. When set in managed settings, login fails if the authenticated account does not belong to a listed organization, and sessions authenticated by
-ANTHROPIC_API_KEY
-,
-ANTHROPIC_AUTH_TOKEN
-, or
-apiKeyHelper
-are blocked at startup since organization membership cannot be verified for them. Third-party provider sessions such as Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry are not blocked: use your cloud IAM to restrict which cloud accounts can be used. An empty array fails closed and blocks login with a misconfiguration message
+Require login to belong to a specific Anthropic organization. Accepts a single UUID string, which also pre-selects that organization during login, or an array of UUIDs where any listed organization is accepted without pre-selection. An empty array fails closed and blocks login with a misconfiguration message. See
+Restrict login to your organization
+for which login paths and credentials enforce the check
 "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 or
 ["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"]
@@ -1234,7 +1233,13 @@ Default
 "first-wins"
 : the parent-supplied settings are dropped and only the admin tier applies.
 "merge"
-: the parent-supplied settings apply under the admin tier, filtered so they can tighten policy but not loosen it. Has no effect when no admin tier is deployed. Requires Claude Code v2.1.133 or later
+: the parent-supplied settings apply under the admin tier through a restrictive-only filter. Only the highest-priority managed source’s value of this key is read. Unless the
+allowManaged*Only
+locks are set, allow-direction entries such as permission allow rules and sandbox allowlists still apply; see
+Restrict parent settings
+. Has no effect when no admin tier is deployed, or when a
+policyHelper
+is configured: the helper’s output replaces every other managed source and parent settings are never merged. Requires Claude Code v2.1.133 or later
 "merge"
 permissions
 See table below for structure of permissions.
@@ -2789,7 +2794,9 @@ and
 managed-settings.json
 , merged together)
 HKCU registry (Windows only)
-A few keys are exceptions, honored when any admin-controlled managed source sets them rather than only the winning source. The user-writable HKCU registry source is excluded. The exception keys are:
+A few keys are honored when any admin-controlled managed source sets them, rather than only the winning source. The user-writable HKCU registry source is excluded, and when a
+policyHelper
+is configured, its output is the only source these checks read. The exception keys are:
 the sandbox lock keys
 sandbox.network.allowManagedDomainsOnly
 and
@@ -2807,7 +2814,25 @@ option. By default this is ignored when an admin-deployed managed source is pres
 parentSettingsBehavior
 to
 "merge"
-. The embedder’s values are filtered so they can tighten managed policy but not loosen it.
+in the highest-priority managed source; only that source’s value is read. The embedder’s values pass through a restrictive-only filter, but the filter isn’t strictly tighten-only: unless the
+allowManaged*Only
+locks are set, allow-direction settings such as permission allow rules and sandbox allowlists still apply. See
+Restrict parent settings
+for the locks. While a
+policyHelper
+is configured, parent settings are never merged, regardless of this key.
+When any admin-controlled managed source sets
+allowManagedPermissionRulesOnly
+, Claude Code drops
+parent-supplied
+permission allow rules and
+additionalDirectories
+as it reads them, even when a higher-priority source leaves the key unset; the key’s effect on the developer’s own permission rules comes from the highest-priority source only
+The parent-settings gap-fill checks for
+forceLoginOrgUUID
+and
+allowedMcpServers
+also read every admin-controlled managed source: a value in any of them blocks a parent-supplied one, though the value that applies still comes from the highest-priority source
 Command line arguments
 Temporary overrides for a specific session. JSON passed via
 --settings <file-or-json>

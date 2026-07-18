@@ -305,9 +305,13 @@ CLAUDE_CODE_DISABLE_AUTO_MEMORY=1
 in
 env
 claude.ai MCP connectors
-Loaded when the active authentication method is a claude.ai subscription. Passing
+Loaded when the session authenticates with your claude.ai login. Not loaded when
+CLAUDE_CODE_OAUTH_TOKEN
+holds a token from
+claude setup-token
+, which can only make model requests. Passing
 mcpServers: {}
-does not suppress them
+does not suppress the connectors
 Set
 strictMcpConfig: true
 ,

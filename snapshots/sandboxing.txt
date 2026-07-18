@@ -171,7 +171,10 @@ A bare
 Bash
 ask rule, or the equivalent
 Bash(*)
-form, is skipped for commands that run sandboxed; it still applies to commands that fall back to the regular permission flow
+form, is skipped for commands that run sandboxed; it still applies to commands that fall back to the regular permission flow.
+In
+plan mode
+, the rule isn’t skipped: it prompts for sandboxed commands too, including read-only ones. Before v2.1.212, the skip applied in plan mode as well
 Regular permissions mode
 : All Bash commands go through the regular permission flow, even when sandboxed. This provides more control but requires more approvals.
 In both modes, the sandbox enforces the same filesystem and network restrictions. The difference is only in whether sandboxed commands are auto-approved or require explicit permission.
@@ -204,7 +207,12 @@ dangerouslyDisableSandbox
 parameter is completely ignored and all commands must run sandboxed or be explicitly listed in
 excludedCommands
 .
-Auto-allow mode works independently of your permission mode setting. Even if you’re not in “accept edits” mode, sandboxed Bash commands will run automatically when auto-allow is enabled. This means Bash commands that modify files within the sandbox boundaries will execute without prompting, even when file edit tools would normally require approval.
+Auto-allow mode works independently of your permission mode setting, with one exception:
+plan mode
+. Even if you’re not in “accept edits” mode, sandboxed Bash commands run automatically when auto-allow is enabled. This means Bash commands that modify files within the sandbox boundaries execute without prompting, even when file edit tools would normally require approval.
+In plan mode, only
+read-only commands
+run without prompting; any other Bash command prompts for approval even with auto-allow enabled. Before v2.1.212, auto-allow ran sandboxed commands without a prompt in plan mode too.
 ​
 Configure sandboxing
 Customize sandbox behavior through your

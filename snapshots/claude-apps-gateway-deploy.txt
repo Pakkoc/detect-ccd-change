@@ -262,8 +262,10 @@ Deploy on Google Cloud
 Push the gateway URL to developer machines
 Once the gateway is serving, push
 forceLoginMethod
-and
+,
 forceLoginGatewayUrl
+, and
+parentSettingsBehavior: "merge"
 to each developer’s machine through managed settings, via MDM or by writing the per-OS
 managed-settings.json
 directly. Without this,

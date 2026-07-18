@@ -115,6 +115,14 @@ CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS
 , or set it to
 0
 to wait without a limit.
+If you stop a
+claude -p
+run with SIGTERM, for example from
+kill
+, a process supervisor, or an SDK host closing the session, Claude Code aborts the in-progress turn, terminates the process tree of any running Bash command, runs
+SessionEnd
+hooks
+, and exits with code 143.
 ​
 Examples
 These examples highlight common CLI patterns. For CI and other scripted calls, add

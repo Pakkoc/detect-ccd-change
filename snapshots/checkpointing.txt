@@ -75,10 +75,10 @@ to summarize; selecting the option by its number key summarizes immediately with
 /compact
 , but targeted: instead of summarizing the entire conversation, you choose which side of the selected message to compress.
 Summarize keeps you in the same session and compresses context. If you want to branch off and try a different approach while preserving the original session intact, use
-fork
-instead (
+/branch
+or
 claude --continue --fork-session
-).
+instead.
 ​
 Common use cases
 Checkpoints are particularly useful when:

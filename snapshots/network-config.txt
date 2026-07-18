@@ -150,6 +150,18 @@ CLAUDE_CODE_CLIENT_KEY_PASSPHRASE
 =
 "your-passphrase"
 Claude Code reads the certificate and key files at startup and re-reads them each time it applies settings, including when settings change during a session. To rotate the certificate and key, replace the files at the same paths.
+In
+cloud sessions
+, the hosting environment manages the connection to the API, so Claude Code ignores the following variables when they come from a settings file
+env
+block:
+CLAUDE_CODE_CLIENT_CERT
+CLAUDE_CODE_CLIENT_KEY
+CLAUDE_CODE_CLIENT_KEY_PASSPHRASE
+NODE_EXTRA_CA_CERTS
+NODE_TLS_REJECT_UNAUTHORIZED
+CLAUDE_CODE_OAUTH_SCOPES
+Claude Code notes each ignored key in the session’s debug log.
 ​
 Apply network settings to background agents
 Background agents
@@ -273,6 +285,19 @@ skipWebFetchPreflight: true
 in
 settings
 .
+When routing through an
+LLM gateway
+with
+ANTHROPIC_BASE_URL
+, the
+fast mode
+availability check still calls
+api.anthropic.com
+rather than the gateway base URL. The check does honor a configured HTTP proxy, so where a network block is the cause, an allowlist entry for
+api.anthropic.com
+in the proxy is the fix. A network block fails the check only where the host is unreachable even through the proxy, and fast mode then reports a connectivity error. The same connectivity error appears when the check presents a gateway-issued credential that Anthropic rejects; allowlisting doesn’t help there, since nothing is blocked. See
+use fast mode behind proxies and LLM gateways
+for the variables that restore it.
 Claude Code on the web
 and
 Code Review

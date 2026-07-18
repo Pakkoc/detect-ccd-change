@@ -309,6 +309,9 @@ plan.summary
 and iterate over
 plan.steps
 with full type safety.
+The SDK validates schemas with JSON Schema draft-07, so schemas that declare a newer version are rejected. Zod targets draft 2020-12 by default, so pass
+target: "draft-7"
+when converting your schema.
 TypeScript
 Python
 import
@@ -395,7 +398,7 @@ infer
 typeof
 FeaturePlan
 >;
-// Convert to JSON Schema
+// Convert to JSON Schema using the draft-07 target the SDK expects
 const
 schema
 =
@@ -404,7 +407,10 @@ z
 toJSONSchema
 (
 FeaturePlan
-);
+, {
+target:
+"draft-7"
+});
 // Use in query
 try
 {
@@ -708,7 +714,7 @@ schema
 : A
 JSON Schema
 object defining your output structure. You can generate this from a Zod schema with
-z.toJSONSchema()
+z.toJSONSchema(schema, { target: "draft-7" })
 or a Pydantic model with
 .model_json_schema()
 The SDK supports standard JSON Schema features including all basic types (object, array, string, number, boolean, null),
@@ -1198,7 +1204,7 @@ Structured output generation can fail when the agent cannot produce valid JSON m
 model fallback
 can retract an already-completed output mid-stream, and if no retry replaces it the run ends with the same error. Check the
 errors
-field on the result message to tell the two causes apart before debugging your schema.
+list on the result message to tell the two causes apart before debugging your schema.
 When an error occurs, the result message has a
 subtype
 indicating what went wrong:
@@ -1208,9 +1214,17 @@ success
 Output was generated and validated successfully
 error_max_structured_output_retries
 No valid output remained after multiple attempts (validation failures, or a model-fallback retraction with no successful retry)
-The example below checks the
+A result can also end with subtype
+success
+but no
+structured_output
+value, for example when the run completes without the agent producing a structured output. Treat that case as a failure as well. The example below treats a result as successful only when the
 subtype
-field to determine whether the output was generated successfully or if you need to handle a failure:
+is
+success
+and
+structured_output
+is present, and handles every other result as a failure:
 TypeScript
 Python
 import
@@ -1314,6 +1328,15 @@ console
 error
 (
 "Could not produce valid output"
+);
+}
+else
+{
+console
+.
+error
+(
+"Run ended without a structured output"
 );
 }
 }
@@ -1421,6 +1444,12 @@ message.subtype
 print
 (
 "Could not produce valid output"
+)
+else
+:
+print
+(
+"Run ended without a structured output"
 )
 except
 Exception
