@@ -547,7 +547,9 @@ removes an active goal early
 /heapdump
 Write a JavaScript heap snapshot and a memory breakdown to
 ~/Desktop
-, or your home directory on Linux without a Desktop folder, for diagnosing high memory usage. See
+, or your home directory on Linux without a Desktop folder, for diagnosing high memory usage. The
+.heapsnapshot
+file contains your full conversation and credentials, so don’t share it. See
 troubleshooting
 /help
 Show help and available commands

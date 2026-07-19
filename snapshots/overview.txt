@@ -81,7 +81,9 @@ periodically to get the latest features and security fixes.
 You can also install with
 apt, dnf, or apk
 on Debian, Fedora, RHEL, and Alpine.
-Then start Claude Code in any project:
+Then start Claude Code in any project. Replace
+your-project
+with the path to a project directory on your machine:
 cd
 your-project
 claude
@@ -234,11 +236,11 @@ Claude mobile app
 , then pull it into your terminal with
 claude --teleport
 . Teleport requires a claude.ai subscription.
-Hand off a terminal session to the
-Desktop app
-with
+Run
 /desktop
-for visual diff review
+to continue your current terminal session in the
+Desktop app
+, where you can review diffs visually. Available on macOS and x64 Windows.
 Route tasks from team chat: mention
 @Claude
 in

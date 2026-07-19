@@ -1160,7 +1160,9 @@ and
 Public
 . Public visibility makes the session visible to any user logged into claude.ai.
 Check your session for sensitive content before sharing. Sessions may contain code and credentials from private GitHub repositories. Repository access verification is not enabled by default.
-To require recipients to have repository access, or to hide your name from shared sessions, go to Settings > Claude Code > Sharing settings.
+To require recipients to have repository access, or to hide your name from shared sessions, go to
+Settings > Claude Code > Sharing settings
+.
 ​
 Archive sessions
 You can archive sessions to keep your session list organized. Archived sessions are hidden from the default session list but can be viewed by filtering for archived sessions.

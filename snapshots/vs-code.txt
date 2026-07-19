@@ -3,7 +3,7 @@ With the extension, you can review and edit Claude’s plans before accepting th
 ​
 Prerequisites
 Before installing, make sure you have:
-VS Code 1.98.0 or higher
+VS Code 1.94.0 or higher
 An Anthropic account: any paid Claude subscription (Pro, Max, Team, or Enterprise) or a Claude Console account works, and no API key is required. You’ll
 sign in
 with this account when you first open the extension. If you access Claude through a third-party provider like Amazon Bedrock or Google Cloud’s Agent Platform, see
@@ -619,6 +619,17 @@ https://api.githubcopilot.com/mcp/
 \
 --header
 "Authorization: Bearer YOUR_GITHUB_PAT"
+Replace
+YOUR_GITHUB_PAT
+with your personal access token. The
+claude mcp add
+command saves the configuration without validating credentials, so a placeholder value is accepted here but the server fails to connect later. To verify the connection, type
+/mcp
+in the chat panel and check that the server shows
+connected
+. A server with bad credentials shows
+failed
+.
 Once configured, ask Claude to use the tools (e.g., “Review PR #456”).
 To manage MCP servers without leaving VS Code, type
 /mcp
@@ -761,7 +772,7 @@ run.
 Fix common issues
 ​
 Extension won’t install
-Ensure you have a compatible version of VS Code (1.98.0 or later)
+Ensure you have a compatible version of VS Code (1.94.0 or later)
 Check that VS Code has permission to install extensions
 Try installing directly from the
 VS Code Marketplace
@@ -773,7 +784,7 @@ Editor Toolbar
 Open a file
 : The icon requires a file to be open. Having just a folder open isn’t enough.
 Check VS Code version
-: Requires 1.98.0 or higher (Help → About)
+: Requires 1.94.0 or higher (Help → About)
 Restart VS Code
 : Run “Developer: Reload Window” from the Command Palette
 Disable conflicting extensions
