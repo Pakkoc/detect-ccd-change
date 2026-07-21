@@ -1972,7 +1972,9 @@ Array of permission rules to deny tool use. Use this to exclude sensitive files 
 "*"
 denies every tool and
 "mcp__*"
-denies all MCP tools. See
+denies every MCP tool. Deny rules can’t remove
+EndConversation
+while any other tool remains. See
 Permission rule syntax
 and
 Bash permission limitations

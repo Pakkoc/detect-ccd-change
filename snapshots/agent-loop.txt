@@ -603,7 +603,7 @@ ask
 requiresUserInteraction
 are denied even if you’ve allowed them
 "auto"
-Uses a model classifier to approve or deny each tool call. See
+Uses a model classifier to approve or deny permission prompts. See
 Auto mode
 for availability and behavior
 "bypassPermissions"

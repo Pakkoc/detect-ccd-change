@@ -66,6 +66,13 @@ dyld: Symbol not found
 Abort trap
 on macOS
 Binary incompatibility
+claude update
+hangs after
+Checking for updates
+, or
+claude doctor
+hangs with no output
+Move the directory at a shell config path
 Invoke-Expression: Missing argument in parameter list
 Install script returns HTML
 App unavailable in region
@@ -891,6 +898,60 @@ docker
 build
 --memory=4g
 .
+​
+claude update
+or
+claude doctor
+hangs
+claude update
+and
+claude doctor
+scan your shell configuration files for an outdated
+claude
+alias:
+~/.zshrc
+,
+~/.bashrc
+, and
+~/.config/fish/config.fish
+, plus on macOS the first of
+~/.bash_profile
+,
+~/.bash_login
+, or
+~/.profile
+that exists. If you set
+ZDOTDIR
+, the Zsh file is
+$ZDOTDIR/.zshrc
+instead.
+When one of those paths is a directory, Claude Code skips it and both commands complete normally. Before v2.1.214, a directory at one of those paths made both commands hang and left the System diagnostics section of
+/status
+blank.
+claude doctor
+hung with no output;
+claude update
+hung right after printing
+Checking for updates
+.
+If you hit the hang on an earlier version, find the directory. In this command’s output, a line starting with
+d
+marks that path as a directory. A
+No such file or directory
+line means nothing exists at that path and isn’t the cause:
+ls
+-ld
+~/.zshrc
+~/.bashrc
+~/.bash_profile
+~/.bash_login
+~/.profile
+~/.config/fish/config.fish
+Move the directory aside, or update to v2.1.214 or later. Since
+claude update
+hangs on the affected versions, update by rerunning the
+install script
+instead.
 ​
 Claude Desktop overrides the
 claude

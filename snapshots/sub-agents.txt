@@ -692,6 +692,9 @@ and MCP tools available in the main conversation by default. The following tools
 tools
 field:
 AskUserQuestion
+EndConversation
+, which can end only the main conversation; see
+EndConversation tool behavior
 EnterPlanMode
 ExitPlanMode
 , unless the subagent’s

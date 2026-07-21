@@ -6107,7 +6107,7 @@ bool
 |
 None
 ,
-# Launch the agent in the background
+# Agents run in the background by default; set to False to run synchronously
 "name"
 :
 str
@@ -6115,6 +6115,13 @@ str
 None
 ,
 # Name for the spawned agent
+"team_name"
+:
+str
+|
+None
+,
+# Deprecated; ignored
 "mode"
 :
 "acceptEdits"
@@ -6131,7 +6138,7 @@ None
 |
 None
 ,
-# Permission mode for the agent
+# Deprecated; ignored. Subagents inherit the parent session's permission mode; agent-definition frontmatter may override it
 "isolation"
 :
 "worktree"
@@ -6189,7 +6196,15 @@ str
 |
 None
 ,
-# Model the subagent actually ran on
+# Model the subagent started on
+"modelsUsed"
+: list[
+str
+]
+|
+None
+,
+# Models used in order, with consecutive repeats collapsed
 "totalToolUseCount"
 :
 int
@@ -6370,7 +6385,15 @@ str
 |
 None
 ,
-# Model the subagent runs on
+# Model in use at the backgrounding transition
+"modelsUsed"
+: list[
+str
+]
+|
+None
+,
+# Models used before backgrounding, in order, with consecutive repeats collapsed
 "prompt"
 :
 str
@@ -6442,18 +6465,26 @@ worktreeBranch
 on the
 completed
 variant.
-The
-resolvedModel
-field on the
+On the
 completed
-and
-async_launched
-variants names the model the subagent actually ran on, which can differ from the requested
+variant,
+resolvedModel
+names the model the subagent started on, which can differ from the requested
 model
 input when
 availableModels
 or another override applies.
-This field requires Claude Code v2.1.174 or later.
+This field requires Claude Code v2.1.174 or later. On the
+async_launched
+variant,
+resolvedModel
+names the model in use when the agent moved to the background, so a swap that happened before backgrounding is reflected there. The
+modelsUsed
+field on both variants lists the models used in order, with consecutive repeats collapsed; it’s set only when the model was swapped mid-run.
+modelsUsed
+and the backgrounding-time
+resolvedModel
+behavior require Claude Code v2.1.212 or later.
 ​
 AskUserQuestion
 Tool name:
@@ -6491,6 +6522,13 @@ str
 str
 ,
 # Explanation of what this option means
+"preview"
+:
+str
+|
+None
+,
+# Preview content rendered when the option is focused
 }
 ],
 "multiSelect"
@@ -6512,6 +6550,25 @@ None
 # User answers populated by the permission system. Multi-select
 # answers are a comma-joined string of the selected labels; a
 # list of labels is accepted on input and coerced to that form
+"annotations"
+: dict[
+str
+,
+dict
+]
+|
+None
+,
+# Per-question annotations from the user, keyed by question text.
+# Each value can carry "preview" (the selected option's preview
+# content) and "notes" (free-text notes on the selection)
+"metadata"
+:
+dict
+|
+None
+,
+# Analytics metadata, such as {"source": "remember"}; not displayed to the user
 }
 Output:
 {
@@ -6536,6 +6593,12 @@ str
 "description"
 :
 str
+,
+"preview"
+:
+str
+|
+None
 }],
 "multiSelect"
 :
@@ -6551,6 +6614,31 @@ str
 ],
 # Maps question text to answer string
 # Multi-select answers are comma-separated
+"response"
+:
+str
+|
+None
+,
+# Freeform reply typed instead of answering the questions; when set,
+# Claude receives "The user responded: ..." in place of the answer list
+"annotations"
+: dict[
+str
+,
+dict
+]
+|
+None
+,
+# Per-question "preview" and "notes" from the user's selections
+"afkTimeoutMs"
+:
+int
+|
+None
+,
+# Set when the dialog auto-resolved after this many milliseconds of user inactivity; absent when the user answered
 }
 ​
 Bash

@@ -24,6 +24,15 @@ and relaunches into fullscreen with your conversation intact, so you can switch 
 to switch back to the classic renderer, or
 /tui
 with no argument to print which renderer is active.
+In
+screen reader mode
+, Claude Code always uses the classic renderer except in attached
+background sessions
+, which still render fullscreen. If you run
+/tui fullscreen
+in any other session, Claude Code prints an explanation instead of switching and doesn’t change the saved
+tui
+setting.
 The relaunched session keeps the conversation as it appears on screen. If you ran
 /rewind
 earlier in the session, the relaunch resumes from the rewound point rather than the longer transcript saved on disk. Before v2.1.207, switching renderers after a rewind restored the conversation the rewind had removed.

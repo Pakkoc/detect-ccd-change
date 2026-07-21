@@ -221,11 +221,19 @@ Claude Code requires access to the following URLs. Allowlist these in your proxy
 URL
 Required for
 api.anthropic.com
-Claude API requests
+Claude API requests, including the WebFetch
+domain safety check
+, feature flag fetches, and telemetry event logging
 claude.ai
 claude.ai account authentication
+claude.com
+claude.ai account sign-in opens a
+claude.com
+page in the browser, which redirects to
+claude.ai
+; pre-approved WebFetch documentation lookups also reach this host from the CLI
 platform.claude.com
-Anthropic Console account authentication
+Anthropic Console account authentication. OAuth token exchange, refresh, and revocation also go to this host for claude.ai accounts, so both Console and claude.ai sign-ins require it
 mcp-proxy.anthropic.com
 MCP connectors from claude.ai
 , including connectors an organization administrator configures. Connector traffic routes through this proxy; connectors are enabled by default for claude.ai-authenticated users. To disable, set
@@ -234,7 +242,7 @@ or the
 disableClaudeAiConnectors
 setting
 downloads.claude.ai
-Plugin executable downloads; native installer and native auto-updater
+Plugin executable downloads; native installer, native auto-updater, and update version checks
 storage.googleapis.com
 Install counts and plugin metadata shown in
 /plugin
@@ -248,20 +256,38 @@ Native installer and native auto-updater on versions prior to 2.1.116
 bridge.claudeusercontent.com
 Claude in Chrome
 extension WebSocket bridge
-*.claudeusercontent.com
-Viewing
-artifacts
-on claude.ai. The viewer loads each artifact’s content from a sandboxed subdomain of this origin. Required in the viewer’s browser, not by the CLI itself
 raw.githubusercontent.com
 Changelog feed for
 /release-notes
 and the release notes shown after updating
-If you install Claude Code through npm or manage your own binary distribution, end users do not need the native installer and auto-updater uses of
-downloads.claude.ai
-. The other uses in the table apply regardless of install method.
-Claude Code also sends optional operational telemetry by default, which you can disable with environment variables. See
+http-intake.logs.us5.datadoghq.com
+Operational telemetry events, sent only when the CLI uses the Anthropic API directly, never for Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. Optional: disable with
+DISABLE_TELEMETRY
+or
+DO_NOT_TRACK
+browser-intake-us5-datadoghq.com
+Operational error reports, sent when the CLI uses the Anthropic API directly and a server-side rollout gate enables them. Optional: disable with
+DISABLE_ERROR_REPORTING
+or
+DISABLE_TELEMETRY
+; see
 Telemetry services
-for how to disable it before finalizing your allowlist.
+formulae.brew.sh
+Update version checks on Homebrew installs. Other install methods don’t contact this host
+code.claude.com
+Claude Code documentation lookups by the built-in claude-code-guide agent and pre-approved WebFetch requests. Blocking this host only affects documentation lookups
+If you install Claude Code through npm or manage your own binary distribution, end users don’t need the native installer and auto-updater uses of
+downloads.claude.ai
+, but npm and bun installs need their package registry,
+registry.npmjs.org
+, unless your organization mirrors it. The other uses in the table apply regardless of install method.
+The two Datadog intake hosts carry only optional operational telemetry, and setting
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+disables both. Sessions on third-party providers never send to these hosts, even when a platform sets
+CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
+and telemetry metrics default on. See
+Telemetry services
+for everything Claude Code sends and how to disable it before finalizing your allowlist.
 When using
 Amazon Bedrock
 ,
@@ -315,8 +341,12 @@ Anthropic API IP addresses
 so Anthropic infrastructure can reach your GHES host to clone repositories and post review comments.
 ​
 Desktop and claude.ai
-The preceding table primarily covers the standalone CLI. The Claude Desktop app and claude.ai in a browser load their application code from additional Anthropic CDN hosts, including
+The preceding table covers the standalone CLI. The Claude Desktop app and claude.ai in a browser load their application code and user content from additional Anthropic CDN hosts, including
 assets-proxy.anthropic.com
+and the
+*.claudeusercontent.com
+origins that serve
+artifacts
 . Allowing
 claude.ai
 while blocking those hosts produces a blank page rather than an error. See

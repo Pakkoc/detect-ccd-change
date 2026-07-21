@@ -53,15 +53,22 @@ protected paths
 are never auto-approved, guarding repository state and Claude’s own configuration against accidental corruption.
 Modes set the baseline. Layer
 permission rules
-on top to pre-approve or block specific tools. Deny rules, explicit ask rules, the
+on top to pre-approve or block specific tools. These controls apply in every mode, including
+bypassPermissions
+:
+deny rules and explicit ask rules, which apply to every tool but can’t block
+EndConversation
+while any other tool remains
+the
 org
 ask
 setting on connector tools
-, and the
+the
 requiresUserInteraction
-marker apply in every mode, including
+marker
+Allow rules have no effect in
 bypassPermissions
-. Allow rules have no effect in that mode because everything else is already approved.
+because everything else is already approved.
 ​
 Switch permission modes
 You can switch modes mid-session, at startup, or as a persistent default. The mode is set through these controls, not by asking Claude in chat. Select your interface below to see how to change it.

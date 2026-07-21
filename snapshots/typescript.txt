@@ -295,6 +295,14 @@ extras
 annotations
 ?:
 ToolAnnotations
+;
+searchHint
+?:
+string
+;
+alwaysLoad
+?:
+boolean
 }
 )
 :
@@ -324,8 +332,16 @@ Async function that executes the tool logic
 extras
 { annotations?:
 ToolAnnotations
-}
-Optional MCP tool annotations providing behavioral hints to clients
+; searchHint?: string; alwaysLoad?: boolean }
+Optional extras.
+annotations
+provides MCP behavioral hints to clients.
+searchHint
+is a one-line capability phrase shown in the deferred-tool list when
+tool search
+is active.
+alwaysLoad: true
+keeps this tool’s full schema in the initial prompt instead of deferring it
 ​
 ToolAnnotations
 Re-exported from
@@ -450,6 +466,10 @@ version
 ?:
 string
 ;
+instructions
+?:
+string
+;
 tools
 ?:
 Array
@@ -458,6 +478,10 @@ SdkMcpToolDefinition
 <
 any
 >>;
+alwaysLoad
+?:
+boolean
+;
 })
 :
 McpSdkServerConfigWithInstance
@@ -473,9 +497,24 @@ The name of the MCP server
 options.version
 string
 Optional version string
+options.instructions
+string
+Optional server instructions, returned from
+initialize
+and surfaced to the model as an MCP instructions block
 options.tools
 Array<SdkMcpToolDefinition>
 Array of tool definitions created with
+tool()
+options.alwaysLoad
+boolean
+When
+true
+, every tool from this server stays in the initial prompt and is never deferred behind
+tool search
+. Combines with per-tool
+alwaysLoad
+in
 tool()
 ​
 listSessions()

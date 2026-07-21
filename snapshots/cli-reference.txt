@@ -427,7 +427,7 @@ claude --disable-slash-commands
 --disallowedTools
 ,
 --disallowed-tools
-Deny rules. A bare tool name removes the matching tools from the model’s context:
+Deny rules. A bare tool name removes the matching tools from Claude’s context:
 "Edit"
 removes Edit,
 "*"
@@ -435,7 +435,9 @@ removes every tool, and
 "mcp__*"
 removes every MCP tool. A scoped rule such as
 Bash(rm *)
-leaves the tool available and denies only matching calls
+leaves the tool available and denies only matching calls. A rule naming
+EndConversation
+can’t remove it while any other tool remains
 "Bash(git log *)" "Bash(git diff *)" "Edit"
 --effort
 Set the
@@ -815,13 +817,17 @@ to disable all,
 "default"
 for all, or tool names like
 "Bash,Edit,Read"
-. MCP tools are not affected; to deny those too, use
+. The flag doesn’t affect MCP tools; to deny those too, use
 --disallowedTools "mcp__*"
 , or pass
 --strict-mcp-config
 without
 --mcp-config
-so no MCP servers load
+so no MCP servers load. A list that omits
+EndConversation
+doesn’t remove it;
+""
+removes it only when no MCP tools remain
 claude --tools "Bash,Edit,Read"
 --verbose
 Enable verbose logging, shows full turn-by-turn output. Overrides the

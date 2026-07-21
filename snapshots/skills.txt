@@ -506,7 +506,9 @@ disallowed-tools
 No
 Tools removed from Claude’s available pool while this skill is active. Use for autonomous skills that should never call certain tools, such as
 AskUserQuestion
-for a background loop. Accepts a space- or comma-separated string, or a YAML list. The restriction clears when you send your next message.
+for a background loop. Accepts a space- or comma-separated string, or a YAML list. The restriction clears when you send your next message. Like deny rules, the field can’t remove
+EndConversation
+while any other tool remains.
 model
 No
 Model to use when this skill is active. The override applies for the rest of the current turn and is not saved to settings; the session model resumes on your next prompt. Accepts the same values as
@@ -688,13 +690,42 @@ CLAUDE_PROJECT_DIR
 . Use this to reference project-local scripts or files, such as
 ${CLAUDE_PROJECT_DIR}/.claude/hooks/helper.sh
 , independent of where the skill is installed.
+Claude Code substitutes
+${CLAUDE_SKILL_DIR}
+and
+${CLAUDE_PROJECT_DIR}
+in two places: the skill’s markdown content, and Bash rules in the
+allowed-tools
+frontmatter. Using the same variable in both places lets a skill run a bundled script without a permission prompt. The following skill shows the pattern:
+---
+name
+:
+render-chart
+description
+:
+Render a chart from a CSV file
+allowed-tools
+:
+Bash(${CLAUDE_SKILL_DIR}/scripts/render.sh *)
+---
+Run `${CLAUDE_SKILL_DIR}/scripts/render.sh <csv-file>` to render the chart.
+If this skill is installed at
+~/.claude/skills/render-chart/
+, both occurrences of
+${CLAUDE_SKILL_DIR}
+expand to that directory. The
+allowed-tools
+rule then matches the exact command the skill body tells Claude to run, so the script runs without prompting.
+The
+allowed-tools
+substitution for
+${CLAUDE_SKILL_DIR}
+requires Claude Code v2.1.129 or later. On earlier versions the rule stays a literal
+${CLAUDE_SKILL_DIR}
+string and never matches, so the command still prompts for permission.
 The
 ${CLAUDE_PROJECT_DIR}
-substitution requires Claude Code v2.1.196 or later. It applies to both the skill body and the
-allowed-tools
-frontmatter, so a permission rule like
-Bash(${CLAUDE_PROJECT_DIR}/scripts/lint.sh *)
-resolves to the same path the skill body uses.
+substitution requires Claude Code v2.1.196 or later.
 Indexed arguments use shell-style quoting, so wrap multi-word values in quotes to pass them as a single argument. For example,
 /my-skill "hello world" second
 makes
@@ -879,7 +910,9 @@ Bash(git add *) Bash(git commit *) Bash(git status *)
 ---
 To remove tools from Claude’s available pool while a skill is active, list them in
 disallowed-tools
-in the skill’s frontmatter. The restriction clears when you send your next message. To block tools across all skills and prompts, add deny rules in your
+in the skill’s frontmatter. The restriction clears when you send your next message. Like deny rules, the field can’t remove
+EndConversation
+while any other tool remains. To block tools across all skills and prompts, add deny rules in your
 permission settings
 .
 ​

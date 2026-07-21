@@ -234,7 +234,9 @@ Restrict login to a specific method or Anthropic organization. The method restri
 claude setup-token
 , and
 /install-github-app
-; the organization restriction covers the terminal, VS Code extension, and Agent SDK.
+; the organization restriction covers the terminal, VS Code extension, and Agent SDK, except
+gateway
+sign-in, which doesn’t authenticate against an Anthropic organization.
 Before v2.1.212, only terminal logins enforced either key. When set, sessions authenticated by
 ANTHROPIC_API_KEY
 ,

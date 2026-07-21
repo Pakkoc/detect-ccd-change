@@ -510,6 +510,15 @@ result
 );
 }
 }
+Combine this snippet with the tool and server definitions from the
+weather tool example
+in one file, then run it with
+python weather.py
+for Python or
+npx tsx weather.ts
+for TypeScript. Claude calls
+get_temperature
+and the script prints a one-line answer with the current temperature in San Francisco.
 ​
 Add more tools
 A server holds as many tools as you list in its
@@ -519,13 +528,13 @@ allowedTools
 individually or use the wildcard
 mcp__weather__*
 to cover every tool the server exposes.
-The example below adds a second tool,
+The example below defines a second tool,
 get_precipitation_chance
-, to the
+, and replaces the
 weatherServer
-from the
+definition from the
 weather tool example
-and rebuilds it with both tools in the array.
+with one that lists both tools in the array.
 Python
 TypeScript
 # Define a second tool for the same server
@@ -803,9 +812,16 @@ getTemperature
 getPrecipitationChance
 ]
 });
-Every tool in this array consumes context window space on every turn. If you’re defining dozens of tools, see
-tool search
-to load them on demand instead.
+Tool search
+is on by default and defers SDK MCP tools: Claude sees each tool’s name in a compact list and loads its full schema on demand. With tool search disabled, every tool in this array consumes context window space on every turn. In TypeScript, pass
+alwaysLoad: true
+in the
+extras
+argument of
+tool()
+or in the options of
+createSdkMcpServer()
+to keep a tool’s full schema in the initial prompt.
 ​
 Add tool annotations
 Tool annotations
@@ -1043,6 +1059,10 @@ from
 typing
 import
 Any
+from
+claude_agent_sdk
+import
+tool
 from
 claude_agent_sdk
 import
@@ -1365,6 +1385,10 @@ import
 base64
 import
 httpx
+from
+claude_agent_sdk
+import
+tool
 from
 claude_agent_sdk
 import
@@ -2399,6 +2423,11 @@ ToolUseBlock
 before printing the final
 ResultMessage
 text. This lets you see when Claude is using the tool versus answering from its own knowledge.
+Because
+tool search
+is on by default, the output may also include a
+ToolSearch
+call as Claude loads the deferred tool schema.
 Python
 TypeScript
 import

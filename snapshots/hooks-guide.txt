@@ -915,11 +915,11 @@ field specifies which filenames to watch
 WorktreeCreate
 When a worktree is being created via
 --worktree
-or
+,
 isolation: "worktree"
-. Replaces default git behavior
+, or for a background session. Replaces default git behavior
 WorktreeRemove
-When a worktree is being removed, either at session exit or when a subagent finishes
+When a worktree is being removed at session exit, when a subagent finishes, or when you delete a background session
 PreCompact
 Before context compaction
 PostCompact
@@ -1078,8 +1078,10 @@ startup
 resume
 ,
 clear
-, or
+,
 compact
+, or
+fork
 , and so on. See
 Common input fields
 in the reference for shared fields, and each event’s section for event-specific schemas.
@@ -1348,6 +1350,8 @@ resume
 clear
 ,
 compact
+,
+fork
 Setup
 which CLI flag triggered setup
 init

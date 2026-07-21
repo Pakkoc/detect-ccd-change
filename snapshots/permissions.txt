@@ -67,7 +67,9 @@ Bash(aws s3 ls)
 , so a deny rule can’t carry allowlist exceptions. The same precedence applies between ask and allow: a matching ask rule prompts even when a more specific allow rule also matches the same call.
 Deny rules behave differently depending on whether they name a tool or scope a pattern within one. A bare tool name like
 Bash
-removes the tool from Claude’s context entirely, so Claude never sees it. A scoped rule like
+removes the tool from Claude’s context entirely, so Claude never sees it. Bare-name removal applies to every tool except
+EndConversation
+: a deny rule can’t remove it while any other tool remains, and an ask rule never prompts for it. A scoped rule like
 Bash(rm *)
 leaves the tool available and blocks matching calls when Claude attempts them.
 Permission rules are enforced by Claude Code, not by the model. Instructions in your prompt or
@@ -345,7 +347,9 @@ Deny and ask rules also accept glob patterns in the tool-name position. The patt
 "*"
 matches every tool, and
 "mcp__*"
-matches every MCP tool across all servers. A tool matched by a bare-name glob deny rule is removed from Claude’s context, the same as a bare tool name. This configuration denies every MCP tool:
+matches every MCP tool across all servers. A tool matched by a bare-name glob deny rule is removed from Claude’s context, the same as a bare tool name, including the
+EndConversation
+exception: a glob deny can’t remove it while any other tool remains, and a glob ask never prompts for it. This configuration denies every MCP tool:
 {
 "permissions"
 : {
@@ -473,12 +477,12 @@ invocations are recognized regardless of what precedes the
 cd
 into a subdirectory generate their own Read rule for that path. Up to 5 rules may be saved for a single compound command.
 ​
-Process wrappers
-Before matching Bash rules, Claude Code strips a fixed set of process wrappers so a rule like
+Wrappers
+Before matching Bash rules, Claude Code strips a fixed set of wrappers, so a rule like
 Bash(npm test *)
 also matches
 timeout 30 npm test
-. The recognized wrappers are
+. The stripped wrappers are
 timeout
 ,
 time
@@ -488,6 +492,25 @@ nice
 nohup
 , and
 stdbuf
+, plus the shell builtins
+command
+and
+builtin
+, and zsh’s
+noglob
+. Each runs its argument as the actual command. Two related forms aren’t stripped: the query form
+command -v
+, which looks up a command rather than running one, and zsh’s
+nocorrect
+.
+Claude Code also strips a leading assignment of certain known-safe environment variables, so
+Bash(npm test *)
+matches
+NODE_ENV=test npm test
+. An allow rule won’t match past an assignment of any other variable. A deny or ask rule matches past any leading assignment, so
+Bash(rm *)
+in deny still matches
+FOO=bar rm -rf tmp/
 .
 Bare
 xargs
@@ -1092,7 +1115,9 @@ node_modules/pkg
 ​
 Extend permissions with hooks
 Claude Code hooks
-provide a way to register custom shell commands to perform permission evaluation at runtime. When Claude Code makes a tool call, PreToolUse hooks run before the permission prompt. The hook output can deny the tool call, force a prompt, or skip the prompt to let the call proceed.
+let you register custom shell commands that evaluate permissions at runtime. When Claude Code makes a tool call, PreToolUse hooks run before the permission prompt, for every tool except
+EndConversation
+. The hook output can deny the tool call, force a prompt, or skip the prompt to let the call proceed.
 Hook decisions don’t bypass permission rules. Claude Code evaluates deny and ask rules regardless of what a PreToolUse hook returns: a matching deny rule blocks the call, and a matching ask rule still prompts even when the hook returned
 "allow"
 or
@@ -1235,7 +1260,9 @@ Permissions and
 sandboxing
 are complementary security layers:
 Permissions
-control which tools Claude Code can use and which files or domains it can access. They apply to all tools, including Bash, Read, Edit, WebFetch, and MCP.
+control which tools Claude Code can use and which files or domains it can access. They apply to Bash, Read, Edit, WebFetch, MCP, and every other tool, except that a deny or ask rule can’t block
+EndConversation
+while any other tool remains.
 Sandboxing
 provides OS-level enforcement that restricts the Bash tool’s filesystem and network access. It applies only to Bash commands and their child processes.
 Use both for defense-in-depth:

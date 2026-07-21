@@ -40,7 +40,7 @@ Installed plugins
 ~/.claude/plugins
 Cloned marketplaces, installed plugin versions, and per-plugin data, managed by
 claude plugin
-commands. Orphaned versions are deleted 7 days after a plugin update or uninstall. See
+commands. Orphaned versions are deleted 14 days after a plugin update or uninstall. See
 plugin caching
 .
 ~/.claude
