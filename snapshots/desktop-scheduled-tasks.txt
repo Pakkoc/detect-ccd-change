@@ -191,6 +191,6 @@ Was this page helpful?
 Yes
 No
 Windows (WSL)
-Mobile
+iOS simulator (beta)
 ⌘
 I

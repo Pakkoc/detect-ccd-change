@@ -403,7 +403,7 @@ picker as its own labeled row. Before v2.1.199, such an ID was selectable only b
 .
 Model changes that Claude Code makes on your behalf are checked the same way:
 Fallback model chains
-: elements outside the allowlist are dropped
+: entries outside the allowlist are dropped
 Plan-mode upgrades
 : on the Anthropic API and Claude Platform on AWS, an upgrade such as
 opusplan
@@ -894,19 +894,22 @@ The
 --fallback-model
 flag takes precedence over the
 fallbackModel
-setting. Each element accepts a model name or alias, and
+setting. Each entry accepts a model name or alias, and
 "default"
 expands to the default model.
 Claude Code doesn’t confirm the chain at startup and
 /status
 doesn’t display it. The notice shown when a switch happens is the first visible sign that a fallback is configured.
-Two cases cause an element to be skipped:
-Unavailable model
-: a model that can’t be reached, such as a retired model pinned in settings, is skipped and Claude Code continues to the next element.
+When a request fails over, Claude Code tries each entry in order until one accepts it. An entry that can’t be reached either, such as a retired model pinned in settings, fails over to the next one the same way. Two kinds of entry are removed before that walk starts:
 Outside the allowlist
-: an element not permitted by
+: any entry not permitted by
 availableModels
-is dropped when the chain is read and never tried.
+is dropped when Claude Code reads the chain.
+Smaller context window during compaction
+:
+the chain also covers
+compaction
+, but Claude Code won’t fall back to a model with a smaller context window than the primary’s, since summarizing there would cut off part of the conversation first. If every fallback is smaller, compaction shows the original error and you can retry.
 ​
 Automatic model fallback
 This section covers content-based fallback from Fable 5. For availability-based fallback when a model is overloaded or unavailable, see

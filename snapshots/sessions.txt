@@ -50,6 +50,16 @@ Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
 ; see
 model configuration
 for the resolution order.
+Agent: a session started with
+--agent
+or the
+agent
+setting continues as that agent, keeping its system prompt, tool restrictions, and model. Pass
+--agent
+when resuming to pick a different one.
+If the agent no longer exists in the session’s original directory or the one you resume from, the session resumes with the default tools and system prompt and shows a
+warning naming the agent
+.
 Permission mode: the mode the session was in.
 plan
 and
@@ -92,9 +102,15 @@ settings.local.json
 , are re-read at launch, so configuration that lives in them doesn’t need to be passed again.
 ​
 Where the session picker looks
-Sessions are stored per project directory. By default the session picker shows interactive sessions from the current worktree, plus sessions started elsewhere that added the current directory with
+Claude Code stores sessions per project directory. By default the session picker shows:
+Sessions from the current worktree, including
+background sessions
+, which are marked
+bg
+in the list
+Sessions started elsewhere that added the current directory with
 /add-dir
-. Use
+Use
 Ctrl+W
 to widen to all worktrees of the repository or
 Ctrl+A
@@ -217,6 +233,13 @@ or
 get their own session IDs and appear as separate rows. When the picker finds more than one entry for the same session, it groups them under a single row. Press
 →
 to expand a group.
+If Claude Code can’t load the session you select from the
+claude --resume
+picker, it prints
+Failed to resume the conversation
+with a command to retry, then exits with code 1. From the
+/resume
+picker inside a session, Claude Code reports the failure and your current conversation keeps running.
 ​
 Branch a session
 Branching creates a copy of the conversation so far and switches you into it, leaving the original intact. Use it to try a different approach without losing the path you were on.

@@ -101,15 +101,20 @@ You can also pass a skill as the prompt, for example
 As of v2.1.196, a scheduled fire only runs skills that Claude is
 allowed to invoke on its own
 . The following reach Claude as plain text instead of executing:
-built-in commands such as
+Built-in commands such as
 /permissions
 ,
 /model
 , or
 /clear
-skills marked
+Skills marked
 disable-model-invocation: true
-skills withheld from Claude by a
+, including the bundled
+/verify
+and
+/code-review
+skills.
+Skills withheld from Claude by a
 skillOverrides
 setting or a
 Skill
@@ -364,6 +369,9 @@ claude --resume
 or
 claude --continue
 restores tasks that have not expired: recurring tasks within seven days of creation, and one-shot tasks whose scheduled time has not yet passed. Background Bash and monitor tasks are never restored on resume.
+Claude Code stores the scheduled task list in the project’s
+.claude
+directory, and scheduling a task fails with an error when that directory, or the task file inside it, is a symlink. Before v2.1.216, Claude Code wrote the file through the link.
 For cron-driven automation that needs to run unattended:
 Routines
 : run on Anthropic-managed infrastructure on a schedule, via API call, or on GitHub events

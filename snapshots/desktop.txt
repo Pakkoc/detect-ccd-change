@@ -35,6 +35,9 @@ Preview your running app
 in the Browser pane while Claude verifies its own changes, and
 open external sites
 alongside it
+Watch Claude
+run and test your iOS app
+in the iOS Simulator pane
 Arrange panes
 for the chat, diff, browser, terminal, and file editor side by side
 Ask a
@@ -324,7 +327,9 @@ gh
 is not installed, Desktop prompts you to install it the first time you try to create a PR.
 ​
 Arrange your workspace
-The Code tab is built around panes you can arrange in any layout: chat, diff, browser, terminal, file, plan, tasks, and subagent. Drag a pane by its header to reposition it, or drag a pane edge to resize it. Press
+The Code tab is built around panes you can arrange in any layout: chat, diff, browser, terminal, file, plan, tasks, and subagent, along with the
+iOS Simulator
+on macOS. Drag a pane by its header to reposition it, or drag a pane edge to resize it. Press
 Cmd+\
 on macOS or
 Ctrl+\
@@ -481,7 +486,9 @@ Check usage
 Click the usage ring next to the model picker to see your current context window usage and your plan usage for the period. Context usage is per session; plan usage is shared across all your Claude Code surfaces.
 ​
 Let Claude use your computer
-Computer use lets Claude open your apps, control your screen, and work directly on your machine the way you would. Ask Claude to test a native app in a mobile simulator, interact with a desktop tool that has no CLI, or automate something that only works through a GUI.
+Computer use lets Claude open your apps, control your screen, and work directly on your machine the way you would. Ask Claude to interact with a desktop tool that has no CLI, or automate something that only works through a GUI. For running and testing iOS apps, Desktop opens the dedicated
+iOS Simulator pane
+instead of controlling your screen; the pane works without enabling computer use.
 Computer use is a research preview on macOS and Windows that requires a Pro or Max plan. It is not available on Team or Enterprise plans. The Claude Desktop app must be running.
 Computer use is off by default.
 Enable it in Settings
@@ -501,10 +508,13 @@ If the task is a shell command, Claude uses Bash.
 If the task is browser work and you have
 Claude in Chrome
 set up, Claude uses that.
+If the task is running or testing an iOS app, Claude uses the
+iOS Simulator pane
+, which doesn’t use screen control.
 If none of those apply, Claude uses computer use.
 The
 per-app access tiers
-reinforce this: browsers are capped at view-only, and terminals and IDEs at click-only, steering Claude toward the dedicated tool even when computer use is active. Screen control is reserved for things nothing else can reach, like native apps, hardware control panels, mobile simulators, or proprietary tools without an API.
+reinforce this: browsers are capped at view-only, and terminals and IDEs at click-only, steering Claude toward the dedicated tool even when computer use is active. Screen control is reserved for things nothing else can reach, like native apps, hardware control panels, or proprietary tools without an API.
 ​
 Enable computer use
 Computer use is off by default. If you ask Claude to do something that needs it while it’s off, Claude tells you it could do the task if you enable computer use in Settings.
@@ -897,6 +907,12 @@ program
 . Only used when
 program
 is set
+url
+string
+The address the preview opens instead of
+http://localhost:<port>
+. See
+open the preview at a specific URL
 When to use
 program
 vs
@@ -923,6 +939,90 @@ node server.js
 . Pass additional flags with
 args
 .
+Open the preview at a specific URL
+By default, the preview opens
+http://localhost:<port>
+. Set
+url
+when your server needs a different address. Common cases are servers that require local HTTPS, apps that use
+*.localhost
+subdomains, and apps that sign you in through a redirect.
+{
+"version"
+:
+"0.0.1"
+,
+"configurations"
+: [
+{
+"name"
+:
+"my-app"
+,
+"runtimeExecutable"
+:
+"npm"
+,
+"runtimeArgs"
+: [
+"run"
+,
+"dev"
+],
+"port"
+:
+8443
+,
+"url"
+:
+"https://localhost:8443"
+}
+]
+}
+Localhost addresses open directly, exactly like the default port address. This includes
+localhost
+, any
+*.localhost
+subdomain,
+127.0.0.1
+, and
+::1
+. For security, a localhost
+url
+must be just your server’s origin — no path or query, and the port must match the entry’s port. To show a specific page, ask Claude to navigate there after the preview opens. A localhost
+url
+with a path, query, or mismatched port is reported as a configuration error that names the url and shows the fix.
+Any other address asks for your permission the first time it opens, the same way browsing to a new site in the preview does. External addresses may include paths. Choose
+Always allow
+to skip the prompt for that site in the future. Organization policies that restrict external sites in the preview still apply.
+To preview a server you already run yourself, set
+url
+without a command. Claude attaches the preview to your running server instead of starting one:
+{
+"version"
+:
+"0.0.1"
+,
+"configurations"
+: [
+{
+"name"
+:
+"my-app"
+,
+"url"
+:
+"https://app.localhost:3000"
+}
+]
+}
+The
+url
+must be
+http
+or
+https
+, and must not contain a username or password.
 ​
 Port conflicts
 The
@@ -1302,6 +1402,12 @@ set to
 to prevent Claude from using tools to read or act on external pages in the
 Browser pane
 . Users can still navigate to external sites themselves, and local dev server previews are unaffected.
+disableMobileSimulatorTools
+set to
+true
+to block Claude’s tools for controlling and capturing devices in the
+iOS Simulator pane
+. The pane stays usable for the user’s own taps; only Claude’s access is removed.
 disableBrowserExternalNavigation
 set to
 true
@@ -1597,6 +1703,11 @@ Enable via
 on macOS
 App and screen control
 on macOS and Windows
+iOS simulator
+Drive the simulator via
+computer use
+iOS Simulator pane
+opens automatically
 Dispatch integration
 Not available
 Dispatch sessions

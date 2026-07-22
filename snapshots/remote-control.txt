@@ -456,7 +456,7 @@ Text-output commands:
 /exit
 ,
 /usage-credits
-(runs the text form instead of opening the in-CLI dialog),
+(prints the billing URL instead of opening a browser),
 /recap
 ,
 /reload-plugins

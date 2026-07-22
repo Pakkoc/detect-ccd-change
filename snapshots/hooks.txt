@@ -6923,8 +6923,12 @@ and
 SubagentStop
 : the reason is fed back to Claude as its next instruction and the turn continues
 PreToolUse
-: the tool call is denied and the reason is returned to Claude as the tool error, equivalent to a command hook’s
+: the tool call is denied; by default the turn ends and the deny reason appears in the chat as a warning line. Set
+continueOnBlock: true
+to instead return the reason to Claude as the tool error so it can adjust and continue, equivalent to a command hook’s
 permissionDecision: "deny"
+.
+Before v2.1.210, the deny reason was returned to Claude as the tool error and the turn continued
 PostToolUse
 : by default the turn ends and the reason appears in the chat as a warning line. Set
 continueOnBlock: true
@@ -6939,12 +6943,16 @@ decision: "block"
 regardless of
 continue
 PostToolUseFailure
-,
+and
 TaskCreated
-, and
+: the reason is returned to Claude as a tool error and the turn continues, regardless of
+continueOnBlock
 TaskCompleted
-: the reason is returned to Claude as a tool error, similar to
-PreToolUse
+: when it fires because a task is marked completed during a turn, the reason is returned to Claude as a tool error and the turn continues, regardless of
+continueOnBlock
+. When it fires because a teammate stops, it behaves like
+TeammateIdle
+and halts the teammate by default
 TeammateIdle
 : by default the teammate stops and the reason appears as a warning line. Set
 continueOnBlock: true

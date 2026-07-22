@@ -264,7 +264,7 @@ Local scope
 For example, select
 commit-commands
 , a plugin that adds git workflow skills, and install it to your user scope.
-You can also install directly from the command line:
+You can also start the install from the command line:
 /plugin
 install
 commit-commands@claude-code-plugins
@@ -414,7 +414,7 @@ tab, and press
 Enter
 on a plugin:
 User scope
-(default): install for yourself across all projects
+: install for yourself across all projects
 Project scope
 : install for all collaborators on this repository, which adds the plugin to
 .claude/settings.json
@@ -430,6 +430,9 @@ managed
 scope. These are installed by administrators via
 managed settings
 and can’t be modified.
+After installing, run
+/reload-plugins
+to activate the plugin in your current session.
 Make sure you trust a plugin before installing it. Anthropic doesn’t control what MCP servers, files, or other software are included in plugins and can’t verify that they work as intended. Check each plugin’s homepage for more information.
 ​
 Manage installed plugins

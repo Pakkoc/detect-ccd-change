@@ -266,7 +266,8 @@ stream-json
 The last line of the stream is a
 result
 message with the final response text, cost, and session metadata.
-Before v2.1.208, piping a large response could truncate the final line and omit the
+If your consumer reads the stream slowly, Claude Code waits for the queued output to drain before exiting, scaling the wait with how much is still queued, capped at 30 seconds.
+Before v2.1.214 the exit wait was capped at about two seconds, which could cut off the end of a large response, and before v2.1.208 piping a large response could truncate the final line and omit the
 result
 message.
 Messages from

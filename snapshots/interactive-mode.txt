@@ -132,7 +132,10 @@ recalls it. When the input is empty, double
 Esc
 opens the
 rewind menu
-to restore or summarize code and conversation from a previous point
+to restore or summarize code and conversation from a previous point.
+Before v2.1.216, double
+Esc
+at an empty prompt could stop opening the menu for the rest of a long-running session that used background tasks
 Shift+Tab
 , or
 Alt+M
@@ -567,7 +570,18 @@ Join lines
 u
 Undo
 .
-Repeat last change
+Repeat last change.
+Before v2.1.216, repeating a change operator such as
+cw
+or
+cc
+replayed only the inserted text without the deletion, and
+.
+after
+p
+/
+P
+repeated the previous change instead of the paste
 ​
 Text objects (NORMAL mode)
 Text objects work with operators like

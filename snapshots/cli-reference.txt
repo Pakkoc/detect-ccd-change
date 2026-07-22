@@ -373,7 +373,7 @@ claude --bg "investigate the flaky test"
 channel
 notifications Claude should listen for in this session. Space-separated list of
 plugin:<name>@<marketplace>
-entries. Requires Claude.ai authentication
+entries. Requires Anthropic authentication through claude.ai or a Console API key
 claude --channels plugin:my-notifier@my-marketplace
 --chrome
 Enable
@@ -766,7 +766,7 @@ claude --setting-sources user,project
 --settings
 Path to a settings JSON file or an inline JSON string. Values you set here override the same keys in your
 settings.json
-files for this session. Keys you omit keep their file-based values. See
+files for this session. Keys you omit keep their file-based values. The file must be a regular file no larger than 2 MiB. See
 settings precedence
 claude --settings ./settings.json
 --strict-mcp-config

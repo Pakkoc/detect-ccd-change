@@ -184,7 +184,9 @@ to this directory for sandboxed commands, so tools that write temporary files wo
 $TMPDIR
 unchanged, which means sandboxed and unsandboxed commands resolve
 $TMPDIR
-to different directories. To pass temporary files between the two, write them under the working directory instead.
+to different directories unless you
+disable filesystem isolation
+. To pass temporary files between the two, write them under the working directory instead.
 Some commands cannot run inside the sandbox at all, such as tools that are incompatible with it or that need a host you have not allowed. Rather than failing the task or requiring you to turn sandboxing off, Claude Code includes an escape hatch: when a command fails because of sandbox restrictions, Claude analyzes the failure and may retry the command with the
 dangerouslyDisableSandbox
 parameter. The retried command runs outside the sandbox, so it goes through the regular permission flow: in default mode you get a confirmation prompt; in
@@ -344,6 +346,99 @@ instead, and project files would remain blocked by the
 denyRead
 rule.
 ​
+Disable filesystem isolation
+Set
+sandbox.filesystem.disabled
+to
+true
+to skip filesystem isolation while keeping network isolation. The example below turns off filesystem isolation while keeping an allowlist of network domains:
+{
+"sandbox"
+: {
+"enabled"
+:
+true
+,
+"filesystem"
+: {
+"disabled"
+:
+true
+},
+"network"
+: {
+"allowedDomains"
+: [
+"github.com"
+,
+"*.npmjs.org"
+]
+}
+}
+}
+The sandbox has two independent layers:
+filesystem isolation
+controls which paths sandboxed commands can read and write, and
+network isolation
+controls which domains they can reach. With the filesystem layer off, sandboxed commands get unrestricted read and write access to the host filesystem, while their network egress stays confined to your allowed domains. Turn the layer off when you sandbox to control where commands connect rather than what they write.
+The setting is off by default and applies on the platforms where the sandbox runs: macOS, Linux, and WSL2. Requires Claude Code v2.1.216 or later.
+With filesystem isolation off and commands auto-allowed, a sandboxed command can write files that later commands run or read, such as shell startup files, executables on
+$PATH
+, or
+~/.claude/settings.json
+, and use them to widen its own access on the next run. Set
+filesystem.disabled
+to
+true
+only for workloads you trust not to escalate their own access. Locking network domains with
+allowManagedDomainsOnly
+narrows the risk but doesn’t remove it, since that lock applies only to commands running inside the sandbox.
+​
+Which settings can disable it
+Because turning filesystem isolation off widens what sandboxed commands can do, Claude Code honors
+filesystem.disabled
+from these settings sources only:
+User settings, managed settings, and the
+--settings
+CLI flag can set it. Project settings in
+.claude/settings.json
+and
+.claude/settings.local.json
+can’t, so a checked-out project can’t switch filesystem isolation off.
+When managed settings configure
+sandbox.filesystem
+at all, or list any
+sandbox.credentials.files
+entry, only managed settings can set the key. This keeps administrator-deployed filesystem restrictions in force; to relax such a deployment, set
+"disabled": true
+in managed settings.
+When
+CLAUDE_CODE_SUBPROCESS_ENV_SCRUB
+is set, Claude Code ignores
+filesystem.disabled
+from every source, including managed settings, and keeps filesystem isolation on.
+​
+What changes when isolation is off
+Turning the filesystem layer off also lifts its read protections and stops overriding
+$TMPDIR
+, while sandboxed commands stay auto-allowed:
+The read protections from
+filesystem.denyRead
+and
+credentials.files
+don’t apply to sandboxed commands, because the filesystem layer enforces both.
+credentials.envVars
+deny and mask entries still apply, since environment variable scrubbing is independent of the filesystem layer.
+Sandboxed commands inherit your shell’s
+$TMPDIR
+instead of the session temp directory, since every temp directory is writable.
+autoAllowBashIfSandboxed
+still defaults to
+true
+, so sandboxed commands keep running without prompts. Set it to
+false
+to keep prompting for sandboxed commands.
+​
 Protect credentials
 The
 sandbox.credentials
@@ -356,7 +451,9 @@ For entries with
 "mode": "deny"
 , file paths are denied for reads inside the sandbox, the same restriction that
 filesystem.denyRead
-applies, and environment variables are unset before each sandboxed command runs.
+applies, and environment variables are unset before each sandboxed command runs. The file protection is part of the filesystem layer, so it doesn’t apply if you
+disable filesystem isolation
+; the environment variable protection still does.
 The example below blocks reads of the AWS credentials file and the SSH directory and removes
 GITHUB_TOKEN
 and
@@ -584,7 +681,9 @@ kubectl
 terraform
 , and
 npm
-, not just Claude’s file tools.
+, not just Claude’s file tools. To skip filesystem isolation entirely while keeping network isolation, set
+sandbox.filesystem.disabled
+.
 ​
 Network isolation
 Network access is controlled through a proxy server running outside the sandbox:
@@ -667,6 +766,8 @@ sandbox.filesystem.allowRead
 Re-allows reading specific paths within a
 denyRead
 region
+sandbox.filesystem.disabled
+Turns the filesystem layer off entirely while keeping network isolation; requires Claude Code v2.1.216 or later
 Edit
 allow rules
 Grant write access to specific paths, the same way
@@ -800,6 +901,13 @@ allowRead
 entries are ignored. This prevents developers from widening read access beyond the organization-approved paths. To lock network domains to the managed values the same way, set
 allowManagedDomainsOnly
 .
+When managed settings configure
+sandbox.filesystem
+or list any
+sandbox.credentials.files
+entry, only managed settings can set
+filesystem.disabled
+, so developers can’t switch off administrator-deployed filesystem restrictions.
 excludedCommands
 has no equivalent managed-only lockdown, so a developer can always append entries that run additional commands outside the sandbox. Keep the managed list narrow.
 ​
@@ -948,8 +1056,10 @@ work, but it removes code-execution isolation: sandboxed commands can launch oth
 Settings files protected
 : the sandbox automatically denies write access to Claude Code’s
 settings.json
-files at every scope and to the managed settings directory, so a sandboxed command cannot modify its own policy.
-In v2.1.210 and later, the deny rules resolve symlinks: when a symlink appears at a protected settings file path after startup, the sandbox adds its target to the deny list for the next command, so a linked settings file can’t be edited through the link.
+files at every scope and to the managed settings directory, so a sandboxed command can’t modify its own policy unless you
+disable filesystem isolation
+, which turns these deny rules off.
+The deny rules resolve symlinks: when a symlink appears at a protected settings file path after startup, the sandbox adds its target to the deny list for the next command, so a linked settings file can’t be edited through the link. Before v2.1.210, the deny rules didn’t resolve symlinks.
 ​
 Platform and tool compatibility
 Platform support
@@ -981,7 +1091,9 @@ Subagents
 :
 subagents
 run in the same process as the parent session and use the same sandbox configuration. Bash commands inside a subagent are sandboxed when sandboxing is enabled in the parent session.
-Effective sandboxing requires both filesystem and network isolation. Without network isolation, a compromised agent could exfiltrate sensitive files like SSH keys. Without filesystem isolation, a compromised agent could backdoor system resources to gain network access. When you widen the defaults, check that an
+Effective sandboxing requires both filesystem and network isolation. Without network isolation, a compromised agent could exfiltrate sensitive files like SSH keys. Without filesystem isolation, whether from a permissive policy or from
+disabling the filesystem layer
+, a compromised agent could backdoor system resources to gain network access. When you widen the defaults, check that an
 allowWrite
 path, a broad
 allowedDomains

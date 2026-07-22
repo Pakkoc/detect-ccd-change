@@ -139,7 +139,7 @@ Claude Code in Slack
 Was this page helpful?
 Yes
 No
-Scheduled tasks
+iOS simulator (beta)
 Chrome extension
 ⌘
 I
