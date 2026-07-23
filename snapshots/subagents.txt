@@ -314,7 +314,8 @@ The agent’s system prompt defining its role and behavior
 tools
 string[]
 No
-Array of allowed tool names. If omitted, inherits all tools
+Array of allowed tool names. If omitted, inherits every
+tool available to subagents
 disallowedTools
 string[]
 No
@@ -392,15 +393,13 @@ field to
 true
 to force background execution for a specific agent regardless of what Claude requests.
 A subagent inherits the main session’s extended thinking configuration. On earlier versions, extended thinking is disabled inside subagents regardless of the main session’s setting.
-As of Claude Code v2.1.172, subagents can spawn their own subagents. A subagent five levels below the main agent can’t spawn further subagents, regardless of whether it runs in the foreground or background. To prevent a subagent from spawning others, omit
-Agent
-from its
-tools
-array or add it to
-disallowedTools
-. See
+By default, subagents can’t spawn subagents of their own. To let them, set
+CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH
+to the number of subagent layers you want below your main conversation,
+2
+or higher; see
 nested subagents
-for the full depth rules.
+. From Claude Code v2.1.172 through v2.1.216, subagents could nest by default, up to five layers.
 ​
 Filesystem-based definition (alternative)
 You can also define subagents as markdown files in
@@ -434,8 +433,10 @@ settingSources
 )
 Preloaded skill content, unless listed in
 AgentDefinition.skills
-Tool definitions (inherited from parent, or the subset in
+Tool definitions (inherited from parent or the subset in
 tools
+,
+filtered for background runs
 )
 The parent’s system prompt
 The parent receives the subagent’s final message as the Agent tool result, but may summarize it in its own response. To preserve subagent output verbatim in the user-facing response, include an instruction to do so in the prompt or
@@ -1566,13 +1567,17 @@ cleanupPeriodDays
 setting, which defaults to 30 days.
 ​
 Tool restrictions
-Subagents can have restricted tool access via the
+Use the
 tools
-field:
-Omit the field
-: agent inherits all available tools (default)
-Specify tools
-: agent can only use listed tools
+field to limit what a subagent can do:
+Omit
+tools
+: the subagent gets every
+tool available to subagents
+List tools
+: the subagent gets only those. A code reviewer that should never edit files, for example, gets
+["Read", "Grep", "Glob"]
+A tool you leave out isn’t in the subagent’s session at all: Claude works without it, with no permission prompt or error.
 This example creates a read-only analysis agent that can examine code but can’t modify files or run commands.
 Python
 TypeScript
@@ -1747,7 +1752,7 @@ Glob
 Full read/write access without command execution
 Full access
 All tools
-Inherits all tools from parent (omit
+Inherits the tools available to subagents (omit the
 tools
 field)
 ​

@@ -476,7 +476,7 @@ Analytics
 Was this page helpful?
 Yes
 No
-Security guidance plugin
+Claude Security plugin
 GitHub Actions
 ⌘
 I

@@ -3233,7 +3233,8 @@ Yes
 The agent’s system prompt
 tools
 No
-Array of allowed tool names. If omitted, inherits all tools
+Array of allowed tool names. If omitted, inherits every
+tool available to subagents
 disallowedTools
 No
 Array of tool names to remove from the agent’s tool set. MCP server-level patterns are also accepted:

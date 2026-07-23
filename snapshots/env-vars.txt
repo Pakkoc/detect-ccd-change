@@ -1261,6 +1261,10 @@ CLAUDE_CODE_IDE_SKIP_VALID_CHECK
 Set to
 1
 to skip validation of IDE lockfile entries during connection. Use when auto-connect fails to find your IDE despite it running
+CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS
+How many
+subagents
+can be running in one session before the Agent tool refuses to spawn another (default: 20). Accepts a positive whole number in plain digits; anything else is ignored, so the variable can adjust the cap but can’t disable it. Requires Claude Code v2.1.217 or later
 CLAUDE_CODE_MAX_CONTEXT_TOKENS
 Override the context window size Claude Code assumes for the active model.
 As of v2.1.193, applied directly for model names Claude Code does not recognize as a Claude model; for recognized Claude models it only takes effect when
@@ -1286,6 +1290,12 @@ CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION
 Cap on the number of
 subagents
 one session can spawn with the Agent tool (default: 200). When Claude reaches the cap, spawning another subagent fails with an error telling Claude to finish the remaining work directly. Accepts a positive whole number in plain digits with no upper bound; this variable doesn’t take the scientific notation or digit-separator spellings. Anything else is ignored and the default applies, so the cap can be raised but not turned off. Requires Claude Code v2.1.212 or later
+CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH
+Number of
+subagent layers
+allowed below the main conversation (default: 1). At the default, subagents can’t spawn their own subagents; set
+2
+or higher to allow it. Accepts a positive whole number in plain digits; anything else is ignored, so the limit can be raised but not turned off. Requires Claude Code v2.1.217 or later
 CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY
 Maximum number of read-only tools and subagents that can execute in parallel (default: 10). Higher values increase parallelism but consume more resources
 CLAUDE_CODE_MAX_TURNS

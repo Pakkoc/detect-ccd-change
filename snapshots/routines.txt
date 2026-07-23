@@ -52,7 +52,7 @@ Routines
 in the sidebar, then
 New routine
 , and choose
-Remote
+Cloud
 ; choosing
 Local
 instead creates a

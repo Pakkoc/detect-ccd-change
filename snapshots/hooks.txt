@@ -1513,7 +1513,12 @@ command
 :
 "./scripts/security-check.sh"
 ---
-Agents use the same format in their YAML frontmatter.
+Subagents use the same format in their YAML frontmatter.
+Frontmatter hooks in a project subagent run only after you accept the
+workspace trust dialog
+for the folder the agent file came from; see
+which scopes are exempt
+. Before v2.1.218, these hooks could run from folders you hadn’t trusted.
 ​
 The
 /hooks

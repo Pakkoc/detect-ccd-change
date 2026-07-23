@@ -928,7 +928,10 @@ Remote Control
 .
 Use
 /tasks
-in the Claude Code CLI to check progress, or open the session on claude.ai or the Claude mobile app to interact directly. From there you can steer Claude, provide feedback, or answer questions just like any other conversation.
+in the Claude Code CLI to check progress, or open the session on claude.ai or the Claude mobile app to interact directly. From there you can steer Claude, provide feedback, or answer questions as in any other conversation.
+If Claude asks a question and the session sits idle, you can still answer when you come back, up to
+environment expiry
+, and the session continues from your answer.
 ​
 Tips for cloud tasks
 Plan locally, execute remotely
@@ -1014,7 +1017,9 @@ From the web interface
 : select
 Open in CLI
 to copy a command you can paste into your terminal.
-When you teleport a session, Claude verifies you’re in the correct repository, fetches and checks out the branch from the cloud session, and loads the full conversation history into your terminal.
+When you teleport a session, Claude verifies you’re in the correct repository, fetches and checks out the branch from the cloud session, and loads the full conversation history into your terminal. The terminal gets its own copy of the session: new work there stays local and doesn’t appear in the cloud session on claude.ai or the Claude mobile app. To keep steering from your phone after teleporting, start
+/remote-control
+in the local session.
 --teleport
 is distinct from
 --resume

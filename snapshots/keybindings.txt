@@ -83,7 +83,7 @@ Theme picker dialog
 Attachments
 Image attachment navigation in select dialogs
 Footer
-Footer indicator navigation (tasks, teams, diff)
+Footer indicator navigation (tasks, teams, diff, artifacts)
 MessageSelector
 Rewind and summarize dialog message selection
 DiffDialog
@@ -438,6 +438,12 @@ Open selected footer item
 footer:clearSelection
 Escape
 Clear footer selection
+footer:dismiss
+Backspace, Delete
+Dismiss the selected
+artifact
+link from the footer; the published artifact itself is unaffected. On other footer rows, these keys have no effect.
+Requires v2.1.217 or later
 ​
 Message selector actions
 Actions available in the

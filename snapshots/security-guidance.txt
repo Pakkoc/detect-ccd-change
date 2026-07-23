@@ -371,9 +371,12 @@ What it covers
 In session
 Security guidance plugin
 Common vulnerabilities in code Claude writes, fixed in the same session
-On demand
+On demand, single pass
 /security-review
 One-time security pass on the current branch, run when you ask
+On demand, deep scan
+Claude Security plugin
+Multi-agent vulnerability scan of a repository or diff, with independently reviewed findings and patches
 On pull request
 Code Review
 , Team and Enterprise plans
@@ -408,6 +411,6 @@ Was this page helpful?
 Yes
 No
 JetBrains IDEs
-Code Review
+Claude Security plugin
 ⌘
 I

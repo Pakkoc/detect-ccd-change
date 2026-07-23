@@ -2206,7 +2206,9 @@ Yes
 Natural language description of when to use this agent
 tools
 No
-Array of allowed tool names. If omitted, inherits all tools from parent. To preload Skills into the agent’s context, use the
+Array of allowed tool names. If omitted, inherits every
+tool available to subagents
+. To preload Skills into the agent’s context, use the
 skills
 field rather than listing
 'Skill'

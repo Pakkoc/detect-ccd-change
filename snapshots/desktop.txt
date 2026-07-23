@@ -67,7 +67,7 @@ Environment
 : choose where Claude runs. Select
 Local
 for your machine,
-Remote
+Cloud
 for Anthropic-hosted cloud sessions, an
 SSH connection
 for a remote machine you manage, or on Windows a
@@ -653,7 +653,7 @@ sidebar
 ​
 Run long-running tasks remotely
 For large refactors, test suites, migrations, or other long-running tasks, select
-Remote
+Cloud
 instead of
 Local
 when starting a session. Cloud sessions run on Anthropic’s cloud infrastructure and continue even if you close the app or shut down your computer. Check back anytime to see progress or steer Claude in a different direction. You can also monitor cloud sessions from
@@ -1178,7 +1178,7 @@ starting a session
 determines where Claude executes and how you connect:
 Local
 : runs on your machine with direct access to your files
-Remote
+Cloud
 : runs on Anthropic’s cloud infrastructure. Sessions continue even if you close the app.
 SSH
 : runs on a remote machine you connect to over SSH, such as your own servers, cloud VMs, or dev containers

@@ -98,6 +98,23 @@ Cost:
 The session cost summary when Claude Code exits, if your account
 shows costs
 The terminal cursor follows the input caret, so a screen reader’s read-current-line command answers “where am I” with the prompt you’re editing.
+When you delete a word or a line in the input, Claude Code announces the deleted text. Requires Claude Code v2.1.218 or later. The announcement covers:
+Deleting a word with
+Ctrl+W
+,
+Option+Delete
+on macOS, or
+Ctrl+Backspace
+on Windows
+Deleting to the start of the line with
+Ctrl+U
+or
+Cmd+Backspace
+Deleting to the end of the line with
+Ctrl+K
+See the
+text editing shortcuts
+for what each key does.
 Cycling
 permission modes
 with
@@ -158,7 +175,12 @@ CLAUDE_CODE_ACCESSIBILITY
 environment variable
 is for screen magnifiers. Set
 CLAUDE_CODE_ACCESSIBILITY=1
-to keep the native terminal cursor visible so that magnifiers, such as macOS Zoom, can track the cursor position.
+to keep the native terminal cursor visible so that magnifiers, such as macOS Zoom, can track the cursor position. The cursor follows keyboard focus: the input caret while you type, and the highlighted row as you move through menus and panels, such as
+/config
+and
+/plugin
+, with the arrow keys.
+Row tracking in menus and panels requires Claude Code v2.1.218 or later.
 The
 prefersReducedMotion
 setting

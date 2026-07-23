@@ -954,6 +954,20 @@ override this for one session. See
 Adjust effort level
 for supported models
 "xhigh"
+emojiCompletionEnabled
+Default
+:
+true
+. Show emoji suggestions when you type
+:
+plus a shortcode in the prompt input, and replace a completed shortcode such as
+:heart:
+with its emoji. Set to
+false
+to disable both. See
+Emoji shortcodes
+. Requires Claude Code v2.1.217 or later
+false
 enableAllProjectMcpServers
 Automatically approve all MCP servers defined in project
 .mcp.json
@@ -2137,6 +2151,15 @@ paths from managed settings are respected.
 denyRead
 still merges from all sources. Default: false
 true
+filesystem.disabled
+Skip filesystem isolation while keeping network isolation: sandboxed commands get unrestricted read and write access to the host filesystem, and network egress stays confined to
+network.allowedDomains
+. Only honored from user, managed, or CLI
+--settings
+settings. Default: false. Requires Claude Code v2.1.216 or later. See
+Disable filesystem isolation
+for which sources can set it and what changes when isolation is off
+true
 credentials.files
 Credential files or directories that sandboxed commands cannot read. Applies the same read block as
 filesystem.denyRead
@@ -2424,7 +2447,11 @@ Filesystem and network restrictions
 can be configured in two ways that are merged together:
 sandbox.filesystem
 settings
-(shown above): Control paths at the OS-level sandbox boundary. These restrictions apply to all subprocess commands (e.g.,
+(shown above): Control paths at the OS-level sandbox boundary, or set
+filesystem.disabled
+to
+true
+to turn that layer off entirely. These restrictions apply to all subprocess commands (e.g.,
 kubectl
 ,
 terraform
