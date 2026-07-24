@@ -580,7 +580,12 @@ maintenance
 matcher before the session (print mode only)
 claude -p --maintenance "query"
 --max-budget-usd
-Maximum dollar amount to spend on API calls before stopping (print mode only)
+Maximum dollar amount to spend on API calls before stopping (print mode only). Spend from
+subagents
+counts toward the cap.
+Once spend reaches the cap, spawning another subagent fails with
+Budget limit reached
+, and Claude Code stops background subagents that are still running; the cap-enforcement behaviors require Claude Code v2.1.217 or later
 claude -p --max-budget-usd 5.00 "query"
 --max-turns
 Limit the number of agentic turns (print mode only). Exits with an error when the limit is reached. No limit by default.

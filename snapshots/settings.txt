@@ -858,6 +858,19 @@ List of specific MCP servers from
 .mcp.json
 files to reject
 ["filesystem"]
+disableMobileSimulatorTools
+(Managed settings only) Set to
+true
+to block Claude’s tools for the desktop app’s
+iOS Simulator pane
+. Users keep manual use of the pane; only Claude’s access is removed. The value must be the JSON boolean
+true
+; any other value is ignored, and a malformed value such as
+"true"
+or
+1
+logs a warning
+true
 disableRemoteControl
 Disable
 Remote Control

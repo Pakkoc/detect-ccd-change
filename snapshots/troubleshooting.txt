@@ -30,6 +30,9 @@ you may not have access to it
 Error reference
 VS Code extension not connecting or detecting Claude
 VS Code integration
+Claude Code process exited with code 1
+in VS Code or an SDK app
+Error reference
 JetBrains plugin or IDE not detected
 JetBrains integration
 High CPU or memory, slow responses, hangs, search not finding files

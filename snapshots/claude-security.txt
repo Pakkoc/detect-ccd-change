@@ -212,6 +212,8 @@ python3
 first on your
 PATH
 , then start a new session.
+You may see “Fable 5’s safeguards flagged this message” when using Fable 5.
+Due to Fable 5’s cybersecurity safety classifiers, certain model activities will be blocked and automatically downgraded to Opus.  This is expected, and the scan should still complete successfully.
 ​
 Related resources
 To go deeper on the pieces this page touches:
