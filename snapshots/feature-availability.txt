@@ -221,7 +221,7 @@ See note
 1
 On Google Cloud’s Agent Platform, web search is available for Claude 4 models and later.
 2
-On these providers, auto mode supports only Claude Sonnet 5, Opus 4.7, Opus 4.8, and Fable 5. See
+On these providers, auto mode supports only Claude Sonnet 5, Opus 4.7 or later, and Fable 5. See
 Auto mode configuration
 .
 In v2.1.158 through v2.1.206, auto mode on these providers also required setting
@@ -286,7 +286,7 @@ Desktop
 : only via
 Claude Desktop on 3P
 Auto mode
-: Sonnet 5, Opus 4.7, Opus 4.8, and Fable 5 only
+: Sonnet 5, Opus 4.7 or later, and Fable 5 only
 /loop
 : explicit intervals only
 Zero Data Retention
@@ -366,7 +366,7 @@ Claude Desktop on 3P
 Web search
 : Claude 4 models and later
 Auto mode
-: Sonnet 5, Opus 4.7, Opus 4.8, and Fable 5 only
+: Sonnet 5, Opus 4.7 or later, and Fable 5 only
 /loop
 : explicit intervals only
 Zero Data Retention
@@ -409,7 +409,7 @@ Desktop
 : only via
 Claude Desktop on 3P
 Auto mode
-: Sonnet 5, Opus 4.7, Opus 4.8, and Fable 5 only
+: Sonnet 5, Opus 4.7 or later, and Fable 5 only
 /loop
 : explicit intervals only
 Zero Data Retention

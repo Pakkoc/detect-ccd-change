@@ -1199,7 +1199,7 @@ cycle of those sessions without starting them in it.
 Settings, plugins, and MCP servers
 Agent view accepts the same configuration flags as
 claude
-for loading settings, plugins, MCP servers, and additional directories. Each flag applies to agent view itself and is passed through to every session you dispatch from it, so a plugin or MCP server you load this way is available in those sessions too.
+for loading settings, plugins, MCP servers, and additional directories. Agent view applies each flag to itself and passes it through to every session you dispatch from it, so a plugin or MCP server you load this way is available in those sessions too.
 Flag
 Effect
 --settings <file-or-json>
@@ -1220,10 +1220,37 @@ Repeat
 --plugin-dir
 , or
 --mcp-config
-once per value. The space-separated form, such as
---add-dir a b c
-, isn’t supported with
+once per value.
 claude agents
+doesn’t support the space-separated form, such as
+--add-dir a b c
+.
+You can place
+--settings
+and
+--plugin-dir
+before or after
+agents
+. Keep
+--add-dir
+and
+--mcp-config
+after
+agents
+: if you place either before
+agents
+,
+claude agents --json
+fails with an
+unknown option
+error. Before v2.1.200, place
+--plugin-dir
+before
+agents
+: after
+agents
+, it reached dispatched sessions but didn’t load the plugin’s agents and skills into agent view’s own
+subagent and skill autocomplete
 .
 The following example opens agent view with a settings override and one extra directory:
 claude
@@ -1930,7 +1957,11 @@ An older Claude Code version that rewrites the session list in
 roster.json
 preserves fields written by a newer version, matching the existing
 state.json
-guarantee, so sessions started by the newer version keep accepting input after the supervisor restarts. When you open a session that has stopped responding, the supervisor restarts its process and the session continues the interrupted response from where it left off.
+guarantee, so sessions started by the newer version keep accepting input after the supervisor restarts. When you open a session that has stopped responding, the supervisor restarts its process and the session continues the interrupted response from where it left off. Agent view applies configuration flags placed after
+agents
+, such as
+--plugin-dir
+, to its own subagent and skill autocomplete in the dispatch input as well as dispatched sessions.
 v2.1.199
 A background session whose process exits before it finishes starting on a low-memory host shows
 possibly low memory — free some up and retry

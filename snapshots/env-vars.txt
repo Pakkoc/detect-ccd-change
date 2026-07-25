@@ -2400,6 +2400,8 @@ VERTEX_REGION_CLAUDE_4_7_OPUS
 Override region for Claude Opus 4.7 when using Google Cloud’s Agent Platform. Added in v2.1.111
 VERTEX_REGION_CLAUDE_4_8_OPUS
 Override region for Claude Opus 4.8 when using Google Cloud’s Agent Platform. Added in v2.1.154
+VERTEX_REGION_CLAUDE_5_OPUS
+Override region for Claude Opus 5 when using Google Cloud’s Agent Platform. Added in v2.1.219
 VERTEX_REGION_CLAUDE_5_SONNET
 Override region for Claude Sonnet 5 when using Google Cloud’s Agent Platform. Added in v2.1.197
 VERTEX_REGION_CLAUDE_FABLE_5

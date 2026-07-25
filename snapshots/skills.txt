@@ -1178,7 +1178,7 @@ in the frontmatter to instead wait for the result in the turn that invoked the s
 Before v2.1.218, forked skills always blocked the turn until they finished.
 Claude Code also waits for the result, even when the skill doesn’t set
 background: false
-, in these cases:
+, in cases like these:
 In non-interactive mode, with the
 -p
 flag or the Agent SDK

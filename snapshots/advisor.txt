@@ -111,8 +111,8 @@ Opus 4.6
 Fable, Opus, Sonnet 5
 Sonnet 5 and Opus 4.6 are ranked as equally capable, so an Opus 4.6 main accepts a Sonnet 5 advisor
 Opus 4.7 or later
-Fable, Opus 4.7, Opus 4.8
-Opus 4.7 and Opus 4.8 are ranked as equally capable, so either accepts the other as an advisor. An Opus 4.7 main with an Opus 4.6 or Sonnet 5 advisor is rejected
+Fable, and Opus 4.7 or later
+Opus 4.7 and later Opus models are ranked as equally capable, so any of them accepts another as an advisor. An Opus 4.7 main with an Opus 4.6 or Sonnet 5 advisor is rejected
 Fable 5 (
 v2.1.170+)
 Fable
@@ -125,7 +125,7 @@ sonnet
 , or as
 fable
 once the rollout returns it as an option. These aliases resolve to the latest version of each model. You can also pass a full model ID such as
-claude-opus-4-8
+claude-opus-5
 .
 Subagents inherit the configured advisor and apply the same pairing check against their own model.
 Claude Code validates the pairing before sending a request:

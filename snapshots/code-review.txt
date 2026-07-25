@@ -492,7 +492,7 @@ a note attached to the review
 reviews your current branch, and Claude relates the findings to your note.
 ​
 Run in the foreground
-The review runs in the background by default; before v2.1.218, it ran inside your conversation. Three cases run it in the foreground instead:
+The review runs in the background by default; before v2.1.218, it ran inside your conversation. It runs in the foreground instead in cases like these:
 You run
 /code-review
 again while an earlier review is still in progress

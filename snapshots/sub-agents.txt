@@ -510,7 +510,7 @@ haiku
 ,
 fable
 , a full model ID (for example,
-claude-opus-4-8
+claude-opus-5
 ), or
 inherit
 . Defaults to
@@ -648,7 +648,7 @@ haiku
 fable
 Full model ID
 : use a full model ID such as
-claude-opus-4-8
+claude-opus-5
 or
 claude-sonnet-5
 . Accepts the same values as the

@@ -180,7 +180,7 @@ managed settings
 .
 In Enterprise deployments that route Desktop to Google Cloud’s Agent Platform, auto mode is
 available by default
-, and only Claude Sonnet 5, Opus 4.7, Opus 4.8, and Fable 5 are supported there.
+, and only Claude Sonnet 5, Opus 4.7 or later, and Fable 5 are supported there.
 Before Claude Code v2.1.207, Enterprise deployments on Google Cloud’s Agent Platform had to set
 CLAUDE_CODE_ENABLE_AUTO_MODE
 to enable auto mode.

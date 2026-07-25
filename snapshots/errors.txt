@@ -1392,6 +1392,7 @@ field in
 , and
 ~/.claude/settings.json
 . Remove the stale value and Claude Code falls back to your account default.
+A newly launched model can be available on the Anthropic API before Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry offers it. If you pinned a new model ID on one of those providers and see this error, check your provider’s model catalog for availability in your region, and keep the previous version pinned until the new one appears there.
 Claude Code reports an expired claude.ai login as
 Login expired
 , not as this error. Before v2.1.206, an expired login that could no longer be refreshed failed every model with this error; run
@@ -1503,18 +1504,18 @@ Organization model restrictions
 .
 ​
 thinking.type.enabled is not supported for this model
-Your Claude Code version is older than the minimum for Sonnet 5, Opus 4.8, or Opus 4.7. The CLI sent a thinking configuration the model no longer accepts.
+Your Claude Code version is older than the minimum for the selected model. The CLI sent a thinking configuration the model no longer accepts.
 API Error: 400 ... "thinking.type.enabled" is not supported for this model. Use "thinking.type.adaptive" and "output_config.effort" to control thinking behavior.
 What to do:
 Run
 claude update
-and restart Claude Code. Opus 4.7 needs v2.1.111 or later. Opus 4.8 needs v2.1.154 or later. Sonnet 5 needs v2.1.197 or later
+and restart Claude Code. Opus 4.7 needs v2.1.111 or later. Opus 4.8 needs v2.1.154 or later. Sonnet 5 needs v2.1.197 or later. Opus 5 needs v2.1.219 or later
 If you can’t upgrade, run
 /model
 and select Opus 4.6 or Sonnet 4.6 instead
 If you hit this in the
 Agent SDK
-, upgrade the SDK package instead. Opus 4.8 needs TypeScript SDK v0.3.154 or later and Python SDK v0.2.88 or later. Sonnet 5 needs TypeScript SDK v0.3.197 or later
+, upgrade the SDK package instead. Opus 4.8 needs TypeScript SDK v0.3.154 or later and Python SDK v0.2.88 or later. Sonnet 5 needs TypeScript SDK v0.3.197 or later. Opus 5 needs TypeScript SDK v0.3.219 or later
 ​
 Thinking budget exceeds output limit
 The configured extended thinking budget exceeds the maximum response length, so there is no room left for the actual answer.
@@ -2404,7 +2405,7 @@ A configured
 takes over after an availability error, for that turn only, with a notice in the transcript
 An Amazon Bedrock or Google Cloud’s Agent Platform startup check finds your default model unavailable
 Automatic model fallback
-on Fable 5 moves the session to the default Opus model and shows a notice in the transcript
+on Fable 5 and Opus 5 moves the session to the flagged category’s fallback model, when that category has one, and shows a notice in the transcript
 The Model selection check below catches the second and third cases; the first appears as a transcript notice rather than a
 /model
 change.

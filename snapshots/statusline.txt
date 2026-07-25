@@ -502,7 +502,7 @@ Your status line command receives this JSON structure via stdin:
 : {
 "id"
 :
-"claude-opus-4-8"
+"claude-opus-5"
 ,
 "display_name"
 :

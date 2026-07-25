@@ -1747,12 +1747,29 @@ hook for a Bash command receives this on stdin:
 "command"
 :
 "npm test"
-}
+,
+"description"
+:
+"Run test suite"
+,
+"timeout"
+:
+120000
+,
+"run_in_background"
+:
+false
+},
+"tool_use_id"
+:
+"toolu_01ABC123..."
 }
 The
 tool_name
-and
+,
 tool_input
+, and
+tool_use_id
 fields are event-specific. Each
 hook event
 section documents the additional fields for that event.
@@ -4854,12 +4871,15 @@ reason
 ,
 "reason"
 :
-"Auto mode denied: command targets a path outside the project"
+"Blocked by classifier"
 }
 Field
 Description
 reason
-The classifier’s explanation for why the tool call was denied
+The denial reason: the fixed text
+Blocked by classifier
+in most sessions, or the classifier’s written explanation when the session’s classifier model provides one. See
+Review denials
 ​
 PermissionDenied decision control
 PermissionDenied hooks can tell the model it may retry the denied tool call. Return a JSON object with
