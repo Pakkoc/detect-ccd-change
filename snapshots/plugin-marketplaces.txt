@@ -324,6 +324,10 @@ email
 string
 No
 Contact email for the maintainer
+url
+string
+No
+Website, GitHub profile, or organization URL
 ​
 Optional fields
 Field
@@ -436,8 +440,10 @@ author
 object
 Plugin author information (
 name
-required,
+required;
 email
+and
+url
 optional)
 homepage
 string

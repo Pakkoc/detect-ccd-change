@@ -59,7 +59,15 @@ to prepend Claude’s previous reply as
 -commented context above your prompt; Claude Code strips the comment block when you save
 Ctrl+L
 Redraw screen
-Forces a full terminal redraw. Input and conversation history are kept. Use this to recover if the display becomes garbled or partially blank
+Forces a full terminal redraw, keeping input and conversation history. Use this to recover if the display becomes garbled or partially blank. In
+fullscreen rendering
+, if you press
+Ctrl+L
+once, Claude Code redraws the screen and also shows a hint that pressing it again runs
+/clear
+. If you press it twice within two seconds, Claude Code runs
+/clear
+and starts a new conversation
 Ctrl+O
 Toggle transcript viewer
 Shows detailed tool usage and execution, with a timestamp and the model used on each assistant message. Also expands MCP calls, which collapse to a single line like “Called slack 3 times” by default
