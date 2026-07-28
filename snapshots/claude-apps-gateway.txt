@@ -763,6 +763,21 @@ in the winning source.
 strictPluginOnlyCustomization
 : this key passes the filter regardless of any lock, and it makes Claude Code ignore the developer’s own customization, including protective hooks. No lock blocks it.
 ​
+Connect Claude Desktop
+Claude Desktop
+connects to the same gateway through a different MDM key: set
+bootstrapUrl
+in Claude Desktop’s
+managed configuration
+to
+<listen.public_url>/user/bootstrap
+, and opt the user’s policy in with a
+desktop
+key.
+Claude Desktop overlay
+covers both halves. Requires Claude Code v2.1.203 or later on the gateway server.
+Claude Desktop signs the developer in through the gateway’s identity provider with the same browser SSO step, then fetches its configuration from the gateway instead of from Anthropic. Model access and policy follow the same per-group rules as the CLI. A developer who uses both the CLI and Claude Desktop signs in to each separately; the gateway session isn’t shared between them.
+​
 CI pipelines and remote machines
 There is no service-token flow for unattended pipelines. Gateway sign-in always runs the browser device flow, so a CI job with no developer to approve the sign-in can’t authenticate; configure those against your provider directly.
 Once a developer has signed in, every Claude Code invocation on that machine uses the gateway session, including non-interactive
@@ -838,6 +853,15 @@ Model access and managed settings by IdP group
 Available
 Model access is enforced server-side; managed settings are delivered per IdP group and applied by the CLI at the
 managed settings tier
+Claude Desktop
+Available with opt-in
+The gateway serves Claude Desktop’s configuration at
+/user/bootstrap
+once a policy
+opts in with a
+desktop
+key
+. Requires Claude Code v2.1.203 or later on the gateway server.
 Telemetry fan-out (OTLP/HTTP)
 Available
 Identity-stamped per export; both protobuf and JSON encodings

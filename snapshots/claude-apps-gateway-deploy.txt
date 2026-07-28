@@ -272,7 +272,9 @@ directly. Without this,
 /login
 shows the standard account picker with no gateway option. See
 Client-side managed settings
-for the file paths.
+for the file paths and the Claude Desktop
+bootstrapUrl
+equivalent.
 ​
 Operations
 Once the gateway is serving traffic, day-to-day operation is reading its logs, probing its health, and rotating its secrets on your schedule. The subsections cover each, plus what Postgres holds and how upgrades and rollbacks behave.
@@ -299,6 +301,10 @@ inference
 ,
 managed.serve
 ,
+desktop_bootstrap.serve
+,
+desktop_bootstrap.denied
+,
 spend.blocked
 , and
 admin.denied
@@ -310,9 +316,22 @@ email
 ,
 client_ip
 , and the result
-Denial events carry the reason, path, and client IP, since no identity exists at denial
+auth.denied
+and
+access.denied
+carry the reason and client IP, plus the request path for
+auth.denied
+, since no user identity exists at those denials
 inference
 records which upstream served the request and the response status
+desktop_bootstrap.denied
+records a rejected Claude Desktop bootstrap fetch with the reason (
+not_configured
+,
+policy_not_opted_in
+, or
+no_policy_matched
+) and the user’s identity
 admin.denied
 records a rejected admin-API auth attempt with the reason (
 invalid_key
@@ -581,6 +600,22 @@ managed settings file
 to the device;
 /login
 reads the gateway URL from there
+Claude Desktop reports that its bootstrap configuration couldn’t be fetched
+/user/bootstrap
+returned 404: the policy matching the user doesn’t carry a
+desktop
+key, or no policy matched. The gateway’s audit log records each rejection as
+desktop_bootstrap.denied
+with the reason.
+Add a
+desktop
+block to the policy that matches the user, or to the
+match: {}
+base layer; an empty
+desktop: {}
+suffices. See
+Claude Desktop overlay
+.
 Startup shows
 Gateway login is configured in managed settings, but this Claude Code build does not include Cloud gateway support.
 The installed Claude Code build predates gateway support

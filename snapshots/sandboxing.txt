@@ -704,6 +704,29 @@ WebFetch
 allow rules also pre-allow domains, as described in
 Permission rules
 .
+Strict allowlist
+:
+if you set
+strictAllowlist
+to
+true
+in user, managed, or CLI
+--settings
+settings, Claude Code denies sandboxed commands access to any host outside the allowlist instead of prompting. The allowlist is the same one the sandbox otherwise prompts against:
+allowedDomains
+plus domains from
+WebFetch(domain:...)
+allow rules, or only the managed settings entries when
+allowManagedDomainsOnly
+is set. Claude Code enforces this for sandboxed commands only; in-process tools such as
+WebFetch
+still follow their
+permission rules
+. Setting it in a repository’s
+.claude/settings.json
+or
+.claude/settings.local.json
+has no effect. Requires Claude Code v2.1.219 or later.
 Managed lockdown
 : if
 allowManagedDomainsOnly

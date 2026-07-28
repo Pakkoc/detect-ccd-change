@@ -4391,7 +4391,7 @@ structured_output: Any
 None
 model_usage: dict[
 str
-, Any]
+, ModelUsage]
 |
 None
 =
@@ -4425,6 +4425,12 @@ str
 None
 =
 None
+terminal_reason:
+str
+|
+None
+=
+None
 The
 subtype
 field determines which other fields are populated. It is one of
@@ -4440,7 +4446,7 @@ field determines which other fields are populated. It is one of
 . The Python dataclass flattens all variants into one shape, so fields that don’t apply to the returned subtype are
 None
 .
-Several fields carry diagnostic detail when the conversation ends on an error:
+Several fields carry diagnostic detail about how the conversation ended:
 is_error
 :
 True
@@ -4479,6 +4485,22 @@ errors
 : loop-level error strings such as the max-turns message. Populated only on the
 error_*
 subtypes.
+terminal_reason
+: why the query loop terminated, such as
+"completed"
+,
+"max_turns"
+, or
+"aborted_streaming"
+. A value of
+"aborted_streaming"
+or
+"aborted_tools"
+means the turn was cancelled by an interrupt.
+None
+when the CLI didn’t report a terminal reason, such as with an older CLI version. See
+SDKResultMessage
+for the full list of values.
 The
 usage
 dict contains the following keys when present:
@@ -4503,9 +4525,11 @@ int
 Tokens read from existing cache entries.
 The
 model_usage
-dict maps model names to per-model usage. The inner dict keys use camelCase because the value is passed through unmodified from the underlying CLI process, matching the TypeScript
+dict maps model names to per-model usage. Each value is a
 ModelUsage
-type:
+TypedDict whose keys use camelCase, because the value is passed through unmodified from the underlying CLI process. Import via
+from claude_agent_sdk.types import ModelUsage
+. The keys are:
 Key
 Type
 Description
@@ -4535,6 +4559,26 @@ Context window size for this model.
 maxOutputTokens
 int
 Maximum output token limit for this model.
+canonicalModel
+str
+Canonical model ID used for the pricing lookup. May differ from the raw model string the entry is keyed by, such as a provider-specific ID or alias. Not always present.
+provider
+str
+API provider that served this model, such as
+firstParty
+,
+bedrock
+,
+vertex
+,
+foundry
+,
+anthropicAws
+,
+mantle
+, or
+gateway
+. Not always present.
 ​
 StreamEvent
 Stream event for partial message updates during streaming. Only received when
