@@ -495,7 +495,7 @@ Summarize from here
 or
 Summarize up to here
 . The first condenses messages from that point forward while keeping earlier context intact; the second condenses earlier messages while keeping recent ones in full. See
-Restore vs. summarize
+the rewind menu’s summarize options
 .
 Customize compaction behavior in CLAUDE.md with instructions like
 "When compacting, always preserve the full list of modified files and any test commands"

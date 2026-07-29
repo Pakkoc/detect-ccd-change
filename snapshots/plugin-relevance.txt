@@ -268,13 +268,15 @@ s*:"
 }
 }
 }
-Unknown fields under
+Claude Code ignores unknown fields under
 relevance
 and
 relevance.signals
-are ignored at load time so older Claude Code clients continue to load your marketplace. Run
+at load time, so older clients continue to load your marketplace. Run
 claude plugin validate
-to surface them as warnings.
+against your marketplace directory, for example
+claude plugin validate ./my-marketplace
+, to surface them as warnings.
 ​
 Enable suggestions in managed settings
 Declaring

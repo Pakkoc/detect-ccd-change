@@ -87,7 +87,9 @@ with the path to a project directory on your machine:
 cd
 your-project
 claude
-You’ll be prompted to log in on first use. That’s it!
+You’ll be prompted to log in on first use. If you’ve set the
+ANTHROPIC_API_KEY
+environment variable, Claude Code skips the login prompt and asks you to approve the key instead. That’s it!
 Continue with the Quickstart →
 See
 advanced setup
@@ -240,7 +242,9 @@ Run
 /desktop
 to continue your current terminal session in the
 Desktop app
-, where you can review diffs visually. Available on macOS and x64 Windows.
+, where you can review diffs visually. The
+/desktop
+handoff requires a claude.ai subscription. Available on macOS and x64 Windows.
 Route tasks from team chat: mention
 @Claude
 in

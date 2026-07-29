@@ -8,7 +8,7 @@ Claude Platform on AWS
 Claude apps gateway
 sessions. If Claude Code reports auto mode as unavailable for your account, check the
 full requirements
-, which also cover the supported models and Owner enablement on Team and Enterprise plans.
+, which also cover the supported models and the organization-level control on Team and Enterprise plans.
 In v2.1.158 through v2.1.206, auto mode on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and Claude apps gateway sessions required setting
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 ; v2.1.207 removed the requirement.

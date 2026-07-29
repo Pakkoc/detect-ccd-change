@@ -45,7 +45,7 @@ Configure sandboxing
 .
 Selecting a mode in the panel writes to your project’s local settings at
 .claude/settings.local.json
-, which apply to the current project and are not checked into git. To enable the sandbox across all of your projects, set
+, which apply to the current project. Claude Code adds that file to your global gitignore when it saves a setting there. To enable the sandbox across all of your projects, set
 sandbox.enabled
 to
 true
@@ -1147,6 +1147,6 @@ Was this page helpful?
 Yes
 No
 Sandbox environments
-Model configuration
+Cloud environments
 ⌘
 I

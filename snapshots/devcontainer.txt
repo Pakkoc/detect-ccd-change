@@ -63,6 +63,13 @@ Enforce organization policy
 Replace the
 image
 line with your project’s base image or remove it if your existing file uses a Dockerfile.
+The Claude Code feature installs Node.js itself when the base image doesn’t provide it. If that install fails and the build stops with
+Failed to install Node.js and npm
+, add
+"ghcr.io/devcontainers/features/node:1": {}
+to the
+features
+block above the Claude Code feature and rebuild.
 2
 Rebuild the container
 Open the VS Code Command Palette with
@@ -104,26 +111,48 @@ Paste code here if prompted
 prompt in the terminal. This can happen when the editor’s port forwarding doesn’t route the localhost callback.
 ​
 Persist authentication and settings across rebuilds
-By default, the container’s home directory is discarded on rebuild, so engineers must sign in again each time. Claude Code stores its authentication token, user settings, and session history under
+By default, the container’s home directory is discarded on rebuild, so engineers must sign in again each time. Claude Code stores its authentication token, user settings, and session history under the
 ~/.claude
-. Mount a named volume at that path to keep this state across rebuilds.
-The following example mounts a volume at the home directory of the
+directory. It stores your OAuth account, personal MCP servers, and per-project trust in
+~/.claude.json
+, a separate file outside that directory, so mounting a volume at
+~/.claude
+alone doesn’t keep you signed in. Mount a named volume at
+~/.claude
+and set
+CLAUDE_CONFIG_DIR
+to the same path so Claude Code writes
+.claude.json
+inside the volume.
+The following example mounts the volume and sets
+CLAUDE_CONFIG_DIR
+for a container whose
+remoteUser
+is
 node
-user:
+:
 devcontainer.json
 "mounts"
 : [
 "source=claude-code-config,target=/home/node/.claude,type=volume"
-]
+],
+"containerEnv"
+: {
+"CLAUDE_CONFIG_DIR"
+:
+"/home/node/.claude"
+}
 Replace
 /home/node
 with the home directory of your container’s
 remoteUser
-. If you mount the volume somewhere other than
-~/.claude
-, set
+. If you already set
+containerEnv
+, for example in
+Enforce organization policy
+, add
 CLAUDE_CONFIG_DIR
-to the mount path so Claude Code reads and writes there.
+to that object rather than adding a second one.
 To isolate state per project rather than sharing one volume across all repositories, include the
 ${devcontainerId}
 variable in the source name. The
@@ -133,7 +162,8 @@ source=claude-code-config-${devcontainerId}
 for this purpose.
 In GitHub Codespaces,
 ~/.claude
-persists across stopping and starting a codespace, but is still cleared when you rebuild the container, so the volume mount above applies there too. To carry authentication across codespaces, store
+persists when you stop and start a codespace but is cleared when you rebuild the container, so the configuration above applies there too.
+To carry authentication across codespaces, store
 ANTHROPIC_API_KEY
 or a
 CLAUDE_CODE_OAUTH_TOKEN
@@ -141,7 +171,7 @@ from
 claude setup-token
 as a
 Codespaces secret
-; Codespaces makes secrets available as environment variables inside the container automatically.
+. Codespaces exposes secrets as environment variables inside the container automatically.
 ​
 Enforce organization policy
 A dev container is a convenient place to apply organization policy, because the same image and configuration run on every engineer’s machine.
@@ -182,6 +212,10 @@ devcontainer.json
 :
 "1"
 }
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+also disables the feature-flag evaluation that
+Remote Control
+depends on, so sessions in the container can’t use Remote Control.
 The Dev Container Feature always installs the latest Claude Code release. To pin a specific Claude Code version for reproducible builds, install it from your Dockerfile with
 npm install -g @anthropic-ai/claude-code@X.Y.Z
 instead of using the feature, and set

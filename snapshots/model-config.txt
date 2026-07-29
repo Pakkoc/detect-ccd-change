@@ -1421,13 +1421,13 @@ haiku
 , or
 background functionality
 CLAUDE_CODE_SUBAGENT_MODEL
-The model to use for all
+The model Claude Code uses for all
 subagents
 ,
 agent teams
-, and the agents a
+, and agents in a
 workflow
-runs. Accepts an alias such as
+. Accepts an alias such as
 haiku
 or a full model name, and overrides the per-invocation
 model
@@ -1560,9 +1560,15 @@ picker. Defaults to the model ID when not set
 ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION
 Display description for the pinned Opus model in the
 /model
-picker. Defaults to
+picker. When not set, defaults to
 Custom Opus model
-when not set
+, or
+Custom Opus model (1M context)
+if the pinned model ID has the
+[1m]
+suffix and
+CLAUDE_CODE_DISABLE_1M_CONTEXT
+isn’t turned on
 ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES
 Comma-separated list of capabilities the pinned Opus model supports
 The same
@@ -1744,7 +1750,7 @@ How Claude Code uses prompt caching
 Was this page helpful?
 Yes
 No
-Bash sandbox
+Cloud environments
 Speed up responses with fast mode
 ⌘
 I

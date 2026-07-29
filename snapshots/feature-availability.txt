@@ -28,7 +28,7 @@ Google Cloud’s Agent Platform
 : Google-operated; you set
 CLAUDE_CODE_USE_VERTEX
 Microsoft Foundry
-: Anthropic-operated on Azure; you set
+: Anthropic-operated; you set
 CLAUDE_CODE_USE_FOUNDRY
 ​
 Features available on every provider
@@ -64,11 +64,12 @@ Three of these have provider-specific differences:
 MCP servers
 :
 connectors from claude.ai
-load only when your claude.ai subscription is the active authentication method, and
-tool search
+load only when your claude.ai subscription is the active authentication method.
+Tool search
 is off by default on Google Cloud’s Agent Platform and when
 ANTHROPIC_BASE_URL
-points to a non-first-party host
+points to a non-first-party host, and isn’t supported on Microsoft Foundry
+deployments hosted on Azure
 Subagents
 : the built-in
 Explore subagent
@@ -130,7 +131,9 @@ Web search
 ✓
 See note
 1
-✓
+✓ (
+deployments hosted on Anthropic
+)
 Fast mode
 ✓
 ✓
@@ -408,6 +411,10 @@ Partial support:
 Desktop
 : only via
 Claude Desktop on 3P
+Web search
+:
+deployments hosted on Anthropic
+only
 Auto mode
 : Sonnet 5, Opus 4.7 or later, and Fable 5 only
 /loop

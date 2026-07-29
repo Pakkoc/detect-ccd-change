@@ -5,7 +5,9 @@ After
 installing Claude Code
 , run
 claude
-in your terminal. On first launch, Claude Code opens a browser window for you to log in.
+in your terminal. On first launch, Claude Code opens a browser window for you to log in. If you’ve set the
+ANTHROPIC_API_KEY
+environment variable, Claude Code skips the login prompt and asks you to approve the key instead.
 If the browser doesn’t open automatically, press
 c
 to copy the login URL to your clipboard, then paste it into your browser.

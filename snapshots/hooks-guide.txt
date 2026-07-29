@@ -344,6 +344,7 @@ in your project root:
 ]
 }
 }
+To test the hook, ask Claude to add a line with single-quoted strings to a JavaScript file, then open the file: with Prettier’s default settings, the hook rewrites them to double quotes.
 On Claude Code v2.1.191 or later you can also write the matcher as
 Edit,Write
 , since
@@ -485,6 +486,13 @@ $CLAUDE_PROJECT_DIR
 ]
 }
 }
+4
+Test the hook
+Ask Claude to add a comment to your
+.env
+file. Claude Code blocks the edit before it runs and passes the script’s
+Blocked:
+message to Claude as feedback.
 ​
 Re-inject context after compaction
 When Claude’s context window fills up, compaction summarizes the conversation to free space. This can lose important details. Use a
@@ -579,6 +587,9 @@ skills
 . See the
 ConfigChange reference
 for the full input schema.
+To confirm the hook records changes, edit a settings file in another editor while a session is running, then open
+~/claude-config-audit.log
+: the hook appends one JSON line per change with the timestamp, source, and file path.
 ​
 Reload environment when directory or files change
 Some projects set different environment variables depending on which directory you are in. Tools like
@@ -714,9 +725,9 @@ ExitPlanMode
 , the tool Claude calls when it finishes presenting a plan and asks to proceed, so you aren’t prompted every time a plan is ready.
 Unlike the exit-code examples above, auto-approval requires your hook to write a JSON decision to stdout. A
 PermissionRequest
-hook fires when Claude Code is about to show a permission dialog, and returning
+hook fires when Claude Code is about to ask you for permission, and returning
 "behavior": "allow"
-answers it on your behalf.
+answers the request on your behalf.
 The matcher scopes the hook to
 ExitPlanMode
 only, so no other prompts are affected. Add this to
@@ -866,7 +877,7 @@ When a user-typed command expands into a prompt, before it reaches Claude. Can b
 PreToolUse
 Before a tool call executes. Can block it
 PermissionRequest
-When a permission dialog appears
+When a tool call needs a permission decision
 PermissionDenied
 When a tool call is denied by the auto mode classifier. Return
 {retry: true}
@@ -1742,7 +1753,7 @@ Single project
 Yes, can be committed to the repo
 .claude/settings.local.json
 Single project
-No, gitignored when Claude Code creates it
+No, gitignored when Claude Code saves a setting to it
 Managed policy settings
 Organization-wide
 Yes, admin-controlled
@@ -1986,16 +1997,29 @@ prompt
 : 30 seconds.
 agent
 : 60 seconds.
+SessionEnd
+hooks of any type share a 1.5-second budget. If your settings set a longer per-hook
+timeout
+, Claude Code raises the budget to match, up to 60 seconds.
 PostToolUse
 hooks can’t undo actions since the tool has already executed.
 PermissionRequest
-hooks don’t fire in
+hooks fire when Claude Code is about to ask you for permission.
+In
 non-interactive mode
 with the
 -p
-flag. Use
+flag, that prompt only exists when the Agent SDK’s
+canUseTool
+callback
+supplies it. In plain
+-p
+runs or with
+--permission-prompt-tool
+, use
 PreToolUse
-hooks for automated permission decisions.
+hooks for automated permission decisions instead.
+Background subagents can’t show a prompt in non-interactive mode. Claude Code still runs the hooks for their tool calls, and if no hook returns a decision, it denies the call. In an interactive session, background subagent prompts surface in your main session and the hooks fire as usual.
 Stop
 hooks fire whenever Claude finishes responding, not only at task completion. They don’t fire on user interrupts. API errors fire
 StopFailure
@@ -2039,13 +2063,19 @@ PreToolUse
 fires before tool execution,
 PostToolUse
 fires after
-If using
-PermissionRequest
-hooks in non-interactive mode with the
+In non-interactive mode with the
 -p
-flag, switch to
+flag,
+PermissionRequest
+hooks fire only when the Agent SDK’s
+canUseTool
+callback supplies the prompt, or for tool calls inside background subagents. In plain
+-p
+runs or with
+--permission-prompt-tool
+, use
 PreToolUse
-instead
+hooks instead
 ​
 Hook error in output
 You see a message like “PreToolUse hook error: …” in the transcript.

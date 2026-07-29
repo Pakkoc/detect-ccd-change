@@ -216,7 +216,7 @@ start Claude from that package’s directory
 instead of editing exclusions.
 If you only want these exclusions for yourself, put the setting in
 .claude/settings.local.json
-. Claude Code gitignores that file when it creates it; since you’re creating it by hand here, add it to your gitignore. Patterns use glob syntax matched against absolute file paths, so start relative-style patterns with
+. Claude Code adds that file to your global gitignore when it saves a setting there. Since you are creating it by hand here, add it to your gitignore yourself. Patterns use glob syntax matched against absolute file paths, so start relative-style patterns with
 **/
 to match anywhere in the tree. The example below excludes a package owned by another team:
 .claude/settings.local.json
@@ -649,7 +649,7 @@ From a subdirectory such as
 packages/api/
 : skills from that directory, every parent up to the repository root, and the user and enterprise levels
 From the repository root
-: skills from every subdirectory Claude touches during the session, which can accumulate into the hundreds
+: root skills, plus skills from every subdirectory Claude touches during the session, which can accumulate into the hundreds
 After adding a sibling with
 --add-dir
 : that sibling’s skills load too. The

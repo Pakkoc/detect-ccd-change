@@ -251,7 +251,7 @@ on
 Claude Code on the web
 : Accept edits, Plan, and Auto. Accept edits corresponds to
 default
-mode: the cloud environment pre-approves file edits regardless of mode, so the dropdown shows Accept edits instead of Manual. Cloud sessions still honor
+mode: cloud sessions pre-approve file edits regardless of mode, so the dropdown shows Accept edits instead of Manual. Cloud sessions still honor
 defaultMode: "acceptEdits"
 from settings. Auto mode appears only when your organization allows it and the selected model supports it. Bypass permissions isn’t available.
 Remote Control
@@ -423,18 +423,14 @@ Auto mode reduces permission prompts but does not guarantee safety. Use it for t
 Auto mode is available only when your account meets all of these requirements:
 Plan
 : All plans.
-Owner
-: on Team and Enterprise, an Owner must enable it in
-Claude Code admin settings
-before users can turn it on. Administrators can also turn auto mode off by setting
+Organization
+: on Team and Enterprise, auto mode is available by default. Administrators can turn it off for the organization by setting
 permissions.disableAutoMode
 to
 "disable"
 in
 managed settings
-. For the desktop app’s Code tab,
-disableAutoMode
-is the organization-level control, and the admin settings toggle doesn’t apply.
+.
 Model
 : on the Anthropic API and
 Claude Platform on AWS

@@ -15,7 +15,7 @@ pip
 install
 claude-agent-sdk
 For uv, Windows PowerShell, and API key setup, see
-Get started in the Agent SDK overview
+Setup in the Agent SDK quickstart
 .
 ​
 Choosing between
@@ -1664,13 +1664,14 @@ isinstance
 print
 (
 f
-"Interrupted task finished with subtype=
+"Interrupted task: terminal_reason=
 {
-message.subtype
+message.terminal_reason
 !r}
 "
 )
-# subtype is "error_during_execution" for interrupted tasks
+# terminal_reason is "aborted_streaming" or "aborted_tools"
+# for interrupted turns
 # Send a new command
 await
 client.query(
@@ -1704,9 +1705,7 @@ Buffer behavior after interrupt:
 interrupt()
 sends a stop signal but does not clear the message buffer. Messages already produced by the interrupted task, including its
 ResultMessage
-(with
-subtype="error_during_execution"
-), remain in the stream. You must drain them with
+, remain in the stream. You must drain them with
 receive_response()
 before reading the response to a new query. If you send a new query immediately after
 interrupt()
@@ -2712,7 +2711,9 @@ to disable it.
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 defaults to
 300000
-and is clamped to that minimum. The aborted request goes through the normal retry path.
+and is clamped to that minimum. After the abort, Claude Code retries the request at most once, and only before Claude has started a block of text or a tool call in the response; once Claude has completed a block of text or a tool call, Claude Code keeps the completed output, appends an
+incomplete-response notice
+instead of retrying, and still runs any completed tool call.
 ​
 OutputFormat
 Configuration for structured output validation. Pass this as a
@@ -2839,7 +2840,7 @@ Global user settings
 Shared project settings (version controlled)
 .claude/settings.json
 "local"
-Local project settings (not version controlled)
+Local project settings, gitignored when Claude Code saves a setting to it
 .claude/settings.local.json
 ​
 Default behavior
@@ -3788,7 +3789,15 @@ or
 "summarized"
 to receive thinking content in
 ThinkingBlock
-outputs.
+outputs. Claude Code doesn’t send
+display
+to Amazon Bedrock or Google Cloud’s Agent Platform, so on those providers Opus 4.7 and later return empty
+ThinkingBlock
+outputs even when you set
+display
+to
+"summarized"
+.
 Because these are
 TypedDict
 classes, they’re plain dicts at runtime. Either construct them as dict literals or call the class like a constructor; both produce a
@@ -3876,7 +3885,7 @@ to enable beta features.
 The
 context-1m-2025-08-07
 beta is retired as of April 30, 2026. Passing this header with Claude Sonnet 4.5 or Sonnet 4 has no effect, and requests that exceed the standard 200k-token context window return an error. To use a 1M-token context window, migrate to
-Claude Sonnet 5, Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
+Claude Opus 5, Claude Sonnet 5, Claude Sonnet 4.6, Claude Opus 4.6, Claude Opus 4.7, or Claude Opus 4.8
 , which include 1M context at standard pricing with no beta header required.
 ​
 McpSdkServerConfig
@@ -4325,11 +4334,16 @@ Literal[
 ,
 "server_error"
 ,
-"max_output_tokens"
-,
 "unknown"
 ,
 ]
+The underlying CLI process can emit error types this Literal doesn’t list, such as
+max_output_tokens
+. The SDK passes the value through unmodified, so treat strings outside this list the way you treat
+unknown
+. The TypeScript
+SDKAssistantMessageError
+type lists the full set of values the CLI can emit.
 ​
 SystemMessage
 System message with metadata.
@@ -4486,21 +4500,31 @@ errors
 error_*
 subtypes.
 terminal_reason
-: why the query loop terminated, such as
+: why the query loop ended, such as
 "completed"
 ,
 "max_turns"
-, or
+,
+"api_error"
+,
 "aborted_streaming"
+, or
+"aborted_tools"
 . A value of
 "aborted_streaming"
 or
 "aborted_tools"
-means the turn was cancelled by an interrupt.
+means the turn was aborted before completing. Common causes are
+interrupt()
+and a permission callback returning
+PermissionResultDeny
+with
+interrupt=True
+.
 None
-when the CLI didn’t report a terminal reason, such as with an older CLI version. See
-SDKResultMessage
-for the full list of values.
+on CLI versions that predate the field, on results that bypassed the query loop such as local slash commands, or on synthesized error results emitted when the session fails fatally. Mirrors the TypeScript SDK’s
+SDKResultMessage.terminal_reason
+, which lists the full set of values.
 The
 usage
 dict contains the following keys when present:
@@ -5044,6 +5068,13 @@ ClaudeSDKError
 Exception
 ):
 """Base error for Claude SDK."""
+When a single-shot
+query()
+ends with an error result, for example a turn-limit error, the SDK raises a plain
+Exception
+after yielding the final result message, not a
+ClaudeSDKError
+subclass.
 ​
 CLINotFoundError
 Raised when Claude Code CLI is not installed or not found.
@@ -5280,7 +5311,8 @@ None
 =
 (
 None
-# Timeout in seconds. When omitted, the per-event default applies
+# Timeout in seconds. When omitted, the per-event default applies:
+# 600 for most events, 30 for UserPromptSubmit
 )
 ​
 HookInput
@@ -8555,6 +8587,20 @@ e
 }
 "
 )
+# A single-shot query() raises a plain Exception after yielding an error result
+except
+Exception
+as
+e:
+print
+(
+f
+"Query ended with an error result:
+{
+e
+}
+"
+)
 asyncio.run(main())
 ​
 Streaming mode with client
@@ -8946,8 +8992,8 @@ asyncio
 from
 claude_agent_sdk
 import
-query, ClaudeAgentOptions, SandboxSettings
-sandbox_settings: SandboxSettings
+query, ClaudeAgentOptions
+sandbox_settings
 =
 {
 "enabled"
@@ -8955,6 +9001,10 @@ sandbox_settings: SandboxSettings
 True
 ,
 "autoAllowBashIfSandboxed"
+:
+True
+,
+"failIfUnavailable"
 :
 True
 ,

@@ -553,6 +553,11 @@ install.cmd 2.1.89
 &&
 del
 install.cmd
+To confirm which version installed, run
+claude --version
+: the command prints the exact version you passed, such as
+2.1.89 (Claude Code)
+.
 ​
 Install with Linux package managers
 Claude Code publishes signed apt, dnf, and apk repositories. Each repository offers two channels:
@@ -572,16 +577,17 @@ dnf
 apk
 For Debian and Ubuntu. The install commands below download the signing key with
 curl
-, which fresh Debian and Ubuntu installations may not include. If the download fails with
-sudo: curl: command not found
-, install curl first:
+and verify it with
+gpg
+, which fresh Debian and Ubuntu installations may not include. If either command reports
+command not found
+, install both first:
 sudo
 apt
 install
 curl
-The following commands configure the
-stable
-channel:
+gnupg
+Download the signing key:
 sudo
 install
 -d
@@ -595,6 +601,22 @@ https://downloads.claude.ai/keys/claude-code.asc
 \
 -o
 /etc/apt/keyrings/claude-code.asc
+If this download fails,
+apt update
+later fails with
+NO_PUBKEY BAA929FF1A7ECACE
+. Confirm the key downloaded and belongs to Anthropic before continuing:
+gpg
+--show-keys
+/etc/apt/keyrings/claude-code.asc
+The fingerprint gpg prints should be
+31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE
+. If gpg reports that the file can’t be opened or contains no valid OpenPGP data, the download failed or returned the wrong content: confirm your network can reach
+downloads.claude.ai
+, then rerun the download command.
+Register the repository on the
+stable
+channel and install:
 echo
 "deb [signed-by=/etc/apt/keyrings/claude-code.asc] https://downloads.claude.ai/claude-code/apt/stable stable main"
 \
@@ -621,11 +643,6 @@ echo
 sudo
 tee
 /etc/apt/sources.list.d/claude-code.list
-Verify the GPG key fingerprint before trusting it:
-gpg --show-keys /etc/apt/keyrings/claude-code.asc
-should report
-31DD DE24 DDFA B679 F42D 7BD2 BAA9 29FF 1A7E CACE
-.
 To upgrade later, run
 sudo apt update && sudo apt upgrade claude-code
 .

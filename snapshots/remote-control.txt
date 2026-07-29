@@ -62,6 +62,21 @@ api.anthropic.com
 , such as an
 LLM gateway
 or proxy. Unset the variable to use Remote Control.
+Feature-flag evaluation
+:
+DISABLE_TELEMETRY
+,
+DO_NOT_TRACK
+,
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+, and
+DISABLE_GROWTHBOOK
+each disable the feature-flag evaluation that Remote Control availability depends on. Unset the variable wherever it’s set, in your shell environment or in the
+env
+block of a
+settings.json
+file
+, to use Remote Control.
 Workspace trust
 : run
 claude
@@ -152,6 +167,9 @@ Show detailed connection and session logs.
 Enable or disable
 sandboxing
 for filesystem and network isolation. Off by default.
+Claude Code checks Remote Control eligibility before printing help, so
+claude remote-control --help
+returns an error instead of this flag list when you aren’t signed in with an eligible account.
 To start a normal interactive Claude Code session with Remote Control enabled, use the
 --remote-control
 flag (or
@@ -300,7 +318,9 @@ to
 true
 . Set it to
 false
-to never auto-connect, or leave it unset to follow your organization’s default. In the Desktop app, you can also toggle this from
+to never auto-connect, or to
+default
+to clear your choice. When the setting is cleared, Remote Control follows your organization’s admin default if one is set, and otherwise Claude Code’s current default. In the Desktop app, you can also toggle this from
 Settings → Claude Code → Enable remote control by default
 .
 In the
@@ -308,7 +328,7 @@ VS Code extension
 , the same toggle appears as
 Enable Remote Control for all sessions
 in the command menu’s Settings section; requires Claude Code v2.1.203 or later.
-With this setting on, each interactive Claude Code process registers one remote session. If you run multiple instances, each one gets its own environment and session. To run multiple concurrent sessions from a single process, use
+With this setting on, each interactive Claude Code process registers one remote session. If you run multiple instances, each one gets its own remote session. To run multiple concurrent sessions from a single process, use
 server mode
 instead.
 ​
@@ -429,7 +449,11 @@ to run multiple concurrent sessions from a single process.
 Local process must keep running
 : Remote Control runs as a local process. If you close the terminal, quit VS Code, or otherwise stop the
 claude
-process, the session ends.
+process, the session ends. To keep a session running on a remote machine after you disconnect from SSH, start it inside
+tmux
+or
+screen
+.
 Extended network outage
 : if your machine is awake but unable to reach the network for more than roughly 10 minutes, the session times out and the process exits. Run
 claude remote-control
@@ -541,11 +565,32 @@ claude auth login
 to refresh them. Run
 claude doctor
 to see which individual eligibility check failed. Environment-variable conflicts, unreachable checks, and organization policy each produce their own message, so this error means the rollout gate itself.
+Before v2.1.154, a variable that disables feature-flag evaluation, such as
+DISABLE_TELEMETRY
+or
+DO_NOT_TRACK
+, also produced this message; the “Remote Control requires feature-flag evaluation” entry below covers that configuration.
 ​
 ”Couldn’t verify Remote Control eligibility”
 Claude Code could not reach the feature-flag service to check whether Remote Control is enabled for your account, typically because you are offline or a proxy is blocking the request. Retry once you have network access, or run
 claude doctor
 for details. The related message “Couldn’t verify your organization’s Remote Control policy” has the same cause and the same fix. Both messages were added in v2.1.178.
+​
+”Remote Control requires feature-flag evaluation”
+One of these variables is set:
+DISABLE_TELEMETRY
+,
+DO_NOT_TRACK
+,
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+, or
+DISABLE_GROWTHBOOK
+. Each of them disables the feature-flag evaluation that Remote Control availability depends on, and the full message names the variable Claude Code found. Unset that variable wherever it’s set, in your shell environment or in the
+env
+block of a
+settings.json
+file
+. On versions before 2.1.154, the same configuration produces “Remote Control is not yet enabled for your account” instead.
 ​
 ”Remote Control is only available when using Claude via api.anthropic.com”
 The session isn’t talking to the Anthropic API directly, so there is no claude.ai backend to pair with. This happens on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry.
@@ -693,7 +738,8 @@ Recurring automation like daily reviews
 ​
 Related resources
 Claude Code on the web
-: run sessions in Anthropic-managed cloud environments instead of on your machine
+: run sessions on Anthropic-managed infrastructure instead of your machine, configured through
+cloud environments
 Ultraplan
 : launch a cloud planning session from your terminal and review the plan in your browser
 Channels

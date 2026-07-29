@@ -93,7 +93,9 @@ for the routine. Environments control what the cloud session has access to:
 Network access
 : set the level of internet access available during each run
 Environment variables
-: provide API keys, tokens, or other secrets Claude can use
+: provide values Claude can use during each run. They’re
+visible to anyone who uses the environment
+, so add credentials with that in mind
 Setup script
 : install dependencies and tools the routine needs. The result is
 cached
@@ -102,9 +104,9 @@ A
 Default
 environment is provided with
 Trusted
-network access, which allows the
-default set
-of package registries, cloud provider APIs, container registries, and common development domains, but blocks everything else. If your routine needs to reach your own services or a domain outside that list, edit the environment’s
+network access, which allows only the
+default allowlist
+of package registries, cloud provider APIs, container registries, and common development domains through the session’s network. Connectors you add to the routine reach their services through Anthropic’s servers, so they don’t need allowlist changes. If your routine needs to reach your own services directly, or a domain outside that list, edit the environment’s
 network access
 before running. To use a separate environment,
 create one
@@ -475,20 +477,20 @@ or use
 in the CLI.
 ​
 Environments and network access
-Each routine runs in a
+Each routine uses a
 cloud environment
 that controls network access, environment variables, and setup scripts. The routine inherits the environment’s network policy on every run.
 The
 Default
 environment uses
 Trusted
-network access: the
+network access, which allows only the
 default allowlist
-of package registries, cloud provider APIs, container registries, and common development domains is reachable, but arbitrary domains are not. Outbound requests to other hosts fail with
+through the session’s network. Requests on that path to hosts outside the allowlist fail with
 403
 and
 x-deny-reason: host_not_allowed
-. MCP connector traffic is routed through Anthropic’s servers, so the connectors you add to the routine work without adding their hosts to
+. MCP connector traffic is routed through Anthropic’s servers rather than that path, so the connectors you add to the routine work without adding their hosts to
 Allowed domains
 . Remove any connectors you don’t need under
 Connectors
@@ -615,8 +617,8 @@ and in-session scheduling
 : schedule local tasks within an open CLI session
 Desktop scheduled tasks
 : local scheduled tasks that run on your machine with access to local files
-Cloud environment
-: configure the runtime environment for cloud sessions
+Cloud environments
+: configure network access, environment variables, and setup scripts for cloud sessions
 MCP connectors
 : connect external services like Slack, Linear, and Google Drive
 GitHub Actions

@@ -1367,16 +1367,42 @@ Undefined (default)
 No restrictions. Users can add any marketplace
 Empty array
 []
-Complete lockdown. Users can’t add any new marketplaces
+Complete lockdown. Blocks every marketplace source, including the official Anthropic marketplace
 List of sources
 Users can only add marketplaces that match the allowlist exactly
 ​
 Common configurations
-Disable all marketplace additions:
+Disable all marketplace additions, including the official Anthropic marketplace:
 {
 "strictKnownMarketplaces"
 : []
 }
+Allow only the official Anthropic marketplace. Matching is exact, so this entry doesn’t cover
+ref
+or
+path
+variants of the same repository:
+{
+"strictKnownMarketplaces"
+: [
+{
+"source"
+:
+"github"
+,
+"repo"
+:
+"anthropics/claude-plugins-official"
+}
+]
+}
+With this entry, the official marketplace registers itself automatically the first time you start Claude Code interactively, so you don’t need to pair it with
+extraKnownMarketplaces
+. In a non-interactive environment that runs before that first interactive launch, add it explicitly with
+claude plugin marketplace add anthropics/claude-plugins-official
+or include it in
+extraKnownMarketplaces
+.
 Allow specific marketplaces only:
 {
 "strictKnownMarketplaces"
@@ -1477,9 +1503,9 @@ For GitHub sources:
 repo
 is required, and
 ref
-or
+and
 path
-must also match if specified in the allowlist
+must each match exactly or be absent from both the marketplace source and the allowlist entry
 For URL sources: the full URL must match exactly
 For
 hostPattern
@@ -2021,10 +2047,10 @@ Check that
 .claude-plugin/marketplace.json
 exists at the specified path
 Ensure JSON syntax is valid using
-claude plugin validate
+claude plugin validate .
 or
-/plugin validate
-. To check skill, agent, and command frontmatter, run the command against each plugin directory
+/plugin validate .
+from the marketplace directory. To check skill, agent, and command frontmatter, run the command against each plugin directory
 For private repositories, confirm you have access permissions
 ​
 Marketplace validation errors

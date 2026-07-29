@@ -101,7 +101,7 @@ You, in every project
 .claude/settings.json
 Everyone working in the project, checked into source control
 .claude/settings.local.json
-You, in this project only (add it to your gitignore if you create it by hand)
+You, in this project only, gitignored when Claude Code saves a setting to it; add it to your gitignore if you create it by hand
 Managed settings
 Everyone in your organization, deployed by an admin
 See
@@ -111,7 +111,7 @@ Settings precedence
 for how they combine when more than one sets the same variable.
 ​
 Precedence
-Where the same behavior has both an environment variable and a settings field, the environment variable takes precedence. For example,
+Some behaviors have both an environment variable and a dedicated settings key. If you set both, the environment variable takes precedence. For example,
 ANTHROPIC_MODEL
 overrides the
 model
@@ -119,7 +119,7 @@ setting, and
 CLAUDE_CODE_AUTO_CONNECT_IDE
 overrides
 autoConnectIde
-. The settings field applies when the environment variable is not set.
+. Claude Code uses the settings key only when the environment variable is unset.
 When the same variable is set in both your shell and a settings file
 env
 block, the settings file value applies. Claude Code writes each
@@ -128,6 +128,13 @@ entry into the process environment at startup and again when the file changes, r
 env
 setting
 lists the exceptions.
+In a settings file you can set a variable but you can’t remove one. To override a variable you can’t unset, such as a stale
+CLAUDE_CODE_USE_VERTEX
+exported by a shell profile you don’t control, set it to an empty string in the
+env
+block:
+"CLAUDE_CODE_USE_VERTEX": ""
+. Claude Code treats the empty value as unset for provider selection. Subprocesses still inherit the empty value.
 Between settings files,
 env
 values follow
@@ -162,6 +169,29 @@ as 2000 and
 as 64000. Before v2.1.211, these spellings could silently set a much smaller value, such as
 1e6
 setting a timeout to 1.
+For variables that turn a behavior on or off, set
+1
+or
+true
+to turn it on and
+0
+or
+false
+to turn it off, in any casing.
+Some variables read only whether you set them at all, so any non-empty value including
+0
+turns the behavior on, and you turn the behavior off by unsetting the variable or setting it to an empty value. These variables work that way:
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+DISABLE_TELEMETRY
+DISABLE_ERROR_REPORTING
+CLAUDE_CODE_TMUX_TRUECOLOR
+FALLBACK_FOR_ALL_PRIMARY_MODELS
+IS_DEMO
+One other variable has its own rule:
+FORCE_HYPERLINK
+reads a number, so only
+0
+turns it off. Each variable’s row also states its own rule.
 Variable
 Purpose
 ANTHROPIC_API_KEY
@@ -259,55 +289,127 @@ Display name for the custom model entry in the
 /model
 picker. Defaults to the model ID when not set
 ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES
-See
+Comma-separated list of
+capabilities
+the custom model supports, for example
+effort,thinking
+. See
 Model configuration
 ANTHROPIC_DEFAULT_FABLE_MODEL
-See
+Model ID that the
+fable
+alias resolves to, and the ID Claude Code recognizes as Fable 5 for
+automatic model fallback
+on third-party providers. See
 Model configuration
 ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION
-See
+Display description for the pinned Fable model in the
+/model
+picker. Defaults to
+Custom Fable model
+when not set. See
 Model configuration
 ANTHROPIC_DEFAULT_FABLE_MODEL_NAME
-See
+Display name for the pinned Fable model in the
+/model
+picker. Defaults to the model ID when not set. See
 Model configuration
 ANTHROPIC_DEFAULT_FABLE_MODEL_SUPPORTED_CAPABILITIES
-See
+Comma-separated list of
+capabilities
+the pinned Fable model supports, for example
+effort,thinking
+. See
 Model configuration
 ANTHROPIC_DEFAULT_HAIKU_MODEL
-See
+Model ID that the
+haiku
+alias resolves to, also used for
+background functionality
+. See
 Model configuration
 ANTHROPIC_DEFAULT_HAIKU_MODEL_DESCRIPTION
-See
+Display description for the pinned Haiku model in the
+/model
+picker. Defaults to
+Custom Haiku model
+when not set. See
 Model configuration
 ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME
-See
+Display name for the pinned Haiku model in the
+/model
+picker. Defaults to the model ID when not set. See
 Model configuration
 ANTHROPIC_DEFAULT_HAIKU_MODEL_SUPPORTED_CAPABILITIES
-See
+Comma-separated list of
+capabilities
+the pinned Haiku model supports, for example
+effort,thinking
+. See
 Model configuration
 ANTHROPIC_DEFAULT_OPUS_MODEL
-See
+Model ID that the
+opus
+alias resolves to, and that
+opusplan
+uses while Plan Mode is active. See
 Model configuration
 ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION
-See
+Display description for the pinned Opus model in the
+/model
+picker. When not set, defaults to
+Custom Opus model
+, or
+Custom Opus model (1M context)
+if the pinned model ID has the
+[1m]
+suffix and
+CLAUDE_CODE_DISABLE_1M_CONTEXT
+isn’t turned on. See
 Model configuration
 ANTHROPIC_DEFAULT_OPUS_MODEL_NAME
-See
+Display name for the pinned Opus model in the
+/model
+picker. Defaults to the model ID when not set. See
 Model configuration
 ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES
-See
+Comma-separated list of
+capabilities
+the pinned Opus model supports, for example
+effort,thinking
+. See
 Model configuration
 ANTHROPIC_DEFAULT_SONNET_MODEL
-See
+Model ID that the
+sonnet
+alias resolves to, and that
+opusplan
+uses when Plan Mode is not active. See
 Model configuration
 ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION
-See
+Display description for the pinned Sonnet model in the
+/model
+picker. When not set, defaults to
+Custom Sonnet model
+, or
+Custom Sonnet model (1M context)
+if the pinned model ID has the
+[1m]
+suffix and
+CLAUDE_CODE_DISABLE_1M_CONTEXT
+isn’t turned on. See
 Model configuration
 ANTHROPIC_DEFAULT_SONNET_MODEL_NAME
-See
+Display name for the pinned Sonnet model in the
+/model
+picker. Defaults to the model ID when not set. See
 Model configuration
 ANTHROPIC_DEFAULT_SONNET_MODEL_SUPPORTED_CAPABILITIES
-See
+Comma-separated list of
+capabilities
+the pinned Sonnet model supports, for example
+effort,thinking
+. See
 Model configuration
 ANTHROPIC_FOUNDRY_API_KEY
 API key for Microsoft Foundry authentication (see
@@ -544,9 +646,14 @@ is published. Republishing an existing artifact does not open the browser regard
 CLAUDE_CODE_ATTRIBUTION_HEADER
 Set to
 0
-to omit the attribution block (client version and prompt fingerprint) from the start of the system prompt. Disabling it improves prompt-cache hit rates when routing through an
+to omit the
+attribution block
+, which carries the client version and a prompt fingerprint, from the start of the system prompt. Caching on a direct connection to the Anthropic API is unaffected either way.
+Before v2.1.181 the block included a per-request token on custom base URLs and Microsoft Foundry connections, so on those versions set it to
+0
+when your
 LLM gateway
-. Caching on a direct connection to the Anthropic API is unaffected either way
+caches on the request body or forwards requests to a third-party provider, or when you connect to Microsoft Foundry directly
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
 Set the context capacity in tokens used for auto-compaction calculations. Defaults to the model’s context window, 200K for standard models or 1M for
 extended context
@@ -814,9 +921,7 @@ instead. Skills from plugins,
 .claude/commands/
 are unaffected. Equivalent to the
 disableBundledSkills
-setting;
-0
-doesn’t override it
+setting
 CLAUDE_CODE_DISABLE_CLAUDE_MDS
 Set to
 1
@@ -894,7 +999,9 @@ to disable file
 checkpointing
 . The
 /rewind
-command will not be able to restore code changes
+command will not be able to restore code changes. Overrides the
+fileCheckpointingEnabled
+setting
 CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS
 Set to
 1
@@ -924,13 +1031,23 @@ while keeping mouse-wheel scrolling. Use this when you want wheel scroll to work
 CLAUDE_CODE_DISABLE_MOUSE
 takes precedence when both are set. Requires Claude Code v2.1.195 or later
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-Set to any non-empty value to disable nonessential network traffic: auto-updates, telemetry, error reporting, the
+Set to any non-empty value, such as
+1
+, to disable nonessential network traffic: auto-updates, telemetry, error reporting, the
 /feedback
 command, release notes,
 gateway model discovery
 refreshes, and availability checks such as the
 fast mode
-check. Official plugin marketplace auto-install isn’t covered; disable it with
+check.
+Setting it to
+0
+or
+false
+still disables this traffic
+, unlike most on/off variables; unset the variable to allow it again. Also disables feature-flag fetching, which makes
+Remote Control
+unavailable. Official plugin marketplace auto-install isn’t covered; disable it with
 CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL
 CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK
 Set to
@@ -1286,7 +1403,7 @@ whose context window does not match the built-in size for its name
 CLAUDE_CODE_MAX_OUTPUT_TOKENS
 Set the maximum number of output tokens for most requests. Defaults and caps vary by model; see
 max output tokens
-. Increasing this value reduces the effective context window available before
+. Claude Code defaults to 32000 for model IDs it doesn’t recognize, such as gateway-specific names, and lowers values above a model’s cap to the cap. Increasing this value reduces the effective context window available before
 auto-compaction
 triggers
 CLAUDE_CODE_MAX_RETRIES
@@ -1523,7 +1640,7 @@ Set automatically to
 true
 when Claude Code is running as a
 cloud session
-. Read this from a hook or setup script to detect whether you are in a cloud environment
+. Read this from a hook or setup script to detect whether you are in a cloud session
 CLAUDE_CODE_REMOTE_SESSION_ID
 Set automatically in
 cloud sessions
@@ -1532,7 +1649,9 @@ Link output back to the session
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN
 Set to
 1
-to automatically resume if the previous session ended mid-turn. Used in SDK mode so the model continues without requiring the SDK to re-send the prompt
+to automatically resume if the previous session ended mid-turn. Used in SDK mode so the model continues without requiring the SDK to re-send the prompt. To turn this off, unset the variable, because setting it to
+0
+still triggers the resume in non-interactive mode
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS
 Maximum age in milliseconds of the last transcript message for a session that ended mid-turn to continue automatically on resume. When the last message is older than this bound, Claude Code skips both the
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN
@@ -1751,14 +1870,26 @@ hook may block the turn from ending before Claude Code overrides it and ends the
 0
 to disable the cap. Raise this if your hook legitimately needs more iterations to resolve
 CLAUDE_CODE_SUBAGENT_MODEL
-See
+The model Claude Code uses for all
+subagents
+,
+agent teams
+, and agents in a
+workflow
+. Accepts an alias such as
+haiku
+or a full model name, and takes precedence over the per-invocation
+model
+parameter and the subagent definition’s
+model
+frontmatter. See
 Model configuration
 .
-As of v2.1.196, setting it to
+Setting it to
 inherit
-is the same as leaving it unset; earlier versions treated
+is the same as leaving it unset; before v2.1.196,
 inherit
-as an override that forced every subagent onto the main conversation’s model
+was an override that forced every subagent onto the main conversation’s model
 CLAUDE_CODE_SUBPROCESS_ENV_SCRUB
 Set to
 1
@@ -1834,9 +1965,15 @@ under the system default when your override is a long path, since some tools fai
 $TMPDIR
 unchanged. Claude Code’s own temp files always use your override
 CLAUDE_CODE_TMUX_TRUECOLOR
-Set to
+Set to any non-empty value, such as
 1
-to allow 24-bit truecolor output inside tmux. By default, Claude Code clamps to 256 colors when
+, to allow 24-bit truecolor output inside tmux.
+Setting it to
+0
+or
+false
+still allows truecolor
+, unlike most on/off variables; unset the variable to restore the 256-color clamp. By default, Claude Code clamps to 256 colors when
 $TMUX
 is set because tmux does not pass through truecolor escape sequences unless configured to. Set this after adding
 set -ga terminal-overrides ',*:Tc'
@@ -2006,7 +2143,9 @@ Set to
 1
 to disable automatic compaction when approaching the context limit. The manual
 /compact
-command remains available. Use when you want explicit control over when compaction occurs
+command remains available. Use when you want explicit control over when compaction occurs. Overrides the
+autoCompactEnabled
+setting
 DISABLE_COMPACT
 Set to
 1
@@ -2031,9 +2170,15 @@ Before v2.1.205, this variable hid the
 /doctor
 diagnostics screen command
 DISABLE_ERROR_REPORTING
-Set to
+Set to any non-empty value, such as
 1
-to opt out of error reporting
+, to opt out of error reporting.
+Setting it to
+0
+or
+false
+still opts out
+, unlike most on/off variables; unset the variable to turn error reporting back on
 DISABLE_EXTRA_USAGE_COMMAND
 Set to
 1
@@ -2058,7 +2203,9 @@ is also accepted
 DISABLE_GROWTHBOOK
 Set to
 1
-to disable GrowthBook feature-flag fetching and use code defaults for every flag. Telemetry event logging stays on unless
+to disable GrowthBook feature-flag fetching and use code defaults for every flag. This makes
+Remote Control
+unavailable. Telemetry event logging stays on unless
 DISABLE_TELEMETRY
 is also set
 DISABLE_INSTALLATION_CHECKS
@@ -2112,11 +2259,19 @@ Set to
 1
 to disable prompt caching for Sonnet models
 DISABLE_TELEMETRY
-Set to
+Set to any non-empty value, such as
 1
-to opt out of telemetry. Telemetry events do not include user data like code, file paths, or bash commands. Also disables feature-flag fetching with the same effect as
+, to opt out of telemetry.
+Setting it to
+0
+or
+false
+still opts out
+, unlike most on/off variables; unset the variable to turn telemetry back on. Telemetry events do not include user data like code, file paths, or bash commands. Also disables feature-flag fetching with the same effect as
 DISABLE_GROWTHBOOK
-, so some flagged features may be unavailable
+, which makes
+Remote Control
+unavailable
 DISABLE_UPDATES
 Set to
 1
@@ -2136,9 +2291,13 @@ command
 DO_NOT_TRACK
 Set to
 1
-to opt out of telemetry. Equivalent to setting
+to opt out of telemetry, with the same effect as
 DISABLE_TELEMETRY
-. Claude Code honors this as the cross-tool convention recognized by many developer CLIs
+, including making
+Remote Control
+unavailable. Claude Code reads this variable as a standard boolean, so
+0
+leaves telemetry on, and honors it as the cross-tool convention recognized by many developer CLIs
 ENABLE_CLAUDEAI_MCP_SERVERS
 Set to
 false
@@ -2168,11 +2327,11 @@ instead
 ENABLE_TOOL_SEARCH
 Controls
 MCP tool search
-. Unset: all MCP tools deferred by default, but loaded upfront on Google Cloud’s Agent Platform or when
+. Unset: all MCP tools deferred by default, but loaded upfront on Google Cloud’s Agent Platform, when
 ANTHROPIC_BASE_URL
-points to a non-first-party host. Values:
+points to a non-first-party host, or on a Microsoft Foundry deployment hosted on Azure. Values:
 true
-(always defer and send the beta header, requests fail on Google Cloud’s Agent Platform models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that do not support
+(always defer and send the beta header, except on a Microsoft Foundry deployment hosted on Azure, where the server-side rejection still forces upfront loading; requests fail on Google Cloud’s Agent Platform models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that do not support
 tool_reference
 ),
 auto
@@ -2186,7 +2345,17 @@ false
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
 is set, which forces all tools to load upfront
 FALLBACK_FOR_ALL_PRIMARY_MODELS
-Set to any non-empty value to make all models, not only Opus, stop retrying with a repeated-overload error when no fallback model is configured.
+Set to any non-empty value, such as
+1
+, to make every model stop retrying with a repeated-overload error when no fallback model is configured.
+Setting it to
+0
+or
+false
+still enables this
+, unlike most on/off variables; unset the variable to restore the default retry behavior. Without it, models Claude Code recognizes as Opus, Fable 5, or Mythos models stop retrying this way when you authenticate with an API key or a
+third-party provider
+rather than a Claude subscription.
 As of v2.1.160, a configured
 fallback model chain
 triggers on repeated overload errors for any primary model, so this variable does not affect switching to a fallback model
@@ -2200,7 +2369,13 @@ Set to
 1
 to enable clickable OSC 8 hyperlinks when your terminal supports them but isn’t auto-detected, or
 0
-to disable them
+to disable them. Claude Code parses this value as a number, not a boolean, so word spellings such as
+false
+,
+no
+, or
+off
+enable hyperlinks rather than disabling them
 FORCE_PROMPT_CACHING_5M
 Set to
 1
@@ -2211,11 +2386,17 @@ Specify HTTP proxy server for network connections
 HTTPS_PROXY
 Specify HTTPS proxy server for network connections
 IS_DEMO
-Set to
+Set to any non-empty value, such as
 1
-to enable demo mode: hides your email and organization name from the header and
+, to enable demo mode: hides your email and organization name from the header and
 /status
-output, and skips onboarding. Useful when streaming or recording a session
+output, and skips onboarding.
+Setting it to
+0
+or
+false
+still enables demo mode
+, unlike most on/off variables; unset the variable to turn it off. Useful when streaming or recording a session
 MAX_MCP_OUTPUT_TOKENS
 Maximum number of tokens allowed in MCP tool responses. Claude Code displays a warning when output exceeds 10,000 tokens. Tools that declare
 anthropic/maxResultSizeChars
@@ -2227,22 +2408,23 @@ in non-interactive mode (the
 -p
 flag). Defaults to 5
 MAX_THINKING_TOKENS
-Override the
+Fixed token budget for
 extended thinking
-token budget. The ceiling is the model’s
-max output tokens
-minus one. Set to
+. Claude Code caps it at one token below the request’s max output tokens and never below 1,024; see
+CLAUDE_CODE_MAX_OUTPUT_TOKENS
+for how that limit is set. When unset and thinking is enabled, models with
+adaptive reasoning
+choose their own thinking depth, and other models use the cap. Set to
 0
-to disable thinking on the Anthropic API except on Fable 5, which cannot have thinking turned off. On
+to disable thinking on the Anthropic API, except on Fable 5, which cannot have thinking turned off; on
 third-party providers
 ,
 0
 omits the
 thinking
-parameter instead, and models with
-adaptive reasoning
-may still think. For nonzero values on adaptive reasoning models, the budget is ignored unless adaptive reasoning is disabled via
+parameter instead. Nonzero values are ignored on adaptive reasoning models unless
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
+is set
 MCP_CLIENT_SECRET
 OAuth client secret for MCP servers that require
 pre-configured credentials

@@ -301,7 +301,9 @@ has its own admin surface: on the Cloud environments page in admin settings, own
 organization-shared environments
 that set the
 network access level
-, environment variables, and setup script for members’ cloud sessions, and choose the organization’s default environment.
+, environment variables, and setup script for members’ cloud sessions. Owners and admins choose the organization’s default environment separately, at
+claude.ai/admin-settings/claude-code
+.
 Permission rules and sandboxing cover different layers. Denying WebFetch blocks Claude’s fetch tool, but if Bash is allowed,
 curl
 and

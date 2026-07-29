@@ -222,7 +222,7 @@ When a user-typed command expands into a prompt, before it reaches Claude. Can b
 PreToolUse
 Before a tool call executes. Can block it
 PermissionRequest
-When a permission dialog appears
+When a tool call needs a permission decision
 PermissionDenied
 When a tool call is denied by the auto mode classifier. Return
 {retry: true}
@@ -372,6 +372,9 @@ Plugin MCP servers start automatically when the plugin is enabled
 Servers appear as standard MCP tools in Claude’s toolkit
 Server capabilities integrate seamlessly with Claude’s existing tools
 Plugin servers can be configured independently of user MCP servers
+If you run
+/reload-plugins
+mid-session, Claude Code keeps the live connections of servers whose configuration is unchanged
 ​
 LSP servers
 Looking to use LSP plugins? Install them from the official marketplace: search for “lsp” in the
@@ -703,7 +706,7 @@ project
 Team plugins shared via version control
 local
 .claude/settings.local.json
-Project-specific plugins, gitignored
+Project-specific plugins, gitignored when Claude Code saves a setting to it
 managed
 Managed settings
 Managed plugins (read-only, update only)
@@ -766,7 +769,7 @@ Project-scope
 @skills-dir
 plugins load only from the
 .claude/skills/
-of the directory where you start Claude Code. They do not
+of the directory where you start Claude Code. They don’t
 walk up to the repository root
 the way plain skills and commands do, so launching from a subdirectory misses a plugin that lives at the repo root. Launch from the repository root, or run
 /reload-plugins
@@ -2026,7 +2029,7 @@ install
 formatter@my-marketplace
 --scope
 project
-# Install to local scope (gitignored)
+# Install to local scope (not shared with team)
 claude
 plugin
 install
@@ -2367,10 +2370,12 @@ Plugin not loading
 Invalid
 plugin.json
 Run
-claude plugin validate
+claude plugin validate ./my-plugin
 or
-/plugin validate
-to check
+/plugin validate ./my-plugin
+, where
+./my-plugin
+is your plugin directory, to check
 plugin.json
 , skill/agent/command frontmatter, and
 hooks/hooks.json

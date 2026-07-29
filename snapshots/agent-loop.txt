@@ -558,7 +558,17 @@ effort
 effort
 trades latency and token cost for reasoning depth within each response.
 Extended thinking
-is a separate feature that produces visible chain-of-thought blocks in the output. They are independent: you can set
+is a separate feature that produces
+thinking
+blocks in the output, and the
+display
+field on
+ThinkingConfig
+for
+Python
+or
+TypeScript
+controls whether you receive their text. They are independent: you can set
 effort: "low"
 with extended thinking enabled, or
 effort: "max"
@@ -676,9 +686,9 @@ Tool definitions
 Every request; MCP schemas deferred by default
 Built-in tool schemas load every request.
 Tool search
-defers MCP tool schemas by default, falling back to upfront loading on Google Cloud’s Agent Platform or a non-first-party
+defers MCP tool schemas by default, falling back to upfront loading on Google Cloud’s Agent Platform, a non-first-party
 ANTHROPIC_BASE_URL
-. See
+, or a Microsoft Foundry deployment hosted on Azure. See
 Configure tool search
 for the full matrix
 Conversation history
@@ -750,9 +760,9 @@ AgentDefinition
 to scope subagents to the minimum set they need.
 Watch MCP server costs.
 MCP tool search
-defers MCP tool schemas by default and loads them on demand. When tool search is off, on Google Cloud’s Agent Platform, or behind a non-first-party
+defers MCP tool schemas by default and loads them on demand. When tool search is off or has fallen back to upfront loading, each MCP server adds all its tool schemas to every request, so a few servers with many tools can consume significant context before the agent does any work. The fallback applies on Google Cloud’s Agent Platform, behind a non-first-party
 ANTHROPIC_BASE_URL
-, each MCP server adds all its tool schemas to every request, so a few servers with many tools can consume significant context before the agent does any work.
+, and on a Microsoft Foundry deployment hosted on Azure.
 Use lower effort for routine tasks.
 Set
 effort
@@ -1260,6 +1270,11 @@ error
 `
 );
 }
+When the agent finishes successfully, the example prints a
+Done:
+line with the agent’s summary of the fix, then a line like
+Cost: $0.0312
+.
 ​
 Next steps
 Now that you understand the loop, here’s where to go depending on what you’re building:

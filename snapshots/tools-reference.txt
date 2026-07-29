@@ -155,7 +155,7 @@ Remote Control
 is connected, so a long-running task or
 scheduled task
 can reach you when you step away.
-Push delivery runs through Anthropic-hosted infrastructure, which is not accessible from Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
+Push delivery runs through Anthropic-hosted infrastructure, which is not accessible from Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry
 No
 Read
 Reads the contents of files. See
@@ -1146,9 +1146,11 @@ is the only form.
 The search backend is not configurable. To search with a different provider, add an
 MCP server
 that exposes a search tool.
-WebSearch is available on the Claude API,
+WebSearch is available on the Claude API and
 Claude Platform on AWS
-, and Microsoft Foundry. On Google Cloud’s Agent Platform it works with Claude 4 and later models, including Opus, Sonnet, and Haiku. Amazon Bedrock doesn’t expose the server-side web search tool.
+. On Microsoft Foundry it requires a
+deployment hosted on Anthropic
+: deployments hosted on Azure don’t support server-side tools, so the WebSearch call fails. On Google Cloud’s Agent Platform it works with Claude 4 and later models, including Opus, Sonnet, and Haiku. Amazon Bedrock doesn’t expose the server-side web search tool.
 ​
 Session search limit
 A session can make at most 200 WebSearch calls, counted across the main conversation and every

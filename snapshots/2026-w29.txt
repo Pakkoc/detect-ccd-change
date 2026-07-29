@@ -6,7 +6,7 @@ web
 A published artifact can now call MCP connectors each time someone views it, so a dashboard shows live data and can take actions on demand rather than a snapshot from the session that built it. Each call runs through the viewing account’s own connections, and viewers approve access before the page’s first connector call. This week also adds public sharing links, editor roles for shared editing on Team and Enterprise plans, and artifacts created from Claude Tag sessions.
 Name the connector and the data you want in your prompt:
 Claude Code
-> Build a dashboard artifact of open pull requests that pulls the live list through my GitHub connector when the page loads.
+Build a dashboard artifact of open pull requests that pulls the live list through my GitHub connector when the page loads.
 Pull live data with MCP connectors
 Screen reader mode
 CLI

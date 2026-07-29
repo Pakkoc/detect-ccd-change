@@ -357,12 +357,14 @@ add
 ../project-feature-a
 -b
 feature-a
-Create a worktree from an existing branch:
+Create a worktree from an existing branch, replacing
+fix-issue-456
+with a branch that already exists in your repository:
 git
 worktree
 add
 ../project-bugfix
-bugfix-123
+fix-issue-456
 Start Claude in the worktree:
 cd
 ../project-feature-a

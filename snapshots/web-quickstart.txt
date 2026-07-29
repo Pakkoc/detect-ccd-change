@@ -86,7 +86,7 @@ Desktop app
 Remote Control
 docs to set those up.
 ​
-Connect GitHub and create an environment
+Connect GitHub
 Setup is a one-time process. If you already use the GitHub CLI, you can
 do this from your terminal
 instead of the browser.
@@ -101,36 +101,30 @@ After signing in, claude.ai/code prompts you to connect GitHub. Follow the promp
 create an empty repository on GitHub
 first.
 3
-Create your environment
-After connecting GitHub, you’ll be prompted to create a cloud environment. The environment controls what network access Claude has during sessions and what runs when a new session is created. See
+Confirm your Default environment
+When you finish connecting GitHub, onboarding creates a
+cloud environment
+named
+Default
+for you; if onboarding shows an environment form instead, keep its defaults to create the same
+Default
+environment. The environment controls what network access Claude has during sessions and what runs when a new session is created.
+Default
+uses
+Trusted
+network access
+: sessions reach
+common package registries
+and other allowlisted domains, and nothing else through the session’s network. See
 Installed tools
 for what’s available without any configuration.
-The form has these fields:
-Name
-: a display label. Useful when you have multiple environments for different projects or access levels.
-Network access
-: controls what the session can reach on the internet. The default,
-Trusted
-, allows connections to
-common package registries
-like npm, PyPI, and RubyGems while blocking general internet access.
-Environment variables
-: optional variables available in every session, in
-.env
-format. Don’t wrap values in quotes, since quotes are stored as part of the value. These are visible to anyone who can edit this environment.
-Setup script
-: an optional Bash script that runs before Claude Code launches. Use it to install system tools the cloud VM doesn’t include, like
-apt install -y gh
-. The result is
-cached
-, so the script doesn’t re-run on every session. See
-Setup scripts
-for examples and debugging tips.
-For a first project, leave the defaults and click
-Create environment
-. You can
-edit it later or create additional environments
-for different projects.
+For a first project, the
+Default
+environment works as is. To change its network access, add environment variables, or run a
+setup script
+before sessions start,
+edit it or create additional environments
+.
 ​
 Connect from your terminal
 If you already use the GitHub CLI (
@@ -159,14 +153,22 @@ login
 Sign in to Claude
 In the Claude Code CLI, run
 /login
-to sign in with your claude.ai account. Skip this step if you’re already signed in.
+to sign in with your claude.ai account. Skip this step if you’re already signed in with a claude.ai account. Authenticating with an API key doesn’t count. To check, run
+/status
+and confirm the
+Login method
+row shows a claude.ai account.
 3
 Run /web-setup
 In the Claude Code CLI, run:
 /web-setup
 This syncs your
 gh
-token to your Claude account. If you don’t have a cloud environment yet,
+token to your Claude account. On success, Claude Code prints
+Connected as <your-github-username>
+and opens
+claude.ai/code
+in your browser. If you don’t have a cloud environment yet,
 /web-setup
 creates one with Trusted network access and no setup script. You can
 edit the environment or add variables
@@ -276,6 +278,16 @@ to run Claude Code on your own machine and monitor it from the web.
 Enterprise organizations may need an Owner to enable Claude Code on the web. Contact your Anthropic account team.
 ​
 /web-setup
+says “Not signed in to Claude”
+If
+/web-setup
+responds with “Not signed in to Claude. Run /login first.”, the CLI doesn’t have a valid claude.ai sign-in. This can also happen when a previous sign-in has expired. Run
+/login
+, sign in with your claude.ai account, then run
+/web-setup
+again.
+​
+/web-setup
 shows “No commands match” or “Unknown command”
 /web-setup
 runs inside the Claude Code CLI, not your shell. Launch
@@ -289,7 +301,10 @@ No commands match "/web-setup"
 Unknown command: /web-setup
 , the command is hidden because a requirement isn’t met. The cause is usually that you’re authenticated with an API key or third-party provider instead of a claude.ai subscription. Run
 /login
-to sign in with your claude.ai account.
+to sign in with your claude.ai account. Team and Enterprise Owners can also
+disable
+/web-setup
+for their organization, which hides the command. In that case, use the browser flow above instead.
 On Team and Enterprise plans, the command is also hidden when any of the following apply:
 an administrator has disabled Claude Code on the web for your organization
 an administrator has disabled the
@@ -304,11 +319,11 @@ or ultraplan
 Remote-session features create a default cloud environment automatically if you don’t have one. If you see “Could not create a cloud environment”, automatic creation failed.
 If you see “No cloud environment available”, your CLI predates automatic creation. In either case, run
 /web-setup
-in the Claude Code CLI to create one manually, or visit
+in the Claude Code CLI, or add an environment from the
+environment selector
+at
 claude.ai/code
-and follow the
-Create your environment
-step above.
+.
 ​
 Setup script failed
 The setup script exited with a non-zero status, which blocks the session from starting. Common causes:
@@ -352,7 +367,9 @@ to remove it permanently.
 Next steps
 Now that you can submit and review tasks, these pages cover what comes next: starting cloud sessions from your terminal, scheduling recurring work, and giving Claude standing instructions.
 Use Claude Code on the web
-: the full reference, including teleporting sessions to your terminal, setup scripts, environment variables, and network config
+: the full reference, including teleporting sessions to your terminal, session sharing, and auto-fixing pull requests
+Configure cloud environments
+: network access levels, environment variables, and setup scripts for cloud sessions
 Routines
 : automate work on a schedule, via API call, or in response to GitHub events
 CLAUDE.md

@@ -125,7 +125,7 @@ indicates a required argument and
 indicates an optional one.
 Not every command appears for every user. Availability depends on your platform, plan, and environment. For example,
 /desktop
-only shows on macOS and Windows when signed in with a Claude subscription, and
+only shows on macOS and x64 Windows when signed in with a Claude subscription, and
 /upgrade
 doesn’t show on Enterprise plans.
 Command
@@ -393,7 +393,7 @@ Claude Design
 /design-sync Acme DS
 . A first-time sync verifies every component and can take a few hours on a large repo. Available on the Anthropic API; on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and Claude Platform on AWS the underlying tool can’t reach claude.ai, so the command is unavailable
 /desktop
-Continue the current session in the Claude Code Desktop app. Requires macOS or Windows and a Claude subscription. Alias:
+Continue the current session in the Claude Code Desktop app. Requires macOS or x64 Windows and a Claude subscription. Alias:
 /app
 /diff
 Open an interactive diff viewer showing uncommitted changes and per-turn diffs. Use left/right arrows to switch between the current git diff and individual Claude turns, and up/down to browse files. Press Enter to open the selected file’s diff, scroll it with up/down or PageUp/PageDown, and press Esc to return to the file list.
@@ -749,7 +749,12 @@ interactively, with a ruler you can scroll while the dialog is open to preview t
 fullscreen rendering
 only and not in the JetBrains IDE terminal
 /security-review
-Analyze pending changes on the current branch for security vulnerabilities. Reviews the git diff and identifies risks like injection, auth issues, and data exposure
+Analyze the changes on your current branch for security vulnerabilities. Reviews the diff between your branch and origin’s default branch, identifying risks like injection, auth issues, and data exposure. Needs an
+origin
+remote; if the review fails with an
+ambiguous argument
+error, see the
+error reference
 /setup-bedrock
 Configure
 Amazon Bedrock

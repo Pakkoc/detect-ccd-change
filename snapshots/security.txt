@@ -158,11 +158,13 @@ Credential protection
 Branch restrictions
 : Git push operations are restricted to the current working branch
 Audit logging
-: All operations in cloud environments are logged for compliance and audit purposes
+: All operations in cloud sessions are logged for compliance and audit purposes
 Automatic cleanup
-: Cloud environments are automatically terminated after session completion
+: Session VMs are reclaimed after a period of inactivity
 For more details on cloud execution, see
 Claude Code on the web
+; to configure network access for cloud sessions, see
+Configure cloud environments
 .
 Remote Control
 sessions work differently: the web interface connects to a Claude Code process running on your local machine. All code execution and file access stays local, and session traffic travels through the Anthropic API over TLS; while connected, the session transcript is stored on Anthropic servers to sync the conversation across devices, as described in
@@ -203,6 +205,8 @@ Allow time for us to address the issue before public disclosure
 Related resources
 Security guidance plugin
 : have Claude review and fix vulnerabilities in its own code changes during the session
+/security-review
+: run an on-demand security pass over the changes on your current branch
 Sandbox environments
 : compare isolation approaches and choose one for your threat model
 Sandboxing

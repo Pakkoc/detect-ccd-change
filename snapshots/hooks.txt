@@ -49,7 +49,7 @@ When a user-typed command expands into a prompt, before it reaches Claude. Can b
 PreToolUse
 Before a tool call executes. Can block it
 PermissionRequest
-When a permission dialog appears
+When a tool call needs a permission decision
 PermissionDenied
 When a tool call is denied by the auto mode classifier. Return
 {retry: true}
@@ -165,7 +165,9 @@ of
 "deny"
 if it contains
 rm -rf
-:
+. Save it to
+.claude/hooks/block-rm.sh
+in your project:
 #!/bin/bash
 # .claude/hooks/block-rm.sh
 COMMAND
@@ -200,6 +202,13 @@ exit
 0
 # no decision; normal permission flow applies
 fi
+On macOS and Linux, make the script executable with
+chmod +x .claude/hooks/block-rm.sh
+so Claude Code can run it. On Windows, write the hook in PowerShell instead and register it with
+"command": "powershell.exe"
+, as shown in the
+MessageDisplay example
+.
 This script and the Bash examples on this page that parse JSON input use
 jq
 , so install
@@ -331,7 +340,7 @@ Single project
 Yes, can be committed to the repo
 .claude/settings.local.json
 Single project
-No, gitignored when Claude Code creates it
+No, gitignored when Claude Code saves a setting to it
 Managed policy settings
 Organization-wide
 Yes, admin-controlled
@@ -922,7 +931,11 @@ http
 mcp_tool
 default to 30, and
 MessageDisplay
-lowers it to 10
+lowers it to 10.
+SessionEnd
+hooks share a 1.5-second budget; if your settings set a longer per-hook
+timeout
+, Claude Code raises the budget to match, up to 60 seconds
 statusMessage
 no
 Custom spinner message displayed while the hook runs
@@ -1561,21 +1574,21 @@ mcp_tool
 . Each hook is labeled with a
 [type]
 prefix and a source indicating where it was defined:
-User
+User Settings
 : from
 ~/.claude/settings.json
-Project
+Project Settings
 : from
 .claude/settings.json
-Local
+Local Settings
 : from
 .claude/settings.local.json
-Plugin
+Plugin Hooks
 : from a plugin’s
 hooks/hooks.json
-Session
+Session Hooks
 : registered in memory for the current session
-Built-in
+Built-in Hooks
 : registered internally by Claude Code
 Selecting a hook opens a detail view showing its event, matcher, type, source file, and the full command, prompt, or URL. The menu is read-only: to add, modify, or remove hooks, edit the settings JSON directly or ask Claude to make the change.
 ​
@@ -1829,14 +1842,21 @@ notice followed by the first line of stderr, so you can identify the cause witho
 For example, a hook command script that blocks dangerous Bash commands:
 #!/bin/bash
 # Reads JSON input from stdin, checks the command
+input
+=
+$(
+cat
+)
 command
 =
 $(
 jq
 -r
 '.tool_input.command'
-<
-/dev/stdin
+<<<
+"
+$input
+"
 )
 if
 [[
@@ -2781,8 +2801,9 @@ or
 claude -p --init
 maintenance
 claude -p --maintenance
---init-only
-runs Setup hooks and
+When you run
+claude --init-only
+, Claude Code runs Setup hooks and
 SessionStart
 hooks with the
 startup
@@ -2790,9 +2811,18 @@ matcher, then exits without starting a conversation.
 --init
 and
 --maintenance
-fire Setup hooks only when combined with
+fire Setup hooks only when you combine them with
 -p
-; in an interactive session those two flags don’t currently fire Setup hooks.
+. In an interactive session, those two flags don’t currently fire Setup hooks.
+When you start or continue a conversation with
+-p
+, you also need to supply a prompt, as an argument or piped on stdin. You can skip the prompt when a
+SessionStart
+hook supplies
+initialUserMessage
+or when you resume a session with a
+deferred tool call
+.
 On success,
 --init-only
 prints nothing to the terminal. To confirm the hooks ran, start with
@@ -4164,7 +4194,9 @@ auto mode requirements
 explicitly on resume overrides the restored value.
 ​
 PermissionRequest
-Runs when the user is shown a permission dialog.
+Runs when Claude Code is about to ask you for permission. In sessions that can’t show a prompt, such as background subagents in
+non-interactive mode
+, Claude Code still runs these hooks, and if no hook returns a decision, it denies the tool call.
 Use
 PermissionRequest decision control
 to allow or deny on behalf of the user.
@@ -4180,7 +4212,7 @@ tool_use_id
 . An optional
 permission_suggestions
 array contains the “always allow” options the user would normally see in the permission dialog.
-The difference from PreToolUse is when the hook fires: PermissionRequest hooks run when a permission dialog is about to be shown to the user, while PreToolUse hooks run before tool execution regardless of permission status. Neither event fires for
+PreToolUse hooks run before every tool call, whether or not it needs permission. PermissionRequest hooks run only when Claude Code is about to ask you for permission, or when it would otherwise auto-deny a call that can’t prompt. Neither event fires for
 EndConversation
 .
 {

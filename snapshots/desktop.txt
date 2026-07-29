@@ -189,7 +189,7 @@ explore first, then plan, then code
 for more on this workflow.
 Cloud sessions support Accept edits, Plan, and Auto. Accept edits corresponds to
 default
-mode: cloud sessions pre-approve file edits, so the selector shows Accept edits instead of Manual. Bypass permissions is not available because the cloud environment is already sandboxed.
+mode: cloud sessions pre-approve file edits, so the selector shows Accept edits instead of Manual. Bypass permissions is not available because cloud sessions already run in a sandboxed VM.
 Enterprise admins can restrict which permission modes are available. See
 enterprise configuration
 for details.
@@ -617,7 +617,7 @@ Session isolation requires
 Git
 . Most Macs include Git by default. Run
 git --version
-in Terminal to check. On Windows, Git is required for the Code tab to work:
+in Terminal to check; if it prints a version number, Git is installed. On Windows, Git is required for the Code tab to work:
 download Git for Windows
 , install it, and restart the app. If you run into Git errors, ask Claude in the
 Cowork tab
@@ -844,7 +844,25 @@ false
 ,
 "configurations"
 : [
-...
+{
+"name"
+:
+"my-app"
+,
+"runtimeExecutable"
+:
+"npm"
+,
+"runtimeArgs"
+: [
+"run"
+,
+"dev"
+],
+"port"
+:
+3000
+}
 ]
 }
 When disabled, preview tools are still available and you can ask Claude to verify at any time. Auto-verify makes it automatic after every edit.
@@ -1230,9 +1248,9 @@ Cloud sessions continue in the background even if you close the app. Usage count
 subscription plan limits
 with no separate compute charges.
 You can create custom cloud environments with different network access levels and environment variables. Select the environment dropdown when starting a cloud session and choose
-Add environment
+Add cloud environment
 . See
-the cloud environment
+Configure cloud environments
 for details on configuring network access and environment variables.
 ​
 SSH sessions
@@ -1562,7 +1580,7 @@ Coming from the CLI?
 If you already use the Claude Code CLI, Desktop runs the same underlying engine with a graphical interface. You can run both simultaneously on the same machine, even on the same project. Each maintains separate session history, but they share configuration and project memory via CLAUDE.md files.
 To move a CLI session into Desktop, run
 /desktop
-in the terminal. Claude saves your session and opens it in the desktop app, then exits the CLI. This command is available on macOS and Windows when you are signed in with a Claude subscription. It is not available with API key authentication or on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
+in the terminal. Claude saves your session and opens it in the desktop app, then exits the CLI. This command is available on macOS and x64 Windows when you are signed in with a Claude subscription. It is not available with API key authentication or on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
 When to use Desktop vs CLI: use Desktop when you want to manage parallel sessions in one window, arrange panes side by side, or review changes visually. Use the CLI when you need scripting, automation, or prefer a terminal workflow.
 ​
 CLI flag equivalents
@@ -1633,16 +1651,37 @@ Models
 : the same
 models
 are available in both. In Desktop, select the model from the dropdown next to the send button. You can change the model mid-session from the same dropdown.
+​
 MCP servers from the Claude Desktop chat app
-: the Desktop app loads MCP servers from
+The Desktop app loads MCP servers from
 claude_desktop_config.json
-into Code tab sessions, alongside servers from
+into local Code tab sessions, alongside servers from
 ~/.claude.json
 and
 .mcp.json
-. A server defined in
+. A server you define in
 claude_desktop_config.json
-is available in both the Desktop chat surface and the Code tab.
+is available in both the Desktop chat surface and local Code tab sessions.
+If you define the same server name in
+claude_desktop_config.json
+and in
+~/.claude.json
+or
+.mcp.json
+, the Code tab in local sessions connects once and uses the
+claude_desktop_config.json
+definition.
+The app also re-delivers stdio servers from
+~/.claude.json
+to the embedded CLI in local sessions. When the top level of
+~/.claude.json
+(user scope) and
+.mcp.json
+define the same stdio server name, the Code tab uses the
+~/.claude.json
+definition, departing from the CLI
+scope hierarchy
+.
 The standalone CLI does not read
 claude_desktop_config.json
 . On macOS and WSL, run
