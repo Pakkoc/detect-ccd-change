@@ -80,7 +80,7 @@ Gateway protocol reference
 Was this page helpful?
 Yes
 No
-Deployment example
+Deployment example: Google Cloud
 Connect to a gateway
 ⌘
 I

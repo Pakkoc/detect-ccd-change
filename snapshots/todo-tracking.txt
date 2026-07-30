@@ -20,22 +20,26 @@ TodoWrite
 for sessions that have not migrated yet.
 ​
 Todo Lifecycle
-Todos follow a predictable lifecycle:
+Claude moves each todo through a predictable lifecycle:
 Created
-as
+: Claude adds the todo as
 pending
-when tasks are identified
+when it identifies a task
 Activated
-to
+: Claude sets the todo to
 in_progress
-when work begins
+when it starts the work
 Completed
-when the task finishes successfully
+: Claude marks it completed when the task finishes successfully
 Removed
-when all tasks in a group are completed
+: Claude deletes a todo it no longer needs by setting
+status: "deleted"
+in a
+TaskUpdate
+call
 ​
 When Todos Are Used
-The SDK creates todos for most multi-step work, such as:
+Claude creates todos for most multi-step work, such as:
 Complex multi-step tasks
 requiring 3 or more distinct actions
 User-provided task lists

@@ -17,7 +17,10 @@ Cmd+Esc
 Ctrl+Esc
 (Windows/Linux) to open Claude Code directly from your editor, or click the Claude Code button in the UI
 Diff viewing
-: code changes can be displayed directly in the IDE diff viewer instead of the terminal
+: Claude Code opens code changes in the IDE diff viewer instead of the terminal; change this with the
+Diff tool
+setting in
+/config
 Selection context
 : the current selection or tab in the IDE is automatically shared with Claude Code.
 Read

@@ -22,7 +22,7 @@ Desktop
 Claude can now control your actual desktop from the Claude Code Desktop app: open native apps, click through the iOS simulator, drive hardware control panels, and verify changes on screen. It’s off by default and asks before each action. Best for the things nothing else can reach: apps without an API, proprietary tools, anything that only exists as a GUI.
 Enable it in Settings, grant the OS permissions, then ask Claude to verify a change end to end:
 Claude Code
-> Open the iOS simulator, tap through the onboarding flow, and screenshot each step
+Open the iOS simulator, tap through the onboarding flow, and screenshot each step
 Computer use guide
 PR auto-fix
 Web

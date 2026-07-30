@@ -14,7 +14,7 @@ won’t appear in
 computer-use
 , and toggle it on. Then ask Claude to verify a change end to end:
 Claude Code
-> Open the iOS simulator, tap through onboarding, and screenshot each step
+Open the iOS simulator, tap through onboarding, and screenshot each step
 Computer use guide
 /powerup
 v2.1.90
@@ -23,7 +23,7 @@ Interactive lessons that teach Claude Code features through animated demos, righ
 once and you’ll know what’s there.
 Run it:
 Claude Code
-> /powerup
+/powerup
 Commands reference
 Flicker-free rendering
 v2.1.89

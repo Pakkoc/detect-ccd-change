@@ -1569,9 +1569,9 @@ Main conversation compaction
 Session persistence
 : subagent transcripts persist within their session. You can resume a subagent after restarting Claude Code by resuming the same session.
 Automatic cleanup
-: transcripts are cleaned up based on the
+: Claude Code deletes subagent transcripts after the
 cleanupPeriodDays
-setting, which defaults to 30 days.
+retention period, 30 days by default.
 ​
 Tool restrictions
 Use the

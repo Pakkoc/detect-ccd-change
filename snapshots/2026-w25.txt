@@ -5,7 +5,7 @@ Artifacts
 An artifact is a live, interactive page that Claude Code publishes from your session to a private URL on claude.ai, and it updates in place as the session keeps working. Ask for one when terminal text is the wrong medium, such as a PR walkthrough with the diff annotated inline or a dashboard built from session data. Artifacts are in beta on Team and Enterprise plans.
 Ask Claude for a page, then approve the publish prompt:
 Claude Code
-> Make an artifact that walks through this PR with the diff annotated inline.
+Make an artifact that walks through this PR with the diff annotated inline.
 Create an artifact
 Match by input parameter
 v2.1.178
@@ -45,7 +45,7 @@ Set the
 thinking
 setting from the prompt:
 Claude Code
-> /config thinking=false
+/config thinking=false
 Commands reference
 Other wins
 Auto mode now blocks destructive git commands (

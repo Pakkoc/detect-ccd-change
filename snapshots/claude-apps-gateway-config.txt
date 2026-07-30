@@ -1302,23 +1302,23 @@ hooks
 CLI
 Org-wide
 hooks
-Because these settings arrive over the network, the CLI shows each developer a one-time security approval dialog before applying anything that can run a shell command or alter where traffic goes. The dialog covers:
+Because these settings arrive over the network, the CLI shows each developer a one-time security approval dialog before applying the settings listed below:
 hooks
 env
-variables that aren’t on the CLI’s built-in safe list
+variables that require the developer’s approval, such as proxy and base-URL variables
 shell-execution settings such as
 apiKeyHelper
 and
 statusLine
 managed CLAUDE.md content
-The safe list determines which
+Claude Code applies some delivered
 env
-variables apply without approval:
-On the safe list
-: auto-update and model-name vars
-Not on the safe list
-: proxy vars, base-URL vars, and
+variables without showing the developer the approval dialog, such as model selection settings and numeric limits. Other delivered variables can require the developer’s approval before they take effect; a non-empty proxy, base-URL, or
 OTEL_EXPORTER_OTLP_ENDPOINT
+value always does. When a delivered variable needs approval, the dialog names it.
+Environment variables and the approval dialog
+has the details, including four privacy toggles whose delivered value decides whether they need approval.
+Before v2.1.218, Claude Code applied fewer variables without asking the developer, so more delivered variables triggered the dialog.
 The gateway’s
 telemetry
 configuration pushes
@@ -1329,7 +1329,7 @@ triggers the dialog on each interactive client. The dialog protects the develope
 A non-interactive run with the
 -p
 flag can’t show the dialog. It applies the pushed settings for that run only and doesn’t record them as approved, so the developer’s next interactive session still shows the dialog. Before v2.1.207, a non-interactive run saved the settings as approved and no later interactive session showed the dialog for them.
-If a developer declines, Claude Code exits rather than applying the policy. Pushing a new hook or non-safe env var to a broad policy therefore means an approval prompt on every matching developer’s next startup.
+If a developer declines, Claude Code exits rather than applying the policy. Pushing a new hook, or any env var that triggers the dialog, to a broad policy therefore means an approval prompt on every matching developer’s next startup.
 The
 cli
 key was named
@@ -1605,7 +1605,7 @@ additionally require
 CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1
 on each client. The gateway doesn’t push that variable, so set it through a managed policy’s
 env
-block. It isn’t on the CLI’s safe list, so delivering it through a policy is covered by the same
+block. It isn’t among the variables Claude Code applies without the developer’s approval, so delivering it through a policy is covered by the same
 security approval dialog
 that the pushed OTLP endpoint already triggers.
 Both protobuf and JSON OTLP encodings are relayed, and any OpenTelemetry-compatible backend works as a destination.
@@ -1935,7 +1935,7 @@ Authorization
 Bearer ${OTEL_TOKEN}
 ​
 Client-side managed settings
-Everything above configures the gateway server. Pointing developer machines at it is configured separately, on each device, through Claude Code’s
+Everything above configures the gateway server. You point developer machines at the gateway separately, on each device, through Claude Code’s
 managed settings
 . The gateway can’t push the login keys itself, because they’re what tell the client where the gateway is.
 For the CLI, set these keys in the per-OS

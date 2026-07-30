@@ -1,4 +1,4 @@
-Claude Code supports fine-grained permissions so that you can specify exactly what the agent is allowed to do and what it can’t. Permission settings can be checked into version control and distributed to all developers in your organization, as well as customized by individual developers.
+Claude Code supports fine-grained permissions so that you can specify exactly what the agent is allowed to do and what it can’t. You can check permission settings into version control to share them with every developer in your organization, and each developer can customize their own.
 ​
 Permission system
 Claude Code uses a tiered permission system to balance power and safety:
@@ -276,7 +276,7 @@ but not a full model ID. Run with
 --verbose
 to see the exact parameter names and values in each tool call
 Whitespace around the colon is ignored
-Fields that a tool already matches with its own canonicalizing rules are not matchable this way:
+You can’t match a tool’s primary content field this way:
 command
 for Bash and PowerShell,
 file_path
@@ -787,32 +787,42 @@ Edit tool
 on the same path, including creating a new file there. Write and NotebookEdit aren’t covered, so add an
 Edit
 deny rule for paths no tool may change. Requires Claude Code v2.1.208 or later.
-The file permission checks match only
+Claude Code checks file permissions against
 Edit(path)
 and
 Read(path)
-rules. A
-Write(path)
+rules only. If you write a path rule for
+Write
 ,
-NotebookEdit(path)
-, or
-Glob(path)
-rule is accepted but never matched by those checks, so Claude Code warns at startup for each allow, deny, or ask rule in one of these unmatched forms. Use
+NotebookEdit
+,
+Glob
+, or the legacy
+MultiEdit
+tool instead, Claude Code accepts the rule but never consults it, and
+warns at startup
+, except for a
+Glob
+rule passed in
+--allowedTools
+. Use
 Edit(docs/**)
 in place of
 Write(docs/**)
-or
+,
 NotebookEdit(docs/**)
+, or
+MultiEdit(docs/**)
 , and
 Read(docs/**)
 in place of
 Glob(docs/**)
-. A tool-name rule with no path, such as a deny rule for
+. Claude Code doesn’t warn about a tool-name rule with no path, such as a deny rule for
 Write
-, isn’t affected: it matches the tool everywhere and produces no warning. Requires Claude Code v2.1.210 or later.
-A deny rule
+; it matches that rule at the tool level everywhere. Requires Claude Code v2.1.210 or later.
+If you put a deny rule
 Write(docs/**)
-in project settings produces this startup warning:
+in project settings, Claude Code prints this startup warning:
 Permission deny rule (.claude/settings.json): Write(docs/**) is not matched by file permission checks — only Edit(path) rules are. Use Edit(docs/**) instead (Edit rules cover all file-editing tools).
 Read and Edit deny rules apply to Claude’s built-in file tools and to file commands Claude Code recognizes in Bash, such as
 cat

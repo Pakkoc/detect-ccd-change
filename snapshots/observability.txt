@@ -312,9 +312,9 @@ calls against the same
 session
 , filter on
 session.id
-in your backend to see them as one timeline. The attribute is omitted if
+in your backend to see them as one timeline. Claude Code omits the attribute if you set
 OTEL_METRICS_INCLUDE_SESSION_ID
-is set to a falsy value.
+to a falsy value.
 Tracing is in beta. Span names and attributes may change between releases. See
 Traces (beta)
 in the Monitoring reference

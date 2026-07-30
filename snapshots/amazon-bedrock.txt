@@ -58,7 +58,7 @@ Set up manually
 To configure Amazon Bedrock through environment variables instead of the wizard, for example in CI or a scripted enterprise rollout, follow the steps below.
 ​
 1. Submit use case details
-First-time users of Anthropic models are required to submit use case details before invoking a model. This is done once per AWS account.
+Before you invoke an Anthropic model for the first time, submit use case details. You do this once per AWS account.
 Ensure you have the right IAM permissions described below
 Navigate to the
 Amazon Bedrock console

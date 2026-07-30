@@ -160,8 +160,10 @@ listen.trusted_proxies
 to the proxy’s source ranges so the gateway reads client IPs from
 X-Forwarded-For
 . The gateway honors the header only when the TCP peer is trusted; the
-Google Cloud worked example
-has concrete values per topology. Without trusted proxies, every request appears to come from the proxy’s IP, which collapses per-IP rate limits into one shared bucket and records the proxy’s IP in audit events.
+Google Cloud
+and
+AWS
+worked examples have concrete values per topology. Without trusted proxies, every request appears to come from the proxy’s IP, which collapses per-IP rate limits into one shared bucket and records the proxy’s IP in audit events.
 ​
 Container image
 Build your own image around the native
@@ -213,6 +215,9 @@ Point the readiness probe at
 GET /readyz
 and the liveness probe at
 GET /healthz
+For a complete worked example on AWS, covering ECS Fargate or EKS, Amazon RDS, and AWS Secrets Manager, see
+Deploy on AWS
+.
 Workload identity
 Prefer the platform’s workload identity over static keys: IRSA on EKS for Amazon Bedrock and for Claude Platform on AWS, Workload Identity on GKE for Google Cloud’s Agent Platform, and workload identity on AKS for Microsoft Foundry. Set
 auth: {}
@@ -797,6 +802,6 @@ Was this page helpful?
 Yes
 No
 Spend limits
-Deployment example
+Deployment example: AWS
 ⌘
 I

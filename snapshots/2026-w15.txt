@@ -6,19 +6,19 @@ research preview
 Kick off plan mode in the cloud from your terminal, then review the result in your browser. Claude drafts the plan in a Claude Code on the web session while your terminal stays free; when it’s ready you comment on individual sections, ask for revisions, and choose to execute remotely or send it back to your CLI. As of v2.1.101 the first run auto-creates a default cloud environment, so there’s no web setup step before you can try it.
 Run the command, or just include the keyword in any prompt:
 Claude Code
-> /ultraplan migrate the auth service from sessions to JWTs
+/ultraplan migrate the auth service from sessions to JWTs
 Ultraplan guide
 Monitor tool
 v2.1.98
 A new built-in tool that spawns a background watcher and streams its events into the conversation: each event lands as a new transcript message that Claude reacts to immediately. Tail a training run, babysit a PR’s CI, or auto-fix a dev server crash the moment it happens, all without a Bash sleep loop holding the turn open.
 Ask Claude to watch something while you keep working:
 Claude Code
-> Tail server.log in the background and tell me the moment a 5xx shows up
+Tail server.log in the background and tell me the moment a 5xx shows up
 This pairs with
 /loop
 , which now self-paces: omit the interval and Claude schedules the next tick based on the task, or reaches for the Monitor tool to skip polling altogether.
 Claude Code
-> /loop check CI on my PR
+/loop check CI on my PR
 Monitor tool reference
 /autofix-pr
 CLI
@@ -27,14 +27,14 @@ PR auto-fix landed on the web in Week 13. Now you can turn it on without leaving
 infers the open PR for your current branch and enables auto-fix for it on Claude Code on the web in one step. Push your branch, run the command, walk away; Claude watches CI and review comments and pushes fixes until it’s green.
 Run it from the PR’s branch:
 Claude Code
-> /autofix-pr
+/autofix-pr
 Auto-fix pull requests
 /team-onboarding
 v2.1.101
 Generates a teammate ramp-up guide from your local Claude Code usage. Run it in a project you know well and hand the output to a new teammate so they can replay your setup instead of starting from defaults.
 Run it from a project you’ve spent real time in:
 Claude Code
-> /team-onboarding
+/team-onboarding
 Commands reference
 Other wins
 Focus view: press

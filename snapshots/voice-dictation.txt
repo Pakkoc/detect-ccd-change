@@ -123,7 +123,7 @@ again to append another recording, or move the cursor first to insert speech els
 > refactor the auth middleware to ▮
 # hold space, speak "use the new token validation helper"
 > refactor the auth middleware to use the new token validation helper▮
-By default, releasing the key inserts the transcript and waits for you to press
+By default, when you release the key, Claude Code inserts the transcript and waits for you to press
 Enter
 . Set
 "autoSubmit": true

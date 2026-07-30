@@ -528,11 +528,21 @@ i
 then
 /
 to open the command menu instead
-In vim normal mode, if the cursor is at the beginning or end of input and can’t move further,
+In vim NORMAL mode, if the cursor is at the beginning or end of input and can’t move further,
 j
 /
 k
-and the arrow keys navigate command history instead.
+and
+↑
+/
+↓
+navigate command history instead.
+←
+on an empty prompt opens
+agent view
+from NORMAL mode as well as INSERT; before v2.1.219,
+←
+on an empty prompt did nothing in NORMAL mode.
 ​
 Editing (NORMAL mode)
 Command
@@ -772,7 +782,7 @@ twice due to tmux’s prefix key.
 Key features:
 Output is written to a file and Claude can retrieve it using the Read tool
 Background tasks have unique IDs for tracking and output retrieval
-Background tasks are automatically cleaned up when Claude Code exits. Backgrounding the session instead of exiting it hands them to the background session, where they keep running. See
+Background tasks are automatically cleaned up when Claude Code exits. If you background the session instead of exiting it, Claude Code hands them to the background session, where they keep running. See
 background a running session
 Background tasks are automatically terminated if output exceeds 5GB, with a note in stderr explaining why
 On macOS and Linux, Claude Code terminates running background tasks when the operating system signals memory pressure, provided the session has been idle for at least 30 minutes and no turn or subagent is running. Set

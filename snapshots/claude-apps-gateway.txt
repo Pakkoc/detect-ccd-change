@@ -280,7 +280,7 @@ on both the
 inference-profile/us.anthropic.*
 ARNs and the underlying
 foundation-model/anthropic.*
-ARNs, and model access enabled in the Amazon Bedrock console for the Claude models you want. Supply the credential with IRSA on EKS, an ECS task role, or an EC2 instance profile rather than static keys. The
+ARNs, and Anthropic’s one-time use case form submitted for the account from the Bedrock console’s Model catalog. Supply the credential with IRSA on EKS, an ECS task role, or an EC2 instance profile rather than static keys. The
 upstreams
 reference
 has the full IAM details, the cross-cloud credential matrix, and the
@@ -930,6 +930,9 @@ covers per-IdP setup, container image requirements, health probes, and troublesh
 Put spend caps on individual developers or groups so a runaway workload can’t consume your whole commitment.
 Spend limits
 covers the admin API and how enforcement works.
+For a complete worked example on AWS, with ECS Fargate or EKS, Amazon RDS, and Secrets Manager, see
+Deploy on AWS
+.
 For a complete worked example on Google Cloud, with Cloud Run, Cloud SQL, and Secret Manager, see
 Deploy on Google Cloud
 .

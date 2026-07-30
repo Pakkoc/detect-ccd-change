@@ -232,9 +232,9 @@ Supported authentication types
 Claude apps gateway
 session tokens.
 Custom credential scripts
-: the
+: configure the
 apiKeyHelper
-setting can be configured to run a shell script that returns an API key.
+setting to run a shell script that returns an API key.
 Refresh intervals
 : by default,
 apiKeyHelper

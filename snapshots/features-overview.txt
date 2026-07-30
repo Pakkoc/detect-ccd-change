@@ -26,7 +26,7 @@ run their own loops in isolated context, returning summaries
 Agent teams
 coordinate multiple independent sessions with shared tasks and peer-to-peer messaging
 Hooks
-fire on lifecycle events and can run a script, HTTP request, prompt, or subagent
+run your script, HTTP request, prompt, or subagent when Claude Code reaches a lifecycle event
 Plugins
 and
 marketplaces
@@ -272,7 +272,7 @@ give Claude knowledge about how to use those tools effectively, plus workflows y
 /post-to-slack
 workflow with your team’s message formatting rules.
 Example: An MCP server connects Claude to your database. A skill teaches Claude your data model, common query patterns, and which tables to use for different tasks.
-A hook fires on a lifecycle event; a skill is loaded into context for Claude to apply.
+Claude Code runs a hook at a lifecycle event; it loads a skill into context for Claude to apply.
 Aspect
 Hook
 Skill
@@ -491,7 +491,7 @@ Context cost:
 Isolated from main session. Subagents don’t inherit your conversation history or invoked skills.
 Use subagents for work that doesn’t need your full conversation context. Their isolation prevents bloating your main session.
 When:
-On trigger. Hooks fire at specific lifecycle events like tool execution, session boundaries, prompt submission, permission requests, and compaction. See
+On trigger. Claude Code runs hooks at specific lifecycle events like tool execution, session boundaries, prompt submission, permission requests, and compaction. See
 Hooks
 for the full list.
 What loads:

@@ -86,11 +86,11 @@ A plugin
 --plugin-dir <path>
 ,
 --plugin-url <url>
-Bare mode skips OAuth and keychain reads. Anthropic authentication must come from
+Bare mode skips OAuth and keychain reads. For Anthropic authentication, set
 ANTHROPIC_API_KEY
-or an
+or configure an
 apiKeyHelper
-in the JSON passed to
+in the JSON you pass to
 --settings
 . Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry use their usual provider credentials.
 --bare
@@ -266,10 +266,31 @@ stream-json
 The last line of the stream is a
 result
 message with the final response text, cost, and session metadata.
-If your consumer reads the stream slowly, Claude Code waits for the queued output to drain before exiting, scaling the wait with how much is still queued, capped at 30 seconds.
-Before v2.1.214 the exit wait was capped at about two seconds, which could cut off the end of a large response, and before v2.1.208 piping a large response could truncate the final line and omit the
-result
-message.
+If your consumer reads the stream slowly, Claude Code waits for the queued output to drain before exiting, scaling the wait with how much is still queued, capped at 30 seconds. Before v2.1.214 the exit wait was capped at about two seconds, which could cut off the end of a large response.
+The following example uses
+jq
+to filter for text deltas and display just the streaming text. The
+-r
+flag outputs raw strings (no quotes) and
+-j
+joins without newlines so tokens stream continuously:
+claude
+-p
+"Write a poem"
+--output-format
+stream-json
+--verbose
+--include-partial-messages
+|
+\
+jq
+-rj
+'select(.type == "stream_event" and .event.delta.type? == "text_delta") | .event.delta.text'
+For programmatic streaming with callbacks and message objects, see
+Stream responses in real-time
+in the Agent SDK documentation.
+​
+Follow subagent messages
 Messages from
 subagents
 appear in the stream as
@@ -291,25 +312,13 @@ Pass
 or set
 CLAUDE_CODE_FORWARD_SUBAGENT_TEXT
 to also emit subagent text and thinking blocks, so you can reconstruct each subagent’s transcript. This requires Claude Code v2.1.211 or later.
-The following example uses
-jq
-to filter for text deltas and display just the streaming text. The
--r
-flag outputs raw strings (no quotes) and
--j
-joins without newlines so tokens stream continuously:
-claude
--p
-"Write a poem"
---output-format
-stream-json
---verbose
---include-partial-messages
-|
-\
-jq
--rj
-'select(.type == "stream_event" and .event.delta.type? == "text_delta") | .event.delta.text'
+When you enable either option, Claude Code forwards messages from
+subagents at every nesting depth
+: when a subagent spawns its own subagent, the nested subagent’s messages carry the ID of the Agent tool call that spawned it in
+parent_tool_use_id
+, so you can rebuild the full nesting tree by following those IDs. Before v2.1.219, messages from nested subagents didn’t appear in the stream.
+​
+Handle API retries
 When an API request fails with a retryable error, Claude Code emits a
 system/api_retry
 event before retrying. You can use this to surface retry progress or implement custom backoff logic.
@@ -364,6 +373,8 @@ unique event identifier
 session_id
 string
 session the event belongs to
+​
+Read session metadata
 The
 system/init
 event reports session metadata including the model, tools, MCP servers, and loaded plugins. It is the first event in the stream unless startup events precede it:
@@ -388,10 +399,16 @@ The event also carries an optional
 capabilities
 array of strings naming the protocol behaviors this Claude Code version implements, such as
 interrupt_receipt_v1
+or
+interrupt_cancel_queued_v1
 . Check it to feature-detect instead of comparing version strings, and ignore values you don’t recognize. The field requires Claude Code v2.1.205 or later and is absent from earlier versions. See
 SDKSystemMessage
 for the capability list.
-Use the plugin fields to fail CI when a plugin did not load:
+​
+Fail CI when a plugin or MCP server doesn’t load
+Use the plugin fields in the
+system/init
+event to catch a plugin that didn’t load:
 Field
 Type
 Description
@@ -414,6 +431,51 @@ message
 load failures such as a missing path or invalid archive. Affected plugins are demoted and absent from
 plugins
 . The key is omitted when there are no errors
+Use the MCP server fields the same way. Claude Code validates each
+--mcp-config
+entry at startup and skips entries that fail validation, for example a
+url
+entry with no
+type
+; the run continues and exits cleanly, so check these fields to catch a server that never loaded:
+Field
+Type
+Description
+mcp_servers
+array
+MCP servers in the session, each with
+name
+and
+status
+mcp_server_errors
+array
+--mcp-config
+entries skipped by config validation, each with
+name
+,
+type
+, and
+message
+.
+type
+is a skip category such as
+unknown_type
+,
+url_missing_type
+,
+invalid_config
+, or
+reserved_name
+; treat values you don’t recognize as a generic skip. Affected servers are absent from
+mcp_servers
+. The key is omitted when there are no errors, so a CI gate can fail on a non-empty array. Requires Claude Code v2.1.219 or later
+When you run the command by hand in a terminal, Claude Code also prints a startup warning to stderr, such as
+Warning: 1 MCP server skipped due to invalid config:
+, followed by the reason for each skipped entry. When you redirect stderr, or when a program such as a CI runner or an SDK host captures it, Claude Code prints no warning and reports the skipped entries only in the
+mcp_server_errors
+field. The warning requires Claude Code v2.1.219 or later.
+​
+Track plugin installs
 When
 CLAUDE_CODE_SYNC_PLUGIN_INSTALL
 is set, Claude Code emits
@@ -460,9 +522,6 @@ unique event identifier
 session_id
 string
 session the event belongs to
-For programmatic streaming with callbacks and message objects, see
-Stream responses in real-time
-in the Agent SDK documentation.
 ​
 Auto-approve tools
 Use

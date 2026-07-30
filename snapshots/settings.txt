@@ -1596,6 +1596,22 @@ true
 locks all four surfaces; an array locks only the named ones. See
 strictPluginOnlyCustomization
 ["skills", "hooks"]
+switchModelsOnFlag
+Default
+:
+true
+. When a
+safety classifier flags a request
+, switch to the fallback model automatically and continue the session. Set to
+false
+to pause instead and choose between switching and editing the prompt. See
+Ask before switching
+. Appears in
+/config
+as
+Switch models when a message is flagged
+. Requires Claude Code v2.1.170 or later
+false
 syntaxHighlightingDisabled
 Disable syntax highlighting in diffs, code blocks, and file previews
 true
@@ -3070,7 +3086,7 @@ ignorePatterns
 configuration. Files matching these patterns are excluded from file discovery and search results, and read operations on these files are denied.
 ​
 Subagent configuration
-Claude Code supports custom AI subagents that can be configured at both user and project levels. These subagents are stored as Markdown files with YAML frontmatter:
+Claude Code supports custom AI subagents that can be configured at both user and project levels. You define each subagent as a Markdown file with YAML frontmatter, saved in one of these locations:
 User subagents
 :
 ~/.claude/agents/
@@ -3809,53 +3825,13 @@ field must match exactly (or both be undefined)
 The
 path
 field must match exactly (or both be undefined)
-Examples of sources that don’t match:
-// These are DIFFERENT sources:
-{
-"source"
-:
-"github"
-,
-"repo"
-:
-"acme-corp/plugins"
-}
-{
-"source"
-:
-"github"
-,
-"repo"
-:
-"acme-corp/plugins"
-,
-"ref"
-:
-"main"
-}
-// These are also DIFFERENT:
-{
-"source"
-:
-"github"
-,
-"repo"
-:
-"acme-corp/plugins"
-,
-"path"
-:
-"marketplace"
-}
-{
-"source"
-:
-"github"
-,
-"repo"
-:
-"acme-corp/plugins"
-}
+For example, Claude Code treats each pair below as two different sources:
+{ "source": "github", "repo": "acme-corp/plugins" }
+and
+{ "source": "github", "repo": "acme-corp/plugins", "ref": "main" }
+{ "source": "github", "repo": "acme-corp/plugins", "path": "marketplace" }
+and
+{ "source": "github", "repo": "acme-corp/plugins" }
 Comparison with
 extraKnownMarketplaces
 :

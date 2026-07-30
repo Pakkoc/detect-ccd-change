@@ -152,7 +152,7 @@ How evaluation works
 /goal
 is a wrapper around a session-scoped
 prompt-based Stop hook
-. Each time Claude finishes a turn, the condition and the conversation so far are sent to your configured
+. Each time Claude finishes a turn, Claude Code sends the condition and the conversation so far to your configured
 small fast model
 , which defaults to Haiku on the Claude API; on a third-party provider, check your
 provider page

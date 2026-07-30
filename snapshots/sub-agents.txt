@@ -481,7 +481,14 @@ Unique identifier using lowercase letters and hyphens.
 Hooks
 receive this value as
 agent_type
-. The filename doesn’t have to match
+. The filename doesn’t have to match.
+Names can’t contain
+:
+, which is reserved for
+plugin-scoped identifiers
+such as
+my-plugin:reviewer
+. Claude Code doesn’t load a file whose name contains one and logs an error to the debug log. Before v2.1.218, such names were accepted
 description
 Yes
 When Claude should delegate to this subagent
@@ -1335,6 +1342,18 @@ agent
 setting. In the main-session case they run alongside any hooks defined in
 settings.json
 .
+To let a project-level subagent’s frontmatter hooks run, accept the
+workspace trust dialog
+for the folder that contains the agent file. Hooks from user-level subagents in
+~/.claude/agents/
+and from definitions you pass with
+--agents
+run without this step. If you added a folder with
+--add-dir
+from outside your trusted workspace’s repository, trust that folder separately: its
+.claude/agents/
+hooks don’t inherit the workspace’s grant.
+Until you trust the folder, the subagent still runs, but Claude Code skips its frontmatter hooks and logs an error to the debug log explaining how to trust the folder. The grant is the same workspace trust approval that covers project settings and project-level hooks. Before v2.1.218, frontmatter hooks could run from folders you hadn’t trusted, including in non-interactive sessions.
 All
 hook events
 are supported. The most common events for subagents are:
@@ -1929,9 +1948,9 @@ Session persistence
 resume a subagent
 after restarting Claude Code by resuming the same session.
 Automatic cleanup
-: transcripts are cleaned up based on the
+: Claude Code deletes subagent transcripts after the
 cleanupPeriodDays
-setting, which defaults to 30 days.
+retention period, 30 days by default.
 ​
 Auto-compaction
 Subagents support automatic compaction using the same logic as the main conversation. Compaction triggers under the same conditions, and
