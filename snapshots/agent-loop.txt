@@ -591,8 +591,12 @@ permissionMode
 in TypeScript) controls whether the agent asks for approval before using tools:
 Mode
 Behavior
+Use case
 "default"
-Tools not covered by allow rules trigger your approval callback; no callback means deny
+Tools not covered by allow rules trigger your
+canUseTool
+callback; no callback means deny
+Interactive applications with a custom approval callback
 "acceptEdits"
 Auto-approves file edits and common filesystem commands (
 mkdir
@@ -603,10 +607,12 @@ mv
 ,
 cp
 , etc.); other Bash commands follow default rules
+You trust Claude’s edits and want faster iteration, such as during prototyping or when working in an isolated directory
 "plan"
 Claude explores and plans without editing your source files; file edits are never auto-approved and prompt through your
 canUseTool
 callback
+You want Claude to propose changes without executing them, such as during code review or when you need to approve changes before they’re made
 "dontAsk"
 Never prompts. Tools pre-approved by
 permission rules
@@ -618,10 +624,14 @@ ask
 , and MCP tools marked
 requiresUserInteraction
 are denied even if you’ve allowed them
+You want a fixed, explicit tool surface for a headless agent and prefer a hard deny over silent reliance on
+canUseTool
+being absent
 "auto"
 Uses a model classifier to approve or deny permission prompts. See
 Auto mode
 for availability and behavior
+Autonomous agents that still want safety guardrails on tool use
 "bypassPermissions"
 Runs all allowed tools without asking, except tools matched by an explicit
 ask
@@ -631,7 +641,12 @@ your organization set to
 ask
 , and tools that require user interaction; see
 How permissions are evaluated
-for the precedence order. Cannot be used when running as root on Unix. Use only in isolated environments where the agent’s actions cannot affect systems you care about
+for the precedence order. In the TypeScript SDK, also requires
+allowDangerouslySkipPermissions: true
+in
+options
+. Cannot be used when running as root on Unix. Use only in isolated environments where the agent’s actions cannot affect systems you care about
+CI, containers, or other isolated environments
 For interactive applications, use
 "default"
 with a tool approval callback to surface approval prompts. For autonomous agents on a dev machine,
