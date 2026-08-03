@@ -1,6 +1,8 @@
-Fullscreen rendering is an opt-in
+Fullscreen rendering is a
 research preview
-. Run
+. If you first used Claude Code on or after May 6, 2026, Claude Code renders fullscreen by default; run
+/tui default
+to switch back. If you started earlier, you keep the classic renderer; run
 /tui fullscreen
 to switch in your current conversation. Behavior may change based on feedback.
 Fullscreen rendering is an alternative rendering path for the Claude Code CLI that eliminates flicker, keeps memory usage flat in long conversations, and adds mouse support. It draws the interface on the terminal’s alternate screen buffer, like

@@ -448,7 +448,9 @@ for the order that rules are checked before a tool runs.
 permission_mode
 /
 permissionMode
-controls what happens to tools that aren’t covered by allow or deny rules. See
+controls how much human oversight you want. The SDK evaluates the active mode together with your allow and deny rules in a fixed order, described in
+How permissions are evaluated
+. See
 Permission mode
 for available modes.
 You can also scope individual tools with rules like

@@ -919,6 +919,12 @@ CwdChanged
 When the working directory changes, for example when Claude executes a
 cd
 command. Useful for reactive environment management with tools like direnv
+DirectoryAdded
+When a working directory is added mid-session via
+/add-dir
+or the SDK
+register_repo_root
+control request
 FileChanged
 When a watched file changes on disk. The
 matcher
@@ -1040,39 +1046,44 @@ Hooks communicate with Claude Code through stdin, stdout, stderr, and exit codes
 Hook input
 Every event includes common fields like
 session_id
-and
+, a unique ID for the session, and
 cwd
-, but each event type adds different data. For example, when Claude runs a Bash command, a
+, the working directory when the event fired, but each event type adds different data. When Claude runs a Bash command, a
 PreToolUse
-hook receives something like this on stdin:
+hook receives these fields on stdin:
+hook_event_name
+: the event that triggered the hook
+tool_name
+: the tool Claude is about to use
+tool_input
+: the arguments Claude passed to the tool. For Bash, its
+command
+field holds the shell command.
+For example, the hook input for an
+npm test
+command looks like this:
 {
 "session_id"
 :
 "abc123"
 ,
-// unique ID for this session
 "cwd"
 :
 "/Users/sarah/myproject"
 ,
-// working directory when the event fired
 "hook_event_name"
 :
 "PreToolUse"
 ,
-// which event triggered this hook
 "tool_name"
 :
 "Bash"
 ,
-// the tool Claude is about to use
 "tool_input"
 : {
-// the arguments Claude passed to the tool
 "command"
 :
 "npm test"
-// for Bash, this is the shell command
 }
 }
 Your script can parse that JSON and act on any of those fields.

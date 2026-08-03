@@ -582,7 +582,9 @@ private repository
 Submit your plugin to the community marketplace
 Anthropic maintains two public marketplaces for Claude Code plugins:
 claude-plugins-official
-: a curated set of plugins maintained by Anthropic. Registered automatically the first time you start Claude Code interactively. A non-interactive script that runs before that first launch must add it explicitly with
+: a curated set of plugins maintained by Anthropic. Claude Code registers it automatically the first time you start Claude Code interactively. If you run Claude Code non-interactively before that first interactive launch, or a
+marketplace policy
+blocked an earlier attempt, register it yourself with
 claude plugin marketplace add anthropics/claude-plugins-official
 .
 claude-community

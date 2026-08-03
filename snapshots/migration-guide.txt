@@ -16,11 +16,9 @@ claude-code-sdk
 claude-agent-sdk
 Documentation Location
 Claude Code docs
-API Guide → Agent SDK section
-Documentation Changes:
-The Agent SDK documentation has moved from the Claude Code docs to the API Guide under a dedicated
+Claude Code docs → dedicated
 Agent SDK
-section. The Claude Code docs now focus on the CLI tool and automation features.
+section
 ​
 Migration Steps
 ​

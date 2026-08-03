@@ -340,7 +340,7 @@ fullscreen rendering
 Jump to the previous or next user prompt, like vim paragraph motion. Requires
 fullscreen rendering
 Ctrl+E
-Toggle show all content. Available in the default renderer only, not in
+Toggle show all content. Available in the classic renderer only, not in
 fullscreen rendering
 [
 Write the full conversation to your terminal’s native scrollback so
@@ -733,7 +733,7 @@ or
 Tab
 to place a match in the prompt input, or
 Esc
-to cancel. The steps below describe the default inline search:
+to cancel. The steps below describe the classic renderer’s inline search:
 Start search
 : press
 Ctrl+R

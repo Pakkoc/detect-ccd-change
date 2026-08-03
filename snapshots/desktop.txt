@@ -643,7 +643,8 @@ on macOS or
 Ctrl+;
 on Windows to open a side chat, or type
 /btw
-in the prompt box. The side chat can read everything in the main thread up to that point. When you’re done, close the side chat and continue the main session where you left off. Side chats are available in local, SSH, and WSL sessions.
+in the prompt box. The side chat can read everything in the main thread up to that point. When you’re done, close the side chat and continue the main session where you left off.
+Side chats are available in local, SSH, and WSL sessions. The desktop app doesn’t save side chats to disk, so you can’t return to one after you close the app.
 ​
 Watch background tasks
 The tasks pane shows the background work running inside the current session: subagents, background shell commands, and

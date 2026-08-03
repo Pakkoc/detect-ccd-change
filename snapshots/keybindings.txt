@@ -295,7 +295,7 @@ transcript:exit
 q, Ctrl+C, Escape
 Exit transcript view
 transcript:toggleShowAll
-applies in the default renderer only; in
+applies in the classic renderer only; in
 fullscreen rendering
 , the transcript viewer doesn’t offer a show-all toggle.
 ​
@@ -329,7 +329,7 @@ historySearch:accept
 historySearch:cancel
 , and
 historySearch:execute
-defaults apply to the inline history search in the default renderer, which always searches prompts from all projects.
+defaults apply to the inline history search in the classic renderer, which always searches prompts from all projects.
 historySearch:cycleScope
 takes effect only in
 fullscreen rendering

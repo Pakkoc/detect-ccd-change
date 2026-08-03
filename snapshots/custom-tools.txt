@@ -1063,10 +1063,6 @@ from
 claude_agent_sdk
 import
 tool
-from
-claude_agent_sdk
-import
-tool
 @tool
 (
 "fetch_data"
@@ -1385,10 +1381,6 @@ import
 base64
 import
 httpx
-from
-claude_agent_sdk
-import
-tool
 from
 claude_agent_sdk
 import
