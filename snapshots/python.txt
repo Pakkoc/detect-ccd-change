@@ -2692,8 +2692,7 @@ window, so worst-case wall time is roughly
 API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)
 plus backoff. For unattended runs that need to wait through longer outages, set
 CLAUDE_CODE_RETRY_WATCHDOG=1
-: it retries capacity errors indefinitely, and
-as of Claude Code v2.1.199 raises the default for other transient errors to
+: it retries capacity errors indefinitely, and as of Claude Code v2.1.199 raises the default for other transient errors to
 300
 and removes the cap on this variable.
 CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
@@ -6550,8 +6549,7 @@ names the model the subagent started on, which can differ from the requested
 model
 input when
 availableModels
-or another override applies.
-This field requires Claude Code v2.1.174 or later. On the
+or another override applies. This field requires Claude Code v2.1.174 or later. On the
 async_launched
 variant,
 resolvedModel
@@ -6790,8 +6788,7 @@ command
 or
 ws
 .
-When Monitor runs a command, it follows the same permission rules as Bash; a WebSocket watch prompts for approval separately.
-The
+When Monitor runs a command, it follows the same permission rules as Bash; a WebSocket watch prompts for approval separately. The
 ws
 source requires Claude Code v2.1.195 or later. See the
 Monitor tool reference
@@ -7683,8 +7680,7 @@ is still accepted as an alias.
 TaskOutput
 is deprecated; prefer
 Read
-on the task’s output file path.
-Deprecated since Claude Code v2.1.83. The schemas below remain valid for hooks and permission handlers that encounter the tool.
+on the task’s output file path. Deprecated since Claude Code v2.1.83. The schemas below remain valid for hooks and permission handlers that encounter the tool.
 Input:
 {
 "task_id"
@@ -9413,7 +9409,5 @@ Common workflows
 Was this page helpful?
 Yes
 No
-TypeScript V2 (removed)
-Migration Guide
 ⌘
 I

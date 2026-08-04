@@ -786,7 +786,5 @@ Claude Enterprise Administrator Guide
 Was this page helpful?
 Yes
 No
-Server-managed settings
-Auto mode
 ⌘
 I

@@ -2599,7 +2599,5 @@ Settings
 Was this page helpful?
 Yes
 No
-Hooks reference
-Channels reference
 ⌘
 I

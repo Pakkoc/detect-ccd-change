@@ -56,8 +56,7 @@ or the
 agent
 setting continues as that agent, keeping its system prompt, tool restrictions, and model. Pass
 --agent
-when resuming to pick a different one.
-Claude Code looks for the agent in two places: the session’s original directory, provided you have
+when resuming to pick a different one. Claude Code looks for the agent in two places: the session’s original directory, provided you have
 trusted that workspace
 , and then the directory you resume from, so a project-scoped agent still loads when you resume from another directory. If Claude Code doesn’t find the agent in either place, the session resumes with the default tools and system prompt and shows a
 warning naming the agent
@@ -143,8 +142,7 @@ later in a conversation doesn’t hide the session. Before v2.1.211, a
 run early in a conversation hid the session from the picker permanently.
 From v2.1.169, moving a session with
 /cd
-relocates it to the new directory’s project storage, so it appears in that directory’s picker afterward.
-As of v2.1.196, a moved session stays out of the old directory’s picker even after a crash or forced exit. On earlier versions, it could also reappear in the old directory’s list after an exit that wasn’t clean when the old path contained special characters such as underscores.
+relocates it to the new directory’s project storage, so it appears in that directory’s picker afterward. As of v2.1.196, a moved session stays out of the old directory’s picker even after a crash or forced exit. On earlier versions, it could also reappear in the old directory’s list after an exit that wasn’t clean when the old path contained special characters such as underscores.
 When you select a session from another worktree of the same repository, Claude Code resumes it in place. When you select a session from an unrelated project, Claude Code copies a
 cd
 and resume command to your clipboard instead.
@@ -314,8 +312,7 @@ These commands control what’s in the context window without leaving the sessio
 /clear
 : start fresh with an empty context. Claude Code saves the previous conversation; resume it with
 /resume
-, or, in the same Claude Code process,
-from
+, or, in the same Claude Code process, from
 the rewind menu’s previous-session entry
 . You keep a name you set with
 --name
@@ -429,7 +426,5 @@ claude -p
 Was this page helpful?
 Yes
 No
-Permission modes
-Common workflows
 ⌘
 I

@@ -356,7 +356,5 @@ to define what Claude Code can and cannot do in your environment.
 Was this page helpful?
 Yes
 No
-Auto mode
-Feature availability
 ⌘
 I

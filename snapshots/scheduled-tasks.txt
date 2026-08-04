@@ -97,8 +97,7 @@ loop.md
 if one exists
 You can also pass a skill as the prompt, for example
 /loop 20m /review-pr 1234
-, to re-run that skill each iteration.
-As of v2.1.196, a scheduled fire only runs skills that Claude is
+, to re-run that skill each iteration. As of v2.1.196, a scheduled fire only runs skills that Claude is
 allowed to invoke on its own
 . The following reach Claude as plain text instead of executing:
 Built-in commands such as
@@ -384,7 +383,5 @@ Desktop scheduled tasks
 Was this page helpful?
 Yes
 No
-Push external events to Claude
-Goals
 ⌘
 I

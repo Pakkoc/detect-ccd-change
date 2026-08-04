@@ -2714,7 +2714,5 @@ SDK Overview
 Was this page helpful?
 Yes
 No
-Get structured output from agents
-Connect to external tools with MCP
 ⌘
 I

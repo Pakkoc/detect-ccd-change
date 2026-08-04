@@ -161,8 +161,7 @@ or
 rmdir
 commands that target
 /
-, your home directory, or other critical system paths still trigger a permission prompt
-, or a classifier check in
+, your home directory, or other critical system paths still trigger a permission prompt, or a classifier check in
 auto mode
 ; the classifier routing requires Claude Code v2.1.218 or later
 Content-scoped
@@ -174,8 +173,7 @@ A bare
 Bash
 ask rule, or the equivalent
 Bash(*)
-form, is skipped for commands that run sandboxed; it still applies to commands that fall back to the regular permission flow.
-In
+form, is skipped for commands that run sandboxed; it still applies to commands that fall back to the regular permission flow. In
 plan mode
 , the rule isn’t skipped: it prompts for sandboxed commands too, including read-only ones. Before v2.1.212, the skip applied in plan mode as well
 Regular permissions mode
@@ -217,8 +215,7 @@ plan mode
 . Even if you’re not in “accept edits” mode, sandboxed Bash commands run automatically when auto-allow is enabled. This means Bash commands that modify files within the sandbox boundaries execute without prompting, even when file edit tools would normally require approval.
 In plan mode, auto-allow doesn’t widen approvals. Bash commands outside the
 built-in read-only set
-prompt for approval even with auto-allow enabled
-, or go to the classifier when
+prompt for approval even with auto-allow enabled, or go to the classifier when
 auto mode
 is available and
 useAutoModeDuringPlan
@@ -696,8 +693,7 @@ sandbox.filesystem.disabled
 Network isolation
 Network access is controlled through a proxy server running outside the sandbox:
 Domain restrictions
-: no domains are pre-allowed by default. The first time a command needs a new domain, Claude Code prompts for approval.
-As of v2.1.191, choosing Yes allows the host for the rest of the current session, so later connections to the same host do not prompt again. Pre-allow domains with
+: no domains are pre-allowed by default. The first time a command needs a new domain, Claude Code prompts for approval. As of v2.1.191, choosing Yes allows the host for the rest of the current session, so later connections to the same host do not prompt again. Pre-allow domains with
 allowedDomains
 to avoid the prompt entirely.
 WebFetch
@@ -705,8 +701,7 @@ allow rules also pre-allow domains, as described in
 Permission rules
 .
 Strict allowlist
-:
-if you set
+: if you set
 strictAllowlist
 to
 true
@@ -739,8 +734,7 @@ Custom proxy support
 : advanced users can implement custom rules on outgoing traffic
 Comprehensive coverage
 : restrictions apply to all scripts, programs, and subprocesses spawned by commands
-The built-in proxy enforces the allowlist based on the requested hostname and, by default, does not terminate or inspect TLS traffic.
-The experimental
+The built-in proxy enforces the allowlist based on the requested hostname and, by default, does not terminate or inspect TLS traffic. The experimental
 network.tlsTerminate
 setting, available in Claude Code v2.1.199 and later, makes the built-in proxy terminate TLS itself, which
 mask
@@ -1089,8 +1083,7 @@ Settings files protected
 settings.json
 files at every scope and to the managed settings directory, so a sandboxed command can’t modify its own policy unless you
 disable filesystem isolation
-, which turns these deny rules off.
-The deny rules resolve symlinks: when a symlink appears at a protected settings file path after startup, the sandbox adds its target to the deny list for the next command, so a linked settings file can’t be edited through the link. Before v2.1.210, the deny rules didn’t resolve symlinks.
+, which turns these deny rules off. The deny rules resolve symlinks: when a symlink appears at a protected settings file path after startup, the sandbox adds its target to the deny list for the next command, so a linked settings file can’t be edited through the link. Before v2.1.210, the deny rules didn’t resolve symlinks.
 ​
 Platform and tool compatibility
 Platform support
@@ -1146,7 +1139,5 @@ CLI reference
 Was this page helpful?
 Yes
 No
-Sandbox environments
-Cloud environments
 ⌘
 I

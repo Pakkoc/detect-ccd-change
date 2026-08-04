@@ -575,7 +575,5 @@ in the job. Use different prompts for different jobs (for example, review, imple
 Was this page helpful?
 Yes
 No
-GitHub Enterprise Server
-Claude Code in Slack
 ⌘
 I

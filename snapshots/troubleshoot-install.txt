@@ -1036,8 +1036,7 @@ that exists. If you set
 ZDOTDIR
 , the Zsh file is
 $ZDOTDIR/.zshrc
-instead.
-When one of those paths is a directory, Claude Code skips it and both commands complete normally. Before v2.1.214, a directory at one of those paths made both commands hang and left the System diagnostics section of
+instead. When one of those paths is a directory, Claude Code skips it and both commands complete normally. Before v2.1.214, a directory at one of those paths made both commands hang and left the System diagnostics section of
 /status
 blank.
 claude doctor
@@ -1121,8 +1120,7 @@ in PowerShell and use the
 bin\bash.exe
 path from that directory.
 If the path is correct and the file exists
-but Claude Code still doesn’t use it, check the file’s name first.
-Claude Code accepts only a file named
+but Claude Code still doesn’t use it, check the file’s name first. Claude Code accepts only a file named
 bash.exe
 ,
 sh.exe
@@ -1417,8 +1415,7 @@ npm package downloads the native binary as a per-platform optional dependency, s
 claude
 command; until it runs,
 claude
-is a placeholder script.
-If either the download or the postinstall step is skipped, the placeholder stays in place, and running
+is a placeholder script. If either the download or the postinstall step is skipped, the placeholder stays in place, and running
 claude
 on macOS and Linux prints:
 Error: claude native binary not installed.
@@ -1474,8 +1471,7 @@ win32-x64
 win32-arm64
 . Claude Code does not ship a binary for other platforms; see the
 system requirements
-.
-On FreeBSD, the installer reports the platform as unsupported. Before v2.1.205, it treated FreeBSD as Linux and downloaded a binary that couldn’t run.
+. On FreeBSD, the installer reports the platform as unsupported. Before v2.1.205, it treated FreeBSD as Linux and downloaded a binary that couldn’t run.
 Corporate npm mirror is missing the platform packages.
 Ensure your registry mirrors all eight
 @anthropic-ai/claude-code-*
@@ -1586,8 +1582,7 @@ If Claude Code prompts you to log in again after a session, your OAuth token may
 Run
 /login
 to re-authenticate. If this happens frequently, check that your system clock is accurate, as token validation depends on correct timestamps.
-Parallel sessions on one machine share a saved login and coordinate its renewal so that only one process refreshes the token at a time.
-Before v2.1.211, waking the machine from sleep could cause two sessions to renew with the same token, which revoked the saved login and prompted every open session to log in again at once.
+Parallel sessions on one machine share a saved login and coordinate its renewal so that only one process refreshes the token at a time. Before v2.1.211, waking the machine from sleep could cause two sessions to renew with the same token, which revoked the saved login and prompted every open session to log in again at once.
 On macOS, login can also fail when the Keychain is locked or its password is out of sync with your account password, which prevents Claude Code from saving credentials. Run
 claude doctor
 to check Keychain access. To unlock the Keychain manually, run
@@ -1656,7 +1651,5 @@ for the full flow.
 Was this page helpful?
 Yes
 No
-Monorepos and large repos
-Troubleshoot performance and stability
 ⌘
 I

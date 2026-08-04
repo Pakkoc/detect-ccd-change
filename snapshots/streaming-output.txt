@@ -1238,7 +1238,5 @@ Permissions
 Was this page helpful?
 Yes
 No
-Handle approvals and user input
-Get structured output from agents
 ⌘
 I

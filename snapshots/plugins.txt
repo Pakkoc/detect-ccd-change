@@ -793,7 +793,5 @@ MCP
 Was this page helpful?
 Yes
 No
-Discover and install prebuilt plugins
-Share session output as artifacts
 ⌘
 I

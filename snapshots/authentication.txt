@@ -246,8 +246,7 @@ Slow helper notice
 apiKeyHelper
 takes longer than 10 seconds to return a key, Claude Code displays a warning notice in the prompt bar showing the elapsed time. If you see this notice regularly, check whether your credential script can be optimized.
 Helper failures
-:
-when the script exits with an error, times out, or prints nothing, requests fail with
+: when the script exits with an error, times out, or prints nothing, requests fail with
 Your apiKeyHelper script is failing
 within three attempts. Before v2.1.208, helper failures surfaced as a generic 401 after about ten silent retries.
 apiKeyHelper
@@ -266,8 +265,7 @@ When the login you created with
 /login
 is within three days of expiring, Claude Code shows a warning at startup:
 Your login expires in 3 days · run /login to renew
-. Requires Claude Code v2.1.203 or later.
-Before v2.1.217, the warning appeared five days out.
+. Requires Claude Code v2.1.203 or later. Before v2.1.217, the warning appeared five days out.
 Run
 /login
 to renew. The warning is informational and never blocks a request: authentication keeps working until the login actually expires. The login lifetime itself is unchanged; the advance warning is what v2.1.203 adds.
@@ -394,7 +392,5 @@ instead.
 Was this page helpful?
 Yes
 No
-Advanced setup
-Server-managed settings
 ⌘
 I

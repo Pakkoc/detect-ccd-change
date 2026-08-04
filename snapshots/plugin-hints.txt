@@ -11,8 +11,7 @@ environment variable to
 1
 for every command it runs through the Bash and PowerShell tools, and for
 hook
-commands.
-From v2.1.172 it also sets
+commands. From v2.1.172 it also sets
 CLAUDE_CODE_CHILD_SESSION
 to
 1
@@ -234,7 +233,5 @@ and related variables
 Was this page helpful?
 Yes
 No
-Plugin dependency versions
-Recommend plugins for your org
 ⌘
 I

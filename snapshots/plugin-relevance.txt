@@ -36,16 +36,14 @@ plugin” message with the
 /plugin install
 command appears below the spinner while Claude is responding.
 Session-start suggestion
-:
-if the
+: if the
 cwd
 signal matches the working directory, a one-line
 plugin suggestion: <name>@<marketplace> · /plugin
 notification appears before the first turn. This surface requires Claude Code v2.1.153 or later.
 /plugin
 Discover tab
-:
-the plugin is pinned to the top of the Discover list with an annotation such as “suggested for this directory” or “suggested for stripe commands”. This surface requires Claude Code v2.1.154 or later.
+: the plugin is pinned to the top of the Discover list with an annotation such as “suggested for this directory” or “suggested for stripe commands”. This surface requires Claude Code v2.1.154 or later.
 The spinner tip and the session-start notification are part of the spinner-tips system. Both are disabled when the user or project sets
 spinnerTipsEnabled
 to
@@ -380,7 +378,5 @@ extraKnownMarketplaces
 Was this page helpful?
 Yes
 No
-Recommend your plugin from your CLI
-Security
 ⌘
 I

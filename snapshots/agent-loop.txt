@@ -522,8 +522,7 @@ Options
 for syntax.
 The budget cap covers
 subagents
-: their spend counts toward the total.
-Once spend reaches the cap, spawning another subagent fails with
+: their spend counts toward the total. Once spend reaches the cap, spawning another subagent fails with
 Budget limit reached
 , and Claude Code stops any background subagents still running. The cap-enforcement behaviors require Claude Code v2.1.217 or later.
 With
@@ -1330,7 +1329,5 @@ on the blog.
 Was this page helpful?
 Yes
 No
-Quickstart
-Use Claude Code features
 ⌘
 I

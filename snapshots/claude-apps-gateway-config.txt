@@ -1317,8 +1317,7 @@ variables without showing the developer the approval dialog, such as model selec
 OTEL_EXPORTER_OTLP_ENDPOINT
 value always does. When a delivered variable needs approval, the dialog names it.
 Environment variables and the approval dialog
-has the details, including four privacy toggles whose delivered value decides whether they need approval.
-Before v2.1.218, Claude Code applied fewer variables without asking the developer, so more delivered variables triggered the dialog.
+has the details, including four privacy toggles whose delivered value decides whether they need approval. Before v2.1.218, Claude Code applied fewer variables without asking the developer, so more delivered variables triggered the dialog.
 The gateway’s
 telemetry
 configuration pushes
@@ -2012,7 +2011,5 @@ Spend limits
 Was this page helpful?
 Yes
 No
-Claude apps gateway
-Spend limits
 ⌘
 I

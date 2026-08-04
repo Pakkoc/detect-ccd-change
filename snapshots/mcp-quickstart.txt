@@ -629,7 +629,5 @@ with the MCP SDK
 Was this page helpful?
 Yes
 No
-Isolate sessions with worktrees
-Reference
 ⌘
 I

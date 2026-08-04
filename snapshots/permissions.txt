@@ -93,8 +93,7 @@ settings files
 Mode
 Description
 default
-Standard behavior: prompts for permission on first use of each tool.
-Labeled Manual in the CLI, the VS Code and JetBrains extensions, and the desktop app, and Claude Code accepts
+Standard behavior: prompts for permission on first use of each tool. Labeled Manual in the CLI, the VS Code and JetBrains extensions, and the desktop app, and Claude Code accepts
 manual
 as an alias. The label and alias require Claude Code v2.1.200 or later. The desktop app’s label doesn’t depend on your CLI version
 acceptEdits
@@ -171,8 +170,7 @@ still prompt. Removals targeting the filesystem root or home directory, such as
 rm -rf /
 and
 rm -rf ~
-, also prompt as a circuit breaker against model error,
-including when the command contains command substitution with
+, also prompt as a circuit breaker against model error, including when the command contains command substitution with
 $(...)
 or backticks, or process substitution with
 <(...)
@@ -1395,8 +1393,7 @@ form
 : the sandbox boundary substitutes for that whole-tool prompt.
 In
 plan mode
-, Claude Code skips this substitution. Without an ask rule, the built-in read-only commands still run without prompting, and any other shell command prompts for approval while you are still planning
-, or goes to the classifier when
+, Claude Code skips this substitution. Without an ask rule, the built-in read-only commands still run without prompting, and any other shell command prompts for approval while you are still planning, or goes to the classifier when
 auto mode
 is available and
 useAutoModeDuringPlan
@@ -1413,8 +1410,7 @@ or
 rmdir
 commands that target
 /
-, your home directory, or other critical system paths still trigger a prompt
-, or a classifier check in
+, your home directory, or other critical system paths still trigger a prompt, or a classifier check in
 auto mode
 ; the classifier routing requires Claude Code v2.1.218 or later
 Commands that won’t run sandboxed, such as excluded commands, respect the bare
@@ -1656,7 +1652,5 @@ Hooks
 Was this page helpful?
 Yes
 No
-Settings
-Sandbox environments
 ⌘
 I

@@ -301,7 +301,5 @@ Non-interactive mode
 Was this page helpful?
 Yes
 No
-Programmatic usage
-Monorepos and large repos
 ⌘
 I

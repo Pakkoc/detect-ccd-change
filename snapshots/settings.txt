@@ -1,7 +1,6 @@
 Claude Code offers a variety of settings to configure its behavior to meet your needs. You can configure Claude Code by running the
 /config
-command in an interactive session, which opens a tabbed Settings interface where you can view status information and modify configuration options.
-From v2.1.181, you can change a single option without opening the interface by passing
+command in an interactive session, which opens a tabbed Settings interface where you can view status information and modify configuration options. From v2.1.181, you can change a single option without opening the interface by passing
 key=value
 to
 /config
@@ -584,8 +583,7 @@ flag, and managed settings only. Ignored in project
 .claude/settings.json
 and local
 .claude/settings.local.json
-.
-Before v2.1.207,
+. Before v2.1.207,
 .claude/settings.local.json
 was also read
 {"soft_deny": ["$defaults", "Never run terraform apply"]}
@@ -711,8 +709,7 @@ older than this period at startup. Setting
 0
 fails with a validation error. The same age cutoff applies to automatic removal of
 orphaned worktrees
-at startup.
-If Claude Code can’t read or parse a settings file, it pauses the retention cleanup sweep and shows a warning in
+at startup. If Claude Code can’t read or parse a settings file, it pauses the retention cleanup sweep and shows a warning in
 /status
 until you fix the file, unless
 managed settings
@@ -996,8 +993,7 @@ false
 enableAllProjectMcpServers
 Automatically approve all MCP servers defined in project
 .mcp.json
-files.
-As of v2.1.196,
+files. As of v2.1.196,
 claude mcp list
 and
 claude mcp get
@@ -1026,8 +1022,7 @@ true
 enabledMcpjsonServers
 List of specific MCP servers from
 .mcp.json
-files to approve.
-As of v2.1.196,
+files to approve. As of v2.1.196,
 claude mcp list
 and
 claude mcp get
@@ -1058,8 +1053,7 @@ and
 FORCE_COLOR
 set here reach only subprocesses; to change Claude Code’s own interface colors, set them in your shell before launching
 claude
-.
-As of v2.1.195, identity variables that Claude Code’s hosting environments set, for example
+. As of v2.1.195, identity variables that Claude Code’s hosting environments set, for example
 CLAUDE_CODE_REMOTE
 and
 CLAUDE_CODE_ACCOUNT_UUID
@@ -1146,8 +1140,7 @@ to restrict login to Claude Console accounts, or
 gateway
 to restrict login to a cloud gateway; see
 Claude apps gateway
-.
-On Claude Code v2.1.212 or later, every first-party login path enforces the restriction, including the
+. On Claude Code v2.1.212 or later, every first-party login path enforces the restriction, including the
 VS Code extension
 , the Agent SDK,
 claude setup-token
@@ -1225,8 +1218,7 @@ Configure Claude’s preferred response language (e.g.,
 "french"
 ). Claude will respond in this language by default. Also sets the language for
 voice dictation
-and auto-generated session titles.
-As of v2.1.176, when not set, session titles match the language of your conversation
+and auto-generated session titles. As of v2.1.176, when not set, session titles match the language of your conversation
 "japanese"
 minimumVersion
 Floor that prevents background auto-updates and
@@ -1704,8 +1696,7 @@ settings.json
 /effort ultracode
 ,
 --settings
-, or an Agent SDK control request.
-To start a session with ultracode already on, launch with
+, or an Agent SDK control request. To start a session with ultracode already on, launch with
 claude --effort ultracode
 , which requires Claude Code v2.1.203 or later
 true
@@ -1829,8 +1820,7 @@ large
 Dynamic workflow size
 choice in
 /config
-, and Claude Code hides that row while a settings file sets the key. Requires Claude Code v2.1.219 or later;
-on v2.1.202 through v2.1.218, set the guideline in
+, and Claude Code hides that row while a settings file sets the key. Requires Claude Code v2.1.219 or later; on v2.1.202 through v2.1.218, set the guideline in
 /config
 instead
 "small"
@@ -1997,8 +1987,7 @@ Edit
 Write
 in the main checkout until
 EnterWorktree
-is called.
-Outside a git repository, a
+is called. Outside a git repository, a
 WorktreeCreate
 hook
 that fails releases the block so the session can edit the working directory in place; requires Claude Code v2.1.203 or later.
@@ -2978,8 +2967,7 @@ Two array settings do not merge this way:
 fallbackModel
 is an ordered chain where position carries meaning: the highest-precedence file that defines it supplies the entire value.
 availableModels
-:
-when the
+: when the
 highest-precedence managed source
 defines it, that list applies as-is and user, project, and local entries cannot extend it. Across non-managed scopes the arrays merge as usual. See
 Merge behavior
@@ -3318,8 +3306,7 @@ object (alongside
 repo
 or
 url
-) to skip Git LFS downloads when Claude Code clones or updates the marketplace repository. LFS pointer files remain as pointers instead of downloading their content. Use this when the repository contains large LFS objects unrelated to plugin content.
-Requires Claude Code v2.1.153 or later.
+) to skip Git LFS downloads when Claude Code clones or updates the marketplace repository. LFS pointer files remain as pointers instead of downloading their content. Use this when the repository contains large LFS objects unrelated to plugin content. Requires Claude Code v2.1.153 or later.
 Each marketplace entry also accepts an optional
 autoUpdate
 Boolean. Set
@@ -4040,6 +4027,5 @@ Troubleshoot installation and login
 Was this page helpful?
 Yes
 No
-Permissions
 ⌘
 I

@@ -7,8 +7,7 @@ settings.json
 Proxy configuration
 ​
 Environment variables
-Claude Code respects standard proxy environment variables.
-In Claude Desktop sessions where the app manages the provider connection, Claude Code reads them only from managed settings and
+Claude Code respects standard proxy environment variables. In Claude Desktop sessions where the app manages the provider connection, Claude Code reads them only from managed settings and
 ~/.claude/settings.json
 ; see
 mTLS authentication
@@ -428,7 +427,5 @@ Troubleshooting guide
 Was this page helpful?
 Yes
 No
-Microsoft Foundry
-Corporate launcher
 ⌘
 I

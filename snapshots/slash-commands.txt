@@ -1362,7 +1362,5 @@ CLI reference
 Was this page helpful?
 Yes
 No
-Modifying system prompts
-Agent Skills in the SDK
 ⌘
 I

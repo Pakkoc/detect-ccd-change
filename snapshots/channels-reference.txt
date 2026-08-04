@@ -2413,7 +2413,5 @@ to package your channel so users can install it with
 Was this page helpful?
 Yes
 No
-Plugins reference
-Glossary
 ⌘
 I

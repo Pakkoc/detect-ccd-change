@@ -633,7 +633,5 @@ Set up Claude Code for your organization
 Was this page helpful?
 Yes
 No
-Connect to a gateway
-Protocol reference
 ⌘
 I

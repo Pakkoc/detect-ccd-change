@@ -118,14 +118,12 @@ Ctrl+P
 /
 Ctrl+N
 Move cursor or navigate command history
-When the input spans more than one visual row, whether wrapped or multiline, first moves the cursor within the prompt. Once the cursor is on the first or last visual row, pressing again navigates command history.
-As of v2.1.169, wrapped single-line input behaves the same as multiline
+When the input spans more than one visual row, whether wrapped or multiline, first moves the cursor within the prompt. Once the cursor is on the first or last visual row, pressing again navigates command history. As of v2.1.169, wrapped single-line input behaves the same as multiline
 Esc
 Interrupt Claude, or close a dialog
 Stop the current response or tool call mid-turn so you can redirect. Claude keeps the work done so far. When a dialog such as a permission prompt is open,
 Esc
-closes the dialog rather than interrupting Claude.
-Before v2.1.202,
+closes the dialog rather than interrupting Claude. Before v2.1.202,
 Esc
 on some dialogs interrupted Claude and left the dialog open
 Esc
@@ -140,8 +138,7 @@ recalls it. When the input is empty, double
 Esc
 opens the
 rewind menu
-to restore or summarize code and conversation from a previous point.
-Before v2.1.216, double
+to restore or summarize code and conversation from a previous point. Before v2.1.216, double
 Esc
 at an empty prompt could stop opening the menu for the rest of a long-running session that used background tasks
 Shift+Tab
@@ -173,8 +170,7 @@ Option+T
 Alt+T
 (Windows/Linux)
 Toggle extended thinking
-Enable or disable extended thinking mode. Has no effect on Fable 5, which always uses extended thinking.
-As of v2.1.132 this shortcut works on macOS without configuring Option as Meta
+Enable or disable extended thinking mode. Has no effect on Fable 5, which always uses extended thinking. As of v2.1.132 this shortcut works on macOS without configuring Option as Meta
 Option+O
 (macOS) or
 Alt+O
@@ -301,15 +297,13 @@ Type a full
 :name:
 to insert the emoji, or two or more characters for suggestions. See
 Emoji shortcodes
-.
-Requires Claude Code v2.1.217 or later
+. Requires Claude Code v2.1.217 or later
 ?
 on empty input
 Toggle the shortcut help panel
 Typing
 ?
-when the input already contains text inserts the character.
-Before v2.1.211, an edit that left a lone
+when the input already contains text inserts the character. Before v2.1.211, an edit that left a lone
 ?
 in the input, such as backspacing from
 ?x
@@ -443,8 +437,7 @@ The
 vimInsertModeRemaps
 setting maps a two-key INSERT-mode sequence to Escape, so a mapping like
 jj
-returns you to NORMAL mode.
-Requires Claude Code v2.1.208 or later.
+returns you to NORMAL mode. Requires Claude Code v2.1.208 or later.
 The following
 ~/.claude/settings.json
 example turns on vim mode and maps
@@ -520,8 +513,7 @@ Repeat last f/F/t/T motion in reverse
 /
 Open reverse history search, same as
 Ctrl+R
-.
-As of v2.1.191, the empty search prompt shows a hint: press
+. As of v2.1.191, the empty search prompt shows a hint: press
 Esc
 then
 i
@@ -570,11 +562,9 @@ ce
 cb
 Change word/to end/back
 s
-Substitute character: delete the character under the cursor and enter INSERT mode.
-Requires Claude Code v2.1.211 or later
+Substitute character: delete the character under the cursor and enter INSERT mode. Requires Claude Code v2.1.211 or later
 S
-Substitute line: clear the line and enter INSERT mode.
-Requires Claude Code v2.1.211 or later
+Substitute line: clear the line and enter INSERT mode. Requires Claude Code v2.1.211 or later
 yy
 /
 Y
@@ -598,8 +588,7 @@ Join lines
 u
 Undo
 .
-Repeat last change.
-Before v2.1.216, repeating a change operator such as
+Repeat last change. Before v2.1.216, repeating a change operator such as
 cw
 or
 cc
@@ -793,8 +782,7 @@ to turn this off. Requires Claude Code v2.1.193 or later. Background commands ow
 subagent
 are instead terminated after 60 minutes, configurable in milliseconds with
 CLAUDE_SUBAGENT_BG_SHELL_MAX_MS
-.
-Before v2.1.218, neither limit covered commands moved to the background with
+. Before v2.1.218, neither limit covered commands moved to the background with
 Ctrl+B
 To disable all background task functionality, set the
 CLAUDE_CODE_DISABLE_BACKGROUND_TASKS
@@ -901,8 +889,7 @@ false
 Emoji shortcodes
 Type a
 :
-followed by an emoji shortcode in the prompt input to insert the emoji.
-Requires Claude Code v2.1.217 or later.
+followed by an emoji shortcode in the prompt input to insert the emoji. Requires Claude Code v2.1.217 or later.
 Type a complete shortcode such as
 :heart:
 and Claude Code replaces it with ❤️ as soon as you type the closing
@@ -1058,7 +1045,5 @@ Memory management
 Was this page helpful?
 Yes
 No
-Tools reference
-Checkpointing
 ⌘
 I

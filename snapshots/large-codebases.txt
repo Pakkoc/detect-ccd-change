@@ -279,8 +279,7 @@ anchor at the directory you start Claude Code from
 //
 -absolute paths, such as
 Read(//absolute/path/to/repo/vendor/**)
-.
-Before v2.1.211,
+. Before v2.1.211,
 .claude/settings.local.json
 also loaded only from the starting directory.
 Everyone, enforced in every session
@@ -846,7 +845,5 @@ on the Claude blog for organizational rollout patterns and ownership models that
 Was this page helpful?
 Yes
 No
-Launch sessions from links
-Troubleshoot installation and login
 ⌘
 I

@@ -410,8 +410,7 @@ managed setting
 bounds what discovery can add.
 A discovered ID is skipped when it exactly matches a row already in the picker, or when both the discovered and existing IDs resolve to
 Fable
-.
-As of Claude Code v2.1.197, a discovered explicit ID is also folded into a built-in entry when both resolve to the same model. Built-in rows are keyed on aliases such as
+. As of Claude Code v2.1.197, a discovered explicit ID is also folded into a built-in entry when both resolve to the same model. Built-in rows are keyed on aliases such as
 sonnet
 , so a discovered explicit ID of the model the alias currently resolves to, such as
 claude-sonnet-5
@@ -451,7 +450,5 @@ Messages API
 Was this page helpful?
 Yes
 No
-Organization rollout
-Monitoring
 ⌘
 I

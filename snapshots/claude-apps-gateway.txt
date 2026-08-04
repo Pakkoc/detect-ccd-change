@@ -95,8 +95,7 @@ Anthropic-operated public gateway endpoints are the exception:
 /login
 accepts them over
 https://
-. These are a small fixed set of gateways that Anthropic itself operates; they aren’t a deployment option you can select or configure. The list is compiled into Claude Code, so no configuration can add a hostname to it and no gateway you host qualifies for the exemption.
-Before v2.1.206,
+. These are a small fixed set of gateways that Anthropic itself operates; they aren’t a deployment option you can select or configure. The list is compiled into Claude Code, so no configuration can add a hostname to it and no gateway you host qualifies for the exemption. Before v2.1.206,
 /login
 rejected those endpoints like any other public address.
 ​
@@ -109,8 +108,7 @@ The
 claude gateway
 subcommand and the gateway sign-in flow ship in v2.1.195. Earlier public builds don’t include them. Both the machine running the gateway server and each developer’s machine must be on v2.1.195 or later; run
 claude update
-to get the latest release.
-The
+to get the latest release. The
 Claude Platform on AWS upstream
 requires Claude Code v2.1.198 or later on the gateway server.
 OpenID Connect (OIDC) identity provider
@@ -146,8 +144,7 @@ in the deployment guide. The check runs on each resolved IP, so if any address t
 /login
 rejects the URL. If developer machines route HTTPS through a corporate proxy, sign-in also requires the proxy host to resolve to private addresses; if it doesn’t, add the gateway host to
 NO_PROXY
-so the CLI connects directly.
-Anthropic-operated public gateway endpoints are exempt from the private-address and proxy checks:
+so the CLI connects directly. Anthropic-operated public gateway endpoints are exempt from the private-address and proxy checks:
 /login
 accepts them over
 https://
@@ -888,8 +885,7 @@ Auto mode
 Available
 Follows the
 third-party provider rules
-: only the models eligible on third-party providers can use it.
-Before v2.1.207, auto mode on gateway sessions required setting
+: only the models eligible on third-party providers can use it. Before v2.1.207, auto mode on gateway sessions required setting
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 , deliverable through the managed policy
 env
@@ -939,7 +935,5 @@ Deploy on Google Cloud
 Was this page helpful?
 Yes
 No
-Overview
-Configuration
 ⌘
 I

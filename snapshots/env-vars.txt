@@ -233,8 +233,7 @@ is disabled by default. Set
 ENABLE_TOOL_SEARCH=true
 if your proxy forwards
 tool_reference
-blocks.
-As of v2.1.196,
+blocks. As of v2.1.196,
 Remote Control
 is disabled when this points at a host other than
 api.anthropic.com
@@ -534,8 +533,7 @@ CLAUDE_AFK_TIMEOUT_MS
 CLAUDE_AFK_TIMEOUT_MS
 How many milliseconds of idle time before an unanswered
 AskUserQuestion
-dialog auto-continues without you.
-Auto-continue is off by default; opt in with the
+dialog auto-continues without you. Auto-continue is off by default; opt in with the
 askUserQuestionTimeout
 setting. This variable is an override for demos and automated tests: when set, it takes precedence over that setting and turns auto-continue on even when the setting is unset or
 never
@@ -577,8 +575,7 @@ default threshold
 CLAUDE_AUTO_BACKGROUND_TASKS
 Set to
 1
-to force-enable automatic backgrounding of long-running agent tasks. When enabled, subagents are moved to the background after running for approximately two minutes.
-Also enables
+to force-enable automatic backgrounding of long-running agent tasks. When enabled, subagents are moved to the background after running for approximately two minutes. Also enables
 automatic backgrounding of long MCP tool calls
 in non-interactive mode on Claude Code v2.1.212 or later
 CLAUDE_AX_SCREEN_READER
@@ -648,8 +645,7 @@ Set to
 0
 to omit the
 attribution block
-, which carries the client version and a prompt fingerprint, from the start of the system prompt. Caching on a direct connection to the Anthropic API is unaffected either way.
-Before v2.1.181 the block included a per-request token on custom base URLs and Microsoft Foundry connections, so on those versions set it to
+, which carries the client version and a prompt fingerprint, from the start of the system prompt. Caching on a direct connection to the Anthropic API is unaffected either way. Before v2.1.181 the block included a per-request token on custom base URLs and Microsoft Foundry connections, so on those versions set it to
 0
 when your
 LLM gateway
@@ -793,8 +789,7 @@ to disable
 adaptive reasoning
 on Opus 4.6 and Sonnet 4.6 and fall back to the fixed thinking budget controlled by
 MAX_THINKING_TOKENS
-.
-From v2.1.111, has no effect on Fable 5, Sonnet 5, or Opus 4.7 and later, which always use adaptive reasoning
+. From v2.1.111, has no effect on Fable 5, Sonnet 5, or Opus 4.7 and later, which always use adaptive reasoning
 CLAUDE_CODE_DISABLE_ADVISOR_TOOL
 Set to
 1
@@ -888,8 +883,7 @@ Set to
 1
 to stop a
 background session’s
-running background shell commands, dynamic workflows,
-and, as of v2.1.198, background subagents when the
+running background shell commands, dynamic workflows, and, as of v2.1.198, background subagents when the
 supervisor
 stops, restarts, or updates that session’s process, instead of handing them to the session’s next process. Affects only that handoff: backgrounding a session with
 ←
@@ -1229,8 +1223,7 @@ TaskGet
 TaskList
 ) or the legacy
 TodoWrite
-tool.
-As of Claude Code v2.1.142, Task tools are the default in all modes. Set to
+tool. As of Claude Code v2.1.142, Task tools are the default in all modes. Set to
 0
 to revert to
 TodoWrite
@@ -1252,8 +1245,7 @@ to enable
 agent teams
 . Agent teams are experimental and disabled by default
 CLAUDE_CODE_EXTRA_BODY
-JSON object to merge into the top level of every API request body. Useful for passing provider-specific parameters that Claude Code doesn’t expose directly.
-A value exported in your shell also applies to the
+JSON object to merge into the top level of every API request body. Useful for passing provider-specific parameters that Claude Code doesn’t expose directly. A value exported in your shell also applies to the
 background sessions
 you dispatch with
 claude agents
@@ -1273,8 +1265,7 @@ was launched from inside another Claude Code session. Use when an inherited
 CLAUDE_CODE_CHILD_SESSION
 value, for example from a
 screen
-session or a background launcher first started by Claude Code’s Bash tool, causes a genuine top-level session to be misclassified as nested.
-As of v2.1.178, Claude Code detects the tmux case automatically and ignores the inherited marker, so tmux no longer needs this variable. Also honored on v2.1.169 and earlier; has no effect on v2.1.170 and v2.1.171, where the nested-session detection it overrides was removed
+session or a background launcher first started by Claude Code’s Bash tool, causes a genuine top-level session to be misclassified as nested. As of v2.1.178, Claude Code detects the tmux case automatically and ignores the inherited marker, so tmux no longer needs this variable. Also honored on v2.1.169 and earlier; has no effect on v2.1.170 and v2.1.171, where the nested-session detection it overrides was removed
 CLAUDE_CODE_FORCE_STRIKETHROUGH
 Set to
 1
@@ -1337,8 +1328,7 @@ and can’t pass the flag itself. Unlike the flag, which exits with an error out
 CLAUDE_CODE_GIT_BASH_PATH
 Windows only: path to the Git Bash executable (
 bash.exe
-). Use when Git Bash is installed but not in your PATH.
-If the path doesn’t exist or the file isn’t named
+). Use when Git Bash is installed but not in your PATH. If the path doesn’t exist or the file isn’t named
 bash.exe
 ,
 sh.exe
@@ -1396,8 +1386,7 @@ How many
 subagents
 can be running in one session before the Agent tool refuses to spawn another (default: 20). Accepts a positive whole number in plain digits; anything else is ignored, so the variable can adjust the cap but can’t disable it. Requires Claude Code v2.1.217 or later
 CLAUDE_CODE_MAX_CONTEXT_TOKENS
-Override the context window size Claude Code assumes for the active model.
-As of v2.1.193, applied directly for model names Claude Code does not recognize as a Claude model; for recognized Claude models it only takes effect when
+Override the context window size Claude Code assumes for the active model. As of v2.1.193, applied directly for model names Claude Code does not recognize as a Claude model; for recognized Claude models it only takes effect when
 DISABLE_COMPACT
 is also set. Use this when routing to a model through
 ANTHROPIC_BASE_URL
@@ -1409,9 +1398,7 @@ max output tokens
 auto-compaction
 triggers
 CLAUDE_CODE_MAX_RETRIES
-Override the number of times to retry failed API requests (default: 10).
-Capped at 15 as of v2.1.186;
-as of v2.1.199,
+Override the number of times to retry failed API requests (default: 10). Capped at 15 as of v2.1.186; as of v2.1.199,
 CLAUDE_CODE_RETRY_WATCHDOG
 raises the default and removes the cap. For unattended sessions that need to wait through longer outages, set
 CLAUDE_CODE_RETRY_WATCHDOG
@@ -1423,8 +1410,7 @@ one session can spawn with the Agent tool (default: 200). When Claude reaches th
 CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH
 Number of
 subagent layers
-allowed below the main conversation
-(default: 3). At the default, subagents can spawn their own subagents, and a subagent at the third layer can’t spawn further; set
+allowed below the main conversation (default: 3). At the default, subagents can spawn their own subagents, and a subagent at the third layer can’t spawn further; set
 1
 to turn nesting off. In v2.1.217 through v2.1.218, the default was 1, so a subagent couldn’t spawn its own unless you raised the limit; v2.1.219 raised the default to 3. Accepts a positive whole number in plain digits; anything else is ignored, so the limit can be adjusted but not removed. Requires Claude Code v2.1.217 or later
 CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY
@@ -1464,8 +1450,7 @@ in
 .mcp.json
 of at least 1000 raises that server’s idle window to at least the
 timeout
-value. Doesn’t apply to IDE servers or SDK in-process servers. Requires Claude Code v2.1.187 or later.
-Before v2.1.203, stdio servers were exempt from the idle timeout
+value. Doesn’t apply to IDE servers or SDK in-process servers. Requires Claude Code v2.1.187 or later. Before v2.1.203, stdio servers were exempt from the idle timeout
 CLAUDE_CODE_NATIVE_CURSOR
 Set to
 1
@@ -1602,8 +1587,7 @@ sessions, through a corporate launcher given as an argv prefix like
 env
 block of user or
 managed settings
-, not as a shell export, so the detached background service inherits it; project and local settings can’t set it.
-Equivalent to the
+, not as a shell export, so the detached background service inherits it; project and local settings can’t set it. Equivalent to the
 processWrapper
 setting
 , which requires Claude Code v2.1.210 or later; this variable takes precedence when both are set. The VS Code extension configures its own launcher separately through its
@@ -1677,8 +1661,7 @@ and
 529
 capacity errors indefinitely instead of failing after
 CLAUDE_CODE_MAX_RETRIES
-attempts. The watchdog backs off up to 5 minutes between attempts, or until the limit resets when the response carries a rate-limit reset time, so a session that hits a usage limit waits out the remaining window.
-As of v2.1.199 it also raises the default retry count for other transient errors, such as server errors, timeouts, and dropped connections, to 300, roughly three hours of backoff, and removes the cap of 15 on
+attempts. The watchdog backs off up to 5 minutes between attempts, or until the limit resets when the response carries a rate-limit reset time, so a session that hits a usage limit waits out the remaining window. As of v2.1.199 it also raises the default retry count for other transient errors, such as server errors, timeouts, and dropped connections, to 300, roughly three hours of backoff, and removes the cap of 15 on
 CLAUDE_CODE_MAX_RETRIES
 if you set that variable explicitly. Requires Claude Code v2.1.186 or later
 CLAUDE_CODE_SAFE_MODE
@@ -1849,8 +1832,7 @@ ANTHROPIC_CUSTOM_HEADERS
 ANTHROPIC_FOUNDRY_API_KEY
 or
 ANTHROPIC_FOUNDRY_AUTH_TOKEN
-is set.
-Before v2.1.203, this variable left the Microsoft Foundry client unable to send requests unless an API key was also set
+is set. Before v2.1.203, this variable left the Microsoft Foundry client unable to send requests unless an API key was also set
 CLAUDE_CODE_SKIP_MANTLE_AUTH
 Skip AWS authentication for Amazon Bedrock Mantle (for example, when using an LLM gateway)
 CLAUDE_CODE_SKIP_PROMPT_HISTORY
@@ -1886,8 +1868,7 @@ parameter and the subagent definition’s
 model
 frontmatter. See
 Model configuration
-.
-Setting it to
+. Setting it to
 inherit
 is the same as leaving it unset; before v2.1.196,
 inherit
@@ -1958,8 +1939,7 @@ on Windows to this path. Default:
 /tmp
 on macOS,
 os.tmpdir()
-on Linux and Windows.
-As of v2.1.161, on macOS and Linux,
+on Linux and Windows. As of v2.1.161, on macOS and Linux,
 sandboxed
 Bash subprocesses receive a short fallback
 $TMPDIR
@@ -2073,9 +2053,7 @@ Set to
 0
 to force-disable the event-level streaming idle watchdog, or set to
 1
-to force-enable it.
-When unset, the watchdog is on by default for all providers. Before v2.1.196, the unset default was server-controlled on the direct Anthropic API and off on other providers.
-As of v2.1.169, providers other than the direct Anthropic API and Claude Platform on AWS also have a default-on 5-minute body idle timeout independent of this variable; see
+to force-enable it. When unset, the watchdog is on by default for all providers. Before v2.1.196, the unset default was server-controlled on the direct Anthropic API and off on other providers. As of v2.1.169, providers other than the direct Anthropic API and Claude Platform on AWS also have a default-on 5-minute body idle timeout independent of this variable; see
 API_FORCE_IDLE_TIMEOUT
 . On Amazon Bedrock, you can also enable the independent byte-level watchdog with
 CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK
@@ -2167,8 +2145,7 @@ setup checkup skill and its
 /checkup
 alias. Useful for managed deployments where users shouldn’t run setup diagnostics from a session. Doesn’t affect the
 claude doctor
-terminal command.
-Before v2.1.205, this variable hid the
+terminal command. Before v2.1.205, this variable hid the
 /doctor
 diagnostics screen command
 DISABLE_ERROR_REPORTING
@@ -2192,8 +2169,7 @@ Set to
 1
 to disable the
 /feedback
-command.
-Also disables
+command. Also disables
 /bug
 and
 /share
@@ -2357,8 +2333,7 @@ false
 still enables this
 , unlike most on/off variables; unset the variable to restore the default retry behavior. Without it, models Claude Code recognizes as Opus, Fable 5, or Mythos models stop retrying this way when you authenticate with an API key or a
 third-party provider
-rather than a Claude subscription.
-As of v2.1.160, a configured
+rather than a Claude subscription. As of v2.1.160, a configured
 fallback model chain
 triggers on repeated overload errors for any primary model, so this variable does not affect switching to a fallback model
 FORCE_AUTOUPDATE_PLUGINS
@@ -2433,8 +2408,7 @@ pre-configured credentials
 . Avoids the interactive prompt when adding a server with
 --client-secret
 MCP_CONNECTION_NONBLOCKING
-Controls whether startup waits for MCP servers to connect before the first query.
-As of Claude Code v2.1.142, MCP startup is non-blocking by default: servers connect in the background and their tools become available as they finish. Set to
+Controls whether startup waits for MCP servers to connect before the first query. As of Claude Code v2.1.142, MCP startup is non-blocking by default: servers connect in the background and their tools become available as they finish. Set to
 0
 to restore the blocking 5-second connection wait. Servers configured with
 alwaysLoad: true
@@ -2465,8 +2439,7 @@ timeout
 timeout
 field in
 .mcp.json
-overrides this for that server.
-A per-server
+overrides this for that server. A per-server
 timeout
 of at least 1000 also sets the minimum idle window for that server’s tool calls, so
 CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT
@@ -2638,7 +2611,5 @@ Monitoring
 Was this page helpful?
 Yes
 No
-Commands
-Tools reference
 ⌘
 I

@@ -229,10 +229,8 @@ Automatic retries
 Claude Code retries transient failures up to 10 times with exponential backoff before showing you an error. It doesn’t always retry a failure that arrives partway through Claude’s response. When you see one of the errors on this page, Claude Code has already exhausted those retries, unless the failure is one it doesn’t retry.
 Claude Code retries these failures:
 Server errors, overloaded responses, and request timeouts.
-Dropped connections.
-This covers a connection that drops in the middle of a request, before any part of Claude’s response has completed: Claude Code re-issues the request with the same backoff, and the turn continues. Before v2.1.198, Claude Code stopped the turn with a connection error when the connection dropped mid-response, before any visible output had streamed.
-Temporary 429 throttles.
-When you’re signed in with a claude.ai subscription, this includes 429 throttles that don’t carry your plan’s quota headers. Before v2.1.199, Claude Code retried those throttles only for API key and Enterprise sign-ins.
+Dropped connections. This covers a connection that drops in the middle of a request, before any part of Claude’s response has completed: Claude Code re-issues the request with the same backoff, and the turn continues. Before v2.1.198, Claude Code stopped the turn with a connection error when the connection dropped mid-response, before any visible output had streamed.
+Temporary 429 throttles. When you’re signed in with a claude.ai subscription, this includes 429 throttles that don’t carry your plan’s quota headers. Before v2.1.199, Claude Code retried those throttles only for API key and Enterprise sign-ins.
 Claude Code doesn’t retry these failures:
 A TLS certificate validation failure, such as a TLS-inspecting proxy, a missing
 NODE_EXTRA_CA_CERTS
@@ -251,8 +249,7 @@ While retrying, the spinner shows a
 Retrying in Ns · attempt x/y
 countdown after an error label. The label names the specific reason from the first attempt for failures you can act on right away: the network is down, a TLS handshake failed, or you hit a rate limit. For other errors it reads
 API error
-at first.
-As of v2.1.198 it switches to the specific reason from the third attempt, or on the final attempt when
+at first. As of v2.1.198 it switches to the specific reason from the third attempt, or on the final attempt when
 CLAUDE_CODE_MAX_RETRIES
 allows fewer than three; earlier versions switch only on the final attempt.
 As of v2.1.198, the usual spinner tip is suppressed during retries. Once the error reason is revealed, if the failure is a 529 overload the line below the countdown also names where to check service status:
@@ -276,9 +273,7 @@ Default
 Effect
 CLAUDE_CODE_MAX_RETRIES
 10
-Number of retry attempts.
-Capped at 15 as of v2.1.186;
-as of v2.1.199
+Number of retry attempts. Capped at 15 as of v2.1.186; as of v2.1.199
 CLAUDE_CODE_RETRY_WATCHDOG
 raises the default and removes the cap. Lower it to surface failures faster in scripts.
 CLAUDE_CODE_RETRY_WATCHDOG
@@ -291,8 +286,7 @@ and
 529
 capacity errors indefinitely instead of failing after
 CLAUDE_CODE_MAX_RETRIES
-attempts.
-As of v2.1.199 it also raises the default retry count for other transient errors, such as server errors, timeouts, and dropped connections, to 300, roughly three hours of backoff, and removes the cap of 15 on
+attempts. As of v2.1.199 it also raises the default retry count for other transient errors, such as server errors, timeouts, and dropped connections, to 300, roughly three hours of backoff, and removes the cap of 15 on
 CLAUDE_CODE_MAX_RETRIES
 if you set that variable explicitly.
 API_TIMEOUT_MS
@@ -459,8 +453,7 @@ Server errors
 , and follow that section’s steps
 Once the underlying error clears, ask Claude to retry the task or
 resume the subagent
-When a rate limit, overload, or server error interrupts a foreground subagent that already produced text output, Claude receives that partial output marked as incomplete instead of this error.
-A subagent whose only output was tool calls gets this error too; in v2.1.199 that shape returned an empty partial result instead. See
+When a rate limit, overload, or server error interrupts a foreground subagent that already produced text output, Claude receives that partial output marked as incomplete instead of this error. A subagent whose only output was tool calls gets this error too; in v2.1.199 that shape returned an empty partial result instead. See
 API errors in subagents
 .
 ​
@@ -536,8 +529,7 @@ CLAUDE_CODE_DISABLE_1M_CONTEXT=1
 Server is temporarily limiting requests
 The API applied a short-lived throttle that is unrelated to your plan quota.
 API Error: Server is temporarily limiting requests (not your usage limit)
-Claude Code tells these apart from your plan limit by the absence of the unified quota headers a real limit response carries.
-As of v2.1.199 this is
+Claude Code tells these apart from your plan limit by the absence of the unified quota headers a real limit response carries. As of v2.1.199 this is
 retried automatically
 with backoff before being shown, whichever way you authenticate. On earlier versions, a session signed in with a claude.ai subscription failed the turn on the first occurrence; only API key and Enterprise sign-ins retried it.
 What to do:
@@ -674,8 +666,7 @@ setting exited with an error, timed out, or printed nothing to stdout. Without a
 401
 .
 Your apiKeyHelper script is failing · This usually means you need to re-authenticate with your provider · Run /status to see the script's error output
-Claude Code re-runs the script and retries the request up to two more times before showing this message, so the failure surfaces within three attempts.
-Before v2.1.208, Claude Code spent the full
+Claude Code re-runs the script and retries the request up to two more times before showing this message, so the failure surfaces within three attempts. Before v2.1.208, Claude Code spent the full
 retry budget
 resending the request with the placeholder credential and then reported a generic
 401
@@ -699,8 +690,7 @@ to confirm
 apiKeyHelper
 is the active credential source. Each time the command fails, its exit code and error output appear in an
 Authentication
-panel in the terminal.
-Before v2.1.212, the panel was titled
+panel in the terminal. Before v2.1.212, the panel was titled
 Cloud authentication
 .
 ​
@@ -807,8 +797,7 @@ The session isn’t talking to the Anthropic API directly, so there is no claude
 Remote Control
 to pair with.
 Remote Control is only available when using Claude via api.anthropic.com.
-This appears on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry.
-As of v2.1.196 it also appears when
+This appears on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry. As of v2.1.196 it also appears when
 ANTHROPIC_BASE_URL
 points at a host other than
 api.anthropic.com
@@ -885,8 +874,7 @@ doesn’t change it. Fix the credential your gateway expects instead.
 Login expired
 Claude Code tried to renew your saved claude.ai or Claude Console login and the OAuth service rejected the stored refresh token, so Claude Code cleared the saved credentials. After that, each request stops locally before it reaches the API, because only
 /login
-can create new credentials.
-Before v2.1.206, Claude Code sent the request anyway with whatever credential remained in the environment, and every model then failed with
+can create new credentials. Before v2.1.206, Claude Code sent the request anyway with whatever credential remained in the environment, and every model then failed with
 There’s an issue with the selected model
 or a 401 instead of a prompt to sign in.
 Login expired · Please run /login
@@ -1030,8 +1018,7 @@ and retries before this error surfaces, so by the time you see it the chain has 
 API Error: AWS default-chain credential resolve timed out
 Common causes are a
 credential_process
-command in your AWS profile that waits for input it can’t receive, and a container or VM whose instance metadata service (IMDS) never answers the chain’s probe.
-Before v2.1.207, a stalled chain left the request waiting indefinitely instead of failing with this message.
+command in your AWS profile that waits for input it can’t receive, and a container or VM whose instance metadata service (IMDS) never answers the chain’s probe. Before v2.1.207, a stalled chain left the request waiting indefinitely instead of failing with this message.
 What to do:
 Run
 aws sts get-caller-identity
@@ -1225,8 +1212,7 @@ Start Claude Code without
 to create a new Remote Control session
 For other Remote Control startup messages, see
 Troubleshoot Remote Control
-You won’t see this message when the server confirms the previous session no longer exists; Claude Code creates a new one in that case.
-Before v2.1.200, any reconnection failure created a new Remote Control session, which left extra sessions in the session list at claude.ai/code.
+You won’t see this message when the server confirms the previous session no longer exists; Claude Code creates a new one in that case. Before v2.1.200, any reconnection failure created a new Remote Control session, which left extra sessions in the session list at claude.ai/code.
 ​
 Request errors
 These errors relate to the content of your request. Most come back from the API after it rejected the request; a few are produced locally by Claude Code before any request is sent.
@@ -1733,8 +1719,7 @@ claude install
 claude update
 , or the
 automatic updater
-was fetching the Claude Code binary, and the retries didn’t recover. Claude Code retries the download when the connection drops, the transfer stalls, or the downloaded file fails its checksum, up to three attempts in total. A completed HTTP error, such as a 404, isn’t retried because the server already answered.
-Before v2.1.202, a single dropped connection failed the download immediately with the bare error
+was fetching the Claude Code binary, and the retries didn’t recover. Claude Code retries the download when the connection drops, the transfer stalls, or the downloaded file fails its checksum, up to three attempts in total. A completed HTTP error, such as a 404, isn’t retried because the server already answered. Before v2.1.202, a single dropped connection failed the download immediately with the bare error
 aborted
 instead of retrying.
 The connection dropped while downloading the update (attempt 3/3: aborted). Check your network — proxies sometimes cut off large downloads.
@@ -1925,8 +1910,7 @@ wasn’t among the connected MCP tools when the run first needed a permission de
 non-interactive
 run exits with this error, and exit code 1, on the first tool call that needs approval, so it produces no answer even though the request was made. Before the first prompt, Claude Code waits up to the per-server connection timeout of 30 seconds set by
 MCP_TIMEOUT
-for that server to connect.
-Before v2.1.206, startup didn’t wait for the server to finish connecting, so a slow-starting but healthy server produced this error too.
+for that server to connect. Before v2.1.206, startup didn’t wait for the server to finish connecting, so a slow-starting but healthy server produced this error too.
 Error: MCP tool mcp__permissions__approve (passed via --permission-prompt-tool) not found. Available MCP tools: none
 The list after
 Available MCP tools:
@@ -2025,8 +2009,7 @@ ultrareview
 /code-review ultra
 and the
 claude ultrareview
-subcommand refuse the review before the cloud session starts. A refused review doesn’t use a free run and doesn’t bill usage credits.
-The message names the limits in effect, the size of your diff, and the files that contribute the most changed lines. Before v2.1.216, the message showed only the raw diff statistics.
+subcommand refuse the review before the cloud session starts. A refused review doesn’t use a free run and doesn’t bill usage credits. The message names the limits in effect, the size of your diff, and the files that contribute the most changed lines. Before v2.1.216, the message showed only the raw diff statistics.
 Diff is too large for ultrareview: 812 files, 96,410 lines changed (limits: 500 files, 8,000 lines). Largest files: package-lock.json (41,904 lines), dist/bundle.js (18,210 lines), src/generated/api.ts (9,876 lines). Pass a closer base branch (`/code-review ultra <branch>`) to narrow the scope, or split the change.
 Reviewing a pull request applies the same limits; that form of the message begins
 PR #<N> is too large for ultrareview
@@ -2309,8 +2292,7 @@ shows
 Press enter again to restart this session fresh
 below the list instead, and a second
 Enter
-on the row restarts the session with an empty conversation. Before v2.1.212, opening the row showed the refusal message with no way to restart from agent view.
-Before v2.1.211, opening the stopped session silently started that blank conversation and could re-run the session’s original prompt.
+on the row restarts the session with an empty conversation. Before v2.1.212, opening the row showed the refusal message with no way to restart from agent view. Before v2.1.211, opening the stopped session silently started that blank conversation and could re-run the session’s original prompt.
 What to do:
 The conversation you backgrounded from is intact: resume it with
 claude --resume
@@ -2491,8 +2473,7 @@ Ignoring 2 permissions.allow entries from .claude/settings.local.json: this work
 What to do:
 Run
 claude
-in the directory and accept the trust dialog.
-The dialog appears even when a parent directory is already trusted, lists the rules being held back, and lets you decline and keep working without them. Before v2.1.200, no dialog appeared in that situation, so this step couldn’t be completed there.
+in the directory and accept the trust dialog. The dialog appears even when a parent directory is already trusted, lists the rules being held back, and lets you decline and keep working without them. Before v2.1.200, no dialog appeared in that situation, so this step couldn’t be completed there.
 In
 non-interactive mode
 with
@@ -2508,8 +2489,7 @@ If the message names
 .claude/settings.local.json
 and you started Claude Code outside a git repository or in your home directory, update to v2.1.200 or later. Versions 2.1.196 through 2.1.199 treated your own
 .claude/settings.local.json
-as repository-supplied in those workspaces.
-On v2.1.207 and later, updating isn’t enough outside a git repository if you haven’t trusted the folder: determining that a folder isn’t inside a repository runs git, and Claude Code runs that check only after you accept the trust dialog, so use the first step. Your home directory and any other
+as repository-supplied in those workspaces. On v2.1.207 and later, updating isn’t enough outside a git repository if you haven’t trusted the folder: determining that a folder isn’t inside a repository runs git, and Claude Code runs that check only after you accept the trust dialog, so use the first step. Your home directory and any other
 configuration home
 are exempt and don’t wait for the dialog. See
 Project allow rules and workspace trust
@@ -2636,8 +2616,7 @@ for how auto-compact affects earlier turns.
 Stale instructions
 : large or outdated
 CLAUDE.md
-files and MCP tool definitions consume context and can steer responses.
-The
+files and MCP tool definitions consume context and can steer responses. The
 /doctor
 checkup flags oversized memory files and unused extensions, and
 /context
@@ -2660,8 +2639,7 @@ If Claude warns about a suspected prompt injection, or refuses a request because
 claude update
 and retry. If the warning repeats after updating,
 report it
-rather than pasting the flagged content back into the prompt.
-Before v2.1.201, Sonnet 5 refused some requests the same way.
+rather than pasting the flagged content back into the prompt. Before v2.1.201, Sonnet 5 refused some requests the same way.
 ​
 Report an error
 For errors from components this page doesn’t cover, see the relevant guide:
@@ -2693,6 +2671,5 @@ on GitHub
 Was this page helpful?
 Yes
 No
-Debug configuration
 ⌘
 I

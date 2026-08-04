@@ -194,7 +194,5 @@ Use Claude Code Desktop
 Was this page helpful?
 Yes
 No
-Windows (WSL)
-iOS simulator (beta)
 ⌘
 I

@@ -1466,7 +1466,5 @@ AWS samples for Claude apps gateway
 Was this page helpful?
 Yes
 No
-Deployment
-Deployment example: Google Cloud
 ⌘
 I

@@ -926,7 +926,5 @@ examples/session-stores/
 Was this page helpful?
 Yes
 No
-Work with sessions
-Streaming Input
 ⌘
 I

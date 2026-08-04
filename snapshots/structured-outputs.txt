@@ -1484,7 +1484,5 @@ Custom tools
 Was this page helpful?
 Yes
 No
-Stream responses in real-time
-Give Claude custom tools
 ⌘
 I

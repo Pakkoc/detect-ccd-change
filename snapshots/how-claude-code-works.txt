@@ -336,7 +336,5 @@ Step-by-step guides for typical tasks
 Was this page helpful?
 Yes
 No
-Changelog
-Extend Claude Code
 ⌘
 I

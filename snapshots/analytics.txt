@@ -220,7 +220,5 @@ Permissions
 Was this page helpful?
 Yes
 No
-Costs
-Create and distribute a plugin marketplace
 ⌘
 I

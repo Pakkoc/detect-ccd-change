@@ -20,18 +20,15 @@ Work from both surfaces at once
 subagents
 and
 dynamic workflows
-stay in sync across all connected devices, so you can send messages from your terminal, browser, and phone interchangeably.
-Before v2.1.207, sessions hosted by the
+stay in sync across all connected devices, so you can send messages from your terminal, browser, and phone interchangeably. Before v2.1.207, sessions hosted by the
 Desktop app
 didn’t send subagent or workflow progress to connected devices.
 Send images and files from your phone or browser
 : when you add an attachment in the Claude app or at claude.ai/code, Claude Code downloads it to your machine and passes it to Claude as an
 @
-file reference, with or without a caption.
-Before v2.1.202, Claude Code could drop an attachment sent without a caption before it reached the session.
+file reference, with or without a caption. Before v2.1.202, Claude Code could drop an attachment sent without a caption before it reached the session.
 Survive interruptions
-: if your laptop sleeps or your network drops, the session reconnects automatically when your machine comes back online. Claude Code queues status updates from subagents and workflows while the connection is rebuilding and delivers them once it recovers.
-Before v2.1.207, an update sent during a reconnection or credential refresh could be lost, so the connected device kept showing a finished task as running.
+: if your laptop sleeps or your network drops, the session reconnects automatically when your machine comes back online. Claude Code queues status updates from subagents and workflows while the connection is rebuilding and delivers them once it recovers. Before v2.1.207, an update sent during a reconnection or credential refresh could be lost, so the connected device kept showing a finished task as running.
 Unlike
 Claude Code on the web
 , which runs on cloud infrastructure, Remote Control sessions run directly on your machine and interact with your local filesystem. The web and mobile interfaces are a window into that local session.
@@ -54,8 +51,7 @@ exits with an error, while
 claude --remote-control
 still starts an interactive session and shows a Remote Control failure notification shortly after launch.
 API endpoint
-: not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
-As of v2.1.196, Remote Control is also disabled when
+: not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. As of v2.1.196, Remote Control is also disabled when
 ANTHROPIC_BASE_URL
 points at a host other than
 api.anthropic.com
@@ -235,8 +231,7 @@ again to retry.
 Session URL reminders
 While Remote Control is connected, Claude Code reminds you of the session URL at the moments when switching to your phone or browser helps most, so you don’t have to dig the link out of
 /remote-control
-.
-Requires Claude Code v2.1.208 or later. A reminder appears above the prompt box at either of these moments:
+. Requires Claude Code v2.1.208 or later. A reminder appears above the prompt box at either of these moments:
 Long turn
 : when a turn runs longer than a server-tuned threshold, a
 Still working
@@ -269,9 +264,7 @@ or the Claude app
 and find the session by name in the session list. In the Claude mobile app, tap
 Code
 in the navigation to reach the session list. Remote Control sessions show a computer icon with a green status dot when online.
-When you connect, the device shows any subagents and workflows the session already has running in the background.
-Before v2.1.208, a device connecting to a session hosted in an interactive terminal didn’t show subagents and workflows that were already running until one of them started or stopped.
-Before v2.1.212, a device that joined mid-run didn’t show a running workflow’s agents until the next agent update.
+When you connect, the device shows any subagents and workflows the session already has running in the background. Before v2.1.208, a device connecting to a session hosted in an interactive terminal didn’t show subagents and workflows that were already running until one of them started or stopped. Before v2.1.212, a device that joined mid-run didn’t show a running workflow’s agents until the next agent update.
 The remote session title is chosen in this order:
 The name you passed to
 --name
@@ -288,8 +281,7 @@ myhost-graceful-unicorn
 myhost
 is your machine’s hostname or the prefix you set with
 --remote-control-session-name-prefix
-If you didn’t set an explicit name, the title updates to reflect your prompt once you send one.
-As of Claude Code v2.1.176, auto-generated titles match the language of your conversation, or the
+If you didn’t set an explicit name, the title updates to reflect your prompt once you send one. As of Claude Code v2.1.176, auto-generated titles match the language of your conversation, or the
 language
 setting if one is configured. Renaming a session from claude.ai or the Claude app also updates the local title shown in
 claude --resume
@@ -322,8 +314,7 @@ to never auto-connect, or to
 default
 to clear your choice. When the setting is cleared, Remote Control follows your organization’s admin default if one is set, and otherwise Claude Code’s current default. In the Desktop app, you can also toggle this from
 Settings → Claude Code → Enable remote control by default
-.
-In the
+. In the
 VS Code extension
 , the same toggle appears as
 Enable Remote Control for all sessions
@@ -436,8 +427,7 @@ No mobile registered
 , open the Claude app on your phone so it can refresh its push token. The warning clears the next time Remote Control connects.
 On iOS, Focus modes and notification summaries can suppress or delay pushes. Check Settings → Notifications → Claude.
 On Android, aggressive battery optimization can delay delivery. Exempt the Claude app from battery optimization in system settings.
-Claude Code skips mobile push notifications while you are typing in or focused on the connected terminal.
-As of v2.1.181, you can set
+Claude Code skips mobile push notifications while you are typing in or focused on the connected terminal. As of v2.1.181, you can set
 CLAUDE_CLIENT_PRESENCE_FILE
 to a marker file path to extend this to any time you are at the machine, even in another window: notifications are skipped while the file exists. Configure a screen-lock listener or similar tool to create the file when your screen unlocks and delete it when your screen locks.
 ​
@@ -564,8 +554,7 @@ then
 claude auth login
 to refresh them. Run
 claude doctor
-to see which individual eligibility check failed. Environment-variable conflicts, unreachable checks, and organization policy each produce their own message, so this error means the rollout gate itself.
-Before v2.1.154, a variable that disables feature-flag evaluation, such as
+to see which individual eligibility check failed. Environment-variable conflicts, unreachable checks, and organization policy each produce their own message, so this error means the rollout gate itself. Before v2.1.154, a variable that disables feature-flag evaluation, such as
 DISABLE_TELEMETRY
 or
 DO_NOT_TRACK
@@ -593,8 +582,7 @@ file
 . On versions before 2.1.154, the same configuration produces “Remote Control is not yet enabled for your account” instead.
 ​
 ”Remote Control is only available when using Claude via api.anthropic.com”
-The session isn’t talking to the Anthropic API directly, so there is no claude.ai backend to pair with. This happens on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry.
-It also happens when
+The session isn’t talking to the Anthropic API directly, so there is no claude.ai backend to pair with. This happens on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry. It also happens when
 ANTHROPIC_BASE_URL
 points at a host other than
 api.anthropic.com
@@ -760,7 +748,5 @@ Data usage
 Was this page helpful?
 Yes
 No
-Overview
-Get started
 ⌘
 I

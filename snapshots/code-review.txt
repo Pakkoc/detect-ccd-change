@@ -411,8 +411,7 @@ Review a diff locally
 The
 /code-review
 command
-reviews a diff in your terminal without installing the GitHub App. It reports correctness bugs and
-reuse, simplification, and efficiency cleanups.
+reviews a diff in your terminal without installing the GitHub App. It reports correctness bugs and reuse, simplification, and efficiency cleanups.
 1
 Run /code-review
 From the session where you’re working, run the command:
@@ -447,8 +446,7 @@ In a terminal session,
 /code-review
 runs the review as a fork and reports the findings as text in the reply, and Claude reports as text in any
 -p
-run with text or JSON output, even when the host application requests the findings list.
-On v2.1.216 and v2.1.217, a terminal review at
+run with text or JSON output, even when the host application requests the findings list. On v2.1.216 and v2.1.217, a terminal review at
 medium
 or higher effort reported the findings list instead.
 When Claude fixes reported findings later in the session, it reports them again, and Claude Code marks each finding in the new list as fixed, skipped, or no change needed.
@@ -458,8 +456,7 @@ The review follows your
 CLAUDE.md
 like any Claude Code session, but it doesn’t read
 REVIEW.md
-.
-A background review applies its
+. A background review applies its
 --fix
 edits outside your session’s
 checkpoints
@@ -494,8 +491,7 @@ as target text instead of loading
 /fix-issue
 as a second
 stacked skill
-.
-Before v2.1.218, a command stacked after
+. Before v2.1.218, a command stacked after
 /code-review
 expanded as its own skill.
 With
@@ -551,8 +547,7 @@ subcommand
 instead; by running it, you consent to the charge.
 The command was named
 /simplify
-before v2.1.147, when it applied fixes by default.
-From v2.1.154,
+before v2.1.147, when it applied fixes by default. From v2.1.154,
 /simplify
 runs a separate cleanup-only review that applies fixes without hunting for bugs. If you scripted
 /simplify
@@ -581,7 +576,5 @@ Analytics
 Was this page helpful?
 Yes
 No
-Claude Security plugin
-GitHub Actions
 ⌘
 I

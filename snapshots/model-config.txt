@@ -84,8 +84,7 @@ ANTHROPIC_DEFAULT_SONNET_MODEL
 .
 Before v2.1.219,
 opus
-resolved to Opus 4.8 on the Anthropic API from v2.1.154, and on Claude Platform on AWS, Amazon Bedrock, and Google Cloud’s Agent Platform from v2.1.207.
-Before v2.1.207,
+resolved to Opus 4.8 on the Anthropic API from v2.1.154, and on Claude Platform on AWS, Amazon Bedrock, and Google Cloud’s Agent Platform from v2.1.207. Before v2.1.207,
 opus
 resolved to Opus 4.7 on Claude Platform on AWS and to Opus 4.6 on Amazon Bedrock and Google Cloud’s Agent Platform.
 Aliases point to the recommended version for your provider and update over time. To pin to a specific version, use the full model name, for example
@@ -160,15 +159,13 @@ Typing
 /model <name>
 directly behaves like
 Enter
-.
-A model set with
+. A model set with
 /model
 in
 non-interactive mode
 , with the
 -p
-flag, applies to the current session only and isn’t saved as your default. Project and managed settings still take precedence and reapply on the next launch.
-An
+flag, applies to the current session only and isn’t saved as your default. Project and managed settings still take precedence and reapply on the next launch. An
 organization default model
 that your admin has configured to override user selection also reapplies on the next launch.
 In v2.1.144 through v2.1.152,
@@ -213,8 +210,7 @@ A model you pick for the new launch with
 --model
 or
 ANTHROPIC_MODEL
-still takes precedence over the restored model.
-As of v2.1.195, so does an
+still takes precedence over the restored model. As of v2.1.195, so does an
 ANTHROPIC_DEFAULT_OPUS_MODEL
 family variable.
 When the active model at startup comes from project or managed settings rather than your own selection, the startup header shows which settings file set it. Run
@@ -318,8 +314,7 @@ model
 setting, and the model restored when
 resuming a session
 Alias resolution
-:
-the
+: the
 ANTHROPIC_DEFAULT_OPUS_MODEL
 ,
 ANTHROPIC_DEFAULT_SONNET_MODEL
@@ -398,8 +393,7 @@ flag
 : Claude Code exits with an error at launch
 Excluded models are hidden from the
 /model
-picker.
-A full model ID in the list that has no built-in picker row, such as an older version that the list pins, appears in the
+picker. A full model ID in the list that has no built-in picker row, such as an older version that the list pins, appears in the
 /model
 picker as its own labeled row. Before v2.1.199, such an ID was selectable only by typing
 /model <id>
@@ -414,8 +408,7 @@ to an excluded model uses the newest permitted version of the upgrade family. On
 Automatic model fallback
 : a fallback whose target is excluded does not run, so the flagged request ends with a refusal instead
 Auto mode classifier
-:
-the classifier’s Claude Sonnet 5 default applies only when the allowlist permits Sonnet 5. When it’s excluded, the classifier runs on the session’s model, which the allowlist already governs, or on an Opus model when the session runs on
+: the classifier’s Claude Sonnet 5 default applies only when the allowlist permits Sonnet 5. When it’s excluded, the classifier runs on the session’s model, which the allowlist already governs, or on an Opus model when the session runs on
 Fable 5
 . On providers other than the Anthropic API, that Opus fallback runs on the provider’s default Opus model without consulting the allowlist. Requires Claude Code v2.1.210 or later
 Fast mode
@@ -624,8 +617,7 @@ defines
 availableModels
 , that list alone applies: entries in user, project, or local settings cannot extend it, and admin-deployed managed sources do not merge with each other, so a list deployed in a managed settings file is ignored when server-managed settings deliver any keys. Otherwise, lists from user, project, and local settings are
 concatenated and deduplicated
-like other array settings.
-As of Claude Code v2.1.175, the managed list replaces lower-precedence entries; earlier versions merge them.
+like other array settings. As of Claude Code v2.1.175, the managed list replaces lower-precedence entries; earlier versions merge them.
 Within the effective list, an entry naming a specific model in a family, whether a version prefix or a full model ID, disables that family’s wildcard entry:
 ["sonnet", "claude-sonnet-4-5"]
 allows only Sonnet 4.5 versions, not every Sonnet model.
@@ -811,8 +803,7 @@ Microsoft Foundry
 Enterprise pay-as-you-go means an Enterprise organization billed by usage rather than by subscription seat.
 Before v2.1.219,
 default
-resolved to Opus 4.8 on the Anthropic API, Max, Team Premium, and Enterprise pay-as-you-go from v2.1.154, and on Claude Platform on AWS, Amazon Bedrock, and Google Cloud’s Agent Platform from v2.1.207.
-Before v2.1.207,
+resolved to Opus 4.8 on the Anthropic API, Max, Team Premium, and Enterprise pay-as-you-go from v2.1.154, and on Claude Platform on AWS, Amazon Bedrock, and Google Cloud’s Agent Platform from v2.1.207. Before v2.1.207,
 default
 resolved to Opus 4.7 on Claude Platform on AWS and to Sonnet 4.5 on Amazon Bedrock and Google Cloud’s Agent Platform.
 When an admin has set an
@@ -912,8 +903,7 @@ Outside the allowlist
 availableModels
 is dropped when Claude Code reads the chain.
 Smaller context window during compaction
-:
-the chain also covers
+: the chain also covers
 compaction
 , but Claude Code won’t fall back to a model with a smaller context window than the primary’s, since summarizing there would cut off part of the conversation first. If every fallback is smaller, compaction shows the original error and you can retry.
 ​
@@ -1756,7 +1746,5 @@ How Claude Code uses prompt caching
 Was this page helpful?
 Yes
 No
-Cloud environments
-Speed up responses with fast mode
 ⌘
 I

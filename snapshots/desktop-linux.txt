@@ -212,7 +212,5 @@ system requirements
 Was this page helpful?
 Yes
 No
-Reference
-Windows (WSL)
 ⌘
 I

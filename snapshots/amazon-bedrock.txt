@@ -104,8 +104,7 @@ AWS_PROFILE
 your-profile-name
 Claude Code requests role credentials from the IAM Identity Center region named by the profile’s
 sso_region
-, which doesn’t need to match the region you run Amazon Bedrock in.
-In v2.1.207, the Amazon Bedrock region overrode
+, which doesn’t need to match the region you run Amazon Bedrock in. In v2.1.207, the Amazon Bedrock region overrode
 sso_region
 , so a profile whose IAM Identity Center instance is in a different region failed to authenticate with a
 Session token not found or invalid
@@ -199,8 +198,7 @@ is also accepted, with the same keys at the top level instead of nested under
 Credentials
 .
 Expiration
-is optional.
-As of Claude Code v2.1.176, when the command returns a valid ISO 8601
+is optional. As of Claude Code v2.1.176, when the command returns a valid ISO 8601
 Expiration
 , Claude Code caches the credentials until five minutes before that time. Without it, or on earlier versions, credentials are cached for one hour.
 When you configure
@@ -337,8 +335,7 @@ ANTHROPIC_DEFAULT_OPUS_MODEL
 keeps its steered Sonnet model as the default.
 On v2.1.207 through v2.1.218, the primary model on Amazon Bedrock defaulted to Opus 4.8 and the
 opus
-alias resolved to Opus 4.8.
-Before v2.1.207, the primary model defaulted to Sonnet 4.5, the
+alias resolved to Opus 4.8. Before v2.1.207, the primary model defaulted to Sonnet 4.5, the
 opus
 alias resolved to Opus 4.6, and background tasks always used the primary model.
 To customize models further, use one of these methods:
@@ -400,8 +397,7 @@ This example maps four Opus versions to distinct ARNs so users can switch betwee
 }
 When a user selects one of these versions in
 /model
-, Claude Code calls Amazon Bedrock with the mapped ARN.
-The same mapping applies when you pass the Anthropic model ID directly through
+, Claude Code calls Amazon Bedrock with the mapped ARN. The same mapping applies when you pass the Anthropic model ID directly through
 --model
 or
 ANTHROPIC_MODEL
@@ -596,8 +592,7 @@ export
 AWS_REGION
 =
 us-east-1
-Claude Code constructs the endpoint URL from the AWS region.
-As of v2.1.172, the region is resolved with the same precedence as
+Claude Code constructs the endpoint URL from the AWS region. As of v2.1.172, the region is resolved with the same precedence as
 Amazon Bedrock above
 ; earlier versions use
 AWS_REGION
@@ -782,8 +777,7 @@ again.
 Zero token counts in /context
 The
 /context
-command counts tokens for each tool group by sending the tool schemas to the Amazon Bedrock count-tokens API.
-On Claude Code versions before v2.1.196, Amazon Bedrock rejected that request because the schemas carried fields its count-tokens API doesn’t accept, so every tool group showed 0 tokens. Other rows in the breakdown, such as messages and memory files, aren’t affected.
+command counts tokens for each tool group by sending the tool schemas to the Amazon Bedrock count-tokens API. On Claude Code versions before v2.1.196, Amazon Bedrock rejected that request because the schemas carried fields its count-tokens API doesn’t accept, so every tool group showed 0 tokens. Other rows in the breakdown, such as messages and memory files, aren’t affected.
 Update to v2.1.196 or later.
 ​
 Mantle endpoint errors
@@ -821,7 +815,5 @@ Claude Code Monitoring Implementation (Amazon Bedrock)
 Was this page helpful?
 Yes
 No
-Feature availability
-Claude Platform on AWS
 ⌘
 I

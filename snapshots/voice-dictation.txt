@@ -289,8 +289,7 @@ on Linux
 sudo apt-get install sox
 .
 Voice mode requires a microphone, but SoX could not open an audio capture device
-: SoX is installed, but the host has no audio capture device, for example a headless server or a container. Run Claude Code on a machine with a microphone.
-As of v2.1.195, Claude Code on Linux reports this message in that situation; earlier versions asked you to install SoX even when it was already installed.
+: SoX is installed, but the host has no audio capture device, for example a headless server or a container. Run Claude Code on a machine with a microphone. As of v2.1.195, Claude Code on Linux reports this message in that situation; earlier versions asked you to install SoX even when it was already installed.
 Voice mode could not find a working audio recorder in WSL
 : WSLg routes audio through PulseAudio rather than an ALSA device, so SoX needs its PulseAudio backend installed explicitly. Run
 sudo apt install sox libsox-fmt-pulse
@@ -300,8 +299,7 @@ alone pulls in the ALSA backend, which cannot record on WSL because there is no
 /dev/snd
 device.
 Voice input is failing repeatedly and has been paused
-: voice dictation hit several capture failures in a row and stopped attempting new sessions until one succeeds. A failure counts whether the microphone fails to start or the recorder starts and then stops without producing any audio. This usually means the microphone or audio stack on this host can’t capture audio, for example a headless server, a remote shell with no audio passthrough, or a denied microphone permission. Confirm a working input device, fix the underlying cause from the entries above, then trigger voice again.
-Before v2.1.202, only start-up failures counted toward the pause.
+: voice dictation hit several capture failures in a row and stopped attempting new sessions until one succeeds. A failure counts whether the microphone fails to start or the recorder starts and then stops without producing any audio. This usually means the microphone or audio stack on this host can’t capture audio, for example a headless server, a remote shell with no audio passthrough, or a denied microphone permission. Confirm a working input device, fix the underlying cause from the entries above, then trigger voice again. Before v2.1.202, only start-up failures counted toward the pause.
 Nothing happens when holding
 Space
 in hold mode
@@ -319,8 +317,7 @@ types a space instead of recording in tap mode
 No audio detected from microphone
 : recording started but captured silence. Confirm the correct input device is set as the system default and that its input level is not muted or near zero. On Windows, open Settings → System → Sound → Input and select your microphone. On macOS, open System Settings → Sound → Input.
 Voice connection failed
-: your recording never reached the transcription service because the connection failed. Check your network and try again.
-A recording that captures no audio reports
+: your recording never reached the transcription service because the connection failed. Check your network and try again. A recording that captures no audio reports
 No audio detected from microphone
 instead of this message. Before v2.1.200, a silent microphone could report a connection failure, which suggested a network problem when the actual issue was the input device.
 No speech detected
@@ -385,7 +382,5 @@ Commands
 Was this page helpful?
 Yes
 No
-Screen reader mode
-Customize status line
 ⌘
 I

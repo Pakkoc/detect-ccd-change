@@ -521,7 +521,5 @@ Host and distribute plugin collections
 Was this page helpful?
 Yes
 No
-How Claude Code works
-Explore the .claude directory
 ⌘
 I

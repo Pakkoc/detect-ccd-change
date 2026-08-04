@@ -171,7 +171,5 @@ Scheduled tasks
 Was this page helpful?
 Yes
 No
-Best practices
-Remote Control
 ⌘
 I

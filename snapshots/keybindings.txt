@@ -354,8 +354,7 @@ Default
 Description
 task:background
 Ctrl+B, Ctrl+X Ctrl+B
-Background current task.
-The Ctrl+X Ctrl+B chord requires v2.1.169 or later and avoids the tmux prefix conflict
+Background current task. The Ctrl+X Ctrl+B chord requires v2.1.169 or later and avoids the tmux prefix conflict
 ​
 Theme actions
 Actions available in the
@@ -442,8 +441,7 @@ footer:dismiss
 Backspace, Delete
 Dismiss the selected
 artifact
-link from the footer; the published artifact itself is unaffected. On other footer rows, these keys have no effect.
-Requires v2.1.217 or later
+link from the footer; the published artifact itself is unaffected. On other footer rows, these keys have no effect. Requires v2.1.217 or later
 ​
 Message selector actions
 Actions available in the
@@ -919,6 +917,5 @@ to see the details.
 Was this page helpful?
 Yes
 No
-Customize status line
 ⌘
 I

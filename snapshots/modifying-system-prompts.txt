@@ -943,7 +943,5 @@ reference, including where output styles and other configuration are stored
 Was this page helpful?
 Yes
 No
-Subagents in the SDK
-Slash Commands in the SDK
 ⌘
 I

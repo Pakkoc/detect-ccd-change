@@ -360,8 +360,7 @@ and return immediately. Prints the session ID and management commands. Combine w
 --exec
 to run a shell command as a background job instead of a Claude session, or with
 --agent
-to run a specific subagent.
-Cannot be combined with
+to run a specific subagent. Cannot be combined with
 -p
 /
 --print
@@ -565,8 +564,7 @@ claude -p --output-format json --input-format stream-json
 --json-schema
 Get validated JSON output matching a JSON Schema after the agent completes its workflow (print mode only). See
 structured outputs
-.
-Claude Code exits with an error on an invalid schema and accepts the
+. Claude Code exits with an error on an invalid schema and accepts the
 format
 keyword as an annotation without client-side validation. Before v2.1.205, an invalid schema produced unstructured output with no error, and schemas using
 format
@@ -582,14 +580,12 @@ claude -p --maintenance "query"
 --max-budget-usd
 Maximum dollar amount to spend on API calls before stopping (print mode only). Spend from
 subagents
-counts toward the cap.
-Once spend reaches the cap, spawning another subagent fails with
+counts toward the cap. Once spend reaches the cap, spawning another subagent fails with
 Budget limit reached
 , and Claude Code stops background subagents that are still running; the cap-enforcement behaviors require Claude Code v2.1.217 or later
 claude -p --max-budget-usd 5.00 "query"
 --max-turns
-Limit the number of agentic turns (print mode only). Exits with an error when the limit is reached. No limit by default.
-With
+Limit the number of agentic turns (print mode only). Exits with an error when the limit is reached. No limit by default. With
 --input-format stream-json
 , a message sent while Claude is working stays queued and runs as its own turn, with its own limit, when the limit ends the current one. Before v2.1.205, Claude Code discarded that message
 claude -p --max-turns 3 "query"
@@ -670,8 +666,7 @@ defaultMode
 from settings files
 claude --permission-mode plan
 --permission-prompt-tool
-Specify an MCP tool to handle permission prompts in non-interactive mode.
-Claude Code waits for that tool’s MCP server to connect before running the first turn, up to the
+Specify an MCP tool to handle permission prompts in non-interactive mode. Claude Code waits for that tool’s MCP server to connect before running the first turn, up to the
 MCP_TIMEOUT
 startup timeout of 30 seconds. Before v2.1.206, a slow-starting server could make the run
 exit with an error that the MCP tool was not found
@@ -906,6 +901,5 @@ Agent SDK documentation
 Was this page helpful?
 Yes
 No
-Commands
 ⌘
 I

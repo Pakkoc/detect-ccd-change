@@ -232,7 +232,5 @@ Settings
 Was this page helpful?
 Yes
 No
-Permissions
-Bash sandbox
 ⌘
 I

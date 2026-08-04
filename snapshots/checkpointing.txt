@@ -6,8 +6,7 @@ As you work with Claude, checkpointing automatically captures the state of your 
 Automatic tracking
 Claude Code tracks all changes made by its file editing tools:
 Every user prompt creates a new checkpoint
-Claude Code keeps file snapshots for the 100 most recent checkpoints in a session. Discarding an older checkpoint deletes the snapshot files that no remaining checkpoint references, except each file’s first snapshot, which the VS Code extension uses as the baseline for its session diffs.
-Before v2.1.208, those superseded snapshot files stayed on disk until the session was cleaned up.
+Claude Code keeps file snapshots for the 100 most recent checkpoints in a session. Discarding an older checkpoint deletes the snapshot files that no remaining checkpoint references, except each file’s first snapshot, which the VS Code extension uses as the baseline for its session diffs. Before v2.1.208, those superseded snapshot files stayed on disk until the session was cleaned up.
 Claude Code saves checkpoints with the conversation, so you can still run
 /rewind
 after you resume a session
@@ -108,8 +107,7 @@ that runs in the foreground, edits a
 subagent
 applies land outside your session’s checkpoints, so rewinding doesn’t restore them, even though the subagent makes them with Claude’s file editing tools. This includes a background
 /code-review --fix
-run and any forked skill that runs in the background. Use git to revert those edits. The foreground fork edits your working tree during your own turn, so rewinding restores its edits as usual.
-A forked skill runs in the background by default; set
+run and any forked skill that runs in the background. Use git to revert those edits. The foreground fork edits your working tree during your own turn, so rewinding restores its edits as usual. A forked skill runs in the background by default; set
 background: false
 in its frontmatter to run it in the foreground, where the invoking turn waits for the result. Before v2.1.218, forked skills always ran in the foreground.
 ​
@@ -154,7 +152,5 @@ CLI reference
 Was this page helpful?
 Yes
 No
-Interactive mode
-Hooks reference
 ⌘
 I

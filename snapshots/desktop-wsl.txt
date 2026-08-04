@@ -43,7 +43,5 @@ in the deployment guide.
 Was this page helpful?
 Yes
 No
-Linux (beta)
-Scheduled tasks
 ⌘
 I

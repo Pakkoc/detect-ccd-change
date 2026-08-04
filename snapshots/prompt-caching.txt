@@ -64,8 +64,7 @@ LLM gateway
 : the cache lives wherever your requests are forwarded, and whether caching works depends on the gateway
 System context that Claude Code appends mid-conversation, such as file-change notices, is cached on Amazon Bedrock and its
 Mantle endpoint
-, Google Cloud’s Agent Platform, and Microsoft Foundry the same way it is on the Claude API.
-Before v2.1.211, these providers billed that appended system context as uncached input tokens on every request.
+, Google Cloud’s Agent Platform, and Microsoft Foundry the same way it is on the Claude API. Before v2.1.211, these providers billed that appended system context as uncached input tokens on every request.
 When your requests pass through an
 LLM gateway
 or a custom
@@ -171,8 +170,7 @@ or start a new session. The cost, whether appended announcements or a full re-re
 /plugin enable
 , or
 /plugin disable
-.
-As of v2.1.163, when a reload would trigger the full re-read,
+. As of v2.1.163, when a reload would trigger the full re-read,
 /reload-plugins
 shows a warning and does not apply the reload. Pass
 --force
@@ -417,7 +415,5 @@ Prompt caching
 Was this page helpful?
 Yes
 No
-Explore the context window
-Store instructions and memories
 ⌘
 I

@@ -242,8 +242,7 @@ Errors
 : view any plugin loading errors
 Go to the
 Discover
-tab to see plugins from the marketplace you just added.
-When your administrator has allowlisted the marketplace via the
+tab to see plugins from the marketplace you just added. When your administrator has allowlisted the marketplace via the
 pluginSuggestionMarketplaces
 managed setting, plugins marked as relevant to your current working directory are pinned at the top with a
 suggested for this directory
@@ -586,8 +585,7 @@ directory, so the summary can report
 even when the plugin’s skills reloaded.
 Reloading has a token cost on the next request: newly loaded components announce themselves in content appended to the conversation, while the existing history still reads from the prompt cache. A plugin that provides MCP servers costs more when its tools aren’t deferred by
 tool search
-: the change invalidates the cache and the next request re-reads the entire conversation.
-In that case
+: the change invalidates the cache and the next request re-reads the entire conversation. In that case
 /reload-plugins
 shows a warning and does not apply the reload; pass
 --force
@@ -798,7 +796,5 @@ for complete specifications
 Was this page helpful?
 Yes
 No
-Extend Claude with skills
-Create plugins
 ⌘
 I

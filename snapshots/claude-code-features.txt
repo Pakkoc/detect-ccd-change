@@ -964,7 +964,5 @@ System prompts
 Was this page helpful?
 Yes
 No
-How the agent loop works
-Work with sessions
 ⌘
 I

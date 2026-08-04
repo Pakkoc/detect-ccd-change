@@ -53,8 +53,7 @@ Claude Code includes a set of bundled skills, such as
 . Bundled skills are prompt-based: they give Claude detailed instructions and let it orchestrate the work using its tools. Most built-in commands instead execute fixed logic directly.
 You invoke a bundled skill the same way as any other skill, by typing
 /
-followed by the skill name. Claude invokes some bundled skills automatically when relevant; others,
-including
+followed by the skill name. Claude invokes some bundled skills automatically when relevant; others, including
 /verify
 and
 /code-review
@@ -528,8 +527,7 @@ to prevent Claude from automatically loading this skill. Use for workflows you w
 /name
 . Also prevents the skill from being
 preloaded into subagents
-.
-As of v2.1.196, also prevents the skill from running when a
+. As of v2.1.196, also prevents the skill from running when a
 scheduled task
 fires with the skill as its prompt. Default:
 false
@@ -600,8 +598,7 @@ to wait for the forked subagent’s result in the turn that invoked the skill, i
 running it in the background
 . Default:
 true
-.
-Requires Claude Code v2.1.218 or later.
+. Requires Claude Code v2.1.218 or later.
 hooks
 No
 Hooks scoped to this skill’s lifecycle. See
@@ -1029,8 +1026,7 @@ $ARGUMENTS
 , Claude Code appends
 ARGUMENTS: <your input>
 to the end of the skill content so Claude still sees what you typed.
-You can also stack several skills at the start of one message.
-Typing
+You can also stack several skills at the start of one message. Typing
 /write-tests /fix-issue 123
 loads both skills and passes the trailing text
 123
@@ -1186,8 +1182,7 @@ The forked subagent runs in the
 background
 : you keep working while it runs, and its result arrives in your conversation when it completes. Set
 background: false
-in the frontmatter to instead wait for the result in the turn that invoked the skill.
-Before v2.1.218, forked skills always blocked the turn until they finished.
+in the frontmatter to instead wait for the result in the turn that invoked the skill. Before v2.1.218, forked skills always blocked the turn until they finished.
 Claude Code also waits for the result, even when the skill doesn’t set
 background: false
 , in cases like these:
@@ -2225,7 +2220,5 @@ Claude Tag skills
 Was this page helpful?
 Yes
 No
-Reference
-Discover and install prebuilt plugins
 ⌘
 I

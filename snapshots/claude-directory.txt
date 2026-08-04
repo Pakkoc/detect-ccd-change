@@ -453,7 +453,5 @@ Configure subagents
 Was this page helpful?
 Yes
 No
-Extend Claude Code
-Explore the context window
 ⌘
 I

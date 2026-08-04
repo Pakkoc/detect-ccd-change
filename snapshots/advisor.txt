@@ -113,8 +113,7 @@ Sonnet 5 and Opus 4.6 are ranked as equally capable, so an Opus 4.6 main accepts
 Opus 4.7 or later
 Fable, and Opus 4.7 or later
 Opus 4.7 and later Opus models are ranked as equally capable, so any of them accepts another as an advisor. An Opus 4.7 main with an Opus 4.6 or Sonnet 5 advisor is rejected
-Fable 5 (
-v2.1.170+)
+Fable 5 (v2.1.170+)
 Fable
 An Opus or Sonnet advisor is rejected. Fable isn’t offered as the advisor, so a Fable 5 main model runs without one
 Fable 5 requires Claude Code v2.1.170 or later and Fable 5 access, whether it acts as the main model or the advisor.
@@ -198,8 +197,7 @@ configured with
 ANTHROPIC_BASE_URL
 , availability depends on whether the gateway forwards the request intact to the Anthropic API.
 Supported main model
-: Opus 4.6 or later, Sonnet 4.6 or later, or Haiku 4.5.
-Fable 5 also qualifies on Claude Code v2.1.170 or later, but a Fable 5 main
+: Opus 4.6 or later, Sonnet 4.6 or later, or Haiku 4.5. Fable 5 also qualifies on Claude Code v2.1.170 or later, but a Fable 5 main
 accepts only a Fable advisor
 and Fable
 isn’t offered as the advisor
@@ -265,7 +263,5 @@ The advisor strategy
 Was this page helpful?
 Yes
 No
-Speed up responses with fast mode
-Output styles
 ⌘
 I

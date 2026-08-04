@@ -225,8 +225,7 @@ Enable logging of assistant response text on
 assistant_response
 events (default: disabled). When unset, falls back to the value of
 OTEL_LOG_USER_PROMPTS
-.
-Requires Claude Code v2.1.193 or later
+. Requires Claude Code v2.1.193 or later
 1
 to enable,
 0
@@ -242,8 +241,7 @@ emit on
 tool_decision
 /
 tool_result
-even with the flag off.
-The exception requires Claude Code v2.1.214 or later
+even with the flag off. The exception requires Claude Code v2.1.214 or later
 1
 to enable
 OTEL_LOG_TOOL_CONTENT
@@ -275,8 +273,7 @@ Content limit: the maximum length of content-bearing attributes such as model re
 OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT
 or one of its logrecord and span variants, is set lower, Claude Code truncates at that smaller value so the
 [TRUNCATED ...]
-marker stays within the SDK limit.
-Requires Claude Code v2.1.214 or later
+marker stays within the SDK limit. Requires Claude Code v2.1.214 or later
 262144
 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
 Metrics temporality preference (default:
@@ -296,8 +293,7 @@ and
 http/json
 protocols, Claude Code sends each export request with a
 Content-Length
-header.
-Before v2.1.212, Claude Code versions from v2.1.191 onward sent these requests with chunked transfer encoding; Azure Monitor and other endpoints that require a declared length rejected them with
+header. Before v2.1.212, Claude Code versions from v2.1.191 onward sent these requests with chunked transfer encoding; Azure Monitor and other endpoints that require a declared length rejected them with
 411 Length Required
 or
 400
@@ -471,11 +467,9 @@ span_id
 values that join it to your application’s trace, even when the traces exporter isn’t configured, so your logging backend can correlate events with the rest of the trace.
 A record emitted while an interaction is active carries the interaction span’s IDs, even when Claude Code emits it outside the span’s async context, such as in a permission prompt callback or for a record buffered during startup and exported later. A record emitted with no active interaction span carries the inbound
 TRACEPARENT
-IDs directly.
-Before v2.1.214, records emitted outside the span’s async context carried the inbound
+IDs directly. Before v2.1.214, records emitted outside the span’s async context carried the inbound
 TRACEPARENT
-IDs instead of the span’s IDs.
-Before v2.1.212, event records emitted outside an active span didn’t carry
+IDs instead of the span’s IDs. Before v2.1.212, event records emitted outside an active span didn’t carry
 trace_id
 or
 span_id
@@ -1177,8 +1171,7 @@ wf_
 Workflow
 tool run. Filtering events by one
 workflow.run_id
-reconstructs that run’s API requests and tool results. The identifier covers the agents the workflow script spawns and any agents those spawn in turn, such as skill invocations. It matches the run identifier reported in the Workflow tool result. Absent on all other events.
-Requires Claude Code v2.1.202 or later
+reconstructs that run’s API requests and tool results. The identifier covers the agents the workflow script spawns and any agents those spawn in turn, such as skill invocations. It matches the run identifier reported in the Workflow tool result. Absent on all other events. Requires Claude Code v2.1.202 or later
 workflow.name
 : name of the workflow, its script’s
 meta.name
@@ -1188,8 +1181,7 @@ workflow.run_id
 custom
 unless
 OTEL_LOG_TOOL_DETAILS=1
-is set.
-Requires Claude Code v2.1.202 or later
+is set. Requires Claude Code v2.1.202 or later
 ​
 Metrics
 Claude Code exports the following metrics. The Unit column shows the OpenTelemetry unit string attached to each metric; count metrics carry none.
@@ -1483,8 +1475,7 @@ except for command dispatches, which can produce zero or many messages. On
 assistant_response
 , this is the response’s final transcript entry, which the next turn’s
 parentUuid
-chains from.
-Requires Claude Code v2.1.214 or later
+chains from. Requires Claude Code v2.1.214 or later
 client_request_id
 Client-generated UUID sent as the
 x-client-request-id
@@ -1496,8 +1487,7 @@ on first-party API connections; absent on third-party provider backends and when
 request_id
 . Matches the same attribute on the
 llm_request
-trace span.
-Requires Claude Code v2.1.214 or later
+trace span. Requires Claude Code v2.1.214 or later
 To trace all activity triggered by a single prompt, filter your events by a specific
 prompt.id
 value. This returns the user_prompt event, any api_request events, and any tool_result events that occurred while processing that prompt.
@@ -1545,8 +1535,7 @@ prompt
 OTEL_LOG_USER_PROMPTS=1
 to include it
 message.uuid
-: UUID of the resulting user message, matching the persisted transcript entry. Absent on command dispatches, which can produce zero or many messages.
-Requires Claude Code v2.1.214 or later
+: UUID of the resulting user message, matching the persisted transcript entry. Absent on command dispatches, which can produce zero or many messages. Requires Claude Code v2.1.214 or later
 command_name
 : Command name when the prompt invokes one. Built-in and bundled command names such as
 compact
@@ -1572,8 +1561,7 @@ mcp
 custom
 ​
 Assistant response event
-Logged after each API request that returns text content from the model. Only the response’s text blocks are included; thinking blocks and tool-use blocks are excluded.
-Requires Claude Code v2.1.193 or later.
+Logged after each API request that returns text content from the model. Only the response’s text blocks are included; thinking blocks and tool-use blocks are excluded. Requires Claude Code v2.1.193 or later.
 Event Name
 :
 claude_code.assistant_response
@@ -1611,8 +1599,7 @@ header. Present only when the API returns one
 message.uuid
 : UUID of the response’s final transcript entry. An API response is persisted as one transcript entry per content block; this is the last one, which the next turn’s
 parentUuid
-chains from.
-Requires Claude Code v2.1.214 or later
+chains from. Requires Claude Code v2.1.214 or later
 query_source
 : Subsystem that issued the request, such as
 "repl_main_thread"
@@ -1695,8 +1682,7 @@ mcp_server_name
 mcp_tool_name
 pair is included even with the flag off, the same host-authored exception as the
 Tool decision event
-,
-requiring Claude Code v2.1.214 or later. The parameters vary by tool:
+, requiring Claude Code v2.1.214 or later. The parameters vary by tool:
 For Bash tool: includes
 bash_command
 ,
@@ -1777,8 +1763,7 @@ client_request_id
 x-client-request-id
 request header. Matches the same attribute on the
 llm_request
-trace span. Absent on third-party provider backends and when the request was retried through the non-streaming fallback.
-Requires Claude Code v2.1.214 or later
+trace span. Absent on third-party provider backends and when the request was retried through the non-streaming fallback. Requires Claude Code v2.1.214 or later
 speed
 :
 "fast"
@@ -1859,8 +1844,7 @@ client_request_id
 x-client-request-id
 request header. Available even when a failure such as a timeout or connection error never produced a server
 request_id
-. Absent on third-party provider backends and when the request was retried through the non-streaming fallback.
-Requires Claude Code v2.1.214 or later
+. Absent on third-party provider backends and when the request was retried through the non-streaming fallback. Requires Claude Code v2.1.214 or later
 speed
 :
 "fast"
@@ -2144,8 +2128,7 @@ decision
 or
 "reject"
 tool_source
-: Always present. The tool’s provenance, as a closed set of CLI-authored values.
-Requires Claude Code v2.1.214 or later
+: Always present. The tool’s provenance, as a closed set of CLI-authored values. Requires Claude Code v2.1.214 or later
 "builtin"
 : the CLI’s own tools
 "mcp"
@@ -2166,8 +2149,7 @@ source
 --allowedTools
 or
 --disallowedTools
-flags, the active permission mode, a session-scoped grant from an earlier prompt in the same interactive CLI session, or because the tool is inherently safe. The event doesn’t indicate which of these sources matched.
-Claude Code also reports
+flags, the active permission mode, a session-scoped grant from an earlier prompt in the same interactive CLI session, or because the tool is inherently safe. The event doesn’t indicate which of these sources matched. Claude Code also reports
 "config"
 when the permission prompt request itself fails, for example when the Agent SDK’s
 canUseTool
@@ -2199,8 +2181,7 @@ sessions, both the choice and later matches emit
 "user_temporary"
 . Treated as an accept.
 "user_abort"
-: Emitted when the user dismissed the permission prompt without answering.
-In Agent SDK and non-interactive
+: Emitted when the user dismissed the permission prompt without answering. In Agent SDK and non-interactive
 -p
 sessions, this includes interrupting the turn while a
 canUseTool
@@ -2247,8 +2228,7 @@ is always the literal
 "mcp_tool"
 , and the server and tool names appear only in
 tool_parameters
-with the flag on; argument content requires the flag everywhere.
-Requires Claude Code v2.1.214 or later
+with the flag on; argument content requires the flag everywhere. Requires Claude Code v2.1.214 or later
 For Bash tool: includes
 bash_command
 ,
@@ -2562,8 +2542,7 @@ host_owned_mcp
 true
 when the SDK host manages this plugin’s MCP connections and Claude Code skipped reading the plugin’s MCP server configuration,
 false
-otherwise.
-Requires Claude Code v2.1.172 or later
+otherwise. Requires Claude Code v2.1.172 or later
 skill_path_count
 : number of skill directories the plugin declares
 command_path_count
@@ -2577,8 +2556,7 @@ when the session was started with
 --safe-mode
 ,
 "false"
-otherwise. In safe mode this event reports configured inventory only; the plugin’s commands, skills, hooks, and MCP servers don’t load.
-Requires Claude Code v2.1.169 or later
+otherwise. In safe mode this event reports configured inventory only; the plugin’s commands, skills, hooks, and MCP servers don’t load. Requires Claude Code v2.1.169 or later
 ​
 Skill activated event
 Logged when a skill is invoked, whether Claude calls it through the Skill tool or you run it as a
@@ -2759,8 +2737,7 @@ when the session was started with
 --safe-mode
 ,
 "false"
-otherwise.
-Requires Claude Code v2.1.169 or later
+otherwise. Requires Claude Code v2.1.169 or later
 hook_matcher
 (when
 OTEL_LOG_TOOL_DETAILS=1
@@ -2823,8 +2800,7 @@ when the session was started with
 --safe-mode
 ,
 "false"
-otherwise.
-Requires Claude Code v2.1.169 or later
+otherwise. Requires Claude Code v2.1.169 or later
 hook_definitions
 : JSON-serialized hook configuration. Included only when both detailed beta tracing and
 OTEL_LOG_TOOL_DETAILS=1
@@ -2878,8 +2854,7 @@ when the session was started with
 --safe-mode
 ,
 "false"
-otherwise.
-Requires Claude Code v2.1.169 or later
+otherwise. Requires Claude Code v2.1.169 or later
 hook_definitions
 : JSON-serialized hook configuration. Included only when both detailed beta tracing and
 OTEL_LOG_TOOL_DETAILS=1
@@ -2960,8 +2935,7 @@ means it was reused;
 "miss_hook"
 , and
 "miss_not_ready"
-give the reason a fresh summary was computed instead.
-Requires Claude Code v2.1.153 or later
+give the reason a fresh summary was computed instead. Requires Claude Code v2.1.153 or later
 ​
 Feedback survey event
 Logged when a session quality survey is shown or answered. See
@@ -3047,8 +3021,7 @@ attributes
 Cost metrics are approximations. For official billing data, refer to your API provider (Claude Console, Amazon Bedrock, or Google Cloud’s Agent Platform).
 Claude Code counts each streaming response toward the cost and token metrics exactly once, including when a gateway or proxy behind
 ANTHROPIC_BASE_URL
-streams usage progressively across multiple frames.
-Before v2.1.214, streams that carried usage in more than one frame inflated
+streams usage progressively across multiple frames. Before v2.1.214, streams that carried usage in more than one frame inflated
 claude_code.cost.usage
 and
 claude_code.token.usage
@@ -3067,8 +3040,7 @@ attribute is available on
 claude_code.token.usage
 ,
 claude_code.cost.usage
-, and
-from v2.1.172,
+, and from v2.1.172,
 claude_code.lines_of_code.count
 .
 Per-model breakdowns of commits can only be approximated by joining against the token or cost metrics on
@@ -3087,8 +3059,7 @@ The
 attempt
 attribute on the event records the total number of attempts.
 CLAUDE_CODE_MAX_RETRIES
-defaults to 10 and is capped at 15;
-as of v2.1.199,
+defaults to 10 and is capped at 15; as of v2.1.199,
 CLAUDE_CODE_RETRY_WATCHDOG
 raises the default and removes the cap. When the request exhausts all retries on a transient error,
 attempt
@@ -3207,8 +3178,7 @@ pair inside
 tool_parameters
 , the same host-authored exception as
 tool_decision
-,
-requiring Claude Code v2.1.214 or later
+, requiring Claude Code v2.1.214 or later
 tool_decision
 : keeps
 tool_source
@@ -3436,8 +3406,7 @@ carry the
 mcp_server_name
 /
 mcp_tool_name
-pair, host-authored names rather than argument content, even with the flag off.
-The exception requires Claude Code v2.1.214 or later. This data is sent only to the OTEL endpoint you configure, never to Anthropic. Arguments may still contain sensitive values, so configure your telemetry backend to filter or redact these attributes as needed. When enabled:
+pair, host-authored names rather than argument content, even with the flag off. The exception requires Claude Code v2.1.214 or later. This data is sent only to the OTEL endpoint you configure, never to Anthropic. Arguments may still contain sensitive values, so configure your telemetry backend to filter or redact these attributes as needed. When enabled:
 tool_result
 and
 tool_decision
@@ -3492,7 +3461,5 @@ Claude Code Monitoring Implementation (Amazon Bedrock)
 Was this page helpful?
 Yes
 No
-Protocol reference
-Costs
 ⌘
 I

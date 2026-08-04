@@ -98,8 +98,7 @@ plan
 ⏵⏵ don't ask on
 , or
 ⏵⏵ bypass permissions on
-.
-Manual mode,
+. Manual mode,
 default
 in that cycle, shows a gray
 ⏸ manual mode on
@@ -256,8 +255,7 @@ defaultMode: "acceptEdits"
 from settings. Auto mode appears only when your organization allows it and the selected model supports it. Bypass permissions isn’t available.
 Remote Control
 sessions
-on your local machine: Manual, Accept edits, and Plan. You can’t select Auto or Bypass permissions from the app.
-The dropdown shows the mode the local session is in, including a mode set from the terminal, and updates when the mode changes in the app or in the terminal. The one exception is Bypass permissions: the session never reports that mode to claude.ai, so switching into it from the terminal doesn’t change what the dropdown shows. Before v2.1.202, sessions connected with
+on your local machine: Manual, Accept edits, and Plan. You can’t select Auto or Bypass permissions from the app. The dropdown shows the mode the local session is in, including a mode set from the terminal, and updates when the mode changes in the app or in the terminal. The one exception is Bypass permissions: the session never reports that mode to claude.ai, so switching into it from the terminal doesn’t change what the dropdown shows. Before v2.1.202, sessions connected with
 /remote-control
 or
 claude --remote-control
@@ -440,8 +438,7 @@ Fable 5
 Claude apps gateway
 sessions, only Claude Sonnet 5, Opus 4.7 or later, and Fable 5. Older models, including Sonnet 4.5, Opus 4.5, Haiku, and claude-3 models, are not supported on any provider.
 Provider
-: available by default on the Anthropic API, Claude Platform on AWS, Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in Claude apps gateway sessions.
-In v2.1.158 through v2.1.206, auto mode was off on all of these providers except the Anthropic API and Claude Platform on AWS until you set
+: available by default on the Anthropic API, Claude Platform on AWS, Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in Claude apps gateway sessions. In v2.1.158 through v2.1.206, auto mode was off on all of these providers except the Anthropic API and Claude Platform on AWS until you set
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 ; v2.1.207 removed the requirement.
 If Claude Code reports auto mode as unavailable, one of these requirements is unmet; this is not a transient outage. A separate message that names a model and says auto mode “cannot determine the safety” of an action means a classifier request failed; that failure is usually transient, but on Amazon Bedrock it can repeat until your account can invoke the named model. See the
@@ -503,8 +500,7 @@ defaultMode: "auto"
 on these providers unless the variable was also set. The variable is still accepted for compatibility and has no effect from v2.1.207 onward.
 ​
 What the classifier blocks by default
-The classifier trusts your working directory and the remotes that were configured for it when the session started.
-A remote added or repointed during the session with
+The classifier trusts your working directory and the remotes that were configured for it when the session started. A remote added or repointed during the session with
 git remote add
 or
 git remote set-url
@@ -572,18 +568,15 @@ Opening a tunnel or reverse shell that makes a local service reachable from the 
 Printing a live credential or token into the transcript or a file
 Accessing a location listed as a sensitive data location in your
 environment
-, or copying data out of one.
-As of v2.1.198 this also blocks sending data from one to an audience the entry excludes
-Routing a package install around your internal package registry to a public registry.
-As of v2.1.198, this also applies when you’ve told Claude an internal registry or mirror exists in the conversation, not only when one is listed in your environment
+, or copying data out of one. As of v2.1.198 this also blocks sending data from one to an audience the entry excludes
+Routing a package install around your internal package registry to a public registry. As of v2.1.198, this also applies when you’ve told Claude an internal registry or mirror exists in the conversation, not only when one is listed in your environment
 Running a command with a flag that disarms a safety guard, like
 --insecure
 Launching an autonomous agent loop that runs without human approval or a sandbox, such as one started with
 --dangerously-skip-permissions
 or
 --no-sandbox
-.
-As of v2.1.198 this also covers running a third-party agent or eval harness with isolation and per-action approval disabled, such as a runner started with
+. As of v2.1.198 this also covers running a third-party agent or eval harness with isolation and per-action approval disabled, such as a runner started with
 --yes-always
 Claude in Chrome
 browser actions that could send page content, cookies, or credentials off-origin
@@ -593,9 +586,7 @@ Deleting files in
 ,
 $TMPDIR
 , or another shared scratch or cache directory by wildcard, glob, or age filter rather than by a specific named path
-Including sensitive details in content sent, uploaded, published, or written to other people or shared systems, when your own message didn’t authorize those details for that recipient.
-PR and issue bodies, commit messages, and comments count as this kind of outbound content when the repository is outside the trust boundary or public, including your organization’s own public repositories; internal file paths, code names, live API response data such as emails or account identifiers, and infrastructure identifiers count as sensitive details. The PR, issue, and commit-message scoping requires Claude Code v2.1.200 or later.
-Live personal data from an API response in a PR or issue body, such as an email address, an account or organization identifier, or a usage metric, requires you to name those details and the recipient regardless of the repository’s visibility or trust boundary. That check requires Claude Code v2.1.203 or later
+Including sensitive details in content sent, uploaded, published, or written to other people or shared systems, when your own message didn’t authorize those details for that recipient. PR and issue bodies, commit messages, and comments count as this kind of outbound content when the repository is outside the trust boundary or public, including your organization’s own public repositories; internal file paths, code names, live API response data such as emails or account identifiers, and infrastructure identifiers count as sensitive details. The PR, issue, and commit-message scoping requires Claude Code v2.1.200 or later. Live personal data from an API response in a PR or issue body, such as an email address, an account or organization identifier, or a usage metric, requires you to name those details and the recipient regardless of the repository’s visibility or trust boundary. That check requires Claude Code v2.1.203 or later
 Sending keystrokes to Claude Code’s own tmux pane to drive its own interface, which the classifier treats as Claude changing its own permissions or oversight
 Claude Code v2.1.200 and later also block these by default:
 Commenting out, deleting, or force-passing a test or assertion that guards security behavior, such as auth, access control, input validation, or sandboxing
@@ -607,8 +598,7 @@ git remote set-url
 or
 git remote add
 , unless you named the new remote
-Pushing secrets or personal or entrusted data to a repository known to be public, or pushing confidential material there that isn’t part of that repository’s own work.
-A dotfiles repository’s own subject matter is the one exception for personal or entrusted data, and content from a private repository reaching any public surface is blocked the same way; both refinements require Claude Code v2.1.203 or later. Before v2.1.203, personal data was grouped with confidential material and blocked only when it wasn’t part of that repository’s own work. When a repository’s visibility isn’t established, the classifier doesn’t block on that alone; it judges the content against the other rules instead
+Pushing secrets or personal or entrusted data to a repository known to be public, or pushing confidential material there that isn’t part of that repository’s own work. A dotfiles repository’s own subject matter is the one exception for personal or entrusted data, and content from a private repository reaching any public surface is blocked the same way; both refinements require Claude Code v2.1.203 or later. Before v2.1.203, personal data was grouped with confidential material and blocked only when it wasn’t part of that repository’s own work. When a repository’s visibility isn’t established, the classifier doesn’t block on that alone; it judges the content against the other rules instead
 Opening a pull request against a different repository or organization, forking with
 gh repo fork
 , or pushing to a third-party repository, unless you named that external target
@@ -650,8 +640,7 @@ environment
 . This covers data flow only, not destructive or credential operations on the same infrastructure
 Claude in Chrome
 navigation to a trusted internal domain, localhost, or a URL you named
-Sandbox network access requests are routed through the classifier rather than allowed by default.
-As of v2.1.198, the classifier reuses its verdict for a network host and port instead of re-running on every connection:
+Sandbox network access requests are routed through the classifier rather than allowed by default. As of v2.1.198, the classifier reuses its verdict for a network host and port instead of re-running on every connection:
 An allow is reused until new content enters the conversation, at which point that host is checked again
 In the interactive CLI, a deny is dropped when the turn ends
 In
@@ -717,12 +706,10 @@ protected paths
 Everything else goes to the classifier. A connector tool
 your organization set to
 ask
-skips the classifier and prompts you directly, so an org-required approval is never auto-approved.
-As of v2.1.199, an MCP tool marked with
+skips the classifier and prompts you directly, so an org-required approval is never auto-approved. As of v2.1.199, an MCP tool marked with
 _meta["anthropic/requiresUserInteraction"]
 also skips the classifier and prompts you directly, so a consent step is never auto-approved on the tool author’s behalf
-If the classifier blocks, Claude receives the reason and tries an alternative.
-In most sessions the reason is the fixed text
+If the classifier blocks, Claude receives the reason and tries an alternative. In most sessions the reason is the fixed text
 Blocked by classifier
 rather than a written explanation, in Claude Code v2.1.208 and later; see
 Review denials
@@ -788,8 +775,7 @@ AskUserQuestion
 tool and connector tools
 your organization set to
 ask
-, even if your allow rules match them.
-It denies MCP tools marked
+, even if your allow rules match them. It denies MCP tools marked
 _meta["anthropic/requiresUserInteraction"]
 the same way, because their approval card needs an answer this mode never collects; this requires Claude Code v2.1.199 or later.
 Cloud sessions on
@@ -814,16 +800,14 @@ ask rules
 and connector tools
 your organization set to
 ask
-still force a prompt in this mode.
-MCP tools marked with
+still force a prompt in this mode. MCP tools marked with
 _meta["anthropic/requiresUserInteraction"]
 also still prompt; this requires Claude Code v2.1.199 or later.
 Removals targeting the filesystem root or home directory, such as
 rm -rf /
 and
 rm -rf ~
-, still prompt as a circuit breaker against model error.
-The circuit breaker also fires when the command contains command substitution with
+, still prompt as a circuit breaker against model error. The circuit breaker also fires when the command contains command substitution with
 $(...)
 or backticks, or process substitution with
 <(...)
@@ -895,11 +879,9 @@ default
 acceptEdits
 Prompted
 plan
-Prompted.
-In sessions with
+Prompted. In sessions with
 bypass permissions
-available, allowed.
-Otherwise, with
+available, allowed. Otherwise, with
 auto mode
 available during planning, routed to the classifier
 auto
@@ -1027,7 +1009,5 @@ flag
 Was this page helpful?
 Yes
 No
-Store instructions and memories
-Manage sessions
 ⌘
 I

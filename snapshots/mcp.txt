@@ -606,15 +606,13 @@ or
 MCP_TOOL_TIMEOUT
 ; setting either to 60 seconds or higher raises the per-request timer to that value, a lower value doesn’t shorten it, and the 28-hour default of an unset
 MCP_TOOL_TIMEOUT
-never feeds it. Stdio and WebSocket servers have no per-request timer.
-Before v2.1.162, values below 1000 were floored to one second instead.
+never feeds it. Stdio and WebSocket servers have no per-request timer. Before v2.1.162, values below 1000 were floored to one second instead.
 A per-server
 timeout
 of at least 1000 also acts as a floor on the idle timeout described below: Claude Code never aborts that server’s tool calls for idleness sooner than the per-server
 timeout
 . Requires Claude Code v2.1.203 or later.
-A tool call to an MCP server that sends no response and no progress notification for the idle window aborts with an error instead of waiting for the wall-clock limit. The idle timeout requires Claude Code v2.1.187 or later.
-It applies to every server type except IDE servers and SDK in-process servers. The idle window defaults to five minutes for HTTP, SSE, WebSocket, and
+A tool call to an MCP server that sends no response and no progress notification for the idle window aborts with an error instead of waiting for the wall-clock limit. The idle timeout requires Claude Code v2.1.187 or later. It applies to every server type except IDE servers and SDK in-process servers. The idle window defaults to five minutes for HTTP, SSE, WebSocket, and
 claude.ai connector
 servers, and to 30 minutes for stdio servers. Before v2.1.203, stdio servers were exempt from the idle timeout.
 Set the
@@ -743,12 +741,10 @@ If you enable or disable a plugin during a session, run
 /reload-plugins
 to connect or disconnect its MCP servers. When you reload, Claude Code keeps the live connections of plugin servers whose configuration is unchanged, and does the same when you
 replace the session’s MCP server list
-from the Agent SDK without naming them.
-Before v2.1.210, Claude Code disconnected plugin-provided MCP servers that the new SDK server list didn’t name
+from the Agent SDK without naming them. Before v2.1.210, Claude Code disconnected plugin-provided MCP servers that the new SDK server list didn’t name
 In
 web sessions
-, an MCP call to a plugin server that isn’t connected yet, such as right after an idle session wakes, starts the server on demand and waits for it to connect.
-Before v2.1.211, plugin servers in a web session reconnected only when the next message started a turn, so MCP calls after an idle session woke failed until then
+, an MCP call to a plugin server that isn’t connected yet, such as right after an idle session wakes, starts the server on demand and waits for it to connect. Before v2.1.211, plugin servers in a web session reconnected only when the next message started a turn, so MCP calls after an idle session woke failed until then
 Path placeholders
 :
 ${CLAUDE_PLUGIN_ROOT}
@@ -777,8 +773,7 @@ url
 headers
 , and
 headersHelper
-.
-Before v2.1.195,
+. Before v2.1.195,
 headersHelper
 passed the placeholder through as a literal string
 User environment access
@@ -1175,8 +1170,7 @@ WWW-Authenticate
 header pointing to its authorization server gets the same automatic discovery as any other remote server.
 Claude Code also shows a startup notice when one or more configured servers need authentication, so you don’t have to open
 /mcp
-to discover which servers need sign-in. The notice requires Claude Code v2.1.193 or later.
-It counts only servers you can sign in to from Claude Code. Before v2.1.218, it also counted
+to discover which servers need sign-in. The notice requires Claude Code v2.1.193 or later. It counts only servers you can sign in to from Claude Code. Before v2.1.218, it also counted
 claude.ai connectors
 that weren’t connected in claude.ai, which you can connect only from claude.ai settings.
 In non-interactive mode there’s no
@@ -2234,7 +2228,5 @@ deniedMcpServers
 Was this page helpful?
 Yes
 No
-Quickstart
-Extend Claude with skills
 ⌘
 I

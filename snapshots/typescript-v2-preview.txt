@@ -703,7 +703,5 @@ V2 examples on GitHub
 Was this page helpful?
 Yes
 No
-TypeScript SDK
-Python SDK
 ⌘
 I

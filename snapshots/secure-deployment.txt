@@ -425,7 +425,5 @@ Firecracker Documentation
 Was this page helpful?
 Yes
 No
-Hosting the Agent SDK
-TypeScript SDK
 ⌘
 I

@@ -288,8 +288,7 @@ clickable links example
 Sizing output to the terminal
 Claude Code captures your script’s output instead of connecting it directly to the terminal, so
 tput cols
-and language-level width detection cannot read the terminal size from inside the script.
-Read the
+and language-level width detection cannot read the terminal size from inside the script. Read the
 COLUMNS
 and
 LINES
@@ -347,8 +346,7 @@ remote, for example
 origin
 remote is configured
 cost.total_cost_usd
-Estimated session cost in USD, computed client-side. May differ from your actual bill.
-Resets to $0 when
+Estimated session cost in USD, computed client-side. May differ from your actual bill. Resets to $0 when
 /clear
 starts a new session
 cost.total_duration_ms
@@ -362,8 +360,7 @@ Lines of code changed
 context_window.total_input_tokens
 ,
 context_window.total_output_tokens
-Token counts currently in the context window, from the most recent API response. Input includes cache reads and writes.
-Before v2.1.132 these were cumulative session totals
+Token counts currently in the context window, from the most recent API response. Input includes cache reads and writes. Before v2.1.132 these were cumulative session totals
 context_window.context_window_size
 Maximum context window size in tokens. 200000 by default, or 1000000 for models with extended context.
 context_window.used_percentage
@@ -421,8 +418,7 @@ prompt_id
 UUID identifying the user prompt currently being processed. Matches the
 prompt.id
 attribute on OpenTelemetry events
-. Absent until the first user input.
-Requires Claude Code v2.1.196 or later
+. Absent until the first user input. Requires Claude Code v2.1.196 or later
 transcript_path
 Path to conversation transcript file
 version
@@ -4668,7 +4664,5 @@ On narrow terminals, these notifications may truncate your status line output
 Was this page helpful?
 Yes
 No
-Voice dictation
-Customize keyboard shortcuts
 ⌘
 I

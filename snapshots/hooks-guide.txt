@@ -237,6 +237,15 @@ Allow Notifications
 ]
 }
 }
+If no notification appears
+notify-send
+needs a desktop notification daemon, which headless servers, SSH sessions, and most containers don’t have. Test the command directly first:
+notify-send
+'Claude Code'
+'test'
+If the command isn’t found, install the
+libnotify-bin
+package on Debian and Ubuntu, or your distribution’s equivalent.
 {
 "hooks"
 : {
@@ -267,6 +276,12 @@ Allow Notifications
 ]
 }
 }
+If no dialog appears
+This command opens a dialog box rather than a notification in the corner of your screen, so the dialog can open behind your terminal window. Test the command directly in PowerShell first. If you run Claude Code inside WSL,
+powershell.exe
+must be available on your
+PATH
+through Windows interop.
 The empty
 matcher
 fires on all notification types. To fire only on specific events, set it to one of these values:
@@ -352,6 +367,9 @@ Edit,Write
 and
 ,
 are interchangeable list separators for tool-name matchers on those versions.
+When the hook succeeds, Claude Code shows nothing in the conversation. To confirm the hook ran, check that the edited file is reformatted, or see
+Debug techniques
+.
 The Bash examples on this page use
 jq
 for JSON parsing. Install it with
@@ -1176,11 +1194,18 @@ Notification
 exit code 2 behavior per event
 for the full list.
 Any other exit code
-: the action proceeds. The transcript shows a
+: the action proceeds
+The transcript shows a
 <hook name> hook error
-notice followed by the first line of stderr; the full stderr goes to the
-debug log
-.
+notice, then the first line of stderr prefixed with
+Failed with non-blocking status code:
+To capture the full stderr, enable
+debug logging
+with
+claude --debug
+or by running
+/debug
+mid-session
 ​
 Structured JSON output
 Exit codes only let you block or stay silent. For more control, exit 0 and print a JSON object to stdout instead.
@@ -1329,8 +1354,7 @@ tool, not when it uses
 Bash
 ,
 Read
-, or any other tool.
-On Claude Code v2.1.191 or later, a comma separates alternatives the same way, so
+, or any other tool. On Claude Code v2.1.191 or later, a comma separates alternatives the same way, so
 "Edit, Write"
 is equivalent. See
 Matcher patterns
@@ -1812,8 +1836,7 @@ appears in the chat as a warning line. Set
 continueOnBlock: true
 on the hook to instead return the
 reason
-to Claude as the tool error, so it can adjust and continue.
-Before v2.1.210, the deny
+to Claude as the tool error, so it can adjust and continue. Before v2.1.210, the deny
 reason
 was returned to Claude as the tool error and the turn continued
 PostToolUse
@@ -2195,11 +2218,16 @@ i
 means interactive. Hooks run in non-interactive shells, so the echo is skipped.
 ​
 Debug techniques
-The transcript view, toggled with
+Press
 Ctrl+O
-, shows a one-line summary for each hook that fired: success is silent, blocking errors show stderr, and non-blocking errors show a
+to open the transcript view to check the outcome of a hook run:
+After a successful run, where the hook exited 0, you see nothing
+To confirm a hook ran, check for its effect, like a reformatted file, or turn on debug logging as described below and trigger the hook again
+After a blocking error, where the hook exited 2 and Claude Code stopped the action, you see the hook’s stderr
+After a non-blocking error, where the hook exited with any other code and the action proceeded, you see a
 <hook name> hook error
-notice followed by the first line of stderr.
+notice followed by the first line of stderr, prefixed with
+Failed with non-blocking status code:
 For full execution details including which hooks matched, their exit codes, stdout, and stderr, read the debug log. Start Claude Code with
 claude --debug-file /tmp/claude.log
 to write to a known path, then
@@ -2218,7 +2246,5 @@ Bash command validator example
 Was this page helpful?
 Yes
 No
-Share session output as artifacts
-Push external events to Claude
 ⌘
 I

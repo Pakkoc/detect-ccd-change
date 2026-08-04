@@ -200,7 +200,5 @@ Scheduling comparison
 Was this page helpful?
 Yes
 No
-Run prompts on a schedule
-Programmatic usage
 ⌘
 I

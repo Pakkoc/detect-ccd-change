@@ -41,8 +41,7 @@ The checkpoint system tracks:
 Files created during the session
 Files modified during the session
 The original content of modified files
-When you rewind to a checkpoint, Claude Code deletes the files it created and restores the files it modified to their content at that point.
-Claude Code skips a tracked path that is a symlink, hard link, or other non-regular file. It also skips a tracked file whose parent directory no longer resolves to its checkpoint-time location, or whose backup it can’t read safely.
+When you rewind to a checkpoint, Claude Code deletes the files it created and restores the files it modified to their content at that point. Claude Code skips a tracked path that is a symlink, hard link, or other non-regular file. It also skips a tracked file whose parent directory no longer resolves to its checkpoint-time location, or whose backup it can’t read safely.
 RewindFilesResult
 counts every skipped path in its
 skippedLinks
@@ -2088,7 +2087,5 @@ method.
 Was this page helpful?
 Yes
 No
-Intercept and control agent behavior with hooks
-Track cost and usage
 ⌘
 I

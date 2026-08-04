@@ -626,7 +626,5 @@ When you run the example, each query prints its final result text: first the aut
 Was this page helpful?
 Yes
 No
-Persist sessions to external storage
-Handle approvals and user input
 ⌘
 I

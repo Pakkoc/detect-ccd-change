@@ -50,8 +50,7 @@ Publishes an HTML or Markdown file as an
 artifact
 : a private, interactive page on claude.ai. You can share it with a public link, or inside your organization on Team and Enterprise plans, where public sharing requires an Owner to
 enable it
-.
-Requires a Pro, Max, Team, or Enterprise plan and
+. Requires a Pro, Max, Team, or Enterprise plan and
 /login
 authentication; see
 Availability
@@ -83,8 +82,7 @@ Makes targeted edits to specific files. See
 Edit tool behavior
 Yes
 EndConversation
-Ends the session, in rare cases of sustained abusive input or when you ask Claude to demonstrate the tool.
-Requires Claude Code v2.1.213 or later. See
+Ends the session, in rare cases of sustained abusive input or when you ask Claude to demonstrate the tool. Requires Claude Code v2.1.213 or later. See
 EndConversation tool behavior
 No
 EnterPlanMode
@@ -95,9 +93,7 @@ Creates an isolated
 git worktree
 and switches into it. Pass a
 path
-to switch into an existing worktree instead of creating a new one.
-On first entry the target may be a worktree of the current repository or, in a multi-repo workspace, of a repository nested inside it. Before v2.1.203, a nested repository’s worktree was rejected.
-A
+to switch into an existing worktree instead of creating a new one. On first entry the target may be a worktree of the current repository or, in a multi-repo workspace, of a repository nested inside it. Before v2.1.203, a nested repository’s worktree was rejected. A
 path
 outside
 .claude/worktrees/
@@ -154,8 +150,7 @@ Sends a desktop notification, and a phone push when
 Remote Control
 is connected, so a long-running task or
 scheduled task
-can reach you when you step away.
-Push delivery runs through Anthropic-hosted infrastructure, which is not accessible from Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry
+can reach you when you step away. Push delivery runs through Anthropic-hosted infrastructure, which is not accessible from Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry
 No
 Read
 Reads the contents of files. See
@@ -169,13 +164,10 @@ Creates, updates, runs, and lists
 Routines
 on claude.ai. Backs the
 /schedule
-command.
-Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
+command. Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
 No
 ReportFindings
-Reports code-review findings as a structured list, with a file, summary, and failure scenario per finding, so Claude Code can render them instead of printing them as text. Claude calls it when active code-review instructions tell it to.
-Requires Claude Code v2.1.196 or later.
-As of v2.1.199, a finding can also carry an optional
+Reports code-review findings as a structured list, with a file, summary, and failure scenario per finding, so Claude Code can render them instead of printing them as text. Claude calls it when active code-review instructions tell it to. Requires Claude Code v2.1.196 or later. As of v2.1.199, a finding can also carry an optional
 category
 slug, such as
 correctness
@@ -189,15 +181,13 @@ self-paced
 /loop
 . Claude calls this at the end of each iteration to pick when the next one runs, between one minute and one hour out; you don’t call it directly. To end the loop instead, Claude calls it with
 stop: true
-, which cancels the pending wakeup.
-The
+, which cancels the pending wakeup. The
 stop
 field requires Claude Code v2.1.202 or later. The pending wakeup appears in
 session_crons
 in
 Stop hook input
-.
-Not available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, where a
+. Not available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, where a
 /loop
 prompt with no interval runs on a fixed schedule instead
 No
@@ -208,14 +198,11 @@ teammate, or
 resumes a subagent
 by its agent ID or name. A completed subagent auto-resumes in the background; a subagent you stopped from
 /tasks
-doesn’t and the call returns a refusal. Structured team-protocol messages require agent teams. A receiver never treats a message from another agent as your consent or approval.
-As of v2.1.198, a subagent treats a message from the agent that launched it as normal task direction rather than as a peer request.
-As of v2.1.199, a send to a name that now resolves to a different agent than it did earlier in the conversation is refused instead of delivered; see
+doesn’t and the call returns a refusal. Structured team-protocol messages require agent teams. A receiver never treats a message from another agent as your consent or approval. As of v2.1.198, a subagent treats a message from the agent that launched it as normal task direction rather than as a peer request. As of v2.1.199, a send to a name that now resolves to a different agent than it did earlier in the conversation is refused instead of delivered; see
 Resume subagents
 No
 SendUserFile
-Sends files from the session to you with an optional caption, so a generated report, diagram, screenshot, or built artifact reaches your device instead of only being mentioned in the transcript.
-As of v2.1.196, the optional
+Sends files from the session to you with an optional caption, so a generated report, diagram, screenshot, or built artifact reaches your device instead of only being mentioned in the transcript. As of v2.1.196, the optional
 display
 input controls presentation:
 render
@@ -251,15 +238,12 @@ No
 TaskOutput
 Retrieves output from a background task. Deprecated in favor of
 Read
-on the task’s output file path.
-When no task matches the ID, the error lists the running background agents by ID and description. Before v2.1.203, the error named only the missing ID
+on the task’s output file path. When no task matches the ID, the error lists the running background agents by ID and description. Before v2.1.203, the error named only the missing ID
 No
 TaskStop
-Stops a running background task by ID.
-It also accepts an
+Stops a running background task by ID. It also accepts an
 agent-team teammate
-or a named background agent by agent ID or name. Before v2.1.198, it accepted only a background task ID.
-When no task matches the ID, the error lists the running background agents by ID and description, including agents that another agent spawned. Before v2.1.203, the error listed running teammates and named agents but not background agents another agent spawned, so those couldn’t be identified or stopped from the main conversation
+or a named background agent by agent ID or name. Before v2.1.198, it accepted only a background task ID. When no task matches the ID, the error lists the running background agents by ID and description, including agents that another agent spawned. Before v2.1.203, the error listed running teammates and named agents but not background agents another agent spawned, so those couldn’t be identified or stopped from the main conversation
 No
 TaskUpdate
 Updates task status, dependencies, details, or deletes tasks
@@ -380,8 +364,7 @@ An
 Edit(...)
 allow rule also grants read access to the same path, so you don’t need a matching
 Read(...)
-rule.
-A
+rule. A
 Read(...)
 deny rule also blocks the Edit tool on the same path, including creating a new file there, because editing requires reading the result back. The
 Read
@@ -570,8 +553,7 @@ old_string
 and a
 new_string
 and replaces the first with the second. It doesn’t use regex or fuzzy matching.
-Three checks must pass for an edit to apply.
-Before any of them, a path matched by a
+Three checks must pass for an edit to apply. Before any of them, a path matched by a
 Read
 deny rule
 is refused, including creating a new file there. The refusal requires Claude Code v2.1.208 or later.
@@ -596,8 +578,7 @@ matches the current content exactly and unambiguously and Claude Code can read t
 old_string
 or one that matches more than once without
 replace_all
-, Claude reads the file again before editing.
-The relaxed handling of unread and changed files requires Claude Code v2.1.208 or later; before that, Claude Code refused any edit to a file it hadn’t read in the conversation or that changed on disk after the read.
+, Claude reads the file again before editing. The relaxed handling of unread and changed files requires Claude Code v2.1.208 or later; before that, Claude Code refused any edit to a file it hadn’t read in the conversation or that changed on disk after the read.
 Viewing a file with Bash also satisfies the read-before-edit requirement when the command is
 cat
 ,
@@ -681,8 +662,7 @@ Subagents
 never get the tool. Background tasks that share the main conversation’s tool list see it, but calling it there ends nothing.
 The tool appears only when all of the following hold:
 Version
-:
-Claude Code v2.1.213 or later.
+: Claude Code v2.1.213 or later.
 Model
 : the session’s model is Claude Opus 4.8, Claude Sonnet 5, Claude Fable 5, or a later version of one of those families.
 Surface
@@ -707,8 +687,7 @@ Startup mode
 --bare
 session. Bare mode loads only shell and file tools, so the tool is never registered there.
 Provider
-:
-not available on
+: not available on
 Amazon Bedrock
 ,
 Claude Platform on AWS
@@ -766,23 +745,20 @@ interface{}
 in Go code takes the pattern
 interface\{\}
 .
-A pattern, glob, or file type that ripgrep rejects returns an error that includes ripgrep’s diagnostic, so Claude can correct the input and search again.
-Before v2.1.208, Claude Code reported a rejected input as
+A pattern, glob, or file type that ripgrep rejects returns an error that includes ripgrep’s diagnostic, so Claude can correct the input and search again. Before v2.1.208, Claude Code reported a rejected input as
 No files found
 instead of an error, even when the searched-for text existed in the target files.
 Three output modes control what comes back:
 files_with_matches
 : file paths only, no line content. This is the default.
 content
-: matching lines with file and line number.
-When the tool’s
+: matching lines with file and line number. When the tool’s
 offset
 parameter points past the last match for a pattern that has matches, Grep returns
 No entries at this offset
 , so Claude widens or resets the offset instead of concluding the pattern doesn’t match.
 count
-: match count per file, followed by a total across all matching files.
-The total covers every match even when the tool’s
+: match count per file, followed by a total across all matching files. The total covers every match even when the tool’s
 head_limit
 or
 offset
@@ -1057,16 +1033,13 @@ stops as soon as the selected lines exceed what the token limit could ever fit a
 limit
 , or to search for specific content with
 Grep
-instead when a single line is that large.
-Before v2.1.208, Claude Code loaded the whole range into memory before rejecting it, so reading a file with an extremely long single line could run it out of memory.
+instead when a single line is that large. Before v2.1.208, Claude Code loaded the whole range into memory before rejecting it, so reading a file with an extremely long single line could run it out of memory.
 Reading an empty file returns a notice that the file exists but its contents are empty, and an
 offset
-past the last line returns a notice giving the file’s line count.
-Before v2.1.208, reading an empty file returned the past-the-end notice instead.
+past the last line returns a notice giving the file’s line count. Before v2.1.208, reading an empty file returned the past-the-end notice instead.
 Read handles several file types beyond plain text:
 Images
-: PNG, JPG, and other image formats are returned as visual content that Claude can see, not as raw bytes. Claude Code resizes and recompresses large images to fit the model’s image size limits before sending them, so Claude may see a downscaled version of a large screenshot.
-As of v2.1.196, an image that is still larger than 500KB after that resize is re-encoded as a JPEG at reduced quality with its pixel dimensions unchanged. If Claude misses fine pixel-level detail in a large image, ask it to crop the region of interest first, for example with ImageMagick via Bash.
+: PNG, JPG, and other image formats are returned as visual content that Claude can see, not as raw bytes. Claude Code resizes and recompresses large images to fit the model’s image size limits before sending them, so Claude may see a downscaled version of a large screenshot. As of v2.1.196, an image that is still larger than 500KB after that resize is re-encoded as a JPEG at reduced quality with its pixel dimensions unchanged. If Claude misses fine pixel-level detail in a large image, ask it to crop the region of interest first, for example with ImageMagick via Bash.
 PDFs
 : Claude reads short
 .pdf
@@ -1196,7 +1169,5 @@ Hooks
 Was this page helpful?
 Yes
 No
-Environment variables
-Interactive mode
 ⌘
 I

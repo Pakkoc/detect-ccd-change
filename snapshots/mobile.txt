@@ -141,7 +141,5 @@ Claude Code in Slack
 Was this page helpful?
 Yes
 No
-iOS simulator (beta)
-Chrome extension
 ⌘
 I

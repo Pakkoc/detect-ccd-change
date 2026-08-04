@@ -1038,7 +1038,5 @@ Force
 Was this page helpful?
 Yes
 No
-Administration overview
-Authentication
 ⌘
 I

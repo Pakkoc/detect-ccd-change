@@ -11,8 +11,7 @@ can’t reach these processes, because they start from the binary’s direct pat
 claude
 .
 CLAUDE_CODE_PROCESS_WRAPPER
-requires Claude Code v2.1.208 or later. Earlier versions ignore the variable and start every process unwrapped.
-The equivalent
+requires Claude Code v2.1.208 or later. Earlier versions ignore the variable and start every process unwrapped. The equivalent
 processWrapper
 setting
 requires v2.1.210 or later. Earlier versions ignore it as an unknown key, apply no launcher, and report no error.
@@ -284,7 +283,5 @@ Launcher error reference
 Was this page helpful?
 Yes
 No
-Network configuration
-Development containers
 ⌘
 I

@@ -23,8 +23,7 @@ Anthropic-operated public gateway endpoints are the exception:
 /login
 accepts them over
 https://
-. These are a small fixed set of gateways that Anthropic itself operates; they aren’t a deployment option you can select or configure. The list is compiled into Claude Code, so no configuration can add a hostname to it and no gateway you host qualifies for the exemption.
-Before v2.1.206,
+. These are a small fixed set of gateways that Anthropic itself operates; they aren’t a deployment option you can select or configure. The list is compiled into Claude Code, so no configuration can add a hostname to it and no gateway you host qualifies for the exemption. Before v2.1.206,
 /login
 rejected those endpoints like any other public address.
 ​
@@ -629,8 +628,7 @@ CLI
 /login
 :
 Gateway hosts must be on your organization's private network; <host> resolves to the public (or unrecognized) address <ip>
-The gateway hostname resolves to at least one public IP address. Claude Code checks each resolved address and requires every one to be private. A common cause is a dual-stack name where one family resolves to a public address, including AWS internal dual-stack load balancers, which return public-range AAAA addresses.
-Anthropic-operated public gateway endpoints are exempt from the check, and
+The gateway hostname resolves to at least one public IP address. Claude Code checks each resolved address and requires every one to be private. A common cause is a dual-stack name where one family resolves to a public address, including AWS internal dual-stack load balancers, which return public-range AAAA addresses. Anthropic-operated public gateway endpoints are exempt from the check, and
 /login
 accepts them over
 https://
@@ -801,7 +799,5 @@ option
 Was this page helpful?
 Yes
 No
-Spend limits
-Deployment example: AWS
 ⌘
 I

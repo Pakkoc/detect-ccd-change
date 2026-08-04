@@ -12,6 +12,11 @@ pathToClaudeCodeExecutable
 to a separately installed
 claude
 binary instead.
+If your package manager doesn’t apply npm’s
+libc
+field, as Yarn 1.x doesn’t, you get both the glibc and musl platform packages on Linux, roughly doubling the install size. The SDK still launches the correct variant. To reclaim the space in a container image, delete the platform package that doesn’t match the libc where your app runs; for a glibc runtime on x64, that’s
+rm -rf node_modules/@anthropic-ai/claude-agent-sdk-linux-x64-musl
+. On a development machine the deletion is temporary, since Yarn reinstalls the package on the next dependency change.
 ​
 Compile to a single executable
 When you compile your application into a single-file executable with
@@ -721,8 +726,7 @@ nested subagent
 agentId
 of the subagent that spawned it.
 null
-for main-session messages, messages from top-level subagents, and older sessions.
-Requires Claude Code v2.1.202 or later
+for main-session messages, messages from top-level subagents, and older sessions. Requires Claude Code v2.1.202 or later
 ​
 Example
 import
@@ -1234,8 +1238,7 @@ set, so consumers can render a nested transcript. By default only
 tool_use
 and
 tool_result
-blocks from subagents are emitted.
-Messages from subagents at every nesting depth are forwarded on Claude Code v2.1.219 and later; before v2.1.219, only messages from depth-1 subagents appeared
+blocks from subagents are emitted. Messages from subagents at every nesting depth are forwarded on Claude Code v2.1.219 and later; before v2.1.219, only messages from depth-1 subagents appeared
 hooks
 Partial<Record<
 HookEvent
@@ -1563,8 +1566,7 @@ window, so worst-case wall time is roughly
 API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)
 plus backoff. For unattended runs that need to wait through longer outages, set
 CLAUDE_CODE_RETRY_WATCHDOG=1
-: it retries capacity errors indefinitely, and
-as of Claude Code v2.1.199 raises the default for other transient errors to
+: it retries capacity errors indefinitely, and as of Claude Code v2.1.199 raises the default for other transient errors to
 300
 and removes the cap on this variable.
 CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
@@ -1818,8 +1820,7 @@ Methods
 Method
 Description
 interrupt()
-Interrupts the query. Only available in streaming input mode.
-When the CLI advertises the
+Interrupts the query. Only available in streaming input mode. When the CLI advertises the
 interrupt_receipt_v1
 capability in
 SDKSystemMessage.capabilities
@@ -1862,8 +1863,7 @@ control request to the running CLI and returns a fresh result instead of the cac
 canUseTool
 callback again. Make the callback idempotent per request ID, because a request whose response was lost is dispatched again. Requires Claude Code v2.1.195 or later
 supportedCommands()
-Returns available slash commands.
-From Agent SDK v0.3.216 the list reflects mid-session command changes; see
+Returns available slash commands. From Agent SDK v0.3.216 the list reflects mid-session command changes; see
 SDKCommandsChangedMessage
 supportedModels()
 Returns available models with display info
@@ -1886,8 +1886,7 @@ Reconnect an MCP server by name
 toggleMcpServer(serverName, enabled)
 Enable or disable an MCP server by name
 setMcpServers(servers)
-Dynamically replace the set of MCP servers for this session. Returns which servers were added and removed, and any errors.
-The call keeps plugin-provided servers it doesn’t name; naming one replaces it. The promise resolves after newly added stdio, HTTP, and SSE servers connect or fail, so tools from servers that connected are available on the next turn.
+Dynamically replace the set of MCP servers for this session. Returns which servers were added and removed, and any errors. The call keeps plugin-provided servers it doesn’t name; naming one replaces it. The promise resolves after newly added stdio, HTTP, and SSE servers connect or fail, so tools from servers that connected are available on the next turn.
 streamInput(stream)
 Stream input messages to the query for multi-turn conversations
 stopTask(taskId)
@@ -1933,8 +1932,7 @@ also applies that agent’s model override, hooks, and system prompt on the next
 Applied during the current turn
 :
 model
-.
-If you switch
+. If you switch
 model
 while Claude is working on a turn, the response Claude is already generating finishes on the old model, and the rest of the turn, starting with the next call Claude Code makes to the model, uses the new one. Subagents keep their own model. Before v2.1.212, a mid-turn switch waited for the next turn.
 No effect mid-session
@@ -1954,8 +1952,7 @@ type declares
 effortLevel
 without that value, so pass the equivalent
 { ultracode: true }
-in TypeScript.
-The
+in TypeScript. The
 ultracode
 value requires Claude Code v2.1.203 or later and is accepted only by
 applyFlagSettings()
@@ -3710,8 +3707,7 @@ kind is
 peer
 or
 channel
-, reaches the stream as a replay whether it was delivered during an active turn or started a new turn while the session was idle.
-Before v2.1.207, an injected turn delivered while the session was idle produced no message on the stream and only appeared when you re-read the transcript.
+, reaches the stream as a replay whether it was delivered during an active turn or started a new turn while the session was idle. Before v2.1.207, an injected turn delivered while the session was idle produced no message on the stream and only appeared when you re-read the transcript.
 ​
 SDKResultMessage
 Final result message.
@@ -4012,8 +4008,7 @@ fast_mode_state
 "cooldown"
 .
 fast_mode_disabled_reason
-:
-why
+: why
 fast mode
 isn’t available right now. Absent when nothing blocks fast mode, though a request may still run at standard speed. During the cooldown after a fast mode rate limit, Claude Code reports
 fast_mode_state: "cooldown"
@@ -4191,8 +4186,7 @@ string
 fast_mode_state
 reports the session’s
 fast mode
-state.
-When something blocks fast mode,
+state. When something blocks fast mode,
 fast_mode_disabled_reason
 names the check that blocked it; the field requires Claude Code v2.1.219 or later. For the reason codes and their meanings, see
 fast_mode_disabled_reason
@@ -4639,8 +4633,7 @@ Direct input from the end user. If your application forwards what the user typed
 origin
 to
 { kind: "human" }
-explicitly:
-Claude Code treats a user message with no
+explicitly: Claude Code treats a user message with no
 origin
 as unattributed, and checks that require a human-typed prompt, such as the
 ultracode
@@ -6677,8 +6670,7 @@ opens a WebSocket and emits one event per text frame. Provide exactly one of
 command
 or
 ws
-.
-The
+. The
 ws
 source requires Claude Code v2.1.195 or later.
 Set
@@ -6699,8 +6691,7 @@ TaskOutput
 TaskOutput
 is deprecated; prefer
 Read
-on the task’s output file path.
-Deprecated since Claude Code v2.1.83. The schemas below remain valid for hooks and permission handlers that encounter the tool.
+on the task’s output file path. Deprecated since Claude Code v2.1.83. The schemas below remain valid for hooks and permission handlers that encounter the tool.
 type
 TaskOutputInput
 =
@@ -6904,8 +6895,7 @@ string
 ;
 // Deprecated: use task_id
 };
-Stops a running background task or shell by ID.
-As of v2.1.198,
+Stops a running background task or shell by ID. As of v2.1.198,
 task_id
 also accepts an agent-team teammate or a named background agent by agent ID or name.
 ​
@@ -7501,8 +7491,7 @@ reason
 prompt
 fields are required unless
 stop
-is true.
-Setting
+is true. Setting
 stop: true
 cancels the pending wakeup and ends the self-paced
 /loop
@@ -7701,15 +7690,13 @@ summary
 failure_scenario
 describes the concrete inputs and state that lead to the wrong output or crash.
 short_summary
-: optional compressed label of at most 60 characters for compact display.
-Requires Claude Code v2.1.212 or later.
+: optional compressed label of at most 60 characters for compact display. Requires Claude Code v2.1.212 or later.
 category
 : optional short kebab-case slug of the finding type, such as
 correctness
 or
 test-coverage
-.
-Requires Claude Code v2.1.199 or later.
+. Requires Claude Code v2.1.199 or later.
 verdict
 : set when a verify pass ran; absent on inline-only reviews.
 outcome
@@ -7926,8 +7913,7 @@ CLAUDE_CODE_ENABLE_REFRESH_MCP_TOOLS=1
 in the
 env
 option
-, and only in sessions with at least one MCP server.
-Requires Claude Code v2.1.211 or later.
+, and only in sessions with at least one MCP server. Requires Claude Code v2.1.211 or later.
 ​
 ShowOnboardingRolePicker
 Tool name:
@@ -8329,16 +8315,13 @@ names the model the subagent started on, which can differ from the requested
 model
 input when
 availableModels
-or another override applies.
-This field requires Claude Code v2.1.174 or later.
-On
+or another override applies. This field requires Claude Code v2.1.174 or later. On
 async_launched
 , it names the model in use when the task moved to the background.
 modelsUsed
 lists the models the subagent used, in order. The field is present only when a mid-run swap happened, and a model appears again when the run swapped back to it. On
 async_launched
-, the list covers the models used before backgrounding.
-Both
+, the list covers the models used before backgrounding. Both
 modelsUsed
 and the backgrounding behavior of
 resolvedModel
@@ -9114,8 +9097,7 @@ mode,
 numFiles
 and
 numMatches
-are totals over the full result set, not the paginated slice.
-Before v2.1.208, a
+are totals over the full result set, not the paginated slice. Before v2.1.208, a
 head_limit
 or
 offset
@@ -9935,15 +9917,13 @@ cancelledWakeups
 number
 ;
 };
-Returns when the wake-up will fire as an epoch millisecond timestamp, the delay actually used, and whether the requested delay was clamped.
-The
+Returns when the wake-up will fire as an epoch millisecond timestamp, the delay actually used, and whether the requested delay was clamped. The
 stopped
 field is
 true
 when the call ended the loop with
 stop: true
-. It requires Claude Code v2.1.202 or later.
-The
+. It requires Claude Code v2.1.202 or later. The
 cancelledWakeups
 field counts how many pending wakeups a
 stop: true
@@ -10140,8 +10120,7 @@ outcome
 ;
 }>;
 };
-Returns the number of findings reported, the effort level the review ran at, and the findings echoed back for the result body. Requires Claude Code v2.1.196 or later.
-The echoed
+Returns the number of findings reported, the effort level the review ran at, and the findings echoed back for the result body. Requires Claude Code v2.1.196 or later. The echoed
 short_summary
 field requires Claude Code v2.1.212 or later.
 ​
@@ -10924,8 +10903,7 @@ resolves to. An alias entry such as
 sonnet
 resolves to an explicit model ID such as
 claude-sonnet-5
-, so a host can match a stored explicit model ID against the alias entry that covers it.
-Requires Claude Code v2.1.197 or later.
+, so a host can match a stored explicit model ID against the alias entry that covers it. Requires Claude Code v2.1.197 or later.
 displayName
 string
 Human-readable display name
@@ -12602,8 +12580,7 @@ string
 SDKCommandsChangedMessage
 Emitted when the set of available commands changes mid-session, such as when Claude Code discovers skills as the agent enters a subdirectory. The
 commands
-array is the full updated list, so replace any cached command list with this payload.
-Calling
+array is the full updated list, so replace any cached command list with this payload. Calling
 supportedCommands()
 after this message returns the same updated list, because the method tracks the latest push; this requires Agent SDK v0.3.216 or later. In earlier SDK versions,
 supportedCommands()
@@ -13255,7 +13232,5 @@ Common workflows
 Was this page helpful?
 Yes
 No
-Securely deploying AI agents
-TypeScript V2 (removed)
 ⌘
 I

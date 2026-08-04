@@ -995,7 +995,5 @@ Claude will follow these guidelines when creating PRs and responding to requests
 Was this page helpful?
 Yes
 No
-Code Review
-GitHub Enterprise Server
 ⌘
 I

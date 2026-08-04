@@ -471,7 +471,5 @@ Desktop parallel sessions
 Was this page helpful?
 Yes
 No
-Dynamic workflows
-Quickstart
 ⌘
 I

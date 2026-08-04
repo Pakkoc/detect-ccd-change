@@ -57,8 +57,7 @@ environment variables
 , which act as another override layer. When a setting doesn’t seem to apply, the value you set is usually being overridden by another scope or an environment variable.
 Run
 /doctor
-to check your configuration and installation. It reports what it finds, including invalid settings files, duplicate installations, unused extensions, and
-checked-in
+to check your configuration and installation. It reports what it finds, including invalid settings files, duplicate installations, unused extensions, and checked-in
 CLAUDE.md
 content Claude can derive from the codebase, then proposes fixes it applies only after you confirm. The
 CLAUDE.md
@@ -118,8 +117,7 @@ field is a single string that uses
 |
 to match multiple tool names, for example
 "Edit|Write"
-.
-A
+. A
 ,
 separator is equivalent, so
 "Edit,Write"
@@ -414,7 +412,5 @@ Troubleshooting
 Was this page helpful?
 Yes
 No
-Troubleshoot performance and stability
-Error reference
 ⌘
 I

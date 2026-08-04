@@ -2337,7 +2337,5 @@ strictKnownMarketplaces reference
 Was this page helpful?
 Yes
 No
-Track team usage with analytics
-Plugin dependency versions
 ⌘
 I

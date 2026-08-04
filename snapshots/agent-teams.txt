@@ -229,8 +229,7 @@ A teammate’s model and fast mode are fixed when it spawns, so
 /model
 and
 /fast
-only change the lead’s settings.
-As of v2.1.199, typing either command while viewing a teammate shows a notice that the change applies to the lead; earlier versions applied it to the lead with no indication.
+only change the lead’s settings. As of v2.1.199, typing either command while viewing a teammate shows a notice that the change applies to the lead; earlier versions applied it to the lead with no indication.
 /effort
 still applies to the viewed teammate’s later turns, because teammates follow the lead’s
 effort level
@@ -367,8 +366,7 @@ How teammates share information:
 Automatic message delivery
 : when teammates send messages, they’re delivered automatically to recipients. The lead doesn’t need to poll for updates.
 Idle notifications
-: when a teammate finishes and stops, it automatically notifies the lead.
-As of v2.1.198, a teammate whose turn ends on an API error notifies the lead that it failed and includes the error text, instead of appearing to finish normally.
+: when a teammate finishes and stops, it automatically notifies the lead. As of v2.1.198, a teammate whose turn ends on an API error notifies the lead that it failed and includes the error text, instead of appearing to finish normally.
 Shared task list
 : all agents can see task status and claim available work.
 Teammate messaging
@@ -545,7 +543,5 @@ comparison for a side-by-side breakdown
 Was this page helpful?
 Yes
 No
-Agent view
-Dynamic workflows
 ⌘
 I

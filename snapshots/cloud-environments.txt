@@ -506,8 +506,7 @@ CLAUDE_CODE_REMOTE_SESSION_ID
 environment variable. Use this to put a traceable link in PR bodies, commit messages, Slack posts, or generated reports so a reviewer can open the run that produced them.
 Commits that Claude creates in a cloud session include a
 Claude-Session: <url>
-git trailer, and PR bodies include the session URL on its own line. This requires v2.1.179 or later.
-To omit the trailer and the PR-body link, set
+git trailer, and PR bodies include the session URL on its own line. This requires v2.1.179 or later. To omit the trailer and the PR-body link, set
 attribution.sessionUrl
 to
 false
@@ -1036,7 +1035,5 @@ Server-managed settings
 Was this page helpful?
 Yes
 No
-Bash sandbox
-Model configuration
 ⌘
 I

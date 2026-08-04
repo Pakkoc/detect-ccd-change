@@ -236,8 +236,7 @@ claude setup-token
 /install-github-app
 ; the organization restriction covers the terminal, VS Code extension, and Agent SDK, except
 gateway
-sign-in, which doesn’t authenticate against an Anthropic organization.
-Before v2.1.212, only terminal logins enforced either key. When set, sessions authenticated by
+sign-in, which doesn’t authenticate against an Anthropic organization. Before v2.1.212, only terminal logins enforced either key. When set, sessions authenticated by
 ANTHROPIC_API_KEY
 ,
 ANTHROPIC_AUTH_TOKEN
@@ -436,6 +435,5 @@ Claude Enterprise Administrator Guide
 Was this page helpful?
 Yes
 No
-Advanced setup
 ⌘
 I

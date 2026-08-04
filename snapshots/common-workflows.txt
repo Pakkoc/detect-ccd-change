@@ -358,7 +358,5 @@ Add skills, hooks, MCP, subagents, and plugins
 Was this page helpful?
 Yes
 No
-Manage sessions
-Prompt library
 ⌘
 I

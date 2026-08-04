@@ -366,7 +366,5 @@ Network configuration
 Was this page helpful?
 Yes
 No
-GitHub Actions
-GitLab CI/CD
 ⌘
 I

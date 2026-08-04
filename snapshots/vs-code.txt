@@ -892,7 +892,5 @@ to customize allowed commands, hooks, and more. These settings are shared betwee
 Was this page helpful?
 Yes
 No
-Computer use (preview)
-JetBrains IDEs
 ⌘
 I

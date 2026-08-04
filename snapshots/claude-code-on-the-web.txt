@@ -248,8 +248,7 @@ Your working directory must have no uncommitted changes. Teleport prompts you to
 Correct repository
 You must run
 --teleport
-from a checkout of the same repository, not a fork.
-As of v2.1.199, Claude Code accepts a checkout even when it can’t parse the remote into a hostname, such as an SSH host alias like
+from a checkout of the same repository, not a fork. As of v2.1.199, Claude Code accepts a checkout even when it can’t parse the remote into a hostname, such as an SSH host alias like
 git@work:owner/repo.git
 or an
 insteadOf
@@ -551,7 +550,5 @@ Claude Tag
 Was this page helpful?
 Yes
 No
-Get started
-Routines
 ⌘
 I

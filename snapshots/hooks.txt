@@ -873,8 +873,7 @@ Handlers run in the current directory with Claude Code’s environment. The
 $CLAUDE_CODE_REMOTE
 environment variable is set to
 "true"
-in remote web environments and not set in the local CLI.
-As of v2.1.199,
+in remote web environments and not set in the local CLI. As of v2.1.199,
 $CLAUDE_CODE_BRIDGE_SESSION_ID
 is set to the
 Remote Control
@@ -974,8 +973,7 @@ directory in the working directory and the files under it. To match a directory 
 src
 at any depth, write
 "Edit(**/src/**)"
-.
-Before v2.1.214,
+. Before v2.1.214,
 "Edit(src/**)"
 matched a directory named
 src
@@ -1643,8 +1641,7 @@ prompt_id
 UUID identifying the user prompt currently being processed. Matches the
 prompt.id
 attribute on OpenTelemetry events
-, so you can correlate hook output with telemetry for a single prompt. Absent until the first user input.
-Requires Claude Code v2.1.196 or later
+, so you can correlate hook output with telemetry for a single prompt. Absent until the first user input. Requires Claude Code v2.1.196 or later
 transcript_path
 Path to conversation JSON. The transcript file is written asynchronously and may lag the in-memory conversation, so it may not yet include the current turn’s most recent messages when a hook fires. Hooks that need the final assistant text of the current turn should use
 last_assistant_message
@@ -1842,14 +1839,15 @@ exit code 2 behavior
 for the full list.
 A hook that exits 2 while printing JSON that fails
 JSON output
-schema validation still blocks: Claude Code uses stderr as the blocking reason and records the validation failure in the debug log.
-Before v2.1.214, Claude Code treated that combination as a non-blocking error and the action proceeded.
+schema validation still blocks: Claude Code uses stderr as the blocking reason and records the validation failure in the debug log. Before v2.1.214, Claude Code treated that combination as a non-blocking error and the action proceeded.
 Any other exit code
-is a non-blocking error for most hook events. The transcript shows a
+is a non-blocking error for most hook events. The action proceeds, and the transcript shows a
 <hook name> hook error
-notice followed by the first line of stderr, so you can identify the cause without
---debug
-. Execution continues and the full stderr is written to the debug log.
+notice followed by the first line of stderr, prefixed with
+Failed with non-blocking status code:
+. To capture the full stderr, enable
+debug logging
+.
 For example, a hook command script that blocks dangerous Bash commands:
 #!/bin/bash
 # Reads JSON input from stdin, checks the command
@@ -3771,8 +3769,7 @@ string
 "completed"
 for foreground subagents,
 "async_launched"
-for background subagents.
-As of v2.1.198, subagents run in the background by default, so an omitted
+for background subagents. As of v2.1.198, subagents run in the background by default, so an omitted
 run_in_background
 also produces
 "async_launched"
@@ -3787,13 +3784,11 @@ The subagent’s final text blocks
 resolvedModel
 string
 "claude-sonnet-4-5"
-Model the subagent started on, which may differ from the requested model.
-Requires Claude Code v2.1.174 or later
+Model the subagent started on, which may differ from the requested model. Requires Claude Code v2.1.174 or later
 modelsUsed
 array
 ["claude-sonnet-4-5", "claude-haiku-4-5"]
-Models used in order, with consecutive repeats collapsed; set only when the model was swapped mid-run.
-Requires Claude Code v2.1.212 or later
+Models used in order, with consecutive repeats collapsed; set only when the model was swapped mid-run. Requires Claude Code v2.1.212 or later
 totalTokens
 number
 12450
@@ -7100,8 +7095,7 @@ PreToolUse
 continueOnBlock: true
 to instead return the reason to Claude as the tool error so it can adjust and continue, equivalent to a command hook’s
 permissionDecision: "deny"
-.
-Before v2.1.210, the deny reason was returned to Claude as the tool error and the turn continued
+. Before v2.1.210, the deny reason was returned to Claude as the tool error and the turn continued
 PostToolUse
 : by default the turn ends and the reason appears in the chat as a warning line. Set
 continueOnBlock: true
@@ -7686,7 +7680,5 @@ Debug your config
 Was this page helpful?
 Yes
 No
-Checkpointing
-Plugins reference
 ⌘
 I

@@ -477,7 +477,5 @@ Version management
 Was this page helpful?
 Yes
 No
-Create and distribute a plugin marketplace
-Recommend your plugin from your CLI
 ⌘
 I

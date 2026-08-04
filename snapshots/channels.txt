@@ -467,7 +467,5 @@ to poll on a timer instead of reacting to pushed events
 Was this page helpful?
 Yes
 No
-Automate with hooks
-Run prompts on a schedule
 ⌘
 I

@@ -356,7 +356,5 @@ Python SDK reference
 Was this page helpful?
 Yes
 No
-Connect to external tools with MCP
-Subagents in the SDK
 ⌘
 I

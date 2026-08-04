@@ -92,7 +92,5 @@ If you are currently using ZDR for Claude Code via pay-as-you-go API keys, you c
 Was this page helpful?
 Yes
 No
-Data usage
-Communications kit
 ⌘
 I

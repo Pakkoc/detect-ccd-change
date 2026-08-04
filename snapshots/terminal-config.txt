@@ -602,7 +602,5 @@ Troubleshooting
 Was this page helpful?
 Yes
 No
-Output styles
-Fullscreen rendering
 ⌘
 I

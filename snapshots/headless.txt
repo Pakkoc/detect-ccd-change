@@ -62,7 +62,7 @@ Bare mode is useful for CI and scripts where you need the same result on every m
 ~/.claude
 or an MCP server in the project’s
 .mcp.json
-won’t run, because bare mode never reads them. Only flags you pass explicitly take effect.
+won’t run, because bare mode never reads them.
 This example runs a one-off summarize task in bare mode and pre-approves the Read tool so the call completes without a permission prompt. Set
 ANTHROPIC_API_KEY
 before running it, because bare mode doesn’t use your subscription login:
@@ -72,7 +72,7 @@ claude
 "Summarize README.md"
 --allowedTools
 "Read"
-Bare mode skips OAuth and the system keychain, so Claude Code only sees credentials you pass explicitly. For the Anthropic API, set
+In bare mode, Claude Code never reads OAuth credentials or the system keychain. For the Anthropic API, set
 ANTHROPIC_API_KEY
 in the environment, with a key created in the
 Claude Console
@@ -136,7 +136,9 @@ or
 build-error.txt
 , substitute a file from your own project. In CI or other scripted environments, add
 --bare
-so Claude Code ignores any local configuration on the host.
+so Claude Code starts without loading the host’s hooks, plugins, auto memory, or
+CLAUDE.md
+.
 ​
 Pipe data through Claude
 Non-interactive mode reads stdin, so you can pipe data in and redirect the response out like any other command-line tool.
@@ -318,8 +320,7 @@ By default, Claude Code emits only subagent
 tool_use
 and
 tool_result
-blocks.
-Pass
+blocks. Pass
 --forward-subagent-text
 or set
 CLAUDE_CODE_FORWARD_SUBAGENT_TEXT
@@ -632,8 +633,7 @@ accept the value as an argument, for example
 /mcp
 with no argument prints a text summary of server status; these forms require Claude Code v2.1.205 or later and follow each command’s
 availability notes
-.
-To change a setting from a
+. To change a setting from a
 -p
 invocation, pass
 key=value
@@ -737,7 +737,5 @@ GitLab CI/CD
 Was this page helpful?
 Yes
 No
-Goals
-Launch sessions from links
 ⌘
 I

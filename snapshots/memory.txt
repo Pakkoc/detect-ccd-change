@@ -358,8 +358,7 @@ Project rules are skipped if you exclude
 project
 from
 --setting-sources
-.
-Before v2.1.211, rules that load on demand, including path-scoped rules and rules in nested
+. Before v2.1.211, rules that load on demand, including path-scoped rules and rules in nested
 .claude/rules/
 directories, loaded even when
 project
@@ -384,8 +383,7 @@ Use the standard error response format
 Include OpenAPI documentation comments
 Rules without a
 paths
-field are loaded unconditionally and apply to all files. Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use.
-As of v2.1.198, matching also works when Claude reaches a file through a symlinked path to the project directory, for example in a symlinked checkout.
+field are loaded unconditionally and apply to all files. Path-scoped rules trigger when Claude reads files matching the pattern, not on every tool use. As of v2.1.198, matching also works when Claude reaches a file through a symlinked path to the project directory, for example in a symlinked checkout.
 Use glob patterns in the
 paths
 field to match files by extension, directory, or any combination:
@@ -419,8 +417,7 @@ expands to two patterns, and
 to eight. To keep expansion bounded, a rule’s whole
 paths
 list shares one budget of 1,000 expanded patterns and 4 MiB, and patterns without braces don’t count against it.
-Claude Code uses any pattern that would exceed the budget unexpanded, and its literal braces match no files.
-Before v2.1.217, a
+Claude Code uses any pattern that would exceed the budget unexpanded, and its literal braces match no files. Before v2.1.217, a
 paths
 value with many brace groups stalled or crashed the CLI at startup.
 Glob syntax treats
@@ -435,8 +432,7 @@ photos [2024/**
 [
 in a file name, escape it as
 photos \[2024/**
-.
-Before v2.1.207, one invalid pattern made the Read tool fail for every file the rule was evaluated against, instead of matching nothing.
+. Before v2.1.207, one invalid pattern made the Read tool fail for every file the rule was evaluated against, instead of matching nothing.
 ​
 Share rules across projects with symlinks
 The
@@ -736,7 +732,5 @@ Subagent memory
 Was this page helpful?
 Yes
 No
-Prompt caching
-Permission modes
 ⌘
 I

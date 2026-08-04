@@ -492,6 +492,5 @@ MCP Integration
 Was this page helpful?
 Yes
 No
-Python SDK
 ⌘
 I

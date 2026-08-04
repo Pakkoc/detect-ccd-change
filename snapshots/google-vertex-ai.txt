@@ -272,8 +272,7 @@ ANTHROPIC_DEFAULT_OPUS_MODEL
 keeps its steered Sonnet model as the default.
 On v2.1.207 through v2.1.218, the primary model on Google Cloud’s Agent Platform defaulted to Opus 4.8 and the
 opus
-alias resolved to Opus 4.8.
-Before v2.1.207, the primary model defaulted to Sonnet 4.5, the
+alias resolved to Opus 4.8. Before v2.1.207, the primary model defaulted to Sonnet 4.5, the
 opus
 alias resolved to Opus 4.6, and background tasks always used the primary model.
 To customize models further:
@@ -411,7 +410,5 @@ Google Cloud’s Agent Platform quotas and limits
 Was this page helpful?
 Yes
 No
-Claude Platform on AWS
-Microsoft Foundry
 ⌘
 I

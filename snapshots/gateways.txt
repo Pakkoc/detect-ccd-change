@@ -111,7 +111,5 @@ for the wider rollout decisions a gateway is one part of
 Was this page helpful?
 Yes
 No
-Development containers
-Claude apps gateway
 ⌘
 I

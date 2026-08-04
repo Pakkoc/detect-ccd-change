@@ -333,7 +333,5 @@ so Claude can pull data into an artifact while it builds the page
 Was this page helpful?
 Yes
 No
-Create plugins
-Automate with hooks
 ⌘
 I

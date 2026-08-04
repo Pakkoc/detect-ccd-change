@@ -338,7 +338,5 @@ if you need to restrict which domains Claude can reach.
 Was this page helpful?
 Yes
 No
-Security
-Zero data retention
 ⌘
 I

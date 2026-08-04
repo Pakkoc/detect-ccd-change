@@ -933,7 +933,5 @@ SDK Permissions
 Was this page helpful?
 Yes
 No
-Rewind file changes with checkpointing
-Observability with OpenTelemetry
 ⌘
 I
