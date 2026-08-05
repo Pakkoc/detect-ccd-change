@@ -873,7 +873,9 @@ PermissionRequest reference
 for the full set of decision fields.
 ​
 How hooks work
-Claude Code fires hook events at specific points in its lifecycle. When an event fires, Claude Code runs all matching hooks in parallel and deduplicates identical hook commands automatically. The table below shows each event and when it triggers:
+Claude Code fires hook events at specific points in its lifecycle. When an event fires, Claude Code runs all matching hooks in parallel; see
+Hook handler fields
+for how duplicate handlers are treated. The table below shows each event and when it triggers:
 Event
 When it fires
 SessionStart
@@ -1359,15 +1361,17 @@ Read
 is equivalent. See
 Matcher patterns
 for how plain names and regular expressions are evaluated.
-Claude can also create or modify files by running shell commands through the
-Bash
-tool. If your hook must see every file change, such as for compliance scanning or audit logging, add a
+Claude can also create or modify files by running shell commands. If your hook must see every file change, such as for compliance scanning or audit logging, add a
 Stop
 hook that scans the working tree once per turn. For per-call coverage instead, also match
-Bash
+Bash|PowerShell
 and have your script list modified and untracked files with
 git status --porcelain
-.
+. The
+PowerShell hook input section
+explains why matching
+Bash
+alone is not enough.
 Each event type matches on a specific field:
 Event
 What the matcher filters
@@ -2188,7 +2192,7 @@ When Claude Code runs a shell-form command hook, one without
 args
 , it spawns
 sh -c
-on macOS and Linux or Git Bash on Windows by default. This shell is non-interactive, but Git Bash and some configurations, such as
+on macOS and Linux, Git Bash on Windows, or PowerShell when Git Bash isn’t installed by default. This shell is non-interactive, but Git Bash and some configurations, such as
 BASH_ENV
 pointing at
 ~/.bashrc

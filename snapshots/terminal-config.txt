@@ -473,11 +473,9 @@ color: blue
 in its definition is drawn using the
 blue_FOR_SUBAGENTS_ONLY
 value.
-The
+Claude Code renders the
 ultrathink
-and
-ultraplan
-keywords in the prompt input are rendered with a seven-color rainbow gradient. The token names follow the pattern
+keyword in the prompt input with a seven-color rainbow gradient. The token names follow the pattern
 rainbow_<color>
 and
 rainbow_<color>_shimmer

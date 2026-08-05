@@ -364,15 +364,41 @@ No organization is permitted to log in until the value is fixed.
 deniedMcpServers
 An individual invalid entry is stripped and the valid subset is enforced. A wholly invalid value is dropped with a warning, since denying every server would block servers the policy never named.
 sandbox.credentials
-An individual invalid entry in
+An invalid entry in
 files
 or
 envVars
-is stripped with a warning and the valid subset is enforced. A wholly invalid
+that still has a valid
+path
+or
+name
+and a
+mode
+of
+mask
+or
+deny
+, such as one whose
+extract
+pattern has no capturing group, is degraded to
+mode: "deny"
+with a warning, so the credential stays blocked, not masked, until you fix the entry. A degraded
+files
+entry pins
+filesystem.disabled
+like an explicit
+deny
+entry, and the warning notes that its read block isn’t enforced if managed settings turn filesystem isolation off. An entry with an unknown
+mode
+or an invalid
+path
+or
+name
+is stripped. Each case warns; whether an entry is degraded or stripped, the remaining valid entries are still enforced, and a wholly invalid
 credentials
-value is dropped with a warning while the rest of
+value is dropped while the rest of
 sandbox
-still applies. Applies in v2.1.191 and later.
+still applies. Applies in v2.1.191 and later; before v2.1.221, every invalid entry was stripped.
 requiredMinimumVersion
 and
 requiredMaximumVersion
@@ -540,6 +566,23 @@ DISABLE_AUTO_COMPACT
 in
 env
 false
+autoCompactWindow
+How full the context window gets before Claude Code
+compacts automatically
+, in tokens from
+100000
+to
+1000000
+. When unset, Claude Code uses a window tuned for your model. Set it with the
+/autocompact
+command, which writes this key to user settings; the
+--autocompact
+flag and the
+CLAUDE_CODE_AUTO_COMPACT_WINDOW
+environment variable can override it.
+Set the auto-compact window
+covers how they interact
+500000
 autoMemoryDirectory
 Custom directory for
 auto memory
@@ -801,7 +844,11 @@ from the
 Shift+Tab
 cycle and rejects
 --permission-mode auto
-at startup. Most useful in
+at startup. Also accepted under
+permissions
+as
+permissions.disableAutoMode
+. Most useful in
 managed settings
 where users cannot override it
 "disable"
@@ -1366,8 +1413,6 @@ Default
 cloud environment
 for cloud sessions you create from the CLI, such as with
 claude --cloud
-or
-ultraplan
 . Written to user settings when you pick an environment with
 /remote-env
 . Follows the standard settings precedence, so a value in a repo’s project settings overrides the user-level pick
@@ -2071,6 +2116,17 @@ auto
 --permission-mode
 CLI flag overrides this setting for a single session
 "acceptEdits"
+disableAutoMode
+Set to
+"disable"
+to prevent
+auto mode
+from being activated. Equivalent to the top-level
+disableAutoMode
+setting, which describes the full effect. Most useful in
+managed settings
+where users cannot override it
+"disable"
 disableBypassPermissionsMode
 Set to
 "disable"
@@ -2199,20 +2255,100 @@ Disable filesystem isolation
 for which sources can set it and what changes when isolation is off
 true
 credentials.files
-Credential files or directories that sandboxed commands cannot read. Applies the same read block as
-filesystem.denyRead
-; the separate key keeps credential paths grouped with
-credentials.envVars
-and apart from general filesystem rules. Each entry is
-{ "path": "...", "mode": "deny" }
-, and
+Credential files or directories to
+protect from sandboxed commands
+. Each entry has a
+path
+and a
+mode
+.
 deny
-is the only supported mode for files. Paths use the same
+blocks reads inside the sandbox, the same read block as
+filesystem.denyRead
+, and requires Claude Code v2.1.187 or later.
+mask
+shows sandboxed commands a sentinel copy of the file on Linux and WSL2, while the sandbox proxy substitutes the real value on outbound requests to that entry’s
+injectHosts
+; on macOS the file is unreadable inside the sandbox instead. It requires
+network.tlsTerminate
+and Claude Code v2.1.221 or later.
+Mask credential files
+covers which settings sources are honored and when an entry falls back to
+deny
+. Paths use the same
 prefixes
 as
 filesystem.*
-settings. Arrays are merged across all settings scopes. Requires Claude Code v2.1.187 or later.
+settings. Arrays are merged across all settings scopes.
 [{ "path": "~/.aws/credentials", "mode": "deny" }]
+credentials.files[].extract
+Regular expression for structured masking when
+mode
+is
+mask
+. Claude Code applies it across the whole file and replaces only the text captured by group 1 of each match with a sentinel, so the rest of the file stays parseable. Must contain at least one capturing group. Without
+extract
+, Claude Code replaces the entire file content with one sentinel. On macOS with filesystem isolation on, Claude Code applies the entry as
+deny
+before the pattern runs; see
+Mask credential files
+. Accepted but ignored when
+mode
+is
+deny
+. Requires Claude Code v2.1.221 or later.
+"oauth_token:\\s*(\\S+)"
+credentials.files[].onExtractNoMatch
+What happens when
+extract
+matches nothing in the file:
+warn
+, the default, warns and leaves the file readable as-is inside the sandbox;
+deny
+makes the file unreadable;
+error
+stops sandbox setup until you fix the configuration. When the read block wouldn’t be enforced, because
+filesystem.disabled
+is set or a
+filesystem.allowRead
+entry re-opens the file’s path, Claude Code treats
+deny
+as
+error
+. Only meaningful when
+mode
+is
+mask
+and
+extract
+is set, with the same macOS scoping as
+extract
+. Requires Claude Code v2.1.221 or later.
+"deny"
+credentials.files[].maskDuplicates
+Also replace verbatim copies of each captured credential value found outside the regex matches. Matches raw substrings, so reserve it for long, high-entropy secrets. Only meaningful when
+mode
+is
+mask
+and
+extract
+is set. Default: false. Requires Claude Code v2.1.221 or later.
+true
+credentials.files[].injectHosts
+Hosts where the sandbox proxy substitutes the real value of a file
+mask
+entry. Behaves the same as
+credentials.envVars[].injectHosts
+: each host must be covered by
+network.allowedDomains
+, and when unset the proxy substitutes the value on requests to every host in
+network.allowedDomains
+. Accepted but ignored when
+mode
+is
+deny
+. Requires Claude Code v2.1.221 or later.
+["api.github.com"]
 credentials.envVars
 Environment variables to
 protect from sandboxed commands

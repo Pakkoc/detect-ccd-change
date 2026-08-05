@@ -316,7 +316,11 @@ Add-Content
 Clear-Content
 , and
 Remove-Item
-on in-scope paths, along with their common aliases. The same scope and protected-path rules apply.
+on in-scope paths, along with their common aliases. The same scope and protected-path rules apply. A positional argument that contains a quote character, such as the apostrophe in
+Set-Content .\notes.txt "It's done"
+, still prompts even on in-scope paths, because Claude Code can’t statically validate an argument whose quoted and unquoted readings differ. Pass the content through a named parameter such as
+-Value
+to avoid the prompt.
 Use
 acceptEdits
 when you want to review changes in your editor or via
@@ -368,10 +372,6 @@ Yes, and bypass permissions
 instead.
 Yes, manually approve edits
 : approve and review each edit individually.
-No, refine with Ultraplan on Claude Code on the web
-: send the plan to
-Ultraplan
-for browser-based review.
 No, keep planning
 : stay in plan mode and tell Claude what to change.
 Approving a plan exits plan mode and switches the session to the permission mode each approve option describes, so Claude starts editing. To plan again, cycle back to plan mode with
@@ -689,6 +689,10 @@ Repeated blocks usually mean the classifier is missing context about your infras
 to report false positives, or have an administrator
 configure trusted infrastructure
 .
+If you switch permission modes while a classifier check is pending, Claude Code discards a verdict the new mode wouldn’t have requested rather than applying it: you’re prompted for approval instead, or the action is auto-denied in
+dontAsk
+mode
+.
 How the classifier evaluates actions
 Each action goes through a fixed decision order. The first matching step wins:
 Actions matching your
@@ -996,8 +1000,6 @@ PreToolUse
 and
 PermissionRequest
 hooks
-Ultraplan
-: run plan mode in a Claude Code on the web session with browser-based review
 Security
 : safeguards and best practices
 Sandboxing

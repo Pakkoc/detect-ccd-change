@@ -135,6 +135,15 @@ remoteControlAtStartup
 so
 every new interactive session connects to Remote Control automatically
 . Requires Claude Code v2.1.203 or later.
+The Settings section also includes
+Focus view
+, which hides tool calls, tool results, and thinking behind one expandable row per turn, leaving your prompts and Claude’s responses. While Claude works, the row shows the tool currently running. When you turn Focus view on or off, the change applies to every open session immediately, and the choice persists across sessions. You can also toggle it with
+Ctrl+Option+F
+(Mac) /
+Ctrl+Alt+F
+(Windows/Linux), or from the Command Palette with
+Claude Code: Toggle Focus view
+. Requires Claude Code v2.1.221 or later.
 Context indicator
 : the prompt box shows how much of Claude’s context window you’re using. Claude automatically compacts when needed, or you can run
 /compact
@@ -361,6 +370,12 @@ Option+K
 Alt+K
 (Windows/Linux)
 Insert a reference to the current file and selection (requires editor to be focused)
+Toggle Focus view
+Ctrl+Option+F
+(Mac) /
+Ctrl+Alt+F
+(Windows/Linux)
+Hide or show tool activity in the conversation. Works while a Claude panel or sidebar is visible
 Show Logs
 -
 View extension debug logs
@@ -487,6 +502,9 @@ Use Cmd/Ctrl+Shift+T to reopen the most recently closed Claude session tab. When
 hideOnboarding
 false
 Hide the onboarding checklist (graduation cap icon)
+focusView
+false
+Hide tool calls, tool results, and thinking behind one expandable row per turn, leaving your prompts and Claude’s responses. You can also toggle Focus view from the command menu. Requires Claude Code v2.1.221 or later
 respectGitIgnore
 true
 Exclude .gitignore patterns from file searches

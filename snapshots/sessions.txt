@@ -175,6 +175,14 @@ On plan accept
 Accepting a plan in
 plan mode
 names the session from the plan content unless you’ve already set one
+From claude.ai or the Claude app
+Rename a
+Remote Control session
+; Claude Code applies the same name in the CLI. Requires Claude Code v2.1.221 or later
+From the desktop app
+Rename a session in the
+desktop app
+; Claude Code applies the same name in the CLI. Requires Claude Code v2.1.221 or later
 Once a session is named, return to it with
 claude --resume <name>
 or

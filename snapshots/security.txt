@@ -26,7 +26,7 @@ To mitigate risks in agentic systems:
 Sandboxed bash tool
 :
 Sandbox
-bash commands with filesystem and network isolation, reducing permission prompts while maintaining security. Enable with
+bash commands with filesystem and network isolation, reducing permission prompts while maintaining security. Configure with
 /sandbox
 to define boundaries where Claude Code can work autonomously
 Working directory boundary
@@ -219,6 +219,8 @@ Development containers
 : secure, isolated environments
 Anthropic Trust Center
 : security certifications and compliance
+CISO’s guide to agentic AI
+: a security leader’s framework for assessing agentic AI deployments
 Was this page helpful?
 Yes
 No

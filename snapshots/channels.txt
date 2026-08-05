@@ -40,16 +40,21 @@ bot
 Install the plugin
 In Claude Code, run:
 /plugin install telegram@claude-plugins-official
-If Claude Code reports
+If the install fails, match the message Claude Code reports:
 Marketplace "claude-plugins-official" not found
-, add the marketplace with
+: add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+, then retry the install.
+The plugin is not found in the marketplace: check the plugin name. Claude Code
+refreshes a stale marketplace catalog and retries
+before reporting this, so if you turned off
+marketplace auto-update
+, refresh manually with
 /plugin marketplace update claude-plugins-official
-. Then retry the install.
-When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. After installing, run
-/reload-plugins
-to activate the plugin’s configure command.
+and retry the install.
+When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. Check the install summary: if it reports
+Run /reload-plugins to activate.
+, run that command to activate the plugin’s configure command.
 3
 Configure your token
 Run the configure command with the token from BotFather:
@@ -114,16 +119,21 @@ Open the generated URL to add the bot to your server.
 Install the plugin
 In Claude Code, run:
 /plugin install discord@claude-plugins-official
-If Claude Code reports
+If the install fails, match the message Claude Code reports:
 Marketplace "claude-plugins-official" not found
-, add the marketplace with
+: add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+, then retry the install.
+The plugin is not found in the marketplace: check the plugin name. Claude Code
+refreshes a stale marketplace catalog and retries
+before reporting this, so if you turned off
+marketplace auto-update
+, refresh manually with
 /plugin marketplace update claude-plugins-official
-. Then retry the install.
-When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. After installing, run
-/reload-plugins
-to activate the plugin’s configure command.
+and retry the install.
+When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. Check the install summary: if it reports
+Run /reload-plugins to activate.
+, run that command to activate the plugin’s configure command.
 5
 Configure your token
 Run the configure command with the bot token you copied:
@@ -169,16 +179,21 @@ authorization denied
 Install the plugin
 In Claude Code, run:
 /plugin install imessage@claude-plugins-official
-If Claude Code reports
+If the install fails, match the message Claude Code reports:
 Marketplace "claude-plugins-official" not found
-, add the marketplace with
+: add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+, then retry the install.
+The plugin is not found in the marketplace: check the plugin name. Claude Code
+refreshes a stale marketplace catalog and retries
+before reporting this, so if you turned off
+marketplace auto-update
+, refresh manually with
 /plugin marketplace update claude-plugins-official
-. Then retry the install.
-When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. Claude Code then suggests running
-/reload-plugins
-; you can skip that here, because restarting in the next step picks up the plugin.
+and retry the install.
+When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. If the install summary reports
+Run /reload-plugins to activate.
+, you can skip that here, because restarting in the next step picks up the plugin.
 3
 Restart with channels enabled
 Exit Claude Code and restart with the channel flag:
@@ -231,16 +246,21 @@ in managed settings
 Install the fakechat channel plugin
 Start a Claude Code session and run the install command:
 /plugin install fakechat@claude-plugins-official
-If Claude Code reports
+If the install fails, match the message Claude Code reports:
 Marketplace "claude-plugins-official" not found
-, add the marketplace with
+: add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+, then retry the install.
+The plugin is not found in the marketplace: check the plugin name. Claude Code
+refreshes a stale marketplace catalog and retries
+before reporting this, so if you turned off
+marketplace auto-update
+, refresh manually with
 /plugin marketplace update claude-plugins-official
-. Then retry the install.
-When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. Claude Code then suggests running
-/reload-plugins
-; you can skip that here, because restarting in the next step picks up the plugin.
+and retry the install.
+When the install asks for an installation scope, choose the user scope option so the plugin is available across all your projects. If the install summary reports
+Run /reload-plugins to activate.
+, you can skip that here, because restarting in the next step picks up the plugin.
 2
 Restart with the channel enabled
 Exit Claude Code, then restart with

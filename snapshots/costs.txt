@@ -225,7 +225,9 @@ turned on. See
 usage limit errors
 .
 A context or auto-compact warning
-: not a usage limit. The conversation has grown close to the model’s maximum input size, and Claude Code summarizes older history to free space. Point the developer at
+: not a usage limit. The conversation has grown close to the session’s
+auto-compact window
+, the threshold where Claude Code summarizes older history to free space. Point the developer at
 reduce token usage
 .
 Unexpectedly high spend on an API or cloud-provider plan

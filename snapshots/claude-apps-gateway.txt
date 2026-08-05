@@ -644,6 +644,33 @@ allowManaged*Only
 locks, permission allow rules and sandbox allowlists supplied by the host still apply. Your policy’s deny and ask rules stay in force either way;
 they’re evaluated before any allow rule
 .
+Claude Code forwards parent-supplied
+sandbox.credentials
+entries in stripped form:
+deny
+entries
+: forwarded with only their
+path
+or
+name
+and the mode.
+File entries with
+mode: mask
+: forwarded sentinel-only, as a whole-file mask whose
+injectHosts
+is the empty list, so the proxy never substitutes the real value for a parent-supplied entry on any platform. The
+extract
+,
+onExtractNoMatch
+, and
+maskDuplicates
+fields are dropped too, so a parent-supplied extract pattern can’t displace a stricter mask another source sets for the same path.
+envVars
+entries with
+mode: mask
+: not forwarded.
+deny
+is the only environment-variable restriction the parent channel can express.
 ​
 Deploy the locks
 To keep parent settings as close to restriction-only as the filter supports, add all five

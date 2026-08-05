@@ -368,13 +368,11 @@ serverCommand
 and
 serverUrl
 values expand before matching.
-Both the policy entry and the server’s configured value go through the same
+Both the policy entry and the server’s configured value go through
 ${VAR}
 and
 ${VAR:-default}
 expansion
-as
-.mcp.json
 , so an entry written as
 ["${HOME}/bin/server"]
 matches a server config that uses either the same reference or the expanded path. On Windows, reference an environment variable that is set there, such as
@@ -383,7 +381,9 @@ instead of
 ${HOME}
 .
 serverName
-values match literally and never expand.
+values match literally and never expand. The two sides read different environments;
+How policy entries expand
+covers which, and how allowlist and denylist entries differ.
 URLs support
 *
 wildcards
@@ -405,13 +405,25 @@ http://localhost:*/*
 Any port on localhost
 *://mcp.example.com/*
 Any scheme to a specific domain
-Because
-${VAR}
-expansion reads Claude Code’s own process environment, a
-serverCommand
-or
-serverUrl
-policy entry that references a variable expands to whatever value a user sets. Use literal URLs and commands for entries you rely on for enforcement.
+​
+How policy entries expand
+The server’s configured value expands from the live process environment, like the rest of
+.mcp.json
+. A policy entry expands from a pinned environment instead, so a variable set by a project or user settings file can’t change what an allowlist entry means. Because a policy entry still depends on the launching shell’s value for any variable it references, use literal URLs and commands for entries you rely on for enforcement.
+Entry list
+Expands from
+Expansion that would change a URL entry’s scheme, host, or path scope
+allowedMcpServers
+The environment Claude Code started with, plus
+env
+values from managed settings
+Claude Code ignores the entry
+deniedMcpServers
+The same, and a variable with no startup value and no
+:-default
+fills from settings files outside the repository, such as user or managed settings, which only ever widens what the entry matches
+The entry still matches
+Before v2.1.219, both sides expanded from the same live process environment, which included variables set by settings files.
 ​
 Example configuration
 The configuration below sets up a hard allowlist with a denylist. The highlighted lines change how the rest of the list is evaluated, and the callouts after the block explain each one:

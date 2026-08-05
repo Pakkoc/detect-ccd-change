@@ -281,11 +281,14 @@ myhost-graceful-unicorn
 myhost
 is your machine’s hostname or the prefix you set with
 --remote-control-session-name-prefix
-If you didn’t set an explicit name, the title updates to reflect your prompt once you send one. As of Claude Code v2.1.176, auto-generated titles match the language of your conversation, or the
+If you didn’t set an explicit name, Claude Code updates the title to reflect your prompt once you send one. Claude Code matches auto-generated titles to the language of your conversation, or to the
 language
-setting if one is configured. Renaming a session from claude.ai or the Claude app also updates the local title shown in
+setting if one is configured; the language matching requires Claude Code v2.1.176 or later.
+When you rename a session from claude.ai or the Claude app, Claude Code also updates the local title shown in
 claude --resume
-.
+. Claude Code applies the same rename to the session name shown on the prompt bar and in
+claude agents
+. Before v2.1.221, renaming from claude.ai or the Claude app updated only the title, and the CLI kept its previous session name.
 If the environment already has an active session, you’ll be asked whether to continue it or start a new one.
 If you don’t have the Claude app yet, use the
 /mobile
@@ -448,10 +451,6 @@ Extended network outage
 : if your machine is awake but unable to reach the network for more than roughly 10 minutes, the session times out and the process exits. Run
 claude remote-control
 again to start a new session.
-Ultraplan disconnects Remote Control
-: starting an
-ultraplan
-session disconnects any active Remote Control session because both features occupy the claude.ai/code interface and only one can be connected at a time.
 Some commands are local-only
 : commands that only run in the terminal interface, such as
 /plugin
@@ -518,6 +517,10 @@ On Team and Enterprise,
 from mobile or web doesn’t send a
 usage-credits request to your admin
 . Sending requires a confirmation that appears only in the interactive CLI, so the command tells you to run it there instead. Before v2.1.211, the text form sent the request without confirmation.
+/autocompact
+, from v2.1.221: pass the window size as an argument, for example
+/autocompact 500k
+. With no argument, it prints the current window size as text instead of opening the dialog the command shows in a terminal session.
 ​
 Troubleshooting
 ​
@@ -728,8 +731,6 @@ Related resources
 Claude Code on the web
 : run sessions on Anthropic-managed infrastructure instead of your machine, configured through
 cloud environments
-Ultraplan
-: launch a cloud planning session from your terminal and review the plan in your browser
 Channels
 : forward Telegram, Discord, or iMessage into a session so Claude reacts to messages while you’re away
 Dispatch

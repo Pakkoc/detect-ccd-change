@@ -331,6 +331,13 @@ claude --append-system-prompt "Always use TypeScript"
 --append-system-prompt-file
 Load additional system prompt text from a file and append to the default prompt
 claude --append-system-prompt-file ./extra-rules.txt
+--autocompact <auto|tokens>
+Set the
+auto-compact window
+for this session without changing your saved settings. Accepts the same values as
+/autocompact
+; that section covers the value forms and what overrides the flag. Requires Claude Code v2.1.221 or later
+claude --autocompact 500k
 --ax-screen-reader
 Render screen-reader friendly output: flat text without decorative borders or animations. Forces the classic renderer, so the
 tui

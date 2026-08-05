@@ -154,13 +154,16 @@ Animated
 Claude is actively running tools or generating a response
 Needs input
 Yellow
-Claude is waiting on something only you can provide: an answer to a question, a permission decision, a
+Claude is waiting on something only you can provide: an answer to a question, a permission decision, or another prompt only you can answer, such as a
 sandbox
-prompt to allow a network host, an MCP server’s
+prompt to allow a network host or an MCP server’s
 request for input
-, a managed-settings prompt, or an MCP authentication or settings request, or an
+. A command that needs an attached terminal, such as
 /install-github-app
-request, held by a session with no terminal attached
+or the
+/mcp
+settings list,
+holds an unattended session here too
 Idle
 Dimmed
 The session has nothing to do and is ready for your next prompt
@@ -247,9 +250,9 @@ When a session opens a pull request, a
 #1234
 label appears at the right edge of the row, linked to the pull request. Claude Code emits the link even when it can’t detect hyperlink support, for example over SSH or tmux; set
 FORCE_HYPERLINK=0
-to render the label as plain text. The label persists when you send a follow-up to the session, so the pull request remains visible while the row reverts to live progress. Background sessions that isolated their changes in a worktree open these pull requests themselves;
+to render the label as plain text. The label persists when you send a follow-up to the session, so the pull request remains visible while the row reverts to live progress. Claude opens these pull requests from the session itself when the task calls for one;
 How file edits are isolated
-covers when that happens and what a session never does without asking.
+covers what Claude commits and pushes without asking and when it asks first.
 A session that works on an existing pull request is linked to it the same way. Editing, commenting on, closing, or marking a pull request ready with
 gh
 links the pull request that the command’s own output names, so a
@@ -277,7 +280,7 @@ Purple
 Merged
 Grey
 Draft or closed
-For most tasks this column is where you pick up the result: review and merge the pull request when its number turns green.
+For a task that ends in a pull request, check this label for the result: review and merge the pull request when its number turns green.
 ​
 Peek and reply
 Press
@@ -619,7 +622,7 @@ $VISUAL
 or
 $EDITOR
 Ctrl+J
-Insert a newline in the dispatch input. Before v2.1.212, terminals with extended key reporting ignored the keypress
+Insert a newline in the dispatch input
 Ctrl+X
 Stop the session; press again within two seconds to delete it
 Shift+↑
@@ -808,13 +811,16 @@ claude attach
 . Click the name to switch into the copy: this session moves to the background, the same as pressing
 ←
 , and agent view opens the copy’s session.
+Claude Code instructs the copy to make its code changes, including changes it makes through shell commands, outside the checkout this session is editing, except when the copy
+edits that checkout in place
+because the layout is a bare repository or worktree isolation is turned off.
 The checkout the copy edits depends on where the current session is running, and the confirmation names the location whenever the copy edits an existing checkout:
 Like any dispatched session, the copy
 moves into its own worktree before editing files
 . In that case the confirmation doesn’t mention where the copy runs.
 When the current session is itself running inside a linked
 worktree
-that has a main working tree to return to, the copy runs in that main working tree, so the two sessions don’t edit the same checkout. The confirmation ends with
+that has a main working tree to return to, the copy starts in that main working tree, so the two sessions don’t edit the same checkout. When its task builds on your work, Claude Code also instructs the copy to base a new branch on yours, since your branch stays checked out in your worktree. The confirmation ends with
 runs in the origin tree
 .
 In a bare-repository layout there is no main working tree, so the copy stays where it is, and the confirmation ends with
@@ -897,7 +903,7 @@ If the name doesn’t match any of your subagents, the launch fails: Claude Code
 no agent named
 warning and still reports the session as backgrounded, but the session exits immediately with an
 --agent '<name>' not found
-error. Before v2.1.191, Claude Code ran the session with the default agent instead.
+error.
 When the backgrounded session later resumes or restarts, Claude Code restores the agent’s system prompt and tool restrictions. It searches the session’s own directory for the agent first, provided you’ve
 trusted that workspace
 , so a project-scoped agent still loads when the session is resumed from another directory. If the agent no longer exists, the session continues with the default tools and system prompt and its transcript opens with a
@@ -1011,17 +1017,30 @@ isolation: worktree
 in its frontmatter or pass
 isolation: "worktree"
 when spawning it.
-A background session that isolated its code changes in a worktree also commits, pushes its own branch, and opens a draft pull request without stopping to ask. The
+When a background session has made code changes in a worktree Claude entered, Claude Code instructs Claude to preserve the work before finishing, so it survives if you delete the session and its worktree:
+Commit and push
+: Claude commits without asking, and pushes the branch when the repository has a remote.
+Draft pull request
+: Claude opens one when the task calls for it, and the
 #N
 label
-appears on its row when the pull request opens. It never pushes to
+appears on the row.
+Never
+: pushing to
 main
 or
 master
-, never force-pushes or merges, and it skips the pull request when you told it not to open one or the repository has no remote.
+, force-pushing, and merging.
+Your git instructions take precedence
+: if the task,
+CLAUDE.md
+, or
+memory
+says you handle committing or pushing yourself, Claude leaves git to you.
 A session editing a checkout it didn’t isolate itself still asks before committing or switching branches. This applies when isolation is set to
 "none"
 , when the worktree move failed, or when the session started inside a worktree that already existed.
+Whatever the task, Claude ends the job with a report saying what it did and where the work is: a path, a branch, a pull request, or the answer itself.
 ​
 Set the model
 The model name shown in the agent view header is the dispatch default. New sessions you start from the input use this model, which comes from the
@@ -1275,15 +1294,7 @@ agents
 claude agents --json
 fails with an
 unknown option
-error. Before v2.1.200, place
---plugin-dir
-before
-agents
-: after
-agents
-, it reached dispatched sessions but didn’t load the plugin’s agents and skills into agent view’s own
-subagent and skill autocomplete
-.
+error.
 The following example opens agent view with a settings override and one extra directory:
 claude
 agents
@@ -1421,6 +1432,17 @@ claude
 directly is tied to that terminal and ends when it closes, unless you
 send it to the background
 .
+To check which kind of session you’re in, run
+/status
+. The
+Session kind
+row reads
+background job · attached
+or
+background job · unattended
+in a background session, depending on whether a terminal is attached, and
+interactive
+in any other session.
 ​
 The supervisor process
 Background sessions are hosted by a per-user supervisor process, separate from your terminal and from agent view. The supervisor starts automatically the first time you background a session or open agent view, and you don’t manage it directly.
@@ -1806,6 +1828,30 @@ unknown option
 error. The table below lists when each flag and behavior was added.
 Version
 Change
+v2.1.221
+/status
+shows a
+Session kind
+row:
+background job · attached
+or
+background job · unattended
+in a background session, depending on whether a terminal is attached, and
+interactive
+in any other session. Before this release,
+/status
+didn’t report the session kind.
+/fork
+: except when the copy edits in place, in a bare-repository layout or with worktree isolation turned off, Claude Code instructs
+the copy
+to create a new worktree of its own before making code changes, and a copy that moved to the main working tree to base a new branch on the original session’s branch instead of entering the original’s worktree to check it out. Before this release, the copy received no isolation instruction and could end up editing the worktree or checkout the original session was still working in.
+With
+vim editor mode
+on, pressing
+←
+right after undoing the prompt back to empty with
+u
+asks for the same confirmation as deleting the text or moving through prompt history, and switches only on the second press; before this release the press switched immediately.
 v2.1.219
 With
 vim editor mode

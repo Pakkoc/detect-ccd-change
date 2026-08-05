@@ -498,10 +498,11 @@ Amazon Bedrock API keys
 BASH_DEFAULT_TIMEOUT_MS
 Default timeout for long-running bash commands (default: 120000, or 2 minutes)
 BASH_MAX_OUTPUT_LENGTH
-Maximum number of characters in bash outputs before the full output is saved to a file and Claude receives the path plus a short preview. See
-Bash tool behavior
+Maximum number of characters of bash output that Claude Code reads back into a command’s result (default: 30000; maximum: 150000). See
+Output limits
 BASH_MAX_TIMEOUT_MS
-Maximum timeout the model can set for long-running bash commands (default: 600000, or 10 minutes)
+Maximum timeout the model can set for long-running bash commands (default: 600000, or 10 minutes). The effective ceiling is the larger of this and
+BASH_DEFAULT_TIMEOUT_MS
 CCR_FORCE_BUNDLE
 Set to
 1
@@ -561,17 +562,11 @@ Stall timeout in milliseconds for background subagents. Default
 600000
 (10 minutes). The timer resets on each streaming progress event; if no progress arrives within the window, the subagent is aborted and the task is marked failed, surfacing any partial result to the parent
 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE
-Set the percentage (1-100) of the auto-compaction window at which auto-compaction triggers. Use lower values like
+Set the percentage (1-100) of the auto-compact window at which auto-compaction triggers. Use lower values like
 50
-to compact earlier. This variable only causes earlier compaction when Claude Code compacts proactively: when
-CLAUDE_CODE_AUTO_COMPACT_WINDOW
-is set, in
-cloud sessions
-, and on Sonnet 4.6 and Opus 4.6 without
-extended context
-, which compact at the 200K boundary by default. On Sonnet 5, proactive compaction applies at the model’s
-default threshold
-. In other cases, such as a local session on Opus 4.8, auto-compaction triggers when the conversation reaches the model’s context limit. The override can only lower the threshold, so values above the default have no effect. Applies to both main conversations and subagents
+to compact earlier; the variable can’t raise the threshold, so values above the default percentage are ignored. It applies only in sessions that
+compact before the model’s context limit
+. Applies to both main conversations and subagents
 CLAUDE_AUTO_BACKGROUND_TASKS
 Set to
 1
@@ -651,17 +646,27 @@ when your
 LLM gateway
 caches on the request body or forwards requests to a third-party provider, or when you connect to Microsoft Foundry directly
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
-Set the context capacity in tokens used for auto-compaction calculations. Defaults to the model’s context window, 200K for standard models or 1M for
-extended context
-models, except on Sonnet 5, which has its own
-default threshold
-. Use a lower value like
+Set the
+auto-compact window
+in tokens, from
+100000
+to
+1000000
+. Accepts a plain integer such as
 500000
-on a 1M model to treat the window as 500K for compaction purposes. The value is capped at the model’s actual context window.
-CLAUDE_AUTOCOMPACT_PCT_OVERRIDE
-is applied as a percentage of this value. Setting this variable decouples the compaction threshold from the status line’s
+only: a value like
+500k
+reads as
+500
+and clamps to the 100K minimum. Takes precedence over the
+/autocompact
+command, the
+--autocompact
+flag, and the
+autoCompactWindow
+setting. The status line’s
 used_percentage
-, which always uses the model’s full context window
+always measures against the model’s full context window, so once this variable is set, that percentage no longer indicates when compaction will run
 CLAUDE_CODE_AUTO_CONNECT_IDE
 Override automatic
 IDE connection
@@ -1635,9 +1640,13 @@ Link output back to the session
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN
 Set to
 1
-to automatically resume if the previous session ended mid-turn. Used in SDK mode so the model continues without requiring the SDK to re-send the prompt. To turn this off, unset the variable, because setting it to
+to automatically resume if the previous session ended mid-turn. Used in SDK mode so the model continues without requiring the SDK to re-send the prompt. To turn this off, unset the variable or set it to
 0
-still triggers the resume in non-interactive mode
+. Before v2.1.221, Claude Code ignored
+0
+and other falsy values, so setting
+0
+still triggered the resume in non-interactive mode and unsetting the variable was the only way to turn it off
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN_MAX_AGE_MS
 Maximum age in milliseconds of the last transcript message for a session that ended mid-turn to continue automatically on resume. When the last message is older than this bound, Claude Code skips both the
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN
@@ -2305,11 +2314,11 @@ instead
 ENABLE_TOOL_SEARCH
 Controls
 MCP tool search
-. Unset: all MCP tools deferred by default, but loaded upfront on Google Cloud’s Agent Platform, when
+. Unset: all MCP tools deferred by default, but loaded upfront on Google Cloud’s Agent Platform models earlier than the Claude 4.5 generation, when
 ANTHROPIC_BASE_URL
 points to a non-first-party host, or on a Microsoft Foundry deployment hosted on Azure. Values:
 true
-(always defer and send the beta header, except on a Microsoft Foundry deployment hosted on Azure, where the server-side rejection still forces upfront loading; requests fail on Google Cloud’s Agent Platform models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that do not support
+(always defer and send the beta header, except on a Microsoft Foundry deployment hosted on Azure and on Google Cloud’s Agent Platform models earlier than the Claude 4.5 generation, where Claude Code still loads tools upfront; requests fail on proxies that don’t support
 tool_reference
 ),
 auto
@@ -2321,7 +2330,8 @@ for 5%),
 false
 (load all upfront). Ignored when
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
-is set, which forces all tools to load upfront
+is set, which forces all tools to load upfront. Before v2.1.221, Claude Code disabled tool search for all models on Google Cloud’s Agent Platform unless you set this variable to
+true
 FALLBACK_FOR_ALL_PRIMARY_MODELS
 Set to any non-empty value, such as
 1

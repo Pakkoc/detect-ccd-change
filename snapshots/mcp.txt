@@ -45,15 +45,21 @@ plugin
 Install the plugin
 In a Claude Code session, run:
 /plugin install mcp-server-dev@claude-plugins-official
-If Claude Code reports
+If the install fails, match the message Claude Code reports:
 Marketplace "claude-plugins-official" not found
-, add the marketplace with
+: add the marketplace with
 /plugin marketplace add anthropics/claude-plugins-official
-. If it reports that the plugin is not found in the marketplace, your local copy is outdated: refresh it with
+, then retry the install.
+The plugin is not found in the marketplace: check the plugin name. Claude Code
+refreshes a stale marketplace catalog and retries
+before reporting this, so if you turned off
+marketplace auto-update
+, refresh manually with
 /plugin marketplace update claude-plugins-official
-. Then retry the install. Once installed, run
-/reload-plugins
-to activate it in the current session.
+and retry the install.
+Check the install summary: if it reports
+Run /reload-plugins to activate.
+, run that command.
 2
 Run the build skill
 /mcp-server-dev:build-mcp-server
@@ -425,11 +431,11 @@ If your request needs tools from a server that is still connecting in the backgr
 tool search
 enabled, which is the default, the wait happens inside the
 ToolSearch
-call. In configurations without tool search, such as Google Cloud’s Agent Platform, a custom
+call. In configurations without tool search, such as a custom
 ANTHROPIC_BASE_URL
-, or
+,
 ENABLE_TOOL_SEARCH=false
-, Claude uses the
+, or a model earlier than the Claude 4.5 generation on Google Cloud’s Agent Platform, Claude uses the
 WaitForMcpServers
 tool instead. A Microsoft Foundry
 deployment hosted on Azure
@@ -2075,13 +2081,13 @@ Key capabilities your server provides
 Claude Code truncates tool descriptions and server instructions at 2KB each. Keep them concise to avoid truncation, and put critical details near the start.
 ​
 Configure tool search
-Tool search is enabled by default: MCP tools are deferred and discovered on demand. Claude Code disables it by default on Google Cloud’s Agent Platform. It is also disabled when
+Tool search is enabled by default: MCP tools are deferred and discovered on demand. Claude Code disables it when
 ANTHROPIC_BASE_URL
 points to a non-first-party host, since most proxies don’t forward
 tool_reference
 blocks. Set
 ENABLE_TOOL_SEARCH
-explicitly to override either fallback.
+explicitly to override that fallback.
 Setting
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
 keeps tool search off, and
@@ -2095,18 +2101,28 @@ Tool search requires a model that supports
 tool_reference
 blocks: Claude Sonnet 4.5, Claude Haiku 4.5, Claude Opus 4.5, and later models. See
 model compatibility in the API docs
-for the current list. On Google Cloud’s Agent Platform, tool search is supported for Claude Sonnet 4.5 and later and Claude Opus 4.5 and later.
+for the current list.
+On Google Cloud’s Agent Platform, Claude Code decides by model generation:
+Claude Opus 4.5, Sonnet 4.5, Haiku 4.5, and later
+: tool search is on by default, the same as on the Anthropic API.
+Earlier Agent Platform models
+: Claude Code loads all MCP tools upfront, because their serving stacks reject the required beta header.
+ENABLE_TOOL_SEARCH=true
+doesn’t override this.
+Before v2.1.221, Claude Code disabled tool search for all models on Google Cloud’s Agent Platform unless you set
+ENABLE_TOOL_SEARCH=true
+.
 Control tool search behavior with the
 ENABLE_TOOL_SEARCH
 environment variable:
 Value
 Behavior
 (unset)
-All MCP tools deferred and loaded on demand. Falls back to loading upfront on Google Cloud’s Agent Platform, when
+All MCP tools deferred and loaded on demand. Falls back to loading upfront on Google Cloud’s Agent Platform models earlier than the Claude 4.5 generation, when
 ANTHROPIC_BASE_URL
 is a non-first-party host, or on a Microsoft Foundry deployment hosted on Azure
 true
-All MCP tools deferred, except on a Microsoft Foundry deployment hosted on Azure, where the server-side rejection still forces upfront loading. Claude Code sends the beta header even on Google Cloud’s Agent Platform and through proxies. Requests fail on Google Cloud’s Agent Platform models earlier than Sonnet 4.5 or Opus 4.5, or on proxies that don’t support
+All MCP tools deferred, except on a Microsoft Foundry deployment hosted on Azure, where the server-side rejection still forces upfront loading, and on Google Cloud’s Agent Platform models earlier than the Claude 4.5 generation, where Claude Code keeps loading tools upfront. Claude Code sends the beta header through proxies, and requests fail on proxies that don’t support
 tool_reference
 blocks
 auto

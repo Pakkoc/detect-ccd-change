@@ -67,6 +67,14 @@ Compact with a focus
 with instructions, like
 /compact focus on the auth bug fix
 , before starting a long new task. The summary keeps what you choose instead of what the automatic pass guesses is important.
+Compact earlier
+: run
+/autocompact
+with a token count, like
+/autocompact 500k
+, to set how full the context window gets before the automatic pass runs. See
+Set the auto-compact window
+for accepted values and overrides.
 Clear between tasks
 : run
 /clear
@@ -84,6 +92,58 @@ model variant. Sonnet 5 runs at 1M with no
 variant to select; see
 Sonnet 5 context window
 for its auto-compaction thresholds and the LLM gateway exception. Compaction works the same way at the larger limit.
+​
+Set the auto-compact window
+The auto-compact window is how full the context window can get before Claude Code compacts the conversation. You can set it in three places:
+For this session and later ones
+: run
+/autocompact
+with a value, like
+/autocompact 500k
+. Claude Code saves it to your user settings as
+autoCompactWindow
+and applies it to the current session; if a higher-priority
+settings scope
+such as managed settings sets the key, the command saves your value but the session keeps that scope’s window, and the command says so. Run
+/autocompact auto
+to return to the window tuned for your model.
+For one launch
+: pass
+--autocompact
+when starting Claude Code. The flag overrides your saved setting for that launch without changing it, and
+claude --autocompact auto
+runs the session at the tuned window even if your saved setting has a value. Unlike
+/autocompact
+, the flag isn’t preempted by a higher-priority settings scope such as managed settings.
+In scripts and cloud environments
+: set
+CLAUDE_CODE_AUTO_COMPACT_WINDOW
+. While it’s set, it takes precedence over the command, the flag, and the setting, and
+/autocompact
+reports the override instead of changing the window.
+The command and the flag accept a window size from 100K to 1M tokens, in any of these forms:
+A plain token count, such as
+200000
+A
+k
+or
+M
+suffix, such as
+500k
+or
+1M
+A bare number from 100 to 1000, meaning thousands, so
+200
+sets 200,000
+The environment variable accepts only the plain token count. Claude Code caps the window at the model’s context window.
+With no window size set in any of these places, Claude Code compacts when the conversation reaches the model’s context limit, except in these sessions, which compact earlier:
+Cloud sessions
+compact as the conversation approaches the model’s limit
+Sonnet 4.6 and Opus 4.6 without
+extended context
+compact at the 200K boundary, and so do Opus 4.8 and Opus 5 when they run with a 200K context window, such as on Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
+Sonnet 5 compacts at the model’s
+default threshold
 ​
 Check your own session
 The visualization uses representative numbers. To see your actual context usage at any point, run

@@ -83,10 +83,12 @@ Agent
 Model
 When Claude uses it
 claude
-Inherits from main conversation
+Inherits
 When a task doesn’t fit a more specialized agent. A catch-all with every tool
 available to subagents
-. Also the default agent for a dispatched
+. Also the
+default agent
+for a dispatched
 background session
 , which runs with your settings’ permission mode rather than a parent conversation’s
 statusline-setup
@@ -97,15 +99,6 @@ to configure your status line
 claude-code-guide
 Haiku
 When you ask questions about Claude Code features
-claude
-Inherits
-When you dispatch a
-background session
-from
-claude agents
-and the dispatch
-resolves to it as the default agent
-. Claude can also delegate to it like any other subagent
 Built-in subagents are registered by default in interactive sessions. To restrict them:
 To block a specific built-in type, add it to
 permissions.deny

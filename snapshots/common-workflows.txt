@@ -84,6 +84,9 @@ Let Claude know if the error is intermittent or consistent
 ​
 Refactor code
 Suppose you need to update old code to use modern patterns and practices.
+For porting an entire codebase to a new language, see
+how Anthropic runs large-scale code migrations with Claude Code
+on the blog.
 1
 Identify legacy code for refactoring
 find deprecated API usage in our codebase

@@ -154,10 +154,6 @@ claude
 --cloud
 "Execute the migration plan in docs/migration-plan.md"
 This pattern gives you control over the strategy while letting Claude execute autonomously in the cloud.
-Plan in the cloud with ultraplan
-: to draft and review the plan itself in a web session, use
-ultraplan
-. Claude generates the plan on Claude Code on the web while you keep working, then you comment on sections in your browser and choose to execute remotely or send the plan back to your terminal.
 Run tasks in parallel
 : each
 --cloud
@@ -331,9 +327,14 @@ in your
 environment variables
 . For example,
 CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70
-compacts at 70% capacity instead of waiting until the window is nearly full. To change the effective window size for compaction calculations, use
+compacts at 70% capacity instead of waiting until the window is nearly full.
+The percentage moves compaction earlier within the
+auto-compact window
+. To change the window itself, set
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
-.
+, or run
+/autocompact
+with a token count in a session where the variable isn’t set.
 Subagents
 work the same way they do locally. Claude can spawn them with the Task tool to offload research or parallel work into a separate context window, keeping the main conversation lighter. Subagents defined in your repo’s
 .claude/agents/
@@ -348,7 +349,11 @@ environment variables
 Review changes
 Each session shows a diff indicator with lines added and removed, like
 +42 -18
-. Select it to open the diff view, leave inline comments on specific lines, and send them to Claude with your next message. See
+. Select it to open the diff view, leave inline comments on specific lines, and send them to Claude with your next message.
+Claude Code computes these diffs, including the per-file diffs shown as Claude edits, from raw git blob content, so diff drivers and
+textconv
+filters configured in the repository don’t apply.
+See
 Review and iterate
 for the full walkthrough including PR creation. To have Claude monitor the PR for CI failures and review comments automatically, see
 Auto-fix pull requests
@@ -531,8 +536,6 @@ to exempt Anthropic-hosted services from your organization’s IP allowlist.
 Related resources
 Cloud environments
 : configure network access, environment variables, and setup scripts for cloud sessions
-Ultraplan
-: draft a plan in a cloud session and review it in your browser
 Ultrareview
 : run a deep multi-agent code review in a cloud sandbox
 Routines
