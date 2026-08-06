@@ -1982,6 +1982,15 @@ UserPromptExpansion
 , and
 SessionStart
 , where stdout is added as context that Claude can see and act on.
+Stderr from a hook that exits 0 goes to the debug log only, never the transcript, and Claude never sees it. To read it yourself, enable
+debug logging
+. To surface a warning to Claude from a
+PostToolUse
+or
+PostToolUseFailure
+hook, exit 2 instead so
+Claude sees the stderr
+even though the tool already ran.
 Exit 2
 means a blocking error. Claude Code ignores stdout and any JSON in it. Instead, stderr text is fed back to Claude as an error message. The effect depends on the event:
 PreToolUse
@@ -3724,7 +3733,68 @@ tool_name
 tool_input
 , and
 tool_use_id
-. The
+.
+For the file tools
+Write
+,
+Edit
+, and
+Read
+,
+tool_input.file_path
+is always absolute:
+Claude Code expands
+~
+and relative paths before hooks run, so a hook that matches on paths can’t be bypassed via
+~
+or a relative spelling of the same path
+On Windows, the path arrives with backslash separators, even when your hook runs under Git Bash where
+$PWD
+looks like
+/c/project
+A comparison written with forward slashes, such as a
+/src/
+check, never matches a backslash path, and the tool call proceeds as if the hook had nothing to block
+Normalize separators before comparing:
+FILE_PATH="${FILE_PATH//\\//}"
+in Bash, or
+file_path.replace("\\", "/")
+in Python, then match a path segment such as
+/src/
+rather than anchoring with
+^
+, since the path is absolute
+A
+Write
+call on Windows delivers:
+{
+"hook_event_name"
+:
+"PreToolUse"
+,
+"tool_name"
+:
+"Write"
+,
+"tool_input"
+: {
+"file_path"
+:
+"C:
+\\
+project
+\\
+src
+\\
+index.ts"
+,
+"content"
+:
+"..."
+},
+...
+}
+The
 tool_input
 fields depend on the tool:
 Bash
@@ -4678,7 +4748,11 @@ hooks fire after a tool has already executed successfully. The input includes bo
 tool_input
 , the arguments sent to the tool, and
 tool_response
-, the result it returned. The exact schema for both depends on the tool.
+, the result it returned. The exact schema for both depends on the tool. File-tool
+tool_input
+paths arrive in the same format as for
+PreToolUse
+: always absolute, with the platform’s native separators, so backslashes on Windows.
 {
 "session_id"
 :

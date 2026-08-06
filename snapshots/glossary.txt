@@ -242,7 +242,9 @@ M
 Managed settings
 Settings enforced org-wide by IT or DevOps, delivered from Anthropic’s servers through the admin console or deployed to devices at an OS-level path outside
 ~/.claude
-. User and project settings cannot override managed settings. Server-managed delivery applies on
+. User and project settings cannot override managed settings, apart from the exceptions listed under
+Settings precedence
+. Server-managed delivery applies on
 eligible configurations
 ; see
 Security considerations
@@ -436,7 +438,9 @@ managed policy
 .claude/settings.json
 , then user settings at
 ~/.claude/settings.json
-. Arrays merge across layers; scalars at a higher layer override lower ones.
+. Arrays merge across layers; scalars at a higher layer override lower ones, apart from the exceptions under
+Settings precedence
+.
 Learn more:
 Settings files
 ​

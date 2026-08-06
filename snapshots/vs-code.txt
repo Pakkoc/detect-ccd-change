@@ -132,8 +132,8 @@ The Settings section includes
 Enable Remote Control for all sessions
 , which sets
 remoteControlAtStartup
-so
-every new interactive session connects to Remote Control automatically
+to control whether
+new interactive sessions connect to Remote Control automatically
 . Requires Claude Code v2.1.203 or later.
 The Settings section also includes
 Focus view

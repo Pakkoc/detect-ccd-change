@@ -28,7 +28,9 @@ Location
 Purpose
 managed-settings.json
 System-level, varies by OS
-Enterprise-enforced settings that you can’t override. See
+Enterprise-enforced settings that you can’t override, apart from
+narrow exceptions
+. See
 server-managed settings
 .
 CLAUDE.local.md
@@ -117,7 +119,8 @@ CLAUDE.md
 and apply across all projects.
 Several things can override what you put in these files:
 Managed settings
-deployed by your organization take precedence over everything
+deployed by your organization take precedence over everything, apart from the
+exceptions under Settings precedence
 CLI flags like
 --permission-mode
 or

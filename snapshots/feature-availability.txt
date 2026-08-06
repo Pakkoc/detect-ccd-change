@@ -176,7 +176,12 @@ See note
 See note
 3
 GitHub Actions
-and
+✓
+✓
+✓
+✗
+✓
+✓
 GitLab CI/CD
 ✓
 ✓
@@ -312,6 +317,8 @@ fast mode
 Advisor
 ,
 Channels
+,
+GitHub Actions
 , the
 analytics dashboard
 ,
@@ -334,8 +341,6 @@ for scheduling, use
 with an explicit interval instead of
 /schedule
 . For cloud sessions, use
-GitHub Actions
-or
 GitLab CI/CD
 .
 Not available:
@@ -391,8 +396,6 @@ Advisor
 ,
 Channels
 ,
-GitHub Actions
-and
 GitLab CI/CD
 , the
 analytics dashboard
@@ -423,6 +426,8 @@ for scheduling, use
 /loop
 with an explicit interval instead of
 /schedule
+. For cloud sessions, use
+GitHub Actions
 .
 Not available:
 all

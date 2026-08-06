@@ -641,7 +641,7 @@ private-network prerequisite
 CLI
 /login
 :
-Gateway login requires a direct connection and does not support connecting through an HTTP proxy
+Gateway login would go through proxy <proxy>, which is not on a private network
 An
 HTTPS_PROXY
 or
@@ -649,7 +649,19 @@ HTTP_PROXY
 applies to the gateway host and the proxy’s hostname resolves to a public address. A proxy whose host resolves only to private addresses is allowed and doesn’t trigger this error
 Add the gateway host to
 NO_PROXY
-on the developer’s machine so the connection is direct, or use a proxy whose hostname resolves to private addresses
+on the developer’s machine so the connection is direct, or use a proxy whose hostname resolves to private addresses. The message names the exact
+NO_PROXY
+entry to add
+CLI
+/login
+:
+Could not resolve the configured HTTP proxy
+The hostname in
+HTTPS_PROXY
+or
+HTTP_PROXY
+doesn’t resolve from the developer’s machine, typically because it isn’t connected to the corporate network
+Have the developer connect to your network or VPN and retry, or fix the proxy URL
 CLI
 /login
 :

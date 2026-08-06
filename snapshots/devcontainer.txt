@@ -183,7 +183,9 @@ settings hierarchy
 ~/.claude
 or the project’s
 .claude/
-directory. Copy the file into place from your Dockerfile:
+directory, apart from the exceptions under
+Settings precedence
+. Copy the file into place from your Dockerfile:
 Dockerfile
 RUN
 mkdir -p /etc/claude-code

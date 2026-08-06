@@ -597,7 +597,13 @@ Limit the number of agentic turns (print mode only). Exits with an error when th
 , a message sent while Claude is working stays queued and runs as its own turn, with its own limit, when the limit ends the current one. Before v2.1.205, Claude Code discarded that message
 claude -p --max-turns 3 "query"
 --mcp-config
-Load MCP servers from JSON files or strings (space-separated)
+Load MCP servers from JSON files or strings (space-separated). When you pass this flag with
+-p
+, Claude Code waits for still-pending servers to connect before running the first turn, up to the
+MCP_TIMEOUT
+startup timeout, 30 seconds by default; a server with a
+cached tool list
+skips the wait and connects on first use. The wait requires Claude Code v2.1.221 or later
 claude --mcp-config ./mcp.json
 --model
 Sets the model for the current session with an alias for the latest model (
@@ -675,7 +681,7 @@ claude --permission-mode plan
 --permission-prompt-tool
 Specify an MCP tool to handle permission prompts in non-interactive mode. Claude Code waits for that tool’s MCP server to connect before running the first turn, up to the
 MCP_TIMEOUT
-startup timeout of 30 seconds. Before v2.1.206, a slow-starting server could make the run
+startup timeout, 30 seconds by default. Before v2.1.206, a slow-starting server could make the run
 exit with an error that the MCP tool was not found
 .
 The prompt tool can’t approve an MCP tool marked as

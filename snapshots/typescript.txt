@@ -1584,9 +1584,9 @@ to disable it.
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 defaults to
 300000
-and is clamped to that minimum. After the abort, Claude Code retries the request at most once, and only before Claude has started a block of text or a tool call in the response; once Claude has completed a block of text or a tool call, Claude Code keeps the completed output, appends an
-incomplete-response notice
-instead of retrying, and still runs any completed tool call.
+and is clamped to that minimum. After the abort,
+Automatic retries
+covers what Claude Code does, based on how far the response had progressed.
 ​
 Query
 object

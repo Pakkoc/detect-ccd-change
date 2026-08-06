@@ -250,18 +250,24 @@ Unknown command: /cd
 Configure
 Claude in Chrome
 settings
-/claude-api [migrate|managed-agents-onboard]
+/claude-api [migrate|managed-agents-onboard|prompt-audit]
 Skill
 .
-Load Claude API reference material for your project’s language (Python, TypeScript, Java, Go, Ruby, C#, PHP, or cURL) and Managed Agents reference. Covers tool use, streaming, batches, structured outputs, and common pitfalls. Also activates automatically when your code imports
+Load
+Claude API
+and Managed Agents reference material for your project’s language. Also activates automatically when your code imports
 anthropic
 or
 @anthropic-ai/sdk
 . Run
-/claude-api migrate
-to upgrade existing Claude API code to a newer model: Claude asks which files to scan and which model to target, then updates model IDs, thinking configuration, and other parameters that changed between versions. Run
-/claude-api managed-agents-onboard
-for an interactive walkthrough that creates a new Managed Agent from scratch
+migrate
+to upgrade existing Claude API code to a newer model,
+managed-agents-onboard
+for a walkthrough that creates a new Managed Agent, or
+prompt-audit
+to flag instructions written for older models in your prompts, skills, and tool descriptions and propose fixes as a diff. The
+prompt-audit
+subcommand requires Claude Code v2.1.221 or later
 /clear [name]
 Start a new conversation with empty context. Pass a name to label the previous conversation in the
 /resume
@@ -393,7 +399,11 @@ Claude Design
 Continue the current session in the Claude Code Desktop app. Requires macOS or x64 Windows and a Claude subscription. Alias:
 /app
 /diff
-Open an interactive diff viewer showing uncommitted changes and per-turn diffs. Use left/right arrows to switch between the current git diff and individual Claude turns, and up/down to browse files. Press Enter to open the selected file’s diff, scroll it with up/down or PageUp/PageDown, and press Esc to return to the file list. As of v2.1.198, the open viewer also refreshes automatically when the repository’s git state changes outside the session, such as a branch switch or commit in another terminal
+Open an interactive diff viewer showing uncommitted changes and per-turn diffs. Use left/right arrows to switch between the current git diff and individual Claude turns, and up/down to browse files. Press Enter to open the selected file’s diff, scroll it with up/down or PageUp/PageDown, and press Esc to return to the file list. Claude Code computes these diffs from raw git blob content, so diff drivers and
+textconv
+filters configured in
+.gitattributes
+or git config don’t apply. Before v2.1.222, workspace-configured drivers and filters could rewrite the viewer’s output. The open viewer also refreshes automatically when the repository’s git state changes outside the session, such as a branch switch or commit in another terminal; the auto-refresh requires Claude Code v2.1.198 or later
 /doctor
 Skill
 .
@@ -494,30 +504,25 @@ Toggle the focus view, which shows only your last prompt, a one-line tool-call s
 viewMode
 in settings to override it. Only available in
 fullscreen rendering
+. The
+VS Code extension
+offers its own Focus view as a command-menu toggle, stored as an extension setting, independent of
+viewMode
 /fork [prompt]
-Copy the current conversation into a new
-background session
-and keep working here. The copy starts with everything in this conversation up to now and runs as its own row in
-agent view
-; the two sessions are independent from that point on. Pass a prompt and the copy starts working on it immediately; without one it waits in agent view for its first prompt. To hand a side task to a subagent whose result comes back into this conversation, use
+Copy the current conversation
+into a new background session and keep working here; the two sessions are independent from that point on. Pass a prompt and the copy starts working on it immediately; without one it waits in agent view for its first prompt. Except when the copy
+edits in place
+, Claude Code instructs it to create a worktree of its own before making code changes; the isolation instruction requires Claude Code v2.1.221 or later. To hand a side task to a subagent whose result comes back into this conversation, use
 /subtask
-. To switch into a copy yourself, use
+; to switch into a copy yourself, use
 /branch
-. Requires Claude Code v2.1.212 or later; on v2.1.161 through v2.1.211
-/fork
-starts a
-forked subagent
-instead, and before v2.1.161 it is an alias for
-/branch
-unless forked subagents were enabled, by setting
-CLAUDE_CODE_FORK_SUBAGENT
-to
-1
-from v2.1.117 or by a server-side rollout. When
+. Requires Claude Code v2.1.212 or later; on v2.1.161 through v2.1.211, and whenever
 agent view is turned off
 ,
 /fork
-keeps the forked-subagent behavior
+starts a
+forked subagent
+instead
 /goal [condition|clear]
 Set a
 goal
@@ -680,7 +685,9 @@ cloud agents
 /rename [name]
 Rename the current session and show the name on the prompt bar. Without a name, auto-generates one from conversation history. Also available in non-interactive mode (
 -p
-); requires Claude Code v2.1.205 or later
+); requires Claude Code v2.1.205 or later. From every rename surface, including claude.ai and the desktop app, Claude Code replaces control and invisible characters in the new name with spaces and caps the name at 200 characters. If the name is empty once invisible characters are removed, Claude Code rejects it and shows
+That name is empty once invisible characters are removed. Usage: /rename <name>
+. The character replacement and length cap require Claude Code v2.1.221 or later
 /resume [session]
 Resume a conversation by ID or name, or open the session picker. As of v2.1.144,
 background sessions
@@ -787,7 +794,19 @@ Alias for
 /usage
 . Opens on the Stats tab
 /status
-Open the Settings interface on the Status tab, showing version, model, account, and connectivity. Works while Claude is responding
+Open the Settings interface on the Status tab, showing version, model, account, and connectivity. A
+Session kind
+row reads
+background job · attached
+or
+background job · unattended
+in a
+background session
+, depending on whether a terminal is attached, and
+interactive
+in any other session. Before v2.1.221,
+/status
+didn’t show this row. Works while Claude is responding
 /statusline
 Configure Claude Code’s
 status line

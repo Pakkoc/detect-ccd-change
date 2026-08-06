@@ -62,7 +62,8 @@ Machine-specific settings that won’t work for others
 How scopes interact
 When the same setting appears in multiple scopes, Claude Code applies them in priority order:
 Managed
-(highest): can’t be overridden by anything
+(highest): can’t be overridden by any other scope, apart from the exceptions under
+Settings precedence
 Command line arguments
 : temporary session overrides
 Local
@@ -77,7 +78,7 @@ to
 true
 and project settings set it to
 false
-, the project value applies. Permission rules behave differently because they merge across scopes rather than override. See
+, the project value applies. Permission rules behave differently because they merge across scopes rather than override, and a few security-sensitive settings honor a restrictive value from certain scopes that otherwise couldn’t override them. See
 Settings precedence
 .
 ​
@@ -161,7 +162,9 @@ step that
 .claude/settings.json
 allow rules require. If the repository supplies the file, for example by committing it, workspace trust still applies.
 Managed settings
-: For organizations that need centralized control, Claude Code supports multiple delivery mechanisms for managed settings. All use the same JSON format and cannot be overridden by user or project settings:
+: For organizations that need centralized control, Claude Code supports multiple delivery mechanisms for managed settings. All use the same JSON format and cannot be overridden by user or project settings, apart from the exceptions listed under
+Settings precedence
+:
 Server-managed settings
 : delivered remotely at sign-in, either from Anthropic’s servers via the claude.ai admin console or from a self-hosted
 Claude apps gateway
@@ -1424,14 +1427,18 @@ automatically when each interactive session starts, instead of waiting for
 /remote-control
 . Set to
 true
-to always auto-connect,
+to turn auto-connect on,
 false
-to never auto-connect, or leave unset to follow your organization’s admin default if one is set, and otherwise Claude Code’s current default. Appears in
+to turn it off, or leave unset to follow your organization’s admin default if one is set, and otherwise Claude Code’s current default. Appears in
 /config
 as
 Enable Remote Control for all sessions
-. See
+. Claude Code ignores a
+true
+from project or local settings; for the full per-scope behavior, see
 Enable Remote Control for all sessions
+and the exceptions under
+Settings precedence
 false
 requiredMaximumVersion
 Managed settings only. Maximum Claude Code version allowed to start. If the running version is newer, Claude Code exits at startup and instructs the user to install an approved version through the organization’s approved method;
@@ -2999,7 +3006,49 @@ MDM/OS-level policies
 managed settings
 )
 Policies deployed by IT through server delivery, MDM configuration profiles, registry policies, or managed settings files
-Cannot be overridden by any other level, including command line arguments
+Cannot be overridden by any other level, including command line arguments, apart from the exceptions in the bullets below
+A few security-sensitive settings honor a restrictive value from scopes that otherwise couldn’t override them:
+A
+true
+for
+disableClaudeAiConnectors
+applies from any scope, even when a managed source sets
+false
+A
+false
+for
+remoteControlAtStartup
+in project or local settings (
+.claude/settings.json
+,
+.claude/settings.local.json
+) applies even when a managed source sets
+true
+. Claude Code ignores a
+true
+there; only user settings, the
+--settings
+flag, and managed sources can turn auto-connect on, and a user
+false
+doesn’t override a managed
+true
+Host platforms that embed Claude Code and set
+CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
+are also an exception. The host’s model configuration takes precedence over the
+model
+,
+fallbackModel
+, and
+modelOverrides
+keys from every managed source, and over the model-selection environment variables in a managed
+env
+block, such as
+ANTHROPIC_MODEL
+and the
+ANTHROPIC_DEFAULT_*_MODEL
+family. A managed
+availableModels
+allowlist stays in force unless the host supplies its own
 Within the managed tier, only one source is used and the others are ignored rather than merged. Precedence, highest first:
 policyHelper
 output: when configured, this is the only managed source used
@@ -3073,7 +3122,9 @@ User settings
 ~/.claude/settings.json
 )
 Personal global settings
-This hierarchy ensures that organizational policies are always enforced while still allowing teams and individuals to customize their experience. The same precedence applies whether you run Claude Code from the CLI, the
+This hierarchy applies organizational policies first, apart from the exceptions under
+Settings precedence
+, while still allowing teams and individuals to customize their experience. The same precedence applies whether you run Claude Code from the CLI, the
 VS Code extension
 , or a
 JetBrains IDE
@@ -3105,7 +3156,9 @@ is an ordered chain where position carries meaning: the highest-precedence file 
 availableModels
 : when the
 highest-precedence managed source
-defines it, that list applies as-is and user, project, and local entries cannot extend it. Across non-managed scopes the arrays merge as usual. See
+defines it, that list applies as-is, apart from a
+host platform that supplies its own
+, and user, project, and local entries cannot extend it. Across non-managed scopes the arrays merge as usual. See
 Merge behavior
 .
 ​
@@ -3170,10 +3223,11 @@ or loaded by Claude automatically
 MCP servers
 : Extend Claude Code with additional tools and integrations
 Precedence
-: Higher-level configurations (Managed) override lower-level ones (User/Project)
+: Higher-level configurations (Managed) override lower-level ones (User/Project), apart from the exceptions under
+Settings precedence
 Inheritance
-: Settings merge across scopes; scalar values from higher-priority scopes override, and arrays concatenate, with two exceptions described in the
-array-merge Note
+: Settings merge across scopes; scalar values from higher-priority scopes override and arrays concatenate, each with the exceptions described under
+Settings precedence
 ​
 System prompt
 Claude Code’s internal system prompt is not published. To add custom instructions, use

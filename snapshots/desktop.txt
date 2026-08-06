@@ -625,9 +625,9 @@ download Git for Windows
 , install it, and restart the app. If you run into Git errors, ask Claude in the
 Cowork tab
 to help troubleshoot your setup.
-Use the controls at the top of the sidebar to filter sessions by status, project, or environment, and to group sessions by project. To rename a session, click the session title in the toolbar at the top of the active session. Claude Code applies the rename to the session’s underlying CLI name too, so the new name appears when you list sessions from a terminal with
+Use the controls at the top of the sidebar to filter sessions by status, project, or environment, and to group sessions by project. To rename a session, click the session title in the toolbar at the top of the active session. For a session on a local environment, Claude Code applies the rename to the session’s underlying CLI name too, so the new name appears in the
 claude agents
-; the shared rename requires Claude Code v2.1.221 or later.
+listing on that machine; the shared rename requires Claude Code v2.1.221 or later.
 To check context usage, see
 Check usage
 . When context fills up, Claude automatically summarizes the conversation and continues working. You can also type

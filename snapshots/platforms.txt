@@ -68,6 +68,11 @@ Responds to
 @Claude
 mentions in your channels
 Turning bug reports into pull requests from team chat
+Claude Tag
+Runs
+@Claude
+as your organization’s shared identity with admin-configured access
+Shared team access on Team and Enterprise plans, instead of per-user Slack sessions
 For integrations not listed here,
 MCP servers
 and
@@ -158,6 +163,10 @@ Code Review
 : automatic review on every pull request
 Slack
 : send tasks from team chat, get PRs back
+Claude Tag
+: run
+@Claude
+as your organization’s shared identity on Team and Enterprise plans
 ​
 Remote access
 Dispatch

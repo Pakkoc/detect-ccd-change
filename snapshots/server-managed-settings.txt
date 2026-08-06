@@ -164,7 +164,9 @@ Most
 settings keys
 work in any scope. A handful of keys are only read from managed settings and have no effect when placed in user or project settings files. See
 managed-only settings
-for the full list. Any setting not on that list can still be placed in managed settings and takes the highest precedence.
+for the full list. Any setting not on that list can still be placed in managed settings and takes the highest precedence, apart from the exceptions listed in the
+settings reference’s precedence section
+.
 ​
 Current limitations
 Server-managed settings have the following limitations:
@@ -191,7 +193,9 @@ Server-managed settings and
 endpoint-managed settings
 both occupy the highest tier in the Claude Code
 settings hierarchy
-. No other settings level can override them, including command line arguments.
+. No other settings level can override them, including command line arguments, apart from the exceptions listed in the
+settings reference’s precedence section
+.
 Within the managed tier, a configured
 policyHelper
 preempts every other managed source, including server-managed settings: its output becomes the only managed configuration for the run.

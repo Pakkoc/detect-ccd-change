@@ -52,7 +52,9 @@ hooks
 enforce limits regardless of what Claude decides. Use CLAUDE.md for “we do it this way here.” Use permissions or hooks for security boundaries and anything that must never happen, where you need a guarantee instead of guidance.
 ​
 Check resolved settings
-Settings merge across managed, user, project, and local scopes. Managed settings always win when present. Among the rest, the closer scope overrides the broader one in the order local, then project, then user. Some settings can also be set by command-line flags or
+Settings merge across managed, user, project, and local scopes. Managed settings apply first when present, apart from the exceptions under
+Settings precedence
+. Among the rest, the closer scope overrides the broader one in the order local, then project, then user. Some settings can also be set by command-line flags or
 environment variables
 , which act as another override layer. When a setting doesn’t seem to apply, the value you set is usually being overridden by another scope or an environment variable.
 Run
@@ -367,15 +369,13 @@ or
 uvx
 work as-is.
 MCP server starts without expected environment variables
-Variables are in
-settings.json
-env
-, which doesn’t propagate to MCP child processes
+The server’s config entry doesn’t set them, and they aren’t in the environment Claude Code passes to stdio servers: its own environment, minus the
+variables it strips from subprocesses
 Set per-server
 env
-inside
+inside the server’s
 .mcp.json
-instead.
+entry, which doesn’t depend on the launch environment or workspace trust.
 Bash(rm *)
 deny rule doesn’t block
 /bin/rm

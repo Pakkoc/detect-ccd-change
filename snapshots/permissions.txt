@@ -1420,7 +1420,9 @@ sandbox modes
 to change this behavior.
 ​
 Managed settings
-For organizations that need centralized control over Claude Code configuration, administrators can deploy managed settings that can’t be overridden by user or project settings. These policy settings follow the same format as regular settings files and can be delivered through MDM/OS-level policies, managed settings files,
+For organizations that need centralized control over Claude Code configuration, administrators can deploy managed settings that can’t be overridden by user or project settings, apart from the exceptions listed in the
+settings reference’s precedence section
+. These policy settings follow the same format as regular settings files and can be delivered through MDM/OS-level policies, managed settings files,
 server-managed settings
 , or a self-hosted
 Claude apps gateway
@@ -1552,7 +1554,7 @@ Permission rules follow the same
 settings precedence
 as all other Claude Code settings:
 Managed settings
-: can’t be overridden by any other level, including command line arguments
+: no other level, including command line arguments, can override a managed permission rule
 Command line arguments
 : temporary session overrides
 Local project settings

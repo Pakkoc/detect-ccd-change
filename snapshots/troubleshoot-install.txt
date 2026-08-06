@@ -97,6 +97,11 @@ OAuth error
 or
 403 Forbidden
 Fix authentication
+Unable to connect to Anthropic services
+during setup
+See
+Unable to connect to Anthropic services
+in the Error reference
 Could not load the default credentials
 or
 Could not load credentials from any providers
@@ -707,9 +712,9 @@ Check for proxy or firewall interference
 unable to get local issuer certificate
 and
 SELF_SIGNED_CERT_IN_CHAIN
-. For the install step, point curl at your corporate CA bundle with
---cacert
-:
+. For the install step, make the install download trust your corporate proxy’s CA:
+macOS/Linux
+Windows PowerShell
 curl
 --cacert
 /path/to/corporate-ca.pem
@@ -717,9 +722,19 @@ curl
 https://claude.ai/install.sh
 |
 bash
+The PowerShell installer downloads through .NET, which validates TLS against the Windows certificate store. Ask your IT team to add the proxy’s CA certificate to the Windows store if it isn’t already there, then run the installer:
+irm https:
+//
+claude.ai
+/
+install.ps1
+|
+iex
 For Claude Code itself once installed, set
 NODE_EXTRA_CA_CERTS
 so API requests trust the same bundle:
+macOS/Linux
+Windows PowerShell
 export
 NODE_EXTRA_CA_CERTS
 =
@@ -731,17 +746,31 @@ to
 corporate-ca
 .
 pem
+$
+env:
+NODE_EXTRA_CA_CERTS
+=
+'C:\path\to\corporate-ca.pem'
 Ask your IT team for the certificate file if you don’t have it. You can also try on a direct connection to confirm the proxy is the cause.
-On Windows, switch installers if your network blocks revocation checks
+On Windows, work around blocked revocation checks
 . The errors
 CRYPT_E_NO_REVOCATION_CHECK (0x80092012)
 and
 CRYPT_E_REVOCATION_OFFLINE (0x80092013)
-mean curl reached the server but your network blocks the certificate revocation lookup, which is common behind corporate firewalls. Adding curl’s
---ssl-revoke-best-effort
-flag doesn’t fix this: the flag only applies to downloading
+mean curl reached the server but your network blocks the certificate revocation lookup, which is common behind corporate firewalls. If the failing command is the
+curl
+that downloads
 install.cmd
-itself, and the script’s own downloads run without it, so the install fails with the same error. Use an install method that tolerates the blocked lookup instead. Open PowerShell and run the PowerShell installer, which downloads through .NET and doesn’t fail when the revocation server is unreachable:
+, rerun it from a Command Prompt with
+--ssl-revoke-best-effort
+added:
+curl --ssl-revoke-best-effort -fsSL https://claude.ai/install.cmd -o install.cmd
+&&
+install.cmd
+&&
+del
+install.cmd
+When the script’s own downloads hit the same errors, it retries them with best-effort revocation checking automatically, so the flag is only needed on the command you run yourself. Best-effort checking tolerates an unreachable revocation server but still rejects a certificate that is known to be revoked, matching how browsers handle revocation. You can also avoid curl’s revocation check entirely by running the PowerShell installer from PowerShell, which downloads through .NET and doesn’t fail when the revocation server is unreachable:
 irm https:
 //
 claude.ai
@@ -1004,12 +1033,10 @@ WORKDIR
 /tmp
 RUN
 curl -fsSL https://claude.ai/install.sh | bash
-Increase Docker memory limits
-if using Docker Desktop:
-docker
-build
---memory=4g
-.
+Give Docker more memory
+if using Docker Desktop. Build containers share the memory allocated to the Docker Desktop virtual machine, so open
+Settings > Resources
+in Docker Desktop, raise the memory limit, and rerun the build.
 ​
 claude update
 or
