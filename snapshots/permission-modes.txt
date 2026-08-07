@@ -798,7 +798,7 @@ Skip all checks with bypassPermissions mode
 bypassPermissions
 mode disables permission prompts and safety checks so tool calls execute immediately, including writes to
 protected paths
-. Before v2.1.126, protected-path writes still prompted in this mode.
+.
 Explicit
 ask rules
 and connector tools

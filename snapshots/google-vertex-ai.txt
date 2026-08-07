@@ -112,7 +112,7 @@ Claude Code uses standard Google Cloud authentication.
 For more information, see
 Google Cloud authentication documentation
 .
-Claude Code v2.1.121 or later supports
+Claude Code supports
 X.509 certificate-based Workload Identity Federation
 through the same Application Default Credentials chain. Set
 GOOGLE_APPLICATION_CREDENTIALS

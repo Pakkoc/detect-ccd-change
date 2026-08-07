@@ -2584,7 +2584,9 @@ list[str] | Literal["all"] | None
 None
 Skills available to the session. Pass
 "all"
-to enable every discovered skill, or a list of skill names. When set, the SDK adds the Skill tool to
+to enable every discovered skill, or a list of skill names. Pass exact names only. The SDK rejects malformed and wildcard-form names with a
+ValueError
+before starting the Claude Code process. When set, the SDK adds the Skill tool to
 allowed_tools
 automatically. If you also pass
 tools
@@ -5528,7 +5530,9 @@ Error message from the failed execution
 is_interrupt
 bool
 (optional)
-Whether the failure was caused by an interrupt
+True when the failure reached Claude Code as an abort rather than as an error the tool reported. Cancelling a running tool with
+interrupt()
+does not fire this hook; the tool result carries the interruption message instead
 agent_id
 str
 (optional)
@@ -6750,30 +6754,35 @@ None
 }
 Output:
 {
-"output"
+"stdout"
 :
 str
 ,
-# Combined stdout and stderr output
-"exitCode"
+# The command's output; stdout and stderr arrive merged into this one interleaved stream
+"stderr"
 :
-int
+str
 ,
-# Exit code of the command
-"killed"
+# Notices the tool itself adds, not the command's stderr
+"interrupted"
+:
+bool
+,
+# Whether the command was interrupted
+"isImage"
 :
 bool
 |
 None
 ,
-# Whether command was killed due to timeout
-"shellId"
+# Whether stdout contains image data
+"backgroundTaskId"
 :
 str
 |
 None
 ,
-# Shell ID for background processes
+# ID of the background task if command is running in background
 }
 ​
 Monitor
@@ -7680,7 +7689,7 @@ is still accepted as an alias.
 TaskOutput
 is deprecated; prefer
 Read
-on the task’s output file path. Deprecated since Claude Code v2.1.83. The schemas below remain valid for hooks and permission handlers that encounter the tool.
+on the task’s output file path. The schemas below remain valid for hooks and permission handlers that encounter the tool.
 Input:
 {
 "task_id"

@@ -6691,7 +6691,7 @@ TaskOutput
 TaskOutput
 is deprecated; prefer
 Read
-on the task’s output file path. Deprecated since Claude Code v2.1.83. The schemas below remain valid for hooks and permission handlers that encounter the tool.
+on the task’s output file path. The schemas below remain valid for hooks and permission handlers that encounter the tool.
 type
 TaskOutputInput
 =
@@ -8577,9 +8577,21 @@ action
 };
 };
 };
-Returns command output with stdout/stderr split. Background commands include a
+The
+stdout
+,
+stderr
+, and
 backgroundTaskId
-.
+fields carry:
+Field
+What it carries
+stdout
+The command’s stdout and stderr, merged into one interleaved stream
+stderr
+Notices the tool itself adds, such as a shell working-directory reset, not the command’s stderr
+backgroundTaskId
+Present for background commands
 timedOutAfterMs
 is the timeout in milliseconds, set when the command reached its timeout and moved to the background rather than starting there explicitly.
 backgroundCwdHint

@@ -181,7 +181,6 @@ custom status line
 that shows the current model, working directory, git branch, or other context.
 ​
 Create a custom theme
-Custom themes require Claude Code v2.1.118 or later.
 In addition to the built-in presets,
 /theme
 lists any custom themes you have defined and any themes contributed by installed

@@ -430,10 +430,11 @@ uninstall
 -g
 @anthropic-ai/claude-code
 Remove the legacy local npm install:
+macOS/Linux
+Windows PowerShell
 rm
 -rf
 ~/.claude/local
-On Windows, use PowerShell:
 Remove-Item
 -
 Recurse
@@ -507,13 +508,14 @@ first; the commands below assume
 claude
 is on your PATH.
 Confirm the binary exists and is executable:
+macOS/Linux
+Windows PowerShell
 ls
 -la
 "$(
 command
 -v
 claude)"
-On Windows, use PowerShell:
 Get-Command
 claude
 |
@@ -1162,14 +1164,7 @@ launcher, it ignores the variable and auto-detects Git Bash as if it were unset,
 . A path that doesn’t exist gets the same fallback and warning. Before v2.1.219, Claude Code used any existing file as the shell without checking its name, and exited at startup with
 Claude Code was unable to find CLAUDE_CODE_GIT_BASH_PATH path
 when the path didn’t exist.
-If the file’s name is right, endpoint security software such as AppLocker, Group Policy software restriction policies, or EDR agents may be interfering. On versions before v2.1.116, Claude Code spawned a
-cmd.exe
-child process to verify the path, which these policies can block. A common signal is that
-cmd.exe /c dir "C:\Program Files\Git\bin\bash.exe"
-works when you run it directly in PowerShell but fails silently when launched by
-claude.exe
-.
-Claude Code v2.1.116 and later check the filesystem directly, so update first. If the error persists on a current version, ask your IT team to allowlist
+If the file’s name is right, endpoint security software such as AppLocker, Group Policy software restriction policies, or EDR agents may be interfering. Ask your IT team to allowlist
 claude.exe
 and the processes it spawns, including
 cmd.exe
@@ -1503,7 +1498,6 @@ Corporate npm mirror is missing the platform packages.
 Ensure your registry mirrors all eight
 @anthropic-ai/claude-code-*
 platform packages in addition to the meta package.
-Before v2.1.113, the npm package shipped Claude Code as JavaScript that ran directly in Node rather than as a native binary, so there was no download or postinstall step to skip and this error didn’t exist.
 ​
 Login and authentication
 These sections address login failures, OAuth errors, and token issues.
@@ -1560,8 +1554,13 @@ flag, the key is always used when present. See
 authentication precedence
 for the full resolution order.
 To use your subscription instead, unset the environment variable and remove it from your shell profile:
+macOS/Linux
+Windows PowerShell
 unset
 ANTHROPIC_API_KEY
+claude
+Remove-Item
+Env:ANTHROPIC_API_KEY
 claude
 Check
 ~/.zshrc

@@ -494,19 +494,21 @@ headers.Authorization
 instead, covered in
 Connect a server that requires sign-in
 .
-An HTTP server that returns
+If an HTTP server returns
 404 Not Found
-shows
-MCP endpoint not found at <url>. Check the URL in your MCP config.
+, Claude Code shows
+MCP endpoint not found at <origin>. Check the URL in your MCP config.
 when you select the server in
 /mcp
-. The message shows the URL’s origin, such as
+. The message names the URL’s origin, such as
 https://mcp.example.com
 , without its path, so run
 claude mcp get <name>
 to see the full URL you configured. Compare its path to the server’s documented MCP endpoint path, then run
 claude mcp remove <name>
-and re-add with the correct URL. Before v2.1.191, Claude Code showed a generic
+and re-add with the correct URL. Before v2.1.219, the message included the URL’s path as well, and before v2.1.191, a
+404
+showed a generic
 Error POSTing to endpoint
 message without the URL.
 For HTTP servers, confirm the URL is reachable from your machine:

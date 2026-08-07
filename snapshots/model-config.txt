@@ -553,7 +553,7 @@ is non-empty but no entry resolves to an allowed and available model, enforcemen
 . Keep at least one guaranteed-available entry in the list to avoid this.
 Deploy both keys in the
 highest-precedence managed source
-: admin-deployed managed sources do not merge, so a pair placed in a managed settings file is ignored when the admin console delivers any settings.
+: these keys don’t merge across managed sources, so a pair placed in a managed settings file is ignored when the admin console delivers any settings.
 ​
 Control the model users run on
 The
@@ -642,7 +642,9 @@ defines
 availableModels
 , that list alone applies, apart from a
 host platform that supplies its own
-: entries in user, project, or local settings cannot extend it, and admin-deployed managed sources do not merge with each other, so a list deployed in a managed settings file is ignored when server-managed settings deliver any keys. Otherwise, lists from user, project, and local settings are
+: entries in user, project, or local settings cannot extend it, and
+availableModels
+doesn’t merge across admin-deployed managed sources, so a list deployed in a managed settings file is ignored when server-managed settings deliver any keys. Otherwise, lists from user, project, and local settings are
 concatenated and deduplicated
 like other array settings. As of Claude Code v2.1.175, the managed list replaces lower-precedence entries; earlier versions merge them.
 Within the effective list, an entry naming a specific model in a family, whether a version prefix or a full model ID, disables that family’s wildcard entry:

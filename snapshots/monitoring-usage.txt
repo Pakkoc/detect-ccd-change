@@ -132,7 +132,13 @@ OTEL_METRICS_EXPORTER
 OTEL_LOGS_EXPORTER
 , and the beta
 OTEL_TRACES_EXPORTER
-follow normal per-key precedence. A developer’s setting can still disable a signal or switch it to the console exporter, so set the selectors in managed settings too if you need them locked.
+follow normal per-key precedence. A developer’s setting can still disable a signal or switch it to the console exporter, so set the selectors in managed settings too if you need them locked. Across
+admin sources
+,
+OTEL_LOGS_EXPORTER
+follows the
+telemetry unit
+while the other two selectors merge per key. Requires Claude Code v2.1.223 or later.
 Claude Code doesn’t remove per-signal variables that you set in managed settings itself, so you can route one signal to a different collector by setting its variable there, as the
 SIEM example
 does. If you set a per-signal credential there, Claude Code removes the developer-set endpoint for that signal.

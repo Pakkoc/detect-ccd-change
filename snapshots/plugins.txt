@@ -495,7 +495,7 @@ claude
 ./my-plugin
 The flag also accepts a
 .zip
-archive of the plugin directory, which requires Claude Code v2.1.128 or later.
+archive of the plugin directory.
 claude
 --plugin-dir
 ./my-plugin.zip

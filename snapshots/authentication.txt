@@ -189,7 +189,20 @@ Deploy the keys through your device management tooling.
 Server-managed settings
 reach only accounts that are already authenticated into your organization, so they can’t redirect a developer’s first login. If your organization distributes server-managed settings as well, set the keys in both places: managed-settings sources
 don’t merge
-, and cached server-managed settings replace the device-managed file entirely.
+, and cached server-managed settings replace the device-managed file, apart from two kinds of keys that still fill in from a losing source:
+The
+env
+block
+:
+merges per key
+in Claude Code v2.1.223 or later
+The
+cross-source lock keys
+: honored from any admin source
+forceLoginMethod
+and
+forceLoginOrgUUID
+are neither, so keep them in both places.
 The keys also block sessions authenticated by
 ANTHROPIC_API_KEY
 ,

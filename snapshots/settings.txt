@@ -457,7 +457,6 @@ as
 Push when Claude decides
 . See
 Mobile push notifications
-. Requires Claude Code v2.1.119 or later
 true
 allowAllClaudeAiMcps
 (Managed settings only) Load claude.ai connectors alongside a deployed
@@ -939,7 +938,7 @@ claude remote-control
 --remote-control
 flag, auto-start, and the in-session toggle. Typically placed in
 managed settings
-for per-device MDM enforcement, but works from any scope. Requires Claude Code v2.1.128 or later
+for per-device MDM enforcement, but works from any scope
 true
 disableSideloadFlags
 (Managed settings only) Reject the
@@ -1257,7 +1256,6 @@ as
 Push when actions required
 . See
 Mobile push notifications
-. Requires Claude Code v2.1.119 or later
 true
 language
 Configure Claude’s preferred response language (e.g.,
@@ -1894,21 +1892,6 @@ settings.json
 . If you add these keys to
 settings.json
 , Claude Code silently ignores them at startup, so double-check the table below for which file each key belongs in.
-Versions before v2.1.119 also store a number of
-/config
-preference keys here instead of in
-settings.json
-, including
-theme
-,
-verbose
-,
-editorMode
-,
-autoCompactEnabled
-, and
-preferredNotifChannel
-.
 Key
 Description
 Example
@@ -3049,7 +3032,7 @@ ANTHROPIC_DEFAULT_*_MODEL
 family. A managed
 availableModels
 allowlist stays in force unless the host supplies its own
-Within the managed tier, only one source is used and the others are ignored rather than merged. Precedence, highest first:
+Within the managed tier, apart from the exception keys listed after the ranking, only one source is used and the others are ignored rather than merged. Precedence, highest first:
 policyHelper
 output: when configured, this is the only managed source used
 Remote (claude.ai
@@ -3078,6 +3061,14 @@ sandbox.bwrapPath
 and
 sandbox.socatPath
 forceRemoteSettingsRefresh
+env
+, which merges per key across the admin-controlled sources: for each environment variable, the highest-priority source defining it wins, and lower admin sources fill in variables the higher sources leave unset, or for which a cached server value is
+withheld pending server confirmation
+. The telemetry unit and credential-paired routing variables follow their own rules; see
+Per-key exceptions across managed sources
+. Requires Claude Code v2.1.223 or later. Before v2.1.223, Claude Code applies the winning source’s whole
+env
+block only.
 Embedding hosts such as Claude Desktop can supply policy via the SDK
 managedSettings
 option. By default this is ignored when an admin-deployed managed source is present: server-managed settings, an MDM or OS-level policy, or a managed settings file. The user-writable HKCU registry fallback does not count as an admin-deployed source. Administrators can opt in by setting
@@ -3098,11 +3089,11 @@ parent-supplied
 permission allow rules and
 additionalDirectories
 as it reads them, even when a higher-priority source leaves the key unset; the key’s effect on the developer’s own permission rules comes from the highest-priority source only
-The parent-settings gap-fill checks for
+A
 forceLoginOrgUUID
-and
+or
 allowedMcpServers
-also read every admin-controlled managed source: a value in any of them blocks a parent-supplied one, though the value that applies still comes from the highest-priority source
+value in the highest-priority admin source blocks a parent-supplied one and is the value Claude Code enforces. A value in a non-winning admin source neither applies nor blocks the parent’s. Before v2.1.223, a value in any admin source blocked the parent’s
 Command line arguments
 Temporary overrides for a specific session. JSON passed via
 --settings <file-or-json>

@@ -1368,9 +1368,7 @@ grant Claude access to those tools without per-use approval during the turn that
 permission settings
 still govern baseline approval behavior for all other tools. A few built-in commands are also available through the Skill tool, including
 /init
-,
-/review
-, and
+and
 /security-review
 . Other built-in commands such as
 /compact
