@@ -66,9 +66,9 @@ hide bundled skills, workflows, and built-in commands from the model
 Deny rules accept a glob in the tool-name position, so
 ”*”
 denies all tools, and unknown tool names in deny rules now warn at startup
-Cross-session messaging is hardened: messages relayed via
+Agent messaging is hardened: messages relayed via
 SendMessage
-from other sessions no longer carry user authority, and auto mode blocks them
+from other agents no longer carry user authority, and auto mode blocks them
 Amazon Bedrock reads the AWS region from
 ~/.aws
 config files when

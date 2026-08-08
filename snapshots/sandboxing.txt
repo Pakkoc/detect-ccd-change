@@ -134,15 +134,19 @@ wsl -l -v
 from PowerShell. If you see
 Sandboxing requires WSL2
 , your distribution is running WSL1. Upgrade it to WSL2 or run Claude Code without sandboxing.
-On WSL2, sandboxed commands cannot launch Windows binaries such as
+On WSL2, WSL hands a launch of a Windows binary such as
 cmd.exe
 ,
 powershell.exe
 , or anything under
 /mnt/c/
-. WSL hands these off to the Windows host over a Unix socket, which the sandbox blocks. If a command needs to invoke a Windows binary, add it to
+to the Windows host over a Unix socket, so whether a sandboxed command can launch one follows the sandbox’s
+Unix-socket settings
+: the optional seccomp filter has to be installed to block the socket in the first place. To allow these launches, set
+allowAllUnixSockets
+; to keep them out of the sandbox entirely, add the command to
 excludedCommands
-so it runs outside the sandbox.
+.
 ​
 Sandbox modes
 Claude Code offers two sandbox modes:
@@ -337,11 +341,7 @@ true
 }
 }
 }
-The
-.
-in
-allowRead
-resolves to the project root because this configuration lives in project settings. If you placed the same configuration in
+If you placed the same configuration in
 ~/.claude/settings.json
 ,
 .
@@ -639,13 +639,9 @@ replaces the sentinel with the real value. The command and anything it logs neve
 The proxy substitutes the credential inside request contents, so it has to see them. Set
 network.tlsTerminate
 so the proxy terminates TLS itself. Without it, masking fails without exposing anything: the command still sees only the sentinel, but the sentinel reaches the server unchanged and authentication fails. Claude Code reports this misconfiguration at startup.
-Substitution covers headers and request bodies. AWS requests carry SigV4 signatures over the request contents, so mask
-AWS_ACCESS_KEY_ID
-and
-AWS_SECRET_ACCESS_KEY
-together. The proxy detects a SigV4 request by the access key’s sentinel and re-signs it after substituting the real values. Masking the secret alone leaves requests signed with the placeholder, which the proxy can’t detect, so they fail at AWS; Claude Code warns about this case at startup, but not when only the access key ID is masked. A detected request the proxy can’t re-sign, such as one missing its
-x-amz-date
-header, fails with a proxy error instead of reaching the server with a broken signature.
+Substitution covers headers and request bodies. Requests that authenticate with a signature derived from the credential, rather than the credential itself, need re-signing at the proxy;
+Re-sign AWS requests
+covers how that works for AWS.
 The example below masks two tokens.
 GH_TOKEN
 is substituted only on requests to
@@ -729,6 +725,136 @@ deny
 in any scope,
 deny
 takes precedence.
+Masking replaces the variable’s entire value by default, which suits a bare token. Optional entry fields, which require Claude Code v2.1.224 or later, handle values with structure:
+extract
+: a regular expression Claude Code applies across the value, replacing only the text captured by group 1 of each match, so a tool that parses the value, such as a
+DATABASE_URL
+connection string, still works inside the sandbox. The pattern must contain at least one capturing group.
+onExtractNoMatch
+controls what happens when the pattern matches nothing:
+warn
+, the default, warns and passes the variable through unmasked
+deny
+unsets the variable inside the sandbox
+error
+stops sandbox setup until you fix the configuration
+decode: "jwt"
+: for a variable holding a JSON Web Token (JWT). Claude Code verifies the value is a JWT and replaces it with a structurally valid fake token, so code inside the sandbox that decodes the token keeps working. Add
+maskClaims
+to list top-level payload claims to mask individually instead of replacing the whole token; the other claims stay readable. When the value doesn’t verify as a JWT, or no listed claim matches, Claude Code passes the variable through unmasked with a warning.
+decode
+can’t be combined with
+extract
+.
+See the
+credentials.envVars[]
+rows in the settings reference
+for the full field list.
+​
+Re-sign AWS requests
+AWS requests carry SigV4 signatures over the request contents, so mask
+AWS_ACCESS_KEY_ID
+and
+AWS_SECRET_ACCESS_KEY
+together. The proxy detects a SigV4 request by the access key’s sentinel and re-signs it after substituting the real values. Masking the secret alone leaves requests signed with the placeholder, which the proxy can’t detect, so they fail at AWS; Claude Code warns about this case at startup, but not when only the access key ID is masked. A detected request the proxy can’t re-sign, such as one missing its
+x-amz-date
+header, fails with a proxy error instead of reaching the server with a broken signature.
+Claude Code links the conventional
+AWS_ACCESS_KEY_ID
+,
+AWS_SECRET_ACCESS_KEY
+, and
+AWS_SESSION_TOKEN
+variables into one credential automatically when you mask their whole values. If your AWS credential lives in variables with other names, group them yourself with
+credentials.awsPairs
+, which requires Claude Code v2.1.224 or later. This example adds the pairing to a configuration that already masks
+MY_KEY_ID
+,
+MY_SECRET_KEY
+, and
+MY_SESSION_TOKEN
+whole-value, as in the
+masking configuration above
+:
+{
+"sandbox"
+: {
+"credentials"
+: {
+"awsPairs"
+: [
+{
+"accessKeyIdVar"
+:
+"MY_KEY_ID"
+,
+"secretAccessKeyVar"
+:
+"MY_SECRET_KEY"
+,
+"sessionTokenVar"
+:
+"MY_SESSION_TOKEN"
+}
+]
+}
+}
+}
+Each entry follows these rules:
+accessKeyIdVar
+and
+secretAccessKeyVar
+name the masked
+envVars
+entries holding the access key ID and the secret key. The optional
+sessionTokenVar
+names the entry holding the session token for temporary credentials; when set, the proxy sends the real token as
+x-amz-security-token
+on re-signed requests.
+Each named variable must be a
+mask
+entry that masks its entire value, without
+extract
+or
+decode
+.
+The proxy re-signs requests on the hosts listed in the access key ID entry’s
+injectHosts
+.
+Naming any of the conventional variables in a pair replaces the automatic pairing.
+Like
+mask
+entries,
+awsPairs
+is honored only from user settings, managed settings, and the
+--settings
+CLI flag.
+Three AWS request forms carry signatures the proxy can’t recompute. When such a request is signed with a masked pair’s placeholder, the proxy fails it rather than forward a broken signature; requests signed with unmasked credentials are never affected. The
+credentials.sigv4
+setting, which requires Claude Code v2.1.224 or later, relaxes this per form: setting a form’s key to
+passthrough
+forwards the request with its placeholder-derived signature, so the calling tool receives AWS’s own rejection response instead of a proxy error. Like
+awsPairs
+,
+sigv4
+is honored only from user settings, managed settings, and the
+--settings
+CLI flag.
+Request form
+sigv4
+key
+Why the proxy can’t re-sign it
+aws-chunked streaming uploads
+streaming
+Per-chunk signatures chain off the seed signature, so re-signing would require rewriting the body
+Presigned URLs
+presigned
+The signature lives in the URL itself, with no
+Authorization
+header
+SigV4A asymmetric signatures
+sigv4a
+There is no shared-key HMAC to recompute
 ​
 Mask credential files
 File entries also accept
@@ -822,14 +948,27 @@ for any structured file that tools parse, such as
 , JSON, or YAML; the pattern must contain at least one capturing group. Without
 extract
 , Claude Code replaces the entire file content with one sentinel value, which suits a file that holds a single bare secret and nothing else.
-Two optional fields refine how
+For a file that holds a JSON Web Token (JWT), set
+decode: "jwt"
+instead of, or together with,
 extract
-behaves. Both apply only when
+.
+decode
+requires Claude Code v2.1.224 or later. Claude Code finds JWT candidates with a built-in pattern, or with your
+extract
+pattern when set, verifies each candidate is a JWT, and replaces it with a structurally valid fake token, so code that decodes the token inside the sandbox keeps working. Add
+maskClaims
+to mask only the named top-level payload claims inside each verified token and leave the other claims readable. When no candidate verifies, or no named claim matches, the
+onExtractNoMatch
+field below governs the outcome, as it does for a pattern that matches nothing.
+Two optional fields refine how matching behaves. Both apply only when
 mode
 is
 mask
 and
 extract
+or
+decode
 is set. On macOS, Claude Code applies
 mask
 entries as
@@ -838,7 +977,7 @@ before the pattern runs whenever filesystem isolation is on, so these fields, an
 filesystem isolation is off
 :
 onExtractNoMatch
-controls what happens when the regex matches nothing in the file:
+controls what happens when matching finds nothing to mask in the file:
 warn
 , the default, warns and skips the entry, so sandboxed commands can read the real file unmasked. The default suits credentials that may be legitimately absent; if the secret might be present but the pattern might miss it, use
 deny
@@ -856,7 +995,11 @@ disable filesystem isolation
 filesystem.allowRead
 entry from any settings source re-opens the file’s path.
 maskDuplicates
-also replaces verbatim copies of each captured credential value found outside the regex matches, for a secret repeated where the regex doesn’t reach. It matches raw substrings, so a short or common value would be replaced everywhere it appears; reserve it for long, high-entropy secrets. Default: false.
+also replaces verbatim copies of each masked credential value, an
+extract
+capture or a
+decode
+-verified token, found outside the matched spans, for a secret repeated where matching doesn’t reach. It matches raw substrings, so a short or common value would be replaced everywhere it appears; reserve it for long, high-entropy secrets. Default: false.
 mask
 applies to a single file, so list each credential file individually. Claude Code falls back to
 deny
@@ -907,22 +1050,14 @@ config
 inside that directory remain denied.
 Configurable
 : define custom allowed and denied paths through settings
-You can grant write access to additional paths using
-sandbox.filesystem.allowWrite
-in your settings. These restrictions are enforced at the OS level, so they apply to all subprocess commands, including tools like
-kubectl
-,
-terraform
-, and
-npm
-, not just Claude’s file tools. To skip filesystem isolation entirely while keeping network isolation, set
+To skip filesystem isolation entirely while keeping network isolation, set
 sandbox.filesystem.disabled
 .
 ​
 Network isolation
 Network access is controlled through a proxy server running outside the sandbox:
 Domain restrictions
-: no domains are pre-allowed by default. The first time a command needs a new domain, Claude Code prompts for approval. As of v2.1.191, choosing Yes allows the host for the rest of the current session, so later connections to the same host do not prompt again. Pre-allow domains with
+: no domains are pre-allowed by default. The first time a command needs a new domain, Claude Code prompts for approval. Choosing Yes allows the host for the rest of the current session, so later connections to the same host do not prompt again. Pre-allow domains with
 allowedDomains
 to avoid the prompt entirely.
 WebFetch
@@ -1075,9 +1210,11 @@ your organization set to
 ask
 , MCP tools marked
 requiresUserInteraction
-, and removing
+, removing
 /
-or your home directory still prompt
+or your home directory, and the
+cross-session messaging safeguards
+still prompt
 The sandbox’s
 auto-allow mode
 is separate from
@@ -1257,12 +1394,6 @@ so the inner sandbox bind-mounts the container’s existing
 instead. Only use this setting when the outer container already provides the isolation boundary you need, since it exposes process information to sandboxed commands that a fresh
 /proc
 mount would hide.
-Seccomp filter on Linux
-: the seccomp filter is required to block Unix domain sockets. The Dependencies tab in
-/sandbox
-appears only when a dependency is missing; if you don’t see the tab after a restart, the filter is already installed. If the filter is missing, run
-npm install -g @anthropic-ai/sandbox-runtime
-to install the helper, then restart Claude Code so the startup dependency check detects it.
 --dangerously-skip-permissions
 fails as root
 : this flag is blocked when running as root or via sudo on Linux and macOS, because root access combined with no permission prompts can modify any file or service on the system. The check is skipped automatically inside a recognized sandbox. To run autonomously in a container, use the

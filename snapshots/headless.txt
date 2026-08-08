@@ -34,9 +34,15 @@ combines with
 -p
 . Claude Code rejects
 --bg
-and
+, and rejects
 --cloud
-with an error naming the conflict. Options you’ll combine with
+with a task description, with an error naming the conflict;
+--cloud
+with a session ID and
+-p
+instead
+queues a message into that cloud session
+and exits. Options you’ll combine with
 -p
 often include:
 --continue
@@ -163,7 +169,9 @@ With
 total_cost_usd
 and a per-model cost breakdown, so scripted callers can track spend per invocation without consulting the
 usage dashboard
-.
+. Both figures are
+client-side estimates
+and can differ from your actual bill.
 Piped stdin is capped at 10MB. If you exceed the cap, Claude Code exits with a clear error and a non-zero status. To work with larger inputs, write the content to a file and reference the file path in your prompt instead of piping it.
 If Claude Code can’t read stdin, for example because the process that started it disconnected its end, Claude Code prints a warning to stderr and continues with the prompt from the command line. Before v2.1.211, an unreadable stdin on Windows crashed the session or made it exit silently with no output.
 ​

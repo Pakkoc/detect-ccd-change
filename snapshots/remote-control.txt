@@ -371,6 +371,17 @@ All traffic travels through the Anthropic API over TLS, the same transport secur
 While Remote Control is connected, the session transcript, including your messages, Claude’s responses, and tool activity, is stored on Anthropic servers. The stored transcript keeps the conversation in sync across your devices and lets the session reconnect after a network drop. Execution and filesystem access stay on your machine, and stored transcripts are retained under the
 Data usage
 policy.
+With
+cross-session messaging
+, the Remote Control connection also carries messages between your own Claude Code sessions on different machines, and messages arriving from your
+Claude Code on the web
+sessions, traveling through Anthropic servers like the rest of Remote Control traffic.
+Message sessions on other machines
+covers the reply-only delivery rules and the
+isolatePeerMachines
+approval requirement.
+Control inbound messages
+covers the inbound controls. Cross-session messaging requires Claude Code v2.1.224 or later.
 To turn Remote Control off entirely, use the
 disableRemoteControl
 setting. Organizations with compliance requirements such as Zero Data Retention can’t enable Remote Control.
@@ -430,7 +441,7 @@ in the admin console to revoke every session and enrolled device for that member
 Remote Control vs Claude Code on the web
 Remote Control and
 Claude Code on the web
-both use the claude.ai/code interface. The key difference is where the session runs: Remote Control executes on your machine, so your local MCP servers, tools, and project configuration stay available. Claude Code on the web executes in Anthropic-managed cloud infrastructure.
+both use the claude.ai/code interface. The key difference is where the session runs: Remote Control executes on your machine, so your local MCP servers, tools, and project configuration stay available. Claude Code on the web executes in the cloud.
 Use Remote Control when you’re in the middle of local work and want to keep going from another device. Use Claude Code on the web when you want to kick off a task without any local setup, work on a repo you don’t have cloned, or run multiple tasks in parallel.
 ​
 Mobile push notifications
@@ -490,6 +501,12 @@ Extended network outage
 : if your machine is awake but unable to reach the network for more than roughly 10 minutes, the session times out and the process exits. Run
 claude remote-control
 again to start a new session.
+Forwarded dialogs expire
+: Claude Code keeps permission prompts and
+AskUserQuestion
+questions open until you answer them. When Claude Code forwards another kind of dialog to the remote session, it waits five minutes by default, then closes the dialog and continues with the dialog’s no-action default. Set
+dialogExpiry
+to adjust or disable the deadline. Requires Claude Code v2.1.224 or later.
 Some commands are local-only
 : commands that only run in the terminal interface, such as
 /plugin
@@ -749,6 +766,14 @@ with
 Claude Code on the web
 enabled
 PRs and reviews from team chat
+Self-hosted environments
+Start a
+cloud session
+and pick your organization’s environment
+Your organization’s infrastructure
+Deploy runners
+, on Team and Enterprise plans
+Cloud sessions that must run inside your network
 Scheduled tasks
 Set a schedule
 CLI
@@ -761,8 +786,12 @@ Recurring automation like daily reviews
 ​
 Related resources
 Claude Code on the web
-: run sessions on Anthropic-managed infrastructure instead of your machine, configured through
+: run sessions in the cloud instead of your machine, configured through
 cloud environments
+Cross-session messaging
+: let Claude reply to messages from your sessions on other machines or on
+Claude Code on the web
+over the Remote Control connection
 Channels
 : forward Telegram, Discord, or iMessage into a session so Claude reacts to messages while you’re away
 Dispatch

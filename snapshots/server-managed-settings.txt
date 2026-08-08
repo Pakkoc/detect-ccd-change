@@ -32,7 +32,13 @@ Organizations with MDM or endpoint management
 Settings deployed to devices via MDM configuration profiles, registry policies, or managed settings files
 If your devices are enrolled in an MDM or endpoint management solution, endpoint-managed settings provide stronger security guarantees because the settings file can be protected from user modification at the OS level. Endpoint-managed settings don’t reach
 cloud sessions
-, so organizations using Claude Code on the web should configure server-managed settings as well.
+in Anthropic-hosted environments, so organizations using Claude Code on the web should configure server-managed settings as well. Sessions in a
+self-hosted environment
+read the managed settings file in the runner image, but only when server-managed settings deliver no keys, per the
+settings precedence
+below and its
+per-key exceptions
+.
 ​
 Configure server-managed settings
 1

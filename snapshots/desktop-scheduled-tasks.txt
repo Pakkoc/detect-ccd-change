@@ -3,7 +3,7 @@ The Desktop app’s
 Routines
 page lets you create both local scheduled tasks and remote
 routines
-. A local task runs on your machine with direct access to your files and tools, but only fires while the app is open and your computer is awake. A remote routine runs on Anthropic-managed cloud infrastructure even when your computer is off, and can also fire on API calls or GitHub events. This page covers local scheduled tasks; for remote routines and their trigger options, see
+. A local task runs on your machine with direct access to your files and tools, but only fires while the app is open and your computer is awake. A remote routine runs in the cloud even when your computer is off, and can also fire on API calls or GitHub events. This page covers local scheduled tasks; for remote routines and their trigger options, see
 Routines
 .
 ​
@@ -13,7 +13,7 @@ Cloud
 Desktop
 /loop
 Runs on
-Anthropic cloud
+Cloud, Anthropic-managed by default
 Your machine
 Your machine
 Requires machine on
@@ -107,9 +107,9 @@ How scheduled tasks run
 Scheduled tasks run on your machine. Desktop checks the schedule every minute while the app is open and starts a fresh session when a task is due, independent of any manual sessions you have open. Each task gets a small delay of a few minutes after the scheduled time to stagger API traffic. The delay is deterministic: the same task always starts at the same offset.
 When a task fires, you get a desktop notification and a new session appears under a
 Scheduled
-section in the sidebar. Open it to see what Claude did, review changes, or respond to permission prompts. The session works like any other, except that Claude can’t send or receive
-cross-session messages
-in a scheduled run: Claude can edit files, run commands, create commits, and open pull requests.
+section in the sidebar. Open it to see what Claude did, review changes, or respond to permission prompts. Claude can edit files, run commands, create commits, and open pull requests, the same as in a session you start yourself, but can’t send or receive
+messages between your desktop sessions
+through the desktop app’s session surface.
 Tasks only run while the desktop app is running and your computer is awake. If your computer sleeps through a scheduled time, the run is skipped. To prevent idle-sleep, enable
 Keep computer awake
 in Settings under
@@ -182,7 +182,7 @@ description
 ​
 Related resources
 Routines
-: run tasks on Anthropic-managed infrastructure on a schedule, via API call, or in response to GitHub events, even when your computer is off
+: run tasks in the cloud on a schedule, via API call, or in response to GitHub events, even when your computer is off
 Run prompts on a schedule
 : session-scoped scheduling with
 /loop

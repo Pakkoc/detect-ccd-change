@@ -110,7 +110,9 @@ Python
 query()
 call. It includes
 total_cost_usd
-, the cumulative estimated cost across all steps in that call. This works for both success and error results. If you use sessions to make multiple
+, the cumulative estimated cost across all steps in that call. This works for both success and error results, though in Python the field is typed as optional and may be
+None
+on some error paths. If you use sessions to make multiple
 query()
 calls, each result only reflects the cost of that individual call.
 The three result-level fields differ in what they count when the agent spawns
@@ -241,9 +243,8 @@ Exception
 as
 error:
 # A single-shot query() raises after yielding an error result. If the
-# failure was an error result, it still carried total_cost_usd and the
-# branch above has already run; connection or process failures yield
-# no result message.
+# failure was an error result, the branch above has already run;
+# connection or process failures yield no result message.
 print
 (
 f
@@ -796,7 +797,9 @@ Both success and error result messages include
 usage
 and
 total_cost_usd
-. If a conversation fails mid-way, you still consumed tokens up to the point of failure. Always read cost data from the result message regardless of its
+; in Python both fields are typed as optional and may be
+None
+on some error paths. If a conversation fails mid-way, you still consumed tokens up to the point of failure. Always read cost data from the result message regardless of its
 subtype
 .
 ​
@@ -819,7 +822,9 @@ message.usage.get("cache_read_input_tokens", 0)
 ).
 ​
 Extend the prompt cache TTL to one hour
-Cache entries written by the SDK use a 5-minute TTL by default when you authenticate with an API key or run on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. If your workload runs many short sessions against the same system prompt and context with gaps longer than 5 minutes between them, the cache expires between sessions and each new session pays full input price.
+Cache entries written by the SDK use a 5-minute TTL by default when you authenticate with an API key or run on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or
+Claude Platform on AWS
+. If your workload runs many short sessions against the same system prompt and context with gaps longer than 5 minutes between them, the cache expires between sessions and each new session pays full input price.
 To request a 1-hour TTL on cache writes, set the
 ENABLE_PROMPT_CACHING_1H
 environment variable. You can export it in your shell or container environment, or pass it through
@@ -921,7 +926,11 @@ message
 }
 Cache writes with a 1-hour TTL are billed at a higher rate than 5-minute writes, so enabling this trades higher write cost for more cache reads. See
 prompt caching pricing
-for details. Claude subscription users already receive 1-hour TTL automatically and do not need to set this variable.
+for details. Claude subscription users within included usage receive the 1-hour TTL automatically without setting this variable. When you’re drawing on
+usage credits
+, the SDK drops to the 5-minute TTL unless you set
+ENABLE_PROMPT_CACHING_1H
+.
 ​
 Related documentation
 TypeScript SDK Reference

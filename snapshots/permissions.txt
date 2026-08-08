@@ -136,29 +136,19 @@ ask
 requiresUserInteraction
 . Root and home directory removals such as
 rm -rf /
-also still prompt as a circuit breaker
+also still prompt as a circuit breaker, and the
+cross-session messaging safeguards
+still apply
 bypassPermissions
 mode skips permission prompts, including for writes to
+protected paths
+such as
 .git
-,
-.config/git
-,
+and
 .claude
-,
-.vscode
-,
-.idea
-,
-.husky
-,
-.cargo
-,
-.devcontainer
-,
-.yarn
-, and
-.mvn
-. Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage.
+. The
+cross-session messaging safeguards
+still apply. Only use this mode in isolated environments like containers or VMs where Claude Code can’t cause damage.
 A few prompts still fire in this mode. Explicit
 ask
 rules, connector tools
@@ -174,9 +164,7 @@ rm -rf ~
 $(...)
 or backticks, or process substitution with
 <(...)
-. Before v2.1.208, only the plain form, such as
-rm -rf ~
-typed as its own command, prompted; commands that reached the removal through a substitution didn’t.
+.
 To prevent
 bypassPermissions
 or
@@ -297,7 +285,7 @@ instead.
 Wildcard patterns
 Bash rules support glob patterns with
 *
-. Wildcards can appear at any position in the command. This configuration allows npm and git commit commands while blocking git push:
+. This configuration allows npm and git commit commands while blocking git push:
 {
 "permissions"
 : {
@@ -319,17 +307,7 @@ Bash rules support glob patterns with
 ]
 }
 }
-The space before
-*
-matters:
-Bash(ls *)
-matches
-ls -la
-but not
-lsof
-, while
-Bash(ls*)
-matches both. The
+The
 :*
 suffix is an equivalent way to write a trailing wildcard, so
 Bash(ls:*)
@@ -1552,23 +1530,7 @@ setting. Web sessions have no per-device managed settings key.
 Settings precedence
 Permission rules follow the same
 settings precedence
-as all other Claude Code settings:
-Managed settings
-: no other level, including command line arguments, can override a managed permission rule
-Command line arguments
-: temporary session overrides
-Local project settings
-(
-.claude/settings.local.json
-)
-Shared project settings
-(
-.claude/settings.json
-)
-User settings
-(
-~/.claude/settings.json
-)
+as all other Claude Code settings, with managed settings highest: no other level, including command line arguments, can override a managed permission rule.
 If a tool is denied at any level, no other level can allow it. For example, a managed settings deny can’t be overridden by
 --allowedTools
 , and

@@ -144,6 +144,15 @@ claude doctor
 Print read-only installation and settings diagnostics from the terminal without starting a session, including install health, settings-file validation errors, and Remote Control eligibility. For the in-session setup checkup that can also apply fixes, run
 /doctor
 claude doctor
+claude import [codex|gemini]
+Start an interactive session that runs
+/import
+to bring configuration from other coding agents into Claude Code. Accepts the same
+--dry-run
+and
+--yes
+options as the command. Requires Claude Code v2.1.213 or later
+claude import codex --dry-run
 claude logs <id>
 Print recent output from a
 background session
@@ -387,9 +396,19 @@ Chrome browser integration
 for web automation and testing
 claude --chrome
 --cloud
-Create a new
+With a task description, create a new
 web session
-on claude.ai with the provided task description
+on claude.ai. With a session ID (
+session_...
+or
+cse_...
+) or a claude.ai/code URL, target that existing session instead:
+-p
+queues the message into it, and no
+-p
+attaches your terminal. See
+send a follow-up message
+.
 claude --cloud "Fix the login bug"
 --continue
 ,
@@ -479,6 +498,18 @@ cycle by default; use
 --permission-mode auto
 to start in it
 claude --permission-mode auto
+--environment <environment-id>
+With
+-p
+, create a new
+cloud session
+on the named environment and exit without waiting for a reply; self-hosted environment IDs have the form
+ccpool_...
+. Can’t be combined with
+--cloud
+. See
+dispatch from a script
+claude -p "Run the smoke test" --environment ccpool_abc123
 --exclude-dynamic-system-prompt-sections
 Move per-machine sections from the system prompt (working directory, environment info, memory paths, git-repo flag) into the first user message. Improves prompt-cache reuse across different users and machines running the same task. Only applies with the default system prompt; ignored when
 --system-prompt
@@ -722,9 +753,16 @@ message after each turn with a predicted next user prompt. Requires
 . See
 Prompt suggestions
 claude -p --prompt-suggestions --output-format stream-json --verbose "query"
+--ref <branch>
+With
+--environment
+, base the new session’s checkout on a named ref instead of local
+HEAD
+claude -p "Run the smoke test" --environment ccpool_abc123 --ref main
 --remote
 Deprecated alias for
 --cloud
+, including the existing-session form
 claude --remote "Fix the login bug"
 --remote-control
 ,

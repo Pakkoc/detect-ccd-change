@@ -164,6 +164,9 @@ Ctrl+End
 Jump to the latest message and re-enable auto-follow
 Mouse wheel
 Scroll a few lines at a time
+You can scroll back to the start of the session even after
+compaction
+. Claude continues working from the compaction summary, but Claude Code keeps every earlier message in the fullscreen scrollback across repeated compactions.
 On keyboards without dedicated
 PgUp
 ,

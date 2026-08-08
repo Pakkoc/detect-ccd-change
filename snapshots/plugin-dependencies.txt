@@ -1,7 +1,7 @@
 A plugin can depend on other plugins by listing them in
 plugin.json
 or in its marketplace entry. By default, a dependency tracks the latest available version, so an upstream release can change the dependency under your plugin without warning. Version constraints let you hold a dependency at a tested version range until you choose to move.
-When you install a plugin that declares dependencies, Claude Code resolves and installs them automatically and lists which dependencies were added at the end of the install output. If a dependency later goes missing,
+When you install a plugin that declares dependencies, Claude Code resolves and installs them automatically. If a dependency later goes missing,
 /reload-plugins
 and the background plugin auto-update reinstall it, provided its marketplace is already in your configured marketplaces. Re-running
 claude plugin install
@@ -109,11 +109,7 @@ allowCrossMarketplaceDependenciesOn
 in the root marketplace’s
 marketplace.json
 .
-The
-version
-field accepts any expression supported by Node’s
-semver
-package, including caret, tilde, hyphen, and comparator ranges. Pre-release versions such as
+Pre-release versions such as
 2.0.0-beta.1
 are excluded unless your range opts in with a pre-release suffix like
 ^2.0.0-0
@@ -307,9 +303,10 @@ version
 , so constraint checks use the tag that was actually fetched even if
 plugin.json
 at that commit has a stale value. The cache directory name for a tag-resolved install includes a 12-character commit-SHA suffix, so if a maintainer force-moves a tag to a different commit, the next install gets a fresh cache directory instead of reusing stale content.
-For
+For dependencies with an
 npm
-marketplace sources, the constraint does not control which version is fetched, since tag-based resolution applies only to git-backed sources. The constraint is still checked at load time, and the dependent plugin is disabled with
+plugin source
+, the constraint does not control which version is fetched, since tag-based resolution applies only to git-backed sources. The constraint is still checked at load time, and the dependent plugin is disabled with
 dependency-version-unsatisfied
 if the installed version does not satisfy it.
 ​
@@ -410,9 +407,7 @@ claude plugin uninstall
 . After removing the named plugin, Claude Code scans for and removes any auto-installed dependencies that are now orphaned. Plugins you installed yourself are never pruned, only those installed automatically through another plugin’s
 dependencies
 array.
-The same confirmation behavior applies: pass
--y
-to skip the prompt. When stdin or stdout isn’t a terminal, the uninstall still completes, but the prune step lists the orphans and removes nothing unless you pass
+The same confirmation behavior applies. When stdin or stdout isn’t a terminal, the uninstall still completes, but the prune step lists the orphans and removes nothing unless you pass
 -y
 .
 For example, to uninstall

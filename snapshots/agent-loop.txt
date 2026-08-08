@@ -643,13 +643,15 @@ rule
 , connector tools
 your organization set to
 ask
-, and tools that require user interaction; see
+, and tools that require user interaction. The
+cross-session messaging safeguards
+still apply. See
 How permissions are evaluated
 for the precedence order. In the TypeScript SDK, also requires
 allowDangerouslySkipPermissions: true
 in
 options
-. Cannot be used when running as root on Unix. Use only in isolated environments where the agent’s actions cannot affect systems you care about
+. Can’t be used when running as root on Unix. Use only in isolated environments where the agent’s actions can’t affect systems you care about
 CI, containers, or other isolated environments
 For interactive applications, use
 "default"

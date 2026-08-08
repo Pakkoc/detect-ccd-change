@@ -71,7 +71,7 @@ Run /reload-plugins to activate.
 Enable in cloud sessions and shared repositories
 User-scoped plugins do not carry into
 Claude Code on the web
-, because those sessions run on Anthropic infrastructure rather than your machine. To enable the plugin there, or to turn it on for everyone who clones a repository, declare it in the project’s checked-in settings:
+, because those sessions run in the cloud rather than on your machine. To enable the plugin there, or to turn it on for everyone who clones a repository, declare it in the project’s checked-in settings:
 .claude/settings.json
 {
 "enabledPlugins"
@@ -296,7 +296,7 @@ and
 commit
 reviews each spend additional model usage that counts toward your
 usage
-like any other Claude request. The commit review is agentic and may take several model turns per commit, capped at 20 reviews per rolling hour. Expect roughly one review call per turn that changes files and one deeper review per commit, both subject to the caps above.
+like any other Claude request. The commit review is agentic and may take several model turns per commit. Expect roughly one review call per turn that changes files and one deeper review per commit, both subject to the caps above.
 Both model-backed reviews use Claude Opus 4.7 by default. Set
 SECURITY_REVIEW_MODEL
 to choose a different model for the end-of-turn review and
@@ -333,7 +333,7 @@ writes an override to your
 .claude/settings.local.json
 rather than editing the checked-in file, so the plugin stays off for you while teammates are unaffected. The same dialog also offers to uninstall the plugin for everyone by removing it from the shared
 .claude/settings.json
-; that option requires Claude Code v2.1.203 or later. If it was enabled through
+. If it was enabled through
 managed settings
 , only an administrator can disable it.
 ​

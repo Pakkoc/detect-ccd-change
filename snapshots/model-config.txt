@@ -409,7 +409,9 @@ rather than failing the request. When the blocked value is the
 Default teammate model
 setting itself, Claude Code runs the teammate on your provider’s default Opus model, or on the lead’s model when the allowlist blocks that too. On the Anthropic API and Claude Platform on AWS, a blocked family alias instead follows the substitution above, so the subagent or teammate runs on the newest permitted version of its family; on the providers with provider-specific IDs, the alias falls back like any other blocked value. Before v2.1.222, a blocked family alias fell back like any other blocked value on every provider
 Skill or command override
-: Claude Code ignores the override, including a blocked family alias, and the skill or command runs on the session model
+: Claude Code ignores the override, including a blocked family alias, and the skill or command runs on the session model. A skill or command that
+runs in a subagent
+follows the subagent behavior above instead
 advisorModel
 setting
 : the advisor is disabled for the session
@@ -465,12 +467,20 @@ Not delivered
 MDM or managed settings files
 Enforced
 Enforced
-Not delivered
+Not delivered in Anthropic-hosted environments; in
+self-hosted environments
+, enforced from the runner image when server-managed settings deliver no keys
 Enforced
 Enforced where deployed
 Cloud sessions, on
 Claude Code on the web
-or in the Desktop app, run on Anthropic-managed VMs: settings deployed to your device do not reach them, so deliver the allowlist through server-managed settings. A mid-session model switch in a cloud session is rejected when the requested model is excluded by the allowlist. Server-side rejection at session creation applies to
+or in the Desktop app, run on Anthropic-managed VMs by default: settings deployed to your device do not reach them, so deliver the allowlist through server-managed settings. Sessions your organization routes to a
+self-hosted environment
+run on your own compute and fall back to the managed settings file in the runner image when your organization delivers no server-managed settings; when both exist, the server-managed payload takes precedence, with the per-key
+env
+merge exception described in
+settings precedence
+. A mid-session model switch in a cloud session is rejected when the requested model is excluded by the allowlist. Server-side rejection at session creation applies to
 organization model restrictions
 , not the
 availableModels

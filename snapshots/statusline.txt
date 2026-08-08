@@ -367,7 +367,7 @@ Lines of code changed
 context_window.total_input_tokens
 ,
 context_window.total_output_tokens
-Token counts currently in the context window, from the most recent API response. Input includes cache reads and writes. Before v2.1.132 these were cumulative session totals
+Token counts currently in the context window, from the most recent API response. Input includes cache reads and writes
 context_window.context_window_size
 Maximum context window size in tokens. 200000 by default, or 1000000 for models with extended context.
 context_window.used_percentage
@@ -773,11 +773,7 @@ Handle missing fields with conditional access and null values with fallback defa
 Context window fields
 The
 context_window
-object describes the live context window from the most recent API response. As of v2.1.132,
-total_input_tokens
-and
-total_output_tokens
-reflect current context usage, not cumulative session totals.
+object describes the live context window from the most recent API response.
 Combined totals
 (
 total_input_tokens

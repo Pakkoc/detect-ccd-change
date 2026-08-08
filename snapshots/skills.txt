@@ -312,7 +312,7 @@ Add supporting files
 for more details.
 Files in
 .claude/commands/
-still work and support the same
+support the same
 frontmatter
 . Skills are recommended since they support additional features like supporting files.
 ​
@@ -432,11 +432,6 @@ Deploy the application
 1. Run the test suite
 2. Build the application
 3. Push to the deployment target
-Your
-SKILL.md
-can contain anything, but thinking through how you want the skill invoked (by you, by Claude, or both) and where you want it to run (inline or in a subagent) helps guide what to include. For complex skills, you can also
-add supporting files
-to keep the main skill focused.
 Keep the body itself concise. Once a skill loads, its content
 stays in context across turns
 , so every line is a recurring token cost. State what to do rather than narrating how or why, and apply the same conciseness test you would for
@@ -563,7 +558,13 @@ Model to use when this skill is active. The override applies for the rest of the
 inherit
 to keep the active model. A value excluded by your organization’s
 availableModels
-allowlist is not used and the session keeps its current model.
+allowlist is not used and the session keeps its current model. With
+context: fork
+, the value sets the
+forked subagent’s model
+instead, and an excluded value follows the
+same rules as a subagent model override
+.
 effort
 No
 Effort level
@@ -870,13 +871,6 @@ ${CLAUDE_SKILL_DIR}
 expand to that directory. The
 allowed-tools
 rule then matches the exact command the skill body tells Claude to run, so the script runs without prompting.
-The
-allowed-tools
-substitution for
-${CLAUDE_SKILL_DIR}
-requires Claude Code v2.1.129 or later. On earlier versions the rule stays a literal
-${CLAUDE_SKILL_DIR}
-string and never matches, so the command still prompts for permission.
 The
 ${CLAUDE_PROJECT_DIR}
 substitution requires Claude Code v2.1.196 or later.

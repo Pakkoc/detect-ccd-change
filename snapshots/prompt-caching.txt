@@ -326,7 +326,9 @@ On a Claude subscription
 On a Claude subscription, Claude Code requests the one-hour TTL automatically, so the cache survives breaks of up to an hour.
 If you’ve gone over your plan’s usage limit and Claude Code is drawing on
 usage credits
-, you are billed for that usage. Cache writes cost more at the one-hour TTL than at the five-minute TTL, so Claude Code automatically drops to the shorter one.
+, you are billed for that usage. Cache writes cost more at the one-hour TTL than at the five-minute TTL, so Claude Code automatically drops to the shorter one. To keep the one-hour TTL while drawing on usage credits, set
+ENABLE_PROMPT_CACHING_1H=1
+.
 ​
 On an API key or third-party provider
 On an API key, Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS, you pay the per-token rates, so the TTL stays at the cheaper five minutes by default. To opt into the

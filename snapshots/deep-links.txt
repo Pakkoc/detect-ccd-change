@@ -96,7 +96,7 @@ acme/payments
 , and fills the prompt box with the decoded text:
 Investigate the failed deploy of payments-api.
 Check recent commits to main and the last successful build.
-You can edit the prompt before pressing Enter to send it. If you have no local clone of the repository, the session opens in your home directory instead. See
+You can edit the prompt before pressing Enter to send it. See
 Choose between
 cwd
 and

@@ -547,13 +547,22 @@ Cache misses
 cache lifetime
 misses the cache and reprocesses your full context. The lifetime is an hour on a subscription and drops to five minutes once you’re drawing on
 usage credits
-; on an API key or cloud provider, it’s five minutes by default. On Pro and Max plans, when you resume a large session after a long break, Claude Code
+; on an API key or cloud provider, it’s five minutes by default. You can keep the one-hour lifetime while drawing on usage credits by setting
+ENABLE_PROMPT_CACHING_1H=1
+. On Pro and Max plans, when you resume a large session after a long break, Claude Code
 offers to resume from a summary
 so later requests don’t carry the full history
 Scheduled tasks
 : a
 scheduled task
 fires on its interval even while the session is idle, sending your full context each time
+Cross-session messages
+: Claude Code delivers a
+message from another of your sessions
+as a new turn when this session sits idle, sending your full context each time. To hold inbound messages instead of delivering them, set
+crossSessionInbound
+to
+hold
 Agent teammates
 : each active
 teammate

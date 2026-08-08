@@ -124,6 +124,22 @@ Grep
 Searches for patterns in file contents. See
 Grep tool behavior
 No
+ListAgents
+Lists the agents Claude can message with
+SendMessage
+, apart from
+agent team
+teammates, which Claude reaches through the team’s roster: subagents in the session, your other local Claude Code sessions, and reply-only
+Remote Control
+sessions, which cover your sessions on other machines and on
+Claude Code on the web
+. Backs the
+/list-agents
+command. See
+cross-session messaging
+. Requires Claude Code v2.1.224 or later, and appears only in sessions where
+cross-session messaging is enabled
+No
 ListMcpResourcesTool
 Lists resources exposed by connected
 MCP servers
@@ -192,11 +208,15 @@ Stop hook input
 prompt with no interval runs on a fixed schedule instead
 No
 SendMessage
-Sends a message to an
+Sends a message to another agent: an
 agent team
-teammate, or
-resumes a subagent
-by its agent ID or name. A completed subagent auto-resumes in the background; a subagent you stopped from
+teammate, a
+subagent it resumes
+by agent ID or name, or one of your other Claude Code sessions, on this machine or, in reply, beyond it through
+Remote Control
+. Messaging other sessions requires Claude Code v2.1.224 or later and works only in sessions where
+cross-session messaging is enabled
+. A completed subagent auto-resumes in the background; a subagent you stopped from
 /tasks
 doesn’t and the call returns a refusal. Structured team-protocol messages require agent teams. A receiver never treats a message from another agent as your consent or approval. In
 auto mode
@@ -1183,9 +1203,9 @@ Set the
 CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION
 environment variable to change the cap; it accepts a positive whole number, so the cap can be raised but not turned off. Running
 /clear
-resets the count under the same rule as the
-session subagent limit
-.
+resets the count. If work that can still spawn
+subagents
+survives the clear, such as a running workflow, the count carries over instead.
 ​
 Write tool behavior
 The Write tool creates a new file or overwrites an existing one with the full content provided. It doesn’t append or merge.

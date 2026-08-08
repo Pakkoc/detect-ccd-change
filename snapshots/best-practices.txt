@@ -601,7 +601,7 @@ Worktrees
 Desktop app
 : manage multiple local sessions visually, each in its own worktree
 Claude Code on the web
-: run sessions on Anthropic-managed cloud infrastructure in isolated VMs
+: run sessions in the cloud, on Anthropic-managed infrastructure by default
 Agent teams
 : automated coordination of multiple sessions with shared tasks, messaging, and a team lead
 Beyond parallelizing work, multiple sessions enable quality-focused workflows. A fresh context improves code review since Claude won’t be biased toward code it just wrote.

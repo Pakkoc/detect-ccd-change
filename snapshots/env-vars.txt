@@ -246,6 +246,21 @@ Amazon Bedrock
 ANTHROPIC_BEDROCK_MANTLE_BASE_URL
 Override the Amazon Bedrock Mantle endpoint URL. See
 Mantle endpoint
+ANTHROPIC_BEDROCK_REGION_PREFIX
+Cross-region inference profile prefix (
+us
+,
+eu
+,
+apac
+,
+jp
+,
+au
+, or
+global
+) Claude Code tries first instead of the one derived from the AWS region. Ignored in AWS GovCloud regions. Requires Claude Code v2.1.224 or later. See
+Amazon Bedrock
 ANTHROPIC_BEDROCK_SERVICE_TIER
 Amazon Bedrock
 service tier
@@ -1057,6 +1072,8 @@ false
 still disables this traffic
 , unlike most on/off variables; unset the variable to allow it again. Also disables feature-flag fetching, which makes
 Remote Control
+and
+cross-session messaging
 unavailable. Official plugin marketplace auto-install isn’t covered; disable it with
 CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL
 CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK
@@ -1420,9 +1437,15 @@ raises the default and removes the cap. For unattended sessions that need to wai
 CLAUDE_CODE_RETRY_WATCHDOG
 instead
 CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION
-Cap on the number of
+Removed in v2.1.224 and now a no-op. Previously capped the total number of
 subagents
-one session can spawn with the Agent tool (default: 200). When Claude reaches the cap, spawning another subagent fails with an error telling Claude to finish the remaining work directly. Accepts a positive whole number in plain digits with no upper bound; this variable doesn’t take the scientific notation or digit-separator spellings. Anything else is ignored and the default applies, so the cap can be raised but not turned off. Requires Claude Code v2.1.212 or later
+Claude could spawn with the Agent tool in one session (default: 200); spawning past the cap failed with
+Subagent spawn limit reached
+. The
+concurrent subagent limit
+and the
+depth limit
+still apply
 CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH
 Number of
 subagent layers
@@ -1467,6 +1490,14 @@ in
 of at least 1000 raises that server’s idle window to at least the
 timeout
 value. Doesn’t apply to IDE servers or SDK in-process servers. Requires Claude Code v2.1.187 or later. Before v2.1.203, stdio servers were exempt from the idle timeout
+CLAUDE_CODE_MESSAGING_SOCKET
+Set by Claude Code, not by you: in sessions that bind an
+inbox socket
+, Claude Code exports that socket’s path to hooks and Bash commands before any hook runs. Other sessions on the machine deliver messages to this path. Each session exports its own socket rather than one inherited from a parent, and messages arriving on it go through the session’s
+inbound controls
+. Settings
+env
+blocks can’t set it. Requires Claude Code v2.1.224 or later
 CLAUDE_CODE_NATIVE_CURSOR
 Set to
 1
@@ -1994,6 +2025,18 @@ to your
 . See
 Terminal configuration
 for other tmux settings
+CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS
+Deadline in milliseconds for dialogs Claude Code forwards to a remote client, such as a
+Remote Control
+or SDK host, and for the approval dialog for a
+held cross-session message
+, before Claude Code cancels them; permission prompts and
+AskUserQuestion
+questions use their own flows and aren’t governed by it. Overrides the
+dialogExpiry
+setting;
+0
+or a negative value disables the deadline
 CLAUDE_CODE_USE_ANTHROPIC_AWS
 Use
 Claude Platform on AWS
@@ -2123,6 +2166,18 @@ Timeout in milliseconds before the event- and byte-level streaming idle watchdog
 CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS
 takes precedence over this variable for the byte-level watchdog. For the per-watchdog unset defaults, see
 Streaming idle watchdogs
+CLAUDE_SUBAGENT_BG_SHELL_MAX_MS
+Maximum lifetime in milliseconds for a
+background shell command
+that a
+subagent
+started, after which Claude Code terminates the command. Default
+3600000
+(60 minutes). Setting
+0
+doesn’t disable the cap: Claude Code applies the 60-minute default instead. Claude Code doesn’t apply a lifetime cap to background commands in the main session;
+CLAUDE_CODE_DISABLE_BG_SHELL_PRESSURE_REAP
+covers the separate memory-pressure limit that applies to them. Requires Claude Code v2.1.133 or later
 DEBUG
 Set to
 1
@@ -2216,6 +2271,8 @@ Set to
 1
 to disable GrowthBook feature-flag fetching and use code defaults for every flag. This makes
 Remote Control
+and
+cross-session messaging
 unavailable. Telemetry event logging stays on unless
 DISABLE_TELEMETRY
 is also set
@@ -2282,6 +2339,8 @@ still opts out
 DISABLE_GROWTHBOOK
 , which makes
 Remote Control
+and
+cross-session messaging
 unavailable
 DISABLE_UPDATES
 Set to
@@ -2306,6 +2365,8 @@ to opt out of telemetry, with the same effect as
 DISABLE_TELEMETRY
 , including making
 Remote Control
+and
+cross-session messaging
 unavailable. Claude Code reads this variable as a standard boolean, so
 0
 leaves telemetry on, and honors it as the cross-tool convention recognized by many developer CLIs
@@ -2330,7 +2391,9 @@ Google Cloud’s Agent Platform
 Microsoft Foundry
 , and
 Claude Platform on AWS
-users. Subscription users within included usage receive 1-hour TTL automatically. 1-hour cache writes are billed at a higher rate
+users. Subscription users within included usage receive 1-hour TTL automatically. Subscription users drawing on
+usage credits
+can set it to keep the 1-hour TTL. 1-hour cache writes are billed at a higher rate
 ENABLE_PROMPT_CACHING_1H_BEDROCK
 Deprecated. Use
 ENABLE_PROMPT_CACHING_1H

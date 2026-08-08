@@ -750,31 +750,38 @@ days, minimum
 1
 . Claude Code deletes
 session files and other application data
-older than this period at startup. Setting
-0
-fails with a validation error. The same age cutoff applies to automatic removal of
-orphaned worktrees
-at startup. If Claude Code can’t read or parse a settings file, it pauses the retention cleanup sweep and shows a warning in
-/status
-until you fix the file, unless
-managed settings
-provide
-cleanupPeriodDays
-, in which case the sweep runs at the managed value. Before v2.1.203, cleanup ran at the 30-day default in that state and could delete transcripts a longer
-cleanupPeriodDays
-was meant to keep; files newer than 30 days were never removed. To disable transcript writes entirely, set the
-CLAUDE_CODE_SKIP_PROMPT_HISTORY
-environment variable. In non-interactive mode, pass
---no-session-persistence
-alongside
--p
-or set
-persistSession: false
-in the Agent SDK.
+older than this period at startup. To disable transcript writes entirely, see
+Plaintext storage
+.
 20
 companyAnnouncements
 Announcement to display to users at startup. If multiple announcements are provided, they will be cycled through at random.
 ["Welcome to Acme Corp! Review our code guidelines at docs.acme.com"]
+crossSessionInbound
+How this session treats inbound
+cross-session messages
+from your other Claude Code sessions:
+"accept"
+delivers them to Claude,
+"hold"
+shows a notice for each message without delivering it, and
+"refuse"
+drops them. When no value applies, Claude Code decides per message from the two sessions’ permission-mode classes; see
+Control inbound messages
+for the rules. Claude Code reads managed settings first, then the
+--settings
+flag, then user settings, and applies the first value found; a value in project or local settings applies only when it’s stricter, on the
+accept
+<
+hold
+<
+refuse
+ladder, than the value those trusted sources give. When none of the trusted sources sets a value, a project or local
+hold
+or
+refuse
+still applies, replacing the per-message default. Requires Claude Code v2.1.224 or later
+"hold"
 defaultShell
 Default
 :
@@ -801,6 +808,30 @@ deniedMcpServers
 When set in managed-settings.json, denylist of MCP servers that are explicitly blocked. Applies to all scopes including managed servers. Denylist takes precedence over allowlist. See
 Managed MCP configuration
 [{ "serverName": "filesystem" }]
+dialogExpiry
+Default
+:
+"5m"
+. Deadline for dialogs Claude Code forwards to a remote client, such as a
+Remote Control
+or SDK host, for example the model-choice prompt shown after a safety refusal, and for the approval dialog for a
+held cross-session message
+. When no answer arrives before the deadline, Claude Code cancels the dialog and continues with its no-action default. For a held message, that drops the message. Permission prompts and
+AskUserQuestion
+questions use their own flows and aren’t governed by this deadline. Accepts
+"60s"
+,
+"5m"
+,
+"10m"
+, or
+"never"
+, which disables the deadline. The
+CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS
+environment variable overrides this setting. Read from user, managed, and
+--settings
+sources only. Requires Claude Code v2.1.224 or later
+"10m"
 disableAgentView
 Set to
 true
@@ -1106,7 +1137,9 @@ claude
 CLAUDE_CODE_REMOTE
 and
 CLAUDE_CODE_ACCOUNT_UUID
-, are ignored when set here
+, are ignored when set here.
+CLAUDE_CODE_MESSAGING_SOCKET
+is also ignored here, because Claude Code exports its own per-session value; ignoring it requires Claude Code v2.1.224 or later
 {"FOO": "bar"}
 fallbackModel
 Fallback model(s) to try in order when the primary model is overloaded or unavailable. Claude Code switches to the next available model in the chain for the rest of the turn and shows a notice.
@@ -1256,6 +1289,20 @@ as
 Push when actions required
 . See
 Mobile push notifications
+true
+isolatePeerMachines
+Require your explicit approval before Claude’s
+SendMessage
+reply reaches one of your sessions beyond this machine; see
+cross-session messaging
+. The approval prompt appears even in
+bypassPermissions
+mode
+. A
+true
+from any settings scope applies, so a checked-in project file can turn the requirement on but not off. The cross-machine
+SendMessage
+approval requires Claude Code v2.1.224 or later
 true
 language
 Configure Claude’s preferred response language (e.g.,
@@ -1416,7 +1463,15 @@ for cloud sessions you create from the CLI, such as with
 claude --cloud
 . Written to user settings when you pick an environment with
 /remote-env
-. Follows the standard settings precedence, so a value in a repo’s project settings overrides the user-level pick
+. For Anthropic-hosted environment IDs (
+env_...
+), follows the standard settings precedence, so a value in a repo’s project settings overrides the user-level pick. A
+self-hosted environment
+ID (
+ccpool_...
+) is honored only from user settings, managed settings, and the
+--settings
+CLI flag; Claude Code ignores one in a repo’s project or local settings with a warning, so a checked-in file can’t steer sessions onto a self-hosted environment you didn’t choose
 "env_0123abcd"
 remoteControlAtStartup
 Connect
@@ -1561,7 +1616,6 @@ menu writes these to
 .claude/settings.local.json
 . See
 Override skill visibility from settings
-. Requires Claude Code v2.1.129 or later
 {"legacy-context": "name-only", "deploy": "off"}
 skipWebFetchPreflight
 Skip the
@@ -2276,8 +2330,14 @@ Regular expression for structured masking when
 mode
 is
 mask
-. Claude Code applies it across the whole file and replaces only the text captured by group 1 of each match with a sentinel, so the rest of the file stays parseable. Must contain at least one capturing group. Without
+. Claude Code applies it across the whole file and replaces only the text captured by group 1 of each match with a sentinel, so the rest of the file stays parseable. Must contain at least one capturing group. When
+decode
+is also set, the captures serve as its decode candidates rather than being replaced outright; see the
+decode
+row. Without
 extract
+or
+decode
 , Claude Code replaces the entire file content with one sentinel. On macOS with filesystem isolation on, Claude Code applies the entry as
 deny
 before the pattern runs; see
@@ -2289,9 +2349,7 @@ deny
 . Requires Claude Code v2.1.221 or later.
 "oauth_token:\\s*(\\S+)"
 credentials.files[].onExtractNoMatch
-What happens when
-extract
-matches nothing in the file:
+What happens when matching finds nothing to mask in the file:
 warn
 , the default, warns and leaves the file readable as-is inside the sandbox;
 deny
@@ -2311,17 +2369,55 @@ is
 mask
 and
 extract
+or
+decode
 is set, with the same macOS scoping as
 extract
-. Requires Claude Code v2.1.221 or later.
+. Requires Claude Code v2.1.221 or later; the
+decode
+case requires v2.1.224 or later.
 "deny"
+credentials.files[].decode
+Format-aware
+masking of encoded credentials
+when
+mode
+is
+mask
+. The only value is
+jwt
+: Claude Code finds JWT candidates in the file with a built-in pattern, or with
+extract
+when set, verifies each candidate is a JWT, and replaces it with a structurally valid fake token, so code inside the sandbox that decodes the token keeps working. When no candidate verifies,
+onExtractNoMatch
+governs the outcome. Same macOS scoping as
+extract
+; accepted but ignored when
+mode
+is
+deny
+. Requires Claude Code v2.1.224 or later.
+"jwt"
+credentials.files[].maskClaims
+Top-level payload claims to mask inside each verified JWT instead of replacing the whole token. Requires
+decode
+and at least one non-empty claim name. Each named claim present with a string value gets its own sentinel and Claude Code rebuilds the token around the modified payload, so the other claims stay readable inside the sandbox. When no named claim matches in any verified token,
+onExtractNoMatch
+governs the outcome. Requires Claude Code v2.1.224 or later.
+["api_key"]
 credentials.files[].maskDuplicates
-Also replace verbatim copies of each captured credential value found outside the regex matches. Matches raw substrings, so reserve it for long, high-entropy secrets. Only meaningful when
+Also replace verbatim copies of each masked credential value, an
+extract
+capture or a
+decode
+-verified token, found outside the matched spans. Matches raw substrings, so reserve it for long, high-entropy secrets. Only meaningful when
 mode
 is
 mask
 and
 extract
+or
+decode
 is set. Default: false. Requires Claude Code v2.1.221 or later.
 true
 credentials.files[].injectHosts
@@ -2366,6 +2462,72 @@ or
 deny
 takes precedence when the same variable appears with both modes.
 [{ "name": "GITHUB_TOKEN", "mode": "deny" }]
+credentials.envVars[].extract
+Regular expression for
+structured masking
+when
+mode
+is
+mask
+. Claude Code applies it across the variable’s value and replaces only the text captured by group 1 of each match with a sentinel, so the rest of the value stays parseable, such as the password inside a
+DATABASE_URL
+connection string. Must contain at least one capturing group. Without
+extract
+or
+decode
+, Claude Code replaces the entire value with one sentinel. Can’t be combined with
+decode
+. Accepted but ignored when
+mode
+is
+deny
+. Requires Claude Code v2.1.224 or later.
+"://[^:]+:([^@]+)@"
+credentials.envVars[].onExtractNoMatch
+What happens when
+extract
+matches nothing in the value:
+warn
+, the default, warns and passes the variable through unmasked;
+deny
+unsets the variable inside the sandbox;
+error
+stops sandbox setup until you fix the configuration. Only meaningful when
+mode
+is
+mask
+and
+extract
+is set. On an entry with
+decode
+, only
+warn
+is accepted, because a value that fails JWT verification always passes through unmasked with a warning. Requires Claude Code v2.1.224 or later.
+"deny"
+credentials.envVars[].decode
+Format-aware
+masking of encoded credentials
+when
+mode
+is
+mask
+. The only value is
+jwt
+: Claude Code verifies the variable’s whole value is a JWT and replaces it with a structurally valid fake token, so code inside the sandbox that decodes the token keeps working, and the proxy substitutes the whole real token on egress. A value that doesn’t verify passes through unmasked with a warning. Can’t be combined with
+extract
+. Accepted but ignored when
+mode
+is
+deny
+. Requires Claude Code v2.1.224 or later.
+"jwt"
+credentials.envVars[].maskClaims
+Top-level payload claims to mask inside the decoded JWT instead of replacing the whole token. Requires
+decode
+and at least one non-empty claim name. Behaves like
+credentials.files[].maskClaims
+, except that when no named claim matches, the variable passes through unmasked with a warning. Requires Claude Code v2.1.224 or later.
+["api_key"]
 credentials.envVars[].injectHosts
 Hosts where the sandbox proxy substitutes the real value of a
 mask
@@ -2390,15 +2552,63 @@ or
 .claude/settings.local.json
 . Default: false. Requires Claude Code v2.1.199 or later.
 true
+credentials.awsPairs
+Groups of masked environment variables that form one AWS credential for
+SigV4 re-signing
+, for non-standard variable names; Claude Code links the conventional
+AWS_ACCESS_KEY_ID
+,
+AWS_SECRET_ACCESS_KEY
+, and
+AWS_SESSION_TOKEN
+trio automatically when those variables are masked whole-value. Each entry names the
+credentials.envVars
+entry holding each part in
+accessKeyIdVar
+,
+secretAccessKeyVar
+, and optionally
+sessionTokenVar
+. Each named variable must be a whole-value
+mask
+entry, without
+extract
+or
+decode
+, and can fill only one slot across all pairs. Only honored from user, managed, or CLI
+--settings
+settings. Requires Claude Code v2.1.224 or later.
+[{ "accessKeyIdVar": "MY_KEY_ID", "secretAccessKeyVar": "MY_SECRET_KEY" }]
+credentials.sigv4
+Policies for AWS request forms the sandbox proxy
+can’t re-sign
+:
+streaming
+for aws-chunked streaming uploads,
+presigned
+for presigned URLs, and
+sigv4a
+for SigV4A asymmetric signatures. Each accepts
+deny
+, the default, which fails the request at the proxy, or
+passthrough
+, which forwards the request with its signature computed from the masked placeholder, so AWS rejects it. Applies only to requests signed with a masked pair’s placeholder access key ID. Only honored from user, managed, or CLI
+--settings
+settings. Requires Claude Code v2.1.224 or later.
+{ "streaming": "passthrough" }
 network.allowUnixSockets
 (macOS only) Unix socket paths accessible in sandbox. Ignored on Linux and WSL2, where the seccomp filter cannot inspect socket paths; use
 allowAllUnixSockets
 instead.
 ["~/.ssh/agent-socket"]
 network.allowAllUnixSockets
-Allow all Unix socket connections in sandbox. On Linux and WSL2 this is the only way to permit Unix sockets, since it skips the seccomp filter that otherwise blocks
+Allow all Unix socket connections in sandbox. On Linux and WSL2, when the optional
+seccomp filter
+is installed, this is the only way to permit Unix sockets, since it skips the filter that otherwise blocks
 socket(AF_UNIX, ...)
-calls. Default: false
+calls; without the filter, the sandbox doesn’t block Unix-socket calls. On WSL2,
+true
+also reopens the interop socket that launches Windows binaries. Default: false
 true
 network.allowLocalBinding
 Allow binding to localhost ports (macOS only). Default: false
@@ -3015,6 +3225,32 @@ flag, and managed sources can turn auto-connect on, and a user
 false
 doesn’t override a managed
 true
+A
+true
+for
+isolatePeerMachines
+applies from any scope, even when a managed source sets
+false
+A stricter
+crossSessionInbound
+value in project or local settings (
+.claude/settings.json
+,
+.claude/settings.local.json
+), on the
+accept
+<
+hold
+<
+refuse
+ladder, applies over the value managed settings, the
+--settings
+flag, or user settings give. Claude Code ignores a project or local value that isn’t stricter, so for this key a checked-in
+accept
+never overrides your user
+hold
+or
+refuse
 Host platforms that embed Claude Code and set
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
 are also an exception. The host’s model configuration takes precedence over the
@@ -3452,6 +3688,20 @@ git
 : Any git URL (uses
 url
 )
+url
+: Direct URL to a
+marketplace.json
+file (uses
+url
+, plus optional
+headers
+for authenticated access)
+file
+: Local path to a
+marketplace.json
+file (uses
+path
+)
 directory
 : Local filesystem path (uses
 path
@@ -3721,7 +3971,7 @@ headers
 (optional: HTTP headers for authenticated access)
 URL-based marketplaces only download the
 marketplace.json
-file. They do not download plugin files from the server. Plugins in URL-based marketplaces must use external sources (GitHub, npm, or git URLs) rather than relative paths. For plugins with relative paths, use a Git-based marketplace instead. See
+file. They do not download plugin files from the server. Plugins in URL-based marketplaces must use external sources (GitHub, npm, git URL, or archive) rather than relative paths. For plugins with relative paths, use a Git-based marketplace instead. See
 Troubleshooting
 for details.
 NPM packages

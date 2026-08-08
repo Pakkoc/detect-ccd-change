@@ -500,6 +500,10 @@ No mid-run user input
 Only agent permission prompts can pause a run. For sign-off between stages, run each stage as its own workflow
 No direct filesystem or shell access from the workflow itself
 Agents read, write, and run commands. The script coordinates the agents
+No module loading: a script that contains
+import()
+fails before the run starts
+The script body is plain JavaScript. Put work that needs a library in an agent’s task
 Up to 16 concurrent agents, fewer on machines with limited CPU cores
 Bounds local resource use
 1,000 agents total per run
@@ -555,6 +559,14 @@ Check
 /model
 before a large run if you usually switch to a smaller model for routine work
 Ask Claude to use a smaller model for stages that don’t need the strongest one when you describe the task
+When your organization’s
+availableModels
+allowlist
+blocks a model the script requests for an agent, that agent runs on a substituted model instead, following the same
+substitution rules as subagents
+. The run’s progress view in
+/workflows
+shows a warning naming both the requested and substituted models.
 ​
 Set a size guideline
 A size guideline tells Claude how many agents to aim for when it writes a dynamic workflow. Claude Code sends the guideline to Claude as advice, not a cap, so a prompt that calls for a different scale still overrides it. Requires Claude Code v2.1.202 or later.

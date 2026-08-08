@@ -8,7 +8,7 @@ Identity provider setup
 for per-IdP details.
 ​
 What you’ll build
-The reference configuration provisions:
+The deployment consists of:
 Cloud Run
 service or
 GKE
@@ -26,12 +26,12 @@ Service account
 with
 roles/aiplatform.user
 , attached directly on Cloud Run or bound via Workload Identity on GKE
-Internal Application Load Balancer
-on Cloud Run, or an internal
+HTTPS front end
+that you provide: an internal Application Load Balancer in front of Cloud Run, which this walkthrough configures the gateway for but doesn’t create, or an internal
 GKE Ingress
 of class
 gce-internal
-on GKE, for HTTPS
+on GKE
 ​
 Prerequisites
 A GCP project with billing enabled, and permission to create the resources above
@@ -317,9 +317,14 @@ configuration reference
 for every field.
 Two
 listen
-fields depend on what fronts the gateway:
+fields describe what fronts the gateway:
 public_url
-: required behind Cloud Run or a GKE Ingress. The gateway builds the IdP
+: the external
+https://
+origin, required for any non-loopback bind; see the
+listen
+reference
+. The gateway builds the IdP
 redirect_uri
 and its discovery document only from this value, never from
 X-Forwarded-*
@@ -503,9 +508,11 @@ PROJECT_ID
 \
 --min-instances=1
 \
+--max-instances=8
+\
 --timeout=3600
 \
---ingress=internal-and-cloud-load-balancing
+--ingress=internal
 \
 --network=
 "
@@ -523,7 +530,15 @@ Direct VPC egress, via
 --subnet
 , and
 --vpc-egress=private-ranges-only
-, lets the service reach the Cloud SQL private IP directly. Public egress to Google Cloud’s Agent Platform endpoints and
+, lets the service reach the Cloud SQL private IP directly. Each instance holds up to
+store.max_connections
+Postgres connections, five by default, so keep maximum instances ×
+store.max_connections
+below your Cloud SQL tier’s connection limit; the
+reference assets
+cap instances at 8 for the
+db-g1-small
+tier for this reason. Public egress to Google Cloud’s Agent Platform endpoints and
 accounts.google.com
 goes directly to the internet rather than through the VPC, so no Cloud NAT is needed.
 The invoker IAM check must be open or disabled. The gateway runs its own OIDC and its clients carry no GCP token, so Cloud Run’s invoker check has to admit unauthenticated requests. The gateway’s OIDC sign-in authenticates the request once it reaches the container, with
@@ -551,15 +566,19 @@ URL resolves to a public address, which the
 private-network check
 rejects. Two topologies give developers a privately resolvable hostname, and Cloud Run provisions neither for you:
 Internal Application Load Balancer
-, the topology the deploy command above assumes: deploy with
---ingress=internal-and-cloud-load-balancing
-, provision an internal Application Load Balancer in front of the service with an internal DNS name and certificate, and set
+, the topology this page’s
+gateway.yaml
+assumes: provision an internal Application Load Balancer in front of the service with an internal DNS name and certificate, and set
 listen.public_url
-to that hostname.
+to that hostname. The
+internal
+ingress setting already admits traffic from internal Application Load Balancers;
+internal-and-cloud-load-balancing
+additionally admits external Application Load Balancers, whose public addresses the
+/login
+private-network check rejects, so no topology on this page needs it.
 Internal-only ingress with no load balancer
-: deploy with
---ingress=internal
-and leave
+: keep the deploy command as is and leave
 listen.public_url
 as the
 *.run.app
@@ -716,15 +735,7 @@ Dockerfile
 for the distroless runtime image
 The artifacts default Cloud Run ingress to
 internal
-, so no load balancer is required. To match this page’s production-behind-an-ALB deployment, run
-setup.sh
-with
-INGRESS=internal-and-cloud-load-balancing
-, or set the Terraform variable
-ingress
-to
-INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER
-. The artifacts also default the invoker layer to an
+, matching the deploy command on this page; that setting works with or without an internal Application Load Balancer in front of the service, and the artifacts don’t create the load balancer either. The artifacts also default the invoker layer to an
 allUsers
 run.invoker
 grant rather than

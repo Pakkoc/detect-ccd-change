@@ -132,7 +132,7 @@ x-should-retry: false
 spend limit reached
 , followed by your
 admin.blocked_message
-if set.
+if set. Caps reset on UTC calendar boundaries: daily at 00:00 UTC, weekly at 00:00 UTC on Monday, and monthly at 00:00 UTC on the first of the month.
 /v1/messages/count_tokens
 is exempt. Token counting is free, so it runs regardless of cap state.
 After each response, a usage meter reads token counts off the response as it streams to the client, prices them at USD list price, and increments Postgres counters for all three period buckets. The meter is a single reader on the stream, so the client’s bytes are untouched and a metering failure doesn’t break the response.
@@ -172,8 +172,16 @@ The endpoints below are served under
 Method and path
 Description
 GET /v1/organizations/spend_limits
-List configured caps. Query:
-?limit=&after_id=&before_id=
+List configured caps, optionally filtered to one
+scope_type
+of
+organization
+,
+rbac_group
+, or
+user
+. Query:
+?limit=&after_id=&before_id=&scope_type=
 .
 POST /v1/organizations/spend_limits
 Create or replace a cap for
@@ -191,7 +199,7 @@ GET /v1/organizations/spend_limits/effective
 Resolved cap and to-date spend per principal per period.
 GET /v1/organizations/spend_limits/audit
 Admin mutation trail, newest-first. Query:
-?limit=
+?limit=&after_id=
 .
 Conventions mirror Anthropic’s Admin API:
 A
@@ -210,7 +218,7 @@ The
 error envelope
 A
 request-id
-response header on every admin response, success or error, matching the body’s
+response header on every admin response, success or error; error bodies also carry it as
 request_id
 Every mutation writes a before/after row to
 admin_audit
@@ -284,7 +292,7 @@ user_ids[]=
 ride GET query strings, so any fronting proxy or load balancer captures them in its access logs. If your PII log policy is strict, scrub these parameters there.
 ​
 /audit
-Returns the spend-limit mutation trail: who changed which cap, before/after snapshots, and the optional reason, newest-first.
+Returns the spend-limit mutation trail: who changed which cap, with before/after snapshots, newest-first.
 has_more
 is exact. This endpoint follows the local Admin API conventions rather than a first-party wire shape.
 ​
@@ -306,6 +314,14 @@ token passed back as
 , with principals ordered ascending so pages stay stable while spend is being recorded.
 limit
 is 1–1000, default 20, on both.
+/audit
+pages by
+after_id
+, the numeric
+id
+of the last event on the previous page, and its
+limit
+defaults to 100.
 ​
 Data lifecycle
 The gateway holds four spend-related tables; an hourly sweep enforces the retention windows:

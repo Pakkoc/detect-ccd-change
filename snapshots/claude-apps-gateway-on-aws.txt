@@ -536,9 +536,14 @@ configuration reference
 for every field.
 Two
 listen
-fields depend on what fronts the gateway:
+fields describe what fronts the gateway:
 public_url
-: required behind a load balancer. The gateway builds the IdP
+: the external
+https://
+origin, required for any non-loopback bind; see the
+listen
+reference
+. The gateway builds the IdP
 redirect_uri
 and its discovery document only from this value, never from
 X-Forwarded-*
@@ -1424,13 +1429,15 @@ https://
 http://
 only for loopback URLs, and even then its
 SSRF guard
-blocks loopback connections at send time by default. A sidecar collector on
+blocks loopback connections by default. Unless
+CLAUDE_GATEWAY_ALLOW_LOOPBACK=1
+is set in the gateway’s environment, a sidecar collector on
 http://localhost:4318
 passes config validation but receives no traffic, with exports failing as
 ECONNREFUSED_SSRF
-in the gateway logs, unless
-CLAUDE_GATEWAY_ALLOW_LOOPBACK=1
-is set in the gateway’s environment. That variable relaxes the loopback block for every operator-configured URL, not only telemetry, so prefer the internal-service pattern and reserve the sidecar-plus-flag setup for tasks whose network is otherwise locked down.
+in the gateway logs, and the gateway rejects an IP-literal URL such as
+http://127.0.0.1:4318
+at boot. That variable relaxes the loopback block for every operator-configured URL, not only telemetry, so prefer the internal-service pattern and reserve the sidecar-plus-flag setup for tasks whose network is otherwise locked down.
 ​
 Gateway logs
 On ECS Fargate, no extra setup: the

@@ -19,13 +19,6 @@ Troubleshooting
 , which is keyed on the error you see.
 Deploy on your private network.
 Claude Code only connects to a gateway whose address is private. This is a security guard, because a trusted gateway can push settings that run commands on developer machines. Put the gateway you deploy behind an internal load balancer or VPN and give it a hostname that resolves to private IPs only.
-Anthropic-operated public gateway endpoints are the exception:
-/login
-accepts them over
-https://
-. These are a small fixed set of gateways that Anthropic itself operates; they aren’t a deployment option you can select or configure. The list is compiled into Claude Code, so no configuration can add a hostname to it and no gateway you host qualifies for the exemption. Before v2.1.206,
-/login
-rejected those endpoints like any other public address.
 ​
 Identity provider setup
 Register a confidential OAuth/OpenID Connect (OIDC) web application with a single redirect URI,
@@ -297,6 +290,8 @@ device.authorize
 ,
 device.verify
 ,
+device.callback
+,
 auth.denied
 ,
 access.denied
@@ -310,8 +305,12 @@ desktop_bootstrap.serve
 desktop_bootstrap.denied
 ,
 spend.blocked
-, and
+,
 admin.denied
+,
+admin.limit.upsert
+, and
+admin.limit.delete
 . Fields vary by event:
 Successful mint and refresh events carry
 sub
@@ -337,17 +336,27 @@ policy_not_opted_in
 no_policy_matched
 ) and the user’s identity
 admin.denied
-records a rejected admin-API auth attempt with the reason (
+records a rejected admin-API auth attempt with the client IP, method, path, and a reason, without the presented key material:
 invalid_key
-or
+when an
+x-api-key
+was presented but matched no configured key,
+bearer_rejected
+when only an
+Authorization
+header was presented and it didn’t verify as a gateway session in
+admin.admin_groups
+, or
 no_credentials
-), client IP, method, and path, without the presented key material
+when neither header was presented
 Operational logs
 : human-readable
 [gateway]
 -prefixed lines for boot, warnings, and upstream errors. The
 CLAUDE_GATEWAY_LOG_LEVEL
 environment variable controls verbosity and accepts
+debug
+,
 info
 ,
 warn
@@ -355,7 +364,15 @@ warn
 error
 , with
 info
-as the default. It doesn’t affect audit events, which are always emitted.
+as the default. At
+debug
+, each sign-in and refresh also logs the names, not the values, of the claims in the id_token, plus the names of the userinfo claims when
+userinfo_fallback
+supplied any, so you can diagnose
+email_claim
+and
+groups_claim
+settings without logging PII. It doesn’t affect audit events, which are always emitted.
 ​
 Health
 The gateway serves
@@ -440,11 +457,7 @@ rows past their TTL, and an hourly sweep enforces the retention windows on the s
 spend limits
 configured, only
 kv
-is written. If your security policy prohibits DDL from the application role, pre-create these tables and
-_migrations
-with an admin role and grant the app role
-SELECT, INSERT, UPDATE, DELETE
-on each.
+is written. The gateway applies its own schema migrations at boot and on every upgrade, so its database role needs rights to create and alter tables. Point it at a database or schema dedicated to the gateway to keep that grant narrow.
 With spend limits in use, a lost database means lost spend tracking and caps, not only developer re-logins, so run regular backups. To erase one departed developer immediately rather than waiting on retention, run
 DELETE FROM principal_emails WHERE principal = '<sub>'
 directly; that removes the only table holding their email, name, and groups.
@@ -456,11 +469,7 @@ sub
 only.
 ​
 Upgrades
-Replicas are stateless, so a rolling restart is safe at any time. The gateway runs schema migrations at boot, which means deploying the new binary self-migrates the database. If the database role can’t run DDL, pre-create the schema, including the
-_migrations
-table seeded to the current version; otherwise boot fails attempting
-CREATE TABLE
-.
+Replicas are stateless, so a rolling restart is safe at any time. The gateway runs schema migrations at boot, which means deploying the new binary self-migrates the database. Concurrent replicas serialize on a Postgres advisory lock, so only one applies each migration.
 Migrations are append-only, so rolling back to a prior binary that knows fewer migrations is safe; it ignores the extra rows. Rollback also re-validates the YAML against the older binary’s schema, so a config that adopted a key introduced by the newer release fails boot on the older one. Remove the new key before rolling back.
 Because you pin the gateway’s version in your own image, fixes in new Claude Code releases, including security fixes, reach your deployment only when you update the pin and redeploy. Include the gateway in the same patching cadence you use for other services that hold production credentials.
 ​
@@ -495,9 +504,11 @@ Developers hold short-lived JWTs instead of raw upstream keys. The CLI-to-gatewa
 The device-verification page enforces same-origin POST and a per-IP rate limit per RFC 8628 §5.1. See
 User-code brute-force resistance
 .
-Outbound requests go through a server-side request forgery (SSRF) guard that resolves DNS, blocks link-local and cloud-metadata addresses plus loopback by default, and pins the connection to the resolved IP, so operator-influenced URLs such as the IdP and OTLP destinations can’t be redirected to cloud metadata endpoints. RFC 1918 private ranges are deliberately allowed, because IdPs and OTLP collectors commonly live on private IPs. For local development against a loopback IdP or collector, set
+Outbound requests go through a server-side request forgery (SSRF) guard that resolves DNS, blocks link-local and cloud-metadata addresses plus loopback by default, and pins the connection to the resolved IP, so operator-influenced URLs such as the IdP and OTLP destinations can’t be redirected to cloud metadata endpoints. RFC 1918 private ranges are deliberately allowed, because IdPs and OTLP collectors commonly live on private IPs. Set
 CLAUDE_GATEWAY_ALLOW_LOOPBACK=1
-in the gateway’s environment; leave it unset in production.
+in the gateway’s environment only when something the gateway must reach legitimately lives on loopback, such as a local-development IdP or a sidecar OTLP collector on
+localhost
+. The variable relaxes the loopback block for every operator-configured URL and also skips the boot-time warning that checks whether the pod can reach the cloud metadata endpoint, so prefer giving the collector its own internal address.
 If you add your own egress controls, the gateway must reach the metadata server whenever it uses instance-metadata credentials such as workload identity.
 Two threats are out of scope because they are your infrastructure to secure:
 A compromised gateway host
@@ -553,9 +564,9 @@ TLS
 public_url
 over HTTPS in production, either from the gateway’s own listener via
 listen.tls
-or from a TLS-terminating ingress in front of plain-HTTP replicas with
+or from a TLS-terminating ingress in front of plain-HTTP replicas, with
 listen.public_url
-set. The gateway doesn’t refuse plain HTTP. The IdP must serve HTTPS in production, and Postgres supports
+set in both cases. The gateway doesn’t refuse plain HTTP. The IdP must serve HTTPS in production, and Postgres supports
 ?sslmode=require
 . Set
 Strict-Transport-Security
@@ -628,13 +639,7 @@ CLI
 /login
 :
 Gateway hosts must be on your organization's private network; <host> resolves to the public (or unrecognized) address <ip>
-The gateway hostname resolves to at least one public IP address. Claude Code checks each resolved address and requires every one to be private. A common cause is a dual-stack name where one family resolves to a public address, including AWS internal dual-stack load balancers, which return public-range AAAA addresses. Anthropic-operated public gateway endpoints are exempt from the check, and
-/login
-accepts them over
-https://
-. Before v2.1.206,
-/login
-rejected them like any other public address
+The gateway hostname resolves to at least one public IP address. Claude Code checks each resolved address and requires every one to be private. A common cause is a dual-stack name where one family resolves to a public address, including AWS internal dual-stack load balancers, which return public-range AAAA addresses.
 Have the gateway name resolve only to private addresses on developer machines. For a dual-stack name, drop the public-range record or serve a separate internal-only DNS name. See the
 private-network prerequisite
 .
@@ -692,9 +697,10 @@ Check the issuer is reachable from the pod and serves
 ca_cert_pem
 for private PKI.
 Boot exits with a Postgres permission error
-App role lacks
-CREATE TABLE
-Pre-create the schema with an admin role and grant DML to the app role, or grant DDL temporarily for boots that apply new migrations
+The database role lacks DDL rights on its schema
+Grant the role
+CREATE
+on the gateway’s schema so it can create and alter its tables at boot
 /oauth/callback
 shows “Sign-in could not be completed”
 Email domain rejected, id_token validation failed, or
@@ -778,15 +784,17 @@ response_mode=query
 , which the gateway requests explicitly so the callback is a plain redirect
 Login works locally but fails behind an ALB
 public_url
-not set, so the IdP gets the inner
+still names the local or inner
 http://
-origin as
+origin, so the IdP gets the wrong
 redirect_uri
 Set
 listen.public_url
 to the external
 https://
-origin
+origin and register
+<public_url>/oauth/callback
+with the IdP
 Developer sees the trust prompt repeatedly
 TLS cert is rotating per replica or per request
 Use a stable cert at the ingress, or terminate TLS once and run replicas over plain HTTP internally

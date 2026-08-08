@@ -27,7 +27,7 @@ Working inside IntelliJ, PyCharm, WebStorm, or other JetBrains IDEs
 Diff viewer, selection sharing, terminal session
 Web
 Long-running tasks that don’t need much steering, or work that should continue when you’re offline
-Anthropic-managed cloud, continues after you disconnect
+Cloud, Anthropic-managed by default; continues after you disconnect
 Mobile
 Starting and monitoring tasks while away from your computer
 Cloud sessions from the Claude app for iOS and Android,
@@ -43,7 +43,7 @@ deployments support Google Cloud’s Agent Platform, and Desktop supports
 gateway providers
 ; for Amazon Bedrock or Microsoft Foundry, use the CLI or VS Code, or
 Claude Desktop on 3P
-, which runs the Code tab on those providers. Desktop and the IDE extensions trade some CLI-only features for visual review and tighter editor integration. The web runs in Anthropic’s cloud, so tasks keep going after you disconnect. Mobile is a thin client into those same cloud sessions or into a local session via Remote Control, and can send tasks to Desktop with Dispatch.
+, which runs the Code tab on those providers. Desktop and the IDE extensions trade some CLI-only features for visual review and tighter editor integration. The web runs in the cloud, so tasks keep going after you disconnect. Mobile is a thin client into those same cloud sessions or into a local session via Remote Control, and can send tasks to Desktop with Dispatch.
 You can mix surfaces on the same project. Configuration, project memory, and MCP servers are shared across the local surfaces.
 ​
 Connect your tools
@@ -115,6 +115,14 @@ with
 Claude Code on the web
 enabled
 PRs and reviews from team chat
+Self-hosted environments
+Start a
+cloud session
+and pick your organization’s environment
+Your organization’s infrastructure
+Deploy runners
+, on Team and Enterprise plans
+Cloud sessions that must run inside your network
 Scheduled tasks
 Set a schedule
 CLI

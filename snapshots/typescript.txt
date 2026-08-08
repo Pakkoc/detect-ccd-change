@@ -4650,7 +4650,9 @@ is the source MCP server name.
 peer
 Message from another agent: an in-process
 teammate
-or a cross-session peer such as another local Claude Code process. See
+or a
+cross-session peer
+, another of your Claude Code sessions. See
 Peer origin fields
 for the per-field semantics and the trust model.
 task-notification
@@ -4673,9 +4675,21 @@ sending to
 main
 with
 SendMessage
-, or a cross-session peer such as another local Claude Code process. The two kinds of sender fill the fields differently:
+, or a
+cross-session peer
+, another of your Claude Code sessions. A cross-session peer can run on the same machine, or on
+another of your machines
+or
+Claude Code on the web
+when its message arrives through Remote Control. The two kinds of sender fill the fields differently:
 from
-: the teammate’s name, or the sender address for a cross-session peer. The value is sender-authored;
+: the teammate’s name, or the sender address for a cross-session peer. For a
+one-way cross-machine reply
+, the sender has no reply address and
+from
+is
+"unknown"
+. The value is sender-authored;
 verifiedPeerPid
 is the verified identity.
 senderTaskId
@@ -7539,7 +7553,7 @@ unknown
 };
 Manages
 Routines
-, the scheduled and triggered Claude Code runs hosted on Anthropic-managed cloud infrastructure. This tool backs the
+, the scheduled and triggered Claude Code runs hosted in the cloud. This tool backs the
 /schedule
 command.
 trigger_id

@@ -79,9 +79,14 @@ Commands
 /design-sync
 and
 /radio
-are unavailable on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and Claude Platform on AWS, and
+are unavailable on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and Claude Platform on AWS,
 /voice
-requires a claude.ai account
+requires a claude.ai account, and
+/list-agents
+and its alias
+/peers
+are available only in sessions where
+cross-session messaging is enabled
 ​
 Features that require a Claude subscription
 These require signing in with a claude.ai account and are not reachable with an Anthropic Console API key or from a third-party provider:
@@ -152,6 +157,15 @@ See note
 Advisor
 ✓
 ✓
+✗
+✗
+✗
+✗
+Cross-session messaging
+✓ (macOS and Linux)
+6
+✓ (macOS and Linux)
+6
 ✗
 ✗
 ✗
@@ -248,6 +262,12 @@ Subject to your agreement with the cloud provider.
 Dashboard and API only.
 Contribution metrics
 requires a claude.ai Team or Enterprise organization.
+6
+Requires Claude Code v2.1.224 or later. WSL 2 counts as Linux; native Windows isn’t supported. Same-machine messaging only, unless the session also meets the
+Remote Control requirements
+: cross-machine messages travel over Remote Control, which API key authentication doesn’t support. See
+Message sessions on other machines
+.
 If you authenticate through an
 LLM gateway
 , feature availability matches the underlying provider the gateway forwards to. Some Anthropic-only features such as the
@@ -276,6 +296,8 @@ fast mode
 Advisor
 ,
 Channels
+,
+cross-session messaging
 , the
 analytics dashboard
 ,
@@ -318,6 +340,8 @@ Advisor
 ,
 Channels
 ,
+cross-session messaging
+,
 GitHub Actions
 , the
 analytics dashboard
@@ -352,6 +376,8 @@ fast mode
 Advisor
 ,
 Channels
+,
+cross-session messaging
 , the
 analytics dashboard
 ,
@@ -395,6 +421,8 @@ fast mode
 Advisor
 ,
 Channels
+,
+cross-session messaging
 ,
 GitLab CI/CD
 , the
@@ -451,7 +479,7 @@ Claude Code on the web
 ✓
 ✓
 ✓
-6
+7
 Routines
 ✓
 ✓
@@ -524,12 +552,12 @@ Zero Data Retention
 ✗
 ✗
 ✓
+8
 7
-6
 On Enterprise, requires a premium seat or a Chat + Claude Code seat. See
 Claude Code on the web
 .
-7
+8
 Not included in the standard Enterprise plan. Requires separate enablement by Anthropic for qualified accounts. See
 Zero Data Retention
 .

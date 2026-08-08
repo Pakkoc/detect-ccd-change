@@ -70,7 +70,7 @@ Environment
 Local
 for your machine,
 Cloud
-for Anthropic-hosted cloud sessions, an
+for cloud sessions, an
 SSH connection
 for a remote machine you manage, or on Windows a
 WSL distribution
@@ -164,11 +164,15 @@ your organization set to
 ask
 , MCP tools marked
 requiresUserInteraction
-, safety classifiers when Claude
+, removals targeting
+/
+or your home directory, safety classifiers when Claude
 acts on external sites
 , or desktop actions where Claude always asks first, such as
 archiving a session
-; equivalent to
+; the CLI’s
+cross-session messaging safeguards
+also still apply. Equivalent to
 --dangerously-skip-permissions
 in the CLI. On Pro and Max plans, enable it in your Settings → Claude Code under “Allow bypass permissions mode”; on Team and Enterprise plans there is no Settings toggle, and organization policy controls it instead. Only use this in sandboxed containers or VMs.
 Earlier versions of the Code tab labeled these modes Ask permissions, Auto accept edits, and Plan mode.
@@ -192,7 +196,7 @@ explore first, then plan, then code
 for more on this workflow.
 Cloud sessions support Accept edits, Plan, and Auto. Accept edits corresponds to
 default
-mode: cloud sessions pre-approve file edits, so the selector shows Accept edits instead of Manual. Bypass permissions is not available because cloud sessions already run in a sandboxed VM.
+mode: cloud sessions pre-approve file edits, so the selector shows Accept edits instead of Manual. Bypass permissions is not available in cloud sessions.
 Enterprise admins can restrict which permission modes are available. See
 enterprise configuration
 for details.
@@ -625,9 +629,7 @@ download Git for Windows
 , install it, and restart the app. If you run into Git errors, ask Claude in the
 Cowork tab
 to help troubleshoot your setup.
-Use the controls at the top of the sidebar to filter sessions by status, project, or environment, and to group sessions by project. To rename a session, click the session title in the toolbar at the top of the active session. For a session on a local environment, Claude Code applies the rename to the session’s underlying CLI name too, so the new name appears in the
-claude agents
-listing on that machine; the shared rename requires Claude Code v2.1.221 or later.
+Use the controls at the top of the sidebar to filter sessions by status, project, or environment, and to group sessions by project. To rename a session, click the session title in the toolbar at the top of the active session.
 To check context usage, see
 Check usage
 . When context fills up, Claude automatically summarizes the conversation and continues working. You can also type
@@ -662,15 +664,17 @@ check on them for you
 ​
 Work across sessions
 Claude can list your other Code tab sessions, read what each has been doing, and send messages between them. Ask in plain language: “which session touched the auth refactor?”, “what did the API session conclude?”, or “tell the payments session the schema changed”. You can also ask Claude to rename or archive a session. Claude archives a session the same way the sidebar’s archive icon does, so ask it to clean up sessions whose PRs have merged.
-Claude sees only the sessions the desktop app runs itself: local,
+Through this surface, Claude sees only the sessions the desktop app runs itself: local,
 SSH
 , and
 WSL
-sessions in the Code tab. Claude doesn’t see cloud sessions, and doesn’t see sessions you started from the terminal CLI or the VS Code extension, even in worktrees of the same project, so with nine terminal worktrees open and two desktop sessions, Claude answering in one of them reports the one other desktop session. Claude never lists the session you’re asking from. By default it sees the 20 most recently active sessions and skips archived sessions unless you ask for them.
-When Claude sends a message to another session, Claude Code shows it there as a card labeled with the sending session’s title and a link back, so you can always tell where a message came from. If the receiving session is mid-task, Claude Code holds the message and Claude reads it once the current work finishes. Claude can’t deliver to an archived session, and tells you when a message doesn’t go through.
+sessions in the Code tab. Claude doesn’t see cloud sessions, or sessions you started from the terminal CLI or the VS Code extension, even in worktrees of the same project, so with nine terminal worktrees open and two desktop sessions, Claude answering in one of them reports the one other desktop session. Claude never lists the session you’re asking from. By default it sees the 20 most recently active sessions and skips archived sessions unless you ask for them. In sessions where
+cross-session messaging
+is enabled, Claude can separately list and message your other Claude Code sessions on the machine, including terminal sessions.
+When Claude messages another session through this surface, Claude Code shows it there as a card labeled with the sending session’s title and a link back, so you can always tell where a message came from. If the receiving session is mid-task, Claude Code holds the message and Claude reads it once the current work finishes. Claude can’t deliver to an archived session, and tells you when a message doesn’t go through.
 Claude Code applies three safety behaviors across sessions:
 Before archiving any session, Claude asks you first. You see the approval card in every permission mode, including Auto and Bypass permissions.
-Claude can’t send cross-session messages from a session nobody is watching, such as a scheduled-task run, and can’t deliver messages into one.
+Through this surface, Claude can’t send cross-session messages from a session nobody is watching, such as a scheduled-task run, and can’t deliver messages into one.
 Claude Code quotes each incoming message and attributes it to the session that sent it, and Claude still follows the receiving session’s own permission settings when acting on one.
 Claude can also suggest new sessions. When it notices something worth fixing that’s out of scope for the current task, it offers the work as a task chip in the chat. Click the chip to start that work in a new session with its own worktree; Claude continues your current session uninterrupted.
 ​
@@ -679,7 +683,7 @@ For large refactors, test suites, migrations, or other long-running tasks, selec
 Cloud
 instead of
 Local
-when starting a session. Cloud sessions run on Anthropic’s cloud infrastructure and continue even if you close the app or shut down your computer. Check back anytime to see progress or steer Claude in a different direction. You can also monitor cloud sessions from
+when starting a session. Cloud sessions run on Anthropic-managed infrastructure by default and continue even if you close the app or shut down your computer. Check back anytime to see progress or steer Claude in a different direction. You can also monitor cloud sessions from
 claude.ai/code
 or the
 Claude mobile app
@@ -1220,7 +1224,7 @@ determines where Claude executes and how you connect:
 Local
 : runs on your machine with direct access to your files
 Cloud
-: runs on Anthropic’s cloud infrastructure. Sessions continue even if you close the app.
+: runs on Anthropic-managed infrastructure by default. Sessions continue even if you close the app.
 SSH
 : runs on a remote machine you connect to over SSH, such as your own servers, cloud VMs, or dev containers
 WSL
@@ -1487,9 +1491,13 @@ Local sessions on this machine
 settings precedence
 as the terminal CLI.
 Cloud sessions
-: run on Anthropic-managed VMs and receive
+: receive
 server-managed settings
-only.
+; device-deployed files don’t reach them, because they run on Anthropic-managed VMs. Sessions routed to a
+self-hosted environment
+fall back to the managed settings file in the runner image when server-managed settings deliver no keys, per
+settings precedence
+.
 SSH sessions
 : the session reads the managed settings file from the remote host. Desktop itself reads
 sshConfigs
@@ -1576,7 +1584,9 @@ Claude Enterprise Administrator Guide
 .
 ​
 Data handling
-Claude Code processes your code locally in local sessions or on Anthropic’s cloud infrastructure in cloud sessions. Conversations and code context are sent to Anthropic’s API for processing. See
+Claude Code processes your code locally in local sessions, or in cloud sessions on Anthropic-managed infrastructure, unless your organization routes them to a
+self-hosted environment
+. Conversations and code context are sent to Anthropic’s API for processing. See
 data handling
 for details on data retention, privacy, and compliance.
 ​

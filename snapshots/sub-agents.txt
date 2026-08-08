@@ -4,7 +4,9 @@ context window visualization
 walks through a session where a subagent handles research in its own separate window.
 Subagents work within a single session. To run many independent sessions in parallel and monitor them from one place, see
 background agents
-. For sessions that communicate with each other, see
+. For separate sessions that pass messages to each other, see
+cross-session messaging
+. For a coordinated team of sessions Claude spawns and supervises, see
 agent teams
 .
 Subagents help you:
@@ -19,7 +21,6 @@ with focused system prompts for specific domains
 Control costs
 by routing tasks to faster, cheaper models like Haiku
 Claude uses each subagent’s description to decide when to delegate tasks. When you create a subagent, write a clear description so Claude knows when to use it.
-Claude Code includes several built-in subagents such as Explore, Plan, and general-purpose. You can also create custom subagents to handle specific tasks.
 ​
 Built-in subagents
 Claude Code includes built-in subagents that Claude automatically uses when appropriate. Each inherits the parent conversation’s permissions; most run with a restricted tool set.
@@ -798,6 +799,8 @@ tools
 list
 resolving to nothing
 .
+ListAgents
+follows these filters like any built-in tool: a foreground subagent inherits it in sessions where cross-session messaging is enabled, and a background subagent doesn’t keep it.
 Teammates in
 agent teams
 additionally keep the task tools and cron tools:
@@ -1068,17 +1071,21 @@ with caution. It skips permission prompts, allowing the subagent to execute oper
 , and
 .mvn
 .
+Even in this mode, some operations still prompt:
 Explicit
 ask
 rules
-, connector tools
+Connector tools
 your organization set to
 ask
-, MCP tools marked
+MCP tools marked
 requiresUserInteraction
-, and root and home directory removals such as
+Root and home directory removals such as
 rm -rf /
-still prompt. See
+The
+isolatePeerMachines
+approval for messages beyond this machine
+See
 permission modes
 for details.
 If the parent uses
@@ -1774,38 +1781,10 @@ v2.1.172 through v2.1.216
 v2.1.217 through v2.1.218
 : the limit defaulted to one, so a subagent couldn’t spawn its own unless you raised it; v2.1.219 raised the default to three.
 ​
-Session subagent limit
-Three separate limits control subagent use, each with its own variable: this one caps the total spawned over a session, the
-concurrent subagent limit
-stops Claude from spawning more while too many are running, and the
-depth limit
-caps how deeply subagents nest.
-By default, Claude can spawn at most 200 subagents per session. To raise the limit, set
-CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION
-to any positive whole number; there is no upper bound, but the limit can’t be turned off. Requires Claude Code v2.1.212 or later.
-Every subagent Claude spawns with the Agent tool counts toward the limit: nested subagents,
-forks
-, and background subagents, including subagents that a
-workflow
-’s agents spawn with the Agent tool. An in-session fork you start yourself with
-/subtask
-counts too: it spends the same budget, though the limit blocks only subagents Claude spawns with the Agent tool, so your own
-/subtask
-still starts after Claude reaches the limit. A session you create with
-/fork
-doesn’t count; it runs as a separate background session with its own budget. Before v2.1.212, the in-session fork was named
-/fork
-. Agents a workflow script spawns with
-agent()
-don’t count; workflows have their own per-run limit. A finished subagent still counts.
-When Claude reaches the limit, the Agent tool fails with
-Subagent spawn limit reached
-, and the error tells Claude to complete the remaining work directly with its own tools.
-Run
-/clear
-to reset the count and start a new conversation with the full budget. If work that can still spawn subagents survives the clear, such as a running workflow, the count carries over instead.
-​
 Concurrent subagent limit
+Two limits control subagent use, each with its own variable: this one stops Claude from spawning more subagents while too many are running, and the
+depth limit
+caps how deeply subagents nest. There’s no limit on the total number of subagents Claude can spawn over a session.
 By default, when 20 subagents are running in a session, spawning another with the Agent tool fails with
 Concurrent subagent limit reached
 , and the error tells Claude not to retry. Spawning succeeds again when the running count drops below the limit. To change the limit, set
@@ -1823,9 +1802,7 @@ Agents that other features run, such as
 workflow
 agents and
 agent team
-teammates, follow their own limits instead. The
-session subagent limit
-separately caps the total Claude spawns over the whole session.
+teammates, follow their own limits instead.
 ​
 Manage subagent context
 ​
@@ -1912,7 +1889,11 @@ to be enabled; only structured team-protocol messages such as
 shutdown_request
 and
 plan_approval_response
-do.
+do. Beyond subagents and teammates, in sessions where cross-session messaging is enabled, the same tool can message
+your other Claude Code sessions
+on this machine, or reply to your sessions
+beyond it
+.
 To resume a subagent, ask Claude to continue the previous work:
 Use the code-reviewer subagent to review the authentication module
 [Agent completes]

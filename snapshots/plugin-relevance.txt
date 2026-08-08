@@ -204,9 +204,7 @@ hosts
 filesRead
 , and
 manifestDeps
-signals need session history, so they can only match on the spinner tip and the Discover tab. Only
-cwd
-can match at session start. The
+signals need session history, so they can only match on the spinner tip and the Discover tab. The
 filesRead
 and
 manifestDeps
@@ -270,11 +268,7 @@ Claude Code ignores unknown fields under
 relevance
 and
 relevance.signals
-at load time, so older clients continue to load your marketplace. Run
-claude plugin validate
-against your marketplace directory, for example
-claude plugin validate ./my-marketplace
-, to surface them as warnings.
+at load time, so older clients continue to load your marketplace.
 ​
 Enable suggestions in managed settings
 Declaring
@@ -323,13 +317,6 @@ The official marketplace is exempt from the source-declaration requirement becau
 "claude-plugins-official"
 ]
 }
-See the
-settings reference
-for
-pluginSuggestionMarketplaces
-and
-extraKnownMarketplaces
-for full configuration details.
 ​
 What the user sees
 When a signal matches during a session, the spinner tip reads:
@@ -346,7 +333,7 @@ Discover tab, the plugin is pinned above the other results with an annotation th
 suggested for this directory
 or
 suggested for terraform commands
-. The Discover tab pins a given plugin once; later visits list it in normal order. The Discover-tab pin requires Claude Code v2.1.154 or later. On v2.1.152 only the spinner tip appears; the session-start notification is added in v2.1.153.
+. The Discover tab pins a given plugin once; later visits list it in normal order.
 ​
 Validate your marketplace
 Run

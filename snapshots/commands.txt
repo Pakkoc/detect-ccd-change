@@ -296,13 +296,15 @@ to post them as inline GitHub PR comments, or
 ultra
 to run a deep
 cloud review
-. With no level given, the review reuses the level you typed last, falling back to the session’s
-effort level
-if you’ve never typed one; before v2.1.223, it always used the session’s effort level. A local review runs as a
+. With no level given, the review reuses the last
+low
+through
+max
+level you typed. A local review runs as a
 subagent
 , in the background in interactive sessions, so it doesn’t fill your conversation; before v2.1.218, it ran inside your conversation. See
 Review a diff locally
-for effort levels, targeting, and how it relates to
+for the exact effort rules, targeting, and how it relates to
 /simplify
 . Alias:
 /review
@@ -520,7 +522,7 @@ offers its own Focus view as a command-menu toggle, stored as an extension setti
 viewMode
 /fork [prompt]
 Copy the current conversation
-into a new background session and keep working here; the two sessions are independent from that point on. Pass a prompt and the copy starts working on it immediately; without one it waits in agent view for its first prompt. Except when the copy
+into a new background session and keep working here. Pass a prompt and the copy starts working on it immediately; without one it waits in agent view for its first prompt. Except when the copy
 edits in place
 , Claude Code instructs it to create a worktree of its own before making code changes; the isolation instruction requires Claude Code v2.1.221 or later. To hand a side task to a subagent whose result comes back into this conversation, use
 /subtask
@@ -566,12 +568,29 @@ hook
 configurations for tool events
 /ide
 Manage IDE integrations and show status
+/import [codex|gemini] [--dry-run] [--yes]
+Bring configuration from other coding agents on your machine, currently OpenAI Codex and Google Gemini CLI, into Claude Code, including instruction files, MCP servers, commands, subagents, and skills. In
+non-interactive mode
+with
+-p
+,
+/import
+lists what it found and gives you the command that confirms the import. Add
+--dry-run
+to preview without writing anything, or
+--yes
+to skip the interactive picker. Requires Claude Code v2.1.213 or later
 /init
 Initialize project with a
 CLAUDE.md
 guide. Set
 CLAUDE_CODE_NEW_INIT=1
-for an interactive flow that also walks through skills, hooks, and personal memory files
+for an interactive flow that also walks through skills, hooks, and personal memory files. If
+/init
+finds configuration from a coding agent that
+/import
+supports, it offers to carry it over with
+/import
 /insights
 Generate a report analyzing your Claude Code sessions, including project areas, interaction patterns, and friction points
 /install-github-app
@@ -584,6 +603,17 @@ Install the Claude Slack app. Opens a browser to complete the OAuth flow
 Open your
 keyboard shortcuts
 file
+/list-agents
+List the subagents and other Claude Code sessions Claude can message, with the name to use for each;
+agent team
+teammates aren’t listed, since Claude reaches them through the team’s roster. See
+cross-session messaging
+. Also available as
+/peers
+. Requires Claude Code v2.1.224 or later; earlier versions report
+Unknown command: /list-agents
+. Available only in sessions where
+cross-session messaging is enabled
 /login
 Sign in to your Anthropic account
 /logout
@@ -712,7 +742,13 @@ Alias of
 /code-review
 : reviews the current diff, or a PR number, branch, or path you pass, such as
 /review 1234
-, and takes the same effort levels and flags. For a deep cloud review, use
+, and takes the same effort levels and flags. With no level given, the review reuses the last
+low
+through
+max
+level you typed; see
+Review a diff locally
+for the exact rules. For a deep cloud review, use
 /code-review ultra
 . Before v2.1.223,
 /review
@@ -748,7 +784,7 @@ sandbox mode
 /schedule [description]
 Create, update, list, or run
 routines
-, which execute on Anthropic-managed cloud infrastructure. Claude walks you through the setup conversationally. Alias:
+, which execute in the cloud. Claude walks you through the setup conversationally. Alias:
 /routines
 /scroll-speed
 Adjust mouse wheel

@@ -22,24 +22,6 @@ Plugins
 manifest)
 /plugin-name:hello
 Sharing with teammates, distributing to community, versioned releases, reusable across projects
-Use standalone configuration when
-:
-You’re customizing Claude Code for a single project
-The configuration is personal and doesn’t need to be shared
-You’re experimenting with skills or hooks before packaging them
-You want short skill names like
-/hello
-or
-/deploy
-Use plugins when
-:
-You want to share functionality with your team or community
-You need the same skills/agents across multiple projects
-You want version control and easy updates for your extensions
-You’re distributing through a marketplace
-You’re okay with namespaced skills like
-/my-plugin:hello
-(namespacing prevents conflicts between plugins)
 Start with standalone configuration in
 .claude/
 for quick iteration, then
@@ -54,11 +36,6 @@ flag.
 Prerequisites
 Claude Code
 installed and authenticated
-If you don’t see the
-/plugin
-command, update Claude Code to the latest version. See
-Troubleshooting
-for upgrade instructions.
 ​
 Create your first plugin
 1
@@ -116,7 +93,7 @@ Unique identifier and skill namespace. Skills are prefixed with this (e.g.,
 description
 Shown in the plugin manager when browsing or installing plugins.
 version
-Optional. If set, users only receive updates when you bump this field. If omitted and your plugin is distributed via git, the commit SHA is used and every commit counts as a new version. See
+Optional. If set, users only receive updates when you bump this field. If omitted, the version comes from the next source in
 version management
 .
 author
@@ -212,19 +189,6 @@ Alex
 Claude will greet you by name. For more on passing arguments to skills, see
 Skills
 .
-You’ve successfully created and tested a plugin with these key components:
-Plugin manifest
-(
-.claude-plugin/plugin.json
-): describes your plugin’s metadata
-Skills directory
-(
-skills/
-): contains your custom skills
-Skill arguments
-(
-$ARGUMENTS
-): captures user input for dynamic behavior
 The
 --plugin-dir
 flag is useful for development and testing. When you’re ready to share your plugin with others, see
@@ -565,8 +529,9 @@ with installation and usage instructions
 Choose a versioning strategy
 : Decide whether to set an explicit
 version
-or rely on the git commit SHA. See
+or rely on the fallback described in
 version management
+.
 Create or use a marketplace
 : Distribute through
 plugin marketplaces
@@ -624,9 +589,6 @@ claude-plugins-official
 , is curated separately. Anthropic decides which plugins to include at its discretion. There is no application process, and the submission form does not add plugins to the official marketplace.
 If Anthropic lists your plugin in the official marketplace, your CLI can prompt Claude Code users to install it. See
 Recommend your plugin from your CLI
-.
-For complete technical specifications, debugging techniques, and distribution strategies, see
-Plugins reference
 .
 ​
 Convert existing configurations to plugins

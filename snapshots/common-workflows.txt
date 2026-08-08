@@ -237,7 +237,7 @@ Option
 Where it runs
 Best for
 Routines
-Anthropic-managed infrastructure
+Cloud, Anthropic-managed by default
 Tasks that should run even when your computer is off. Can also trigger on API calls or GitHub events in addition to a schedule. Configure at
 claude.ai/code/routines
 .

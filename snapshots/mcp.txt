@@ -129,6 +129,16 @@ MCP server "<name>" has a "url" but no "type"; add "type": "http" (or "sse" / "w
 . Before v2.1.202, Claude Code reported this misconfiguration as
 command: expected string, received undefined
 .
+In
+--output-format stream-json
+runs, Claude Code also reports a skipped
+--mcp-config
+entry in the
+system/init
+event’s
+mcp_server_errors
+field
+, so scripts can detect that the server never loaded. This requires Claude Code v2.1.219 or later.
 ​
 Option 2: Add a remote SSE server
 The SSE (Server-Sent Events) transport is deprecated. Use HTTP servers instead, where available.
@@ -336,6 +346,8 @@ remove
 notion
 # (within Claude Code) Check server status
 /mcp
+​
+Server status
 claude mcp add
 confirms a successful add by printing an
 Added ...
@@ -370,6 +382,8 @@ claude mcp get <name>
 or the
 /mcp
 panel to check them.
+​
+Project server approvals and workspace trust
 As of v2.1.196,
 claude mcp list
 and
@@ -405,9 +419,8 @@ approved servers in a folder you’d never trusted.
 A
 disabledMcpjsonServers
 entry in any settings file still rejects the server.
-The
-/mcp
-panel shows the tool count next to each connected server and flags servers that advertise the tools capability but expose no tools.
+​
+Server status detail
 In
 /mcp
 , a server’s menu, and the
@@ -421,6 +434,21 @@ MCP_DISCOVERY_CACHE=0
 . The discovery cache and its
 cached
 status require Claude Code v2.1.221 or later.
+When a server’s status is
+✘ Failed to connect
+,
+claude mcp list
+appends the failure detail to that status line, and
+claude mcp get <name>
+shows it on an
+Issue:
+line: the HTTP status or error code, plus any error text the server returned. The server’s detail view in
+/mcp
+includes the same server-reported text in its
+Issue:
+row. Claude Code redacts credential-like text from this detail and never includes the expanded server URL, which can carry secrets. Claude Code appends no detail to a
+✘ Connection error
+status, because the exception text it would print there can embed that URL. Before v2.1.219, both commands showed only the bare failure status, without the status code or the server’s error text.
 A remote server whose configuration has an empty
 url
 shows as
@@ -440,23 +468,25 @@ url
 to connect it. Before v2.1.208, Claude Code reported an empty
 url
 as a configuration issue with a prompt to reconnect.
-If your request needs tools from a server that is still connecting in the background, Claude waits for that server before continuing. With
-tool search
-enabled, which is the default, the wait happens inside the
-ToolSearch
-call. In configurations without tool search, such as a custom
-ANTHROPIC_BASE_URL
+​
+Configuration warnings
+Claude Code also warns when an MCP config value carries hidden leading or trailing whitespace, which often comes from pasting a token with a trailing newline. Claude Code checks
+command
 ,
-ENABLE_TOOL_SEARCH=false
-, or a model earlier than the Claude 4.5 generation on Google Cloud’s Agent Platform, Claude uses the
-WaitForMcpServers
-tool instead. A Microsoft Foundry
-deployment hosted on Azure
-starts on the tool-search path rather than with
-WaitForMcpServers
-, since Claude Code discovers the deployment’s server-side rejection only from the API; after Claude Code switches that deployment to
-upfront loading
-, tools from a server that finishes connecting become available on Claude’s next request.
+url
+, each
+args
+entry, and the values and key names under
+env
+and
+headers
+. Claude Code shows the warning in
+claude mcp list
+output and in
+/mcp
+, naming the affected fields without echoing their values, for example
+Leading or trailing whitespace in: headers.Authorization
+. Claude Code doesn’t trim the whitespace and uses the values exactly as written, so edit the configuration to remove it.
 Some server names are reserved for Claude Code’s built-in servers:
 workspace
 ,
@@ -478,6 +508,34 @@ Claude Code desktop app’s preview pane
 uses. Before v2.1.205,
 Claude Browser
 wasn’t reserved, so a user-configured server could register under that name.
+​
+Tool availability
+The
+/mcp
+panel shows the tool count next to each connected server and flags servers that advertise the tools capability but expose no tools.
+If your request needs tools from a server that is still connecting in the background, Claude waits for that server before continuing. How the wait happens depends on your configuration:
+With
+tool search
+, the default
+: the wait happens inside the
+ToolSearch
+call.
+Without tool search
+: Claude uses the
+WaitForMcpServers
+tool instead. Configurations without tool search include a custom
+ANTHROPIC_BASE_URL
+,
+ENABLE_TOOL_SEARCH=false
+, and a model earlier than the Claude 4.5 generation on Google Cloud’s Agent Platform.
+On a Microsoft Foundry
+deployment hosted on Azure
+: Claude starts on the tool-search path rather than with
+WaitForMcpServers
+, since Claude Code discovers the deployment’s server-side rejection only from the API. After Claude Code switches that deployment to
+upfront loading
+, tools from a server that finishes connecting become available on Claude’s next request.
+With tool search enabled, when a server finishes connecting while Claude is working, Claude Code lists the server’s tool names to Claude on its next request in the same turn. Claude can then search for and call those tools without waiting for your next message.
 ​
 Disable a server without removing it
 Toggle a server off in the
@@ -565,15 +623,13 @@ or
 --scope
 flag to specify where the configuration is stored:
 local
-(default): available only to you in the current project. Older versions called this scope
-project
+(default): available only to you in the current project
 project
 : shared with everyone in the project via the
 .mcp.json
 file
 user
-: available to you across all projects. Older versions called this scope
-global
+: available to you across all projects
 Set environment variables with
 -e
 or
@@ -804,11 +860,9 @@ User environment access
 : access to the same environment variables as manually configured servers
 Multiple transport types
 : support for stdio, SSE, HTTP, and WebSocket transports, though transport support may vary by server
-Viewing plugin MCP servers
-:
-# Within Claude Code, see all MCP servers including plugin ones
+Plugin servers appear in
 /mcp
-Plugin servers appear in the list with indicators showing they come from plugins.
+with indicators showing they come from plugins.
 Plugin MCP tool names
 :
 Tools from a plugin-bundled MCP server include both the plugin name and the server key in their callable name. The full form is
@@ -856,14 +910,6 @@ hook’s
 server
 field
 .
-Benefits of plugin MCP servers
-:
-Bundled distribution
-: tools and servers packaged together
-Automatic setup
-: no manual MCP configuration needed
-Team consistency
-: everyone gets the same tools when the plugin is installed
 See the
 plugin components reference
 for details on bundling MCP servers with plugins.
@@ -980,11 +1026,23 @@ file follows a standardized format:
 }
 }
 }
-For security reasons, Claude Code prompts for approval before using project-scoped servers from
+For security reasons, Claude Code prompts for approval in interactive sessions before using project-scoped servers from
 .mcp.json
-files. If you need to reset these approval choices, use the
+files. To reset those approval choices, run
 claude mcp reset-project-choices
-command.
+.
+claude -p
+runs,
+Agent SDK
+sessions, and
+cloud sessions
+can’t show that prompt: Claude Code loads project-scoped servers there without asking. To keep a server out anyway, add it to
+disabledMcpjsonServers
+, which blocks it in every mode, or exclude project settings entirely with
+--setting-sources
+or the SDK’s
+settingSources
+option.
 ​
 User scope
 User-scoped servers are stored in
@@ -1134,7 +1192,7 @@ and check that the server shows
 connected
 . A server with bad credentials shows
 failed
-.
+, and the failure detail includes the HTTP status the server returned, such as a 401.
 Then work with GitHub:
 Review PR #456 and suggest improvements
 Create a new issue for the bug we just found
@@ -1178,13 +1236,15 @@ Claude Code marks a remote server as needing authentication when the server resp
 401 Unauthorized
 or
 403 Forbidden
-. For a server you haven’t signed in to, either status code flags it in
+. What Claude Code shows depends on the server:
+For a server you haven’t signed in to, either status code flags it in
 /mcp
-so you can complete the OAuth flow. For a
+so you can complete the OAuth flow.
+For a
 claude.ai connector
 , a
 401
-caused by claude.ai rejecting your session token doesn’t flag the connector this way, because re-authorizing the connector can’t fix your login; Claude Code shows the
+caused by claude.ai rejecting your session token doesn’t flag the connector, because re-authorizing the connector can’t fix your login. Claude Code shows the
 session-token-rejected state
 instead.
 When a request to an OAuth server you already signed in to returns
@@ -1771,7 +1831,6 @@ mode, which never prompts, Claude Code denies the call instead.
 Tool set to
 blocked
 : Claude Code filters the tool out before Claude sees it, so it never appears in the tool list.
-Enforcing these controls requires Claude Code v2.1.129 or later. Earlier versions ignore the settings and apply the standard permission flow.
 ​
 Disable claude.ai connectors
 To disable claude.ai MCP servers in Claude Code, set
@@ -1894,7 +1953,6 @@ Without the correct executable path, you’ll encounter errors like
 spawn claude ENOENT
 .
 Tips:
-The server provides access to Claude’s tools like View, Edit, LS, etc.
 In Claude Desktop, try asking Claude to read files in a directory, make edits, and more.
 This MCP server only exposes Claude Code’s tools to your MCP client, so your own client is responsible for implementing user confirmation for individual tool calls.
 ​
@@ -1921,10 +1979,6 @@ MAX_MCP_OUTPUT_TOKENS
 =
 50000
 claude
-This is particularly useful when working with MCP servers that:
-Query large datasets or databases
-Generate detailed reports or documentation
-Process extensive log files or debugging information
 ​
 Raise the limit for a specific tool
 If you’re building an MCP server, you can allow individual tools to return results larger than the default persist-to-disk threshold by setting

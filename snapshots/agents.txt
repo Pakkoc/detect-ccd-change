@@ -26,9 +26,13 @@ A job outgrows a handful of subagents, or you want findings verified against eac
 In every approach the workers are Claude sessions. To involve a different tool, expose it to Claude as an
 MCP server
 .
-Two more tools support this work without being a way to run agents themselves:
+Three more tools support this work without being a way to run agents themselves:
 Worktrees
 give each session a separate git checkout, so parallel sessions never edit the same files. Use them for sessions you run yourself. Agent view moves each dispatched session into its own worktree automatically, and subagents you spawn can each get one too.
+Cross-session messaging
+lets Claude list your other Claude Code sessions and message them on this machine, or reply to your sessions on other machines or on
+Claude Code on the web
+, so sessions you run yourself can pass findings and status between themselves.
 /batch
 is a
 skill
@@ -54,7 +58,7 @@ instead and
 isn’t available.
 A
 routine
-runs a session on a schedule in Anthropic’s cloud, not in parallel on your machine.
+runs a session on a schedule in the cloud, not in parallel on your machine.
 Running several sessions or subagents at once multiplies token usage. See
 Costs
 for usage and rate-limit details.
@@ -74,7 +78,9 @@ dynamic workflows
 . See
 how workflows compare to subagents and skills
 Do the workers need to talk to each other?
-Subagents report results back to the conversation that spawned them, and agent view sessions report only to you. Teammates in an agent team share a task list and message each other directly.
+Subagents report results back to the conversation that spawned them, and agent view sessions report only to you, though separate sessions can pass messages with
+cross-session messaging
+. Teammates in an agent team share a task list and message each other directly.
 Do the tasks touch the same files?
 Isolate the work with
 worktrees

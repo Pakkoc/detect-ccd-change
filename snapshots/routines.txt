@@ -1,7 +1,9 @@
 Routines are in research preview. Behavior, limits, and the API surface may change.
 A routine is a saved Claude Code configuration: a prompt, one or more repositories, and a set of
 connectors
-, packaged once and run automatically. Routines execute on Anthropic-managed cloud infrastructure, so they keep working when your laptop is closed.
+, packaged once and run automatically. Routines execute on Anthropic-managed cloud infrastructure, or on your organization’s
+self-hosted environment
+when routed there, so they keep working when your laptop is closed.
 Each routine can have one or more triggers attached to it:
 Scheduled
 : run on a recurring cadence like hourly, nightly, or weekly, or once at a specific future time
@@ -42,7 +44,6 @@ Library port.
 A GitHub trigger runs on
 pull_request.closed
 filtered to merged PRs in one SDK repository. The routine ports the change to a parallel SDK in another language and opens a matching PR, keeping the two libraries in step without a human re-implementing each change.
-The sections below walk through creating a routine and configuring each of these trigger types.
 ​
 Create a routine
 Create a routine from the web at
@@ -198,7 +199,7 @@ Create a one-off run from the CLI by describing the time in natural language. Cl
 /schedule tomorrow at 9am, summarize yesterday's merged PRs
 /schedule in 2 weeks, open a cleanup PR that removes the feature flag
 The same local-to-UTC conversion as recurring schedules applies to one-off timestamps.
-One-off runs do not count against the daily routine run cap. They consume your plan’s regular subscription usage like any other session. See
+One-off runs do not count against the daily routine run cap. See
 Usage and limits
 for details.
 ​
@@ -313,7 +314,7 @@ The
 endpoint is available to claude.ai users only and is not part of the Claude Platform API surface.
 ​
 Add a GitHub trigger
-A GitHub trigger starts a new session automatically when a matching event occurs on a connected repository. Each matching event starts its own session.
+A GitHub trigger starts a new session automatically when a matching event occurs on a connected repository. Claude Code doesn’t reuse sessions across events, so two PR updates produce two independent sessions.
 During the research preview, GitHub webhook events are subject to per-routine and per-account hourly caps. Events beyond the limit are dropped until the window resets. See your current limits at
 claude.ai/code/routines
 .
@@ -339,7 +340,7 @@ Install the Claude GitHub App
 The Claude GitHub App must be installed on the repository you want to subscribe to. The trigger setup prompts you to install it if it isn’t already.
 Running
 /web-setup
-in the CLI grants repository access for cloning, but it does not install the Claude GitHub App and does not enable webhook delivery. GitHub triggers require installing the Claude GitHub App, which the trigger setup prompts you to do.
+in the CLI grants repository access for cloning, but it does not install the Claude GitHub App and does not enable webhook delivery.
 4
 Configure the trigger
 Select the repository, choose an event from the
@@ -406,9 +407,6 @@ Label-gated backport
 : labels include
 needs-backport
 . Triggers a port-to-another-branch routine only when a maintainer tags the PR.
-​
-How sessions map to events
-Each matching GitHub event starts a new session. Session reuse across events is not available for GitHub-triggered routines, so two PR updates produce two independent sessions.
 ​
 Manage routines
 Click a routine in the list to open its detail page. The detail page shows the routine’s repositories, connectors, prompt, schedule, API tokens, GitHub triggers, and a list of past runs.
@@ -540,7 +538,7 @@ claude.ai/settings/usage
 . On Team and Enterprise plans, an admin turns them on for the organization at
 claude.ai/admin-settings/usage
 .
-One-off runs do not count against the daily routine cap. They draw down your regular subscription usage like any other session, but they are exempt from the per-account daily routine run allowance.
+One-off runs do not count against the daily routine cap. They draw down your regular subscription usage like any other session.
 ​
 Troubleshooting
 ​

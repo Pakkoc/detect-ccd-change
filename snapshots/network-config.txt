@@ -455,9 +455,13 @@ in the proxy is the fix. A network block fails the check only where the host is 
 use fast mode behind proxies and LLM gateways
 for the variables that restore it.
 Claude Code on the web
-and
+in Anthropic-hosted environments and
 Code Review
-connect to your repositories from Anthropic-managed infrastructure. If your GitHub Enterprise Cloud organization restricts access by IP address, enable
+connect to your repositories from Anthropic-managed infrastructure; sessions in a
+self-hosted environment
+connect from inside your network, unless the runner opts into the
+Anthropic git proxy
+, which fetches from Anthropic’s side. If your GitHub Enterprise Cloud organization restricts access by IP address, enable
 IP allow list inheritance for installed GitHub Apps
 . The Claude GitHub App registers its IP ranges, so enabling this setting allows access without manual configuration. To
 add the ranges to your allow list manually
@@ -468,7 +472,13 @@ For self-hosted
 GitHub Enterprise Server
 instances behind a firewall, allowlist the same
 Anthropic API IP addresses
-so Anthropic infrastructure can reach your GHES host to clone repositories and post review comments.
+so Anthropic infrastructure can reach your GHES host to clone repositories and post review comments. Sessions in a
+self-hosted environment
+reach your GHES host from inside your network instead, so that exposure applies only to Anthropic-hosted sessions, to hosted pre-session flows such as the repository picker, and to self-hosted runners that opt into the
+Anthropic git proxy
+, which fetches from Anthropic’s side. For a GHES host that’s only routable inside your network, the
+SCM connector
+carries the hosted pre-session flows over an outbound connection instead, so the allowlist isn’t needed for them.
 ​
 Desktop and claude.ai
 The preceding table covers the standalone CLI. The Claude Desktop app and claude.ai in a browser load their application code and user content from additional Anthropic CDN hosts, including
