@@ -1437,6 +1437,22 @@ environment variable takes precedence when both are set. See
 Run Claude Code behind a corporate launcher
 for the launcher contract. Requires Claude Code v2.1.210 or later
 "/opt/corp/launcher --profile claude"
+promptSuggestionEnabled
+Default
+:
+true
+. Show
+prompt suggestions
+, the grayed-out predictions that appear in your prompt input. Set to
+false
+or turn off
+Prompt suggestions
+in
+/config
+to disable.
+CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
+takes precedence when both are set
+false
 prUrlTemplate
 URL template for the PR badge shown in the footer and in tool-result summaries. Substitutes
 {host}

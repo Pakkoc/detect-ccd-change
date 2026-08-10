@@ -885,13 +885,38 @@ with
 to emit a
 prompt_suggestion
 message after each turn instead.
-To disable prompt suggestions entirely, set the environment variable or toggle the setting in
+To disable prompt suggestions entirely, use any of the following:
+Turn off
+Prompt suggestions
+in
 /config
-:
+Set
+promptSuggestionEnabled
+to
+false
+in your settings file
+Set the
+CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
+environment variable to
+false
+, which takes precedence over the setting:
 export
 CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
 =
 false
+To turn prompt suggestions off across an organization, set
+promptSuggestionEnabled
+to
+false
+in
+managed settings
+. Also set
+CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
+to
+false
+under the managed
+env
+key so that users can’t re-enable them with their own environment variable.
 ​
 Emoji shortcodes
 Type a

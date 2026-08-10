@@ -1243,7 +1243,9 @@ Set to
 false
 to disable prompt suggestions (the “Prompt suggestions” toggle in
 /config
-). These are the grayed-out predictions that appear in your prompt input after Claude responds. See
+). These are the grayed-out predictions that appear in your prompt input. Takes precedence over the
+promptSuggestionEnabled
+setting. See
 Prompt suggestions
 CLAUDE_CODE_ENABLE_TASKS
 Controls whether sessions use the structured Task tools (
