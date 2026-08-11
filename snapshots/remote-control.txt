@@ -377,7 +377,7 @@ cross-session messaging
 Claude Code on the web
 sessions, traveling through Anthropic servers like the rest of Remote Control traffic.
 Message sessions on other machines
-covers the reply-only delivery rules and the
+covers the cross-machine delivery rules and the
 isolatePeerMachines
 approval requirement.
 Control inbound messages
@@ -789,9 +789,8 @@ Claude Code on the web
 : run sessions in the cloud instead of your machine, configured through
 cloud environments
 Cross-session messaging
-: let Claude reply to messages from your sessions on other machines or on
+: let Claude message your sessions on other machines or on
 Claude Code on the web
-over the Remote Control connection
 Channels
 : forward Telegram, Discord, or iMessage into a session so Claude reacts to messages while you’re away
 Dispatch

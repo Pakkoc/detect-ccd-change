@@ -158,7 +158,9 @@ Get notified when Claude needs input
 Get a desktop notification whenever Claude finishes working and needs your input, so you can switch to other tasks without checking the terminal.
 This hook uses the
 Notification
-event, which Claude Code fires when Claude is waiting for input or permission. Each tab below uses the platform’s native notification command. Add this to
+event, which Claude Code fires when Claude is waiting for input or permission. See
+when each notification type fires
+for the exact timing. Each tab below uses the platform’s native notification command. Add this to
 ~/.claude/settings.json
 :
 macOS
@@ -288,13 +290,15 @@ fires on all notification types. To fire only on specific events, set it to one 
 Matcher
 Fires when
 permission_prompt
-Claude needs you to approve a tool use
+Claude needs you to approve a tool use and you haven’t typed for about 6 seconds
 idle_prompt
-Claude is done and waiting for your next prompt
+Claude finished responding about 60 seconds ago and you haven’t typed since
 auth_success
 Authentication completes
 elicitation_dialog
-An MCP server opens an elicitation form
+An MCP server opens an elicitation form and you haven’t typed for about 6 seconds
+elicitation_url_dialog
+An MCP server asks you to open a browser URL and you haven’t typed for about 6 seconds
 elicitation_complete
 An MCP elicitation form is submitted or dismissed
 elicitation_response
@@ -1417,6 +1421,8 @@ idle_prompt
 auth_success
 ,
 elicitation_dialog
+,
+elicitation_url_dialog
 ,
 elicitation_complete
 ,

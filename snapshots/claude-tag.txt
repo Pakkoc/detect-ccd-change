@@ -1,4 +1,5 @@
-Claude Tag is a Slack integration that runs
+Claude Tag
+is a Slack integration that runs
 @Claude
 in your team’s channels as your organization’s shared identity with admin-configured access. Anyone in a channel can tag
 @Claude

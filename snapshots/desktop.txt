@@ -668,9 +668,11 @@ Through this surface, Claude sees only the sessions the desktop app runs itself:
 SSH
 , and
 WSL
-sessions in the Code tab. Claude doesn’t see cloud sessions, or sessions you started from the terminal CLI or the VS Code extension, even in worktrees of the same project, so with nine terminal worktrees open and two desktop sessions, Claude answering in one of them reports the one other desktop session. Claude never lists the session you’re asking from. By default it sees the 20 most recently active sessions and skips archived sessions unless you ask for them. In sessions where
-cross-session messaging
-is enabled, Claude can separately list and message your other Claude Code sessions on the machine, including terminal sessions.
+sessions in the Code tab. Claude doesn’t see cloud sessions, or sessions you started from the terminal CLI or the VS Code extension, even in worktrees of the same project, so with nine terminal worktrees open and two desktop sessions, Claude answering in one of them reports the one other desktop session. Claude never lists the session you’re asking from. By default it sees the 20 most recently active sessions and skips archived sessions unless you ask for them.
+Cross-session messaging
+separately lets Claude message
+your other Claude Code sessions
+, including terminal sessions.
 When Claude messages another session through this surface, Claude Code shows it there as a card labeled with the sending session’s title and a link back, so you can always tell where a message came from. If the receiving session is mid-task, Claude Code holds the message and Claude reads it once the current work finishes. Claude can’t deliver to an archived session, and tells you when a message doesn’t go through.
 Claude Code applies three safety behaviors across sessions:
 Before archiving any session, Claude asks you first. You see the approval card in every permission mode, including Auto and Bypass permissions.

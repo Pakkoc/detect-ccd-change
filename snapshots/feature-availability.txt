@@ -263,9 +263,13 @@ Dashboard and API only.
 Contribution metrics
 requires a claude.ai Team or Enterprise organization.
 6
-Requires Claude Code v2.1.224 or later. WSL 2 counts as Linux; native Windows isn’t supported. Same-machine messaging only, unless the session also meets the
+Requires Claude Code v2.1.224 or later. WSL 2 counts as Linux; native Windows isn’t supported. With API key authentication, same-machine messaging only. Reaching your
+Claude Code on the web
+sessions requires
+cloud access
+, and reaching your sessions on other machines requires meeting the
 Remote Control requirements
-: cross-machine messages travel over Remote Control, which API key authentication doesn’t support. See
+; both need a claude.ai sign-in. See
 Message sessions on other machines
 .
 If you authenticate through an

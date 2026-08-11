@@ -1891,7 +1891,7 @@ and
 plan_approval_response
 do. Beyond subagents and teammates, in sessions where cross-session messaging is enabled, the same tool can message
 your other Claude Code sessions
-on this machine, or reply to your sessions
+, on this machine or
 beyond it
 .
 To resume a subagent, ask Claude to continue the previous work:

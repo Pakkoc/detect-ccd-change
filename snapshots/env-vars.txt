@@ -2030,9 +2030,9 @@ for other tmux settings
 CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS
 Deadline in milliseconds for dialogs Claude Code forwards to a remote client, such as a
 Remote Control
-or SDK host, and for the approval dialog for a
+or SDK host, and for a
 held cross-session message
-, before Claude Code cancels them; permission prompts and
+awaiting approval, before Claude Code cancels the dialog or drops the default-held message; permission prompts and
 AskUserQuestion
 questions use their own flows and aren’t governed by it. Overrides the
 dialogExpiry
@@ -2173,13 +2173,13 @@ Maximum lifetime in milliseconds for a
 background shell command
 that a
 subagent
-started, after which Claude Code terminates the command. Default
+started. Default
 3600000
-(60 minutes). Setting
+(60 minutes). When you set
 0
-doesn’t disable the cap: Claude Code applies the 60-minute default instead. Claude Code doesn’t apply a lifetime cap to background commands in the main session;
-CLAUDE_CODE_DISABLE_BG_SHELL_PRESSURE_REAP
-covers the separate memory-pressure limit that applies to them. Requires Claude Code v2.1.133 or later
+, Claude Code applies the default instead of removing the cap. Claude Code doesn’t cap main-session background commands this way; see
+How backgrounding works
+for the memory-pressure limit that covers them
 DEBUG
 Set to
 1

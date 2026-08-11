@@ -410,6 +410,11 @@ on the blog.
 Auto mode lets Claude execute without routine permission prompts. A separate classifier model reviews actions before they run, blocking anything that escalates beyond your request, targets unrecognized infrastructure, or appears driven by hostile content Claude read. Explicit
 ask rules
 still force a prompt.
+The classifier also reviews each message Claude sends to another agent with
+SendMessage
+, plain or structured, before Claude Code delivers it, both in auto mode and in
+plan mode while the classifier reviews commands
+; the send review requires Claude Code v2.1.222 or later.
 The classifier also decides removals targeting the filesystem root or home directory, such as
 rm -rf /
 and

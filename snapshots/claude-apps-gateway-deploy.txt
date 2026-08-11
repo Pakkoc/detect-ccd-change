@@ -695,7 +695,9 @@ Check the issuer is reachable from the pod and serves
 /.well-known/openid-configuration
 . Set
 ca_cert_pem
-for private PKI.
+for private PKI. If the pod reaches the IdP only through a forward proxy, set
+oidc.use_proxy: true
+; on versions before v2.1.227, give the pod a direct route to each of the IdP’s endpoints instead.
 Boot exits with a Postgres permission error
 The database role lacks DDL rights on its schema
 Grant the role

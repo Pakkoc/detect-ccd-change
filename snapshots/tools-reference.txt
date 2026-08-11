@@ -129,10 +129,10 @@ Lists the agents Claude can message with
 SendMessage
 , apart from
 agent team
-teammates, which Claude reaches through the team’s roster: subagents in the session, your other local Claude Code sessions, and reply-only
-Remote Control
-sessions, which cover your sessions on other machines and on
+teammates, which Claude reaches through the team’s roster: subagents in the session, your other local Claude Code sessions, your
 Claude Code on the web
+sessions when this session has cloud access, and your Remote Control sessions on other machines while this session is connected to
+Remote Control
 . Backs the
 /list-agents
 command. See
@@ -212,18 +212,9 @@ Sends a message to another agent: an
 agent team
 teammate, a
 subagent it resumes
-by agent ID or name, or one of your other Claude Code sessions, on this machine or, in reply, beyond it through
-Remote Control
-. Messaging other sessions requires Claude Code v2.1.224 or later and works only in sessions where
-cross-session messaging is enabled
-. A completed subagent auto-resumes in the background; a subagent you stopped from
-/tasks
-doesn’t and the call returns a refusal. Structured team-protocol messages require agent teams. A receiver never treats a message from another agent as your consent or approval. In
-auto mode
-, and in
-plan mode while the auto classifier reviews commands
-, the classifier reviews each send, plain or structured, before Claude Code delivers it; the classifier review requires Claude Code v2.1.222 or later. A subagent treats a message from the agent that launched it as normal task direction rather than as a peer request; before v2.1.198, it treated such a message as a peer request. Claude Code refuses a send to a name that now resolves to a different agent than it did earlier in the conversation, where before v2.1.199 it delivered the message; see
-Resume subagents
+by agent ID or name, or one of your other Claude Code sessions, on this machine or beyond it. Messaging other sessions requires Claude Code v2.1.224 or later;
+cross-session messaging
+covers which sessions Claude can reach and each case’s requirements. A receiver never treats a message from another agent as your consent or approval
 No
 SendUserFile
 Sends files from the session to you with an optional caption, so a generated report, diagram, screenshot, or built artifact reaches your device instead of only being mentioned in the transcript. As of v2.1.196, the optional

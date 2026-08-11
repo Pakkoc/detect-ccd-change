@@ -100,6 +100,15 @@ That’s expected and you can continue to the next step.
 pip
 install
 claude-agent-sdk
+If
+claude-code-sdk
+is listed in your
+requirements.txt
+or
+pyproject.toml
+, replace it with
+claude-agent-sdk
+.
 3. Update your imports:
 Change all imports from
 claude_code_sdk
@@ -193,8 +202,6 @@ permission_mode
 =
 "acceptEdits"
 )
-Why this changed:
-The type name now matches the “Claude Agent SDK” branding and provides consistency across the SDK’s naming conventions.
 ​
 System prompt no longer default
 What changed:
@@ -332,7 +339,7 @@ Why this changed:
 Provides better control and isolation for SDK applications. You can now build agents with custom behavior without inheriting Claude Code’s CLI-focused instructions.
 ​
 Settings sources default
-This default was briefly changed in v0.1.0 and then reverted, so no migration action is needed.
+This default was briefly changed in v0.1.0 to load no filesystem settings and then reverted, so no migration action is needed.
 Current behavior:
 Omitting
 settingSources
@@ -442,7 +449,7 @@ print
 (message)
 asyncio.run(main())
 Isolation is especially important for CI/CD pipelines, deployed applications, test environments, and multi-tenant systems where local customizations should not leak in.
-SDK v0.1.0 briefly defaulted to no settings loaded; this was reverted in subsequent releases. Python SDK 0.1.59 and earlier treated an empty list the same as omitting the option, so upgrade before relying on
+Python SDK 0.1.59 and earlier treated an empty list the same as omitting the option, so upgrade before relying on
 setting_sources=[]
 . See
 What settingSources does not control
@@ -451,29 +458,6 @@ settingSources
 is
 []
 .
-​
-Why the Rename?
-The Claude Code SDK was originally designed for coding tasks, but it has evolved into a powerful framework for building all types of AI agents. The new name “Claude Agent SDK” better reflects its capabilities:
-Building business agents (legal assistants, finance advisors, customer support)
-Creating specialized coding agents (SRE bots, security reviewers, code review agents)
-Developing custom agents for any domain with tool use, MCP integration, and more
-​
-Getting Help
-If you encounter any issues during migration:
-For TypeScript/JavaScript:
-Check that all imports are updated to use
-@anthropic-ai/claude-agent-sdk
-Verify your package.json has the new package name
-Run
-npm install
-to ensure dependencies are updated
-For Python:
-Check that all imports are updated to use
-claude_agent_sdk
-Verify your requirements.txt or pyproject.toml has the new package name
-Run
-pip install claude-agent-sdk
-to ensure the package is installed
 ​
 Next Steps
 Explore the

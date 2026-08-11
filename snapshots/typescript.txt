@@ -936,7 +936,15 @@ This function is alpha and its API may change before stabilization. It reads MDM
 policyHelper
 subprocess. The
 permissions.defaultMode
-field is returned as-is from all tiers including project settings. The trust filter the CLI applies before honoring escalating permission modes is not applied.
+field is returned as-is from all tiers including project settings. In a live session, the CLI
+ignores
+defaultMode: 'auto'
+from project and local settings
+;
+resolveSettings()
+skips that check, so an
+auto
+from those tiers appears here even though a session would ignore it.
 function
 resolveSettings
 (
@@ -1963,9 +1971,7 @@ The values are written to the flag-settings layer, the same layer the inline
 settings
 option of
 query()
-populates at startup. Flag settings sit near the top of the
-settings precedence order
-: they override user, project, and local settings, and only managed policy settings can override them. This is the same tier the
+populates at startup. This is the same tier the
 on-page precedence section
 calls programmatic options.
 Successive calls shallow-merge top-level keys. A second call with
@@ -2754,11 +2760,7 @@ is omitted or
 undefined
 ,
 query()
-loads the same filesystem settings as the Claude Code CLI: user, project, and local.
-Endpoint-managed policy
-is loaded in all cases; server-managed settings are fetched when the session authenticates with an organization credential on an
-eligible configuration
-. See
+loads the same filesystem settings as the Claude Code CLI: user, project, and local. See
 What settingSources does not control
 for inputs that are read regardless of this option, and how to disable them.
 ​
@@ -2785,35 +2787,6 @@ options:
 settingSources:
 [] }
 });
-Load all filesystem settings explicitly:
-import
-{
-query
-}
-from
-"@anthropic-ai/claude-agent-sdk"
-;
-const
-result
-=
-query
-({
-prompt:
-"Analyze this code"
-,
-options:
-{
-settingSources:
-[
-"user"
-,
-"project"
-,
-"local"
-]
-// Load all settings
-}
-});
 Load only specific setting sources:
 import
 {
@@ -2838,77 +2811,6 @@ settingSources:
 "project"
 ]
 // Only .claude/settings.json
-}
-});
-Testing and CI environments:
-import
-{
-query
-}
-from
-"@anthropic-ai/claude-agent-sdk"
-;
-// Ensure consistent behavior in CI by excluding local settings
-const
-result
-=
-query
-({
-prompt:
-"Run tests"
-,
-options:
-{
-settingSources:
-[
-"project"
-],
-// Only team-shared settings
-permissionMode:
-"bypassPermissions"
-,
-allowDangerouslySkipPermissions:
-true
-}
-});
-SDK-only applications:
-import
-{
-query
-}
-from
-"@anthropic-ai/claude-agent-sdk"
-;
-// Define everything programmatically.
-// Pass [] to opt out of filesystem setting sources.
-const
-result
-=
-query
-({
-prompt:
-"Review this PR"
-,
-options:
-{
-settingSources:
-[],
-agents:
-{
-/* ... */
-},
-mcpServers:
-{
-/* ... */
-},
-allowedTools:
-[
-"Read"
-,
-"Grep"
-,
-"Glob"
-]
 }
 });
 Loading CLAUDE.md project instructions:
@@ -4446,7 +4348,6 @@ canUseTool
 callback. Denials issued by a
 PreToolUse
 hook are not reported through this event.
-This event requires Claude Code v2.1.136 or later.
 type
 SDKPermissionDeniedMessage
 =
@@ -4684,7 +4585,7 @@ Claude Code on the web
 when its message arrives through Remote Control. The two kinds of sender fill the fields differently:
 from
 : the teammate’s name, or the sender address for a cross-session peer. For a
-one-way cross-machine reply
+one-way cross-machine message
 , the sender has no reply address and
 from
 is
@@ -7097,11 +6998,6 @@ string
 Ignored; the script’s
 meta
 block sets the description
-The schema accepts any JSON value for
-args
-; the exported type marks it
-unknown
-, but the published typings render the field as an object map.
 ​
 TodoWrite
 Tool name:
@@ -13223,13 +13119,6 @@ message
 result
 );
 }
-This pattern enables you to:
-Audit model requests:
-Log when the model requests unsandboxed execution
-Implement allowlists:
-Only permit specific commands to run unsandboxed
-Add approval workflows:
-Require explicit authorization for privileged operations
 Commands running with
 dangerouslyDisableSandbox: true
 have full system access. Ensure your
