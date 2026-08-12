@@ -51,7 +51,7 @@ again at any time to check whether fast mode is on or off
 Opus 5 is the fast mode default in Claude Code v2.1.219 and later. Before v2.1.219, fast mode defaulted to Opus 4.8 on v2.1.154 through v2.1.218, and to Opus 4.7 on v2.1.142 through v2.1.153.
 When you disable fast mode with
 /fast
-again, you remain on Opus. The model does not revert to your previous model. To switch to a different model, use
+again, you remain on Opus. To switch to a different model, use
 /model
 .
 ​
@@ -64,9 +64,7 @@ Switch back
 per-session opt-in
 configured, switching back doesn’t turn it on either; run
 /fast
-to re-enable it. Before v2.1.208, fast mode stayed off after you switched back until you ran
-/fast
-again.
+to re-enable it.
 Whenever a model switch turns fast mode on or off, Claude Code shows a
 Fast mode ON
 or
@@ -79,9 +77,7 @@ icon appears while fast mode is on. This holds whether you switch with
 /config model=<model>
 , or from a device connected through
 Remote Control
-; before v2.1.218, switches through
-/config model=<model>
-or Remote Control changed fast mode without the confirmation.
+.
 Claude Code resends the session’s fast mode status to devices connected through Remote Control after a model switch, a reconnection, or a failed
 availability check
 .
@@ -103,6 +99,37 @@ Claude pricing reference
 The first time you enable fast mode in a conversation, you pay the full fast mode uncached input token price for the entire conversation context. The deeper into a conversation you are, the more this costs, so enabling fast mode from the start is cheaper. The cost applies once per conversation, so toggling fast mode off and on again later does not repeat it. For the mechanism, see
 how fast mode interacts with the prompt cache
 .
+​
+See where fast mode spend appears
+You see fast mode spend in a different place depending on how you signed in, so first run
+/status
+to check. If it shows a
+Login method
+row such as
+Claude Max account
+, you signed in with a Claude subscription. If it shows an
+API key
+row instead, your requests bill to a Claude Console organization.
+Pro and Max
+: you pay for fast mode from your usage credits. Go to
+Settings > Usage
+on claude.ai, where the
+Usage credits
+section shows how much you’ve spent in usage credits this month. That figure includes fast mode but doesn’t break it out separately.
+Team and Enterprise
+: your organization pays for your fast mode usage from its usage credits. For where your organization sees that spend, see
+Claude for Teams and Enterprise
+.
+Claude Console
+: your organization pays for fast mode with the rest of its API usage. On the Console
+Usage
+and
+Cost
+pages, select
+Speed (Research Preview)
+in the
+Group by
+menu to separate fast mode from standard-speed usage. You see that option only when the selected date range includes fast mode usage.
 ​
 Decide when to use fast mode
 Fast mode is best for interactive work where response latency matters more than cost:
@@ -130,11 +157,29 @@ Requirements
 Fast mode requires all of the following:
 Anthropic API or subscription only
 : fast mode is available through the Anthropic Console API and for Claude subscription plans using usage credits. It is not available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS.
-Usage credits turned on
-: your account must have usage credits turned on, which allows billing beyond your plan’s included usage. For individual accounts, turn this on in your
+Usage credits turned on for subscription plans
+: on a Pro, Max, Team, or Enterprise plan, your account must have
+usage credits
+turned on, which allows billing beyond your plan’s included usage. Until they’re on,
+/fast
+shows “Fast mode requires usage credits · /usage-credits to turn them on”. On Pro and Max, turn them on in the
+Usage credits
+section of
+Settings > Usage
+on claude.ai, or run
+/usage-credits
+to open that page. On Team and Enterprise, a member with billing access turns them on for the organization at
+Admin settings > Usage
+, and a member without it runs
+/usage-credits
+to send the organization’s admins a request.
+Fast mode usage draws directly from usage credits, even if you have remaining usage on your plan.
+Paid Console organization
+: Claude Console accounts don’t use usage credits, and your organization pays for fast mode per token with the rest of its API usage. On the Console’s free Evaluation plan,
+/fast
+shows “Fast mode unavailable during evaluation. Please purchase credits.” To clear it, purchase credits in your
 Console billing settings
-. For Team and Enterprise, an admin must turn on usage credits for the organization.
-Fast mode usage draws directly from usage credits, even if you have remaining usage on your plan. This means fast mode tokens do not count against your plan’s included usage and are charged at the fast mode rate from the first token.
+.
 Owner enablement for Team and Enterprise
 : fast mode is disabled by default for Team and Enterprise organizations. An Owner must explicitly
 enable fast mode
@@ -212,7 +257,7 @@ also suppresses the availability check. Without a previously cached successful c
 reports “Fast mode is currently unavailable”; both skip variables restore fast mode in that configuration too.
 ​
 Require per-session opt-in
-By default, fast mode a user turns on in an interactive session persists across sessions: it stays on in future sessions. To change this, set
+By default, fast mode a user turns on in an interactive session persists across sessions. To change this, set
 fastModePerSessionOptIn
 to
 true
@@ -232,9 +277,7 @@ server-managed settings
 :
 true
 }
-This is useful for controlling costs in organizations where users run multiple concurrent sessions. Users can still enable fast mode with
-/fast
-when they need speed, but it resets at the start of each new session. The user’s fast mode preference is still saved, so removing this setting restores the default persistent behavior.
+This is useful for controlling costs in organizations where users run multiple concurrent sessions. The user’s fast mode preference is still saved, so removing this setting restores the default persistent behavior.
 ​
 Handle rate limits
 Fast mode has separate rate limits from standard Opus. All supported Opus models share one fast mode rate limit pool: usage on any of them draws from the same limits. When you hit the fast mode rate limit:

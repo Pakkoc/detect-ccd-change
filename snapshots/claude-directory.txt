@@ -42,9 +42,9 @@ Installed plugins
 ~/.claude/plugins
 Cloned marketplaces, installed plugin versions, and per-plugin data, managed by
 claude plugin
-commands. Orphaned versions are deleted 14 days after a plugin update or uninstall. See
+commands. See
 plugin caching
-.
+for how orphaned versions are cleaned up.
 ~/.claude
 also holds data Claude Code writes as you work: transcripts, prompt history, file snapshots, caches, and logs. See
 application data
@@ -282,6 +282,11 @@ feedback-bundles/
 Redacted transcript archives written by
 /feedback
 on third-party providers or when no Anthropic credentials are configured, for sending to your Anthropic account team
+usage-data/
+report.html
+and timestamped report copies written by
+/insights
+, plus cached per-session analysis data used to build them
 todos/
 ,
 statsig/
@@ -424,6 +429,12 @@ Checkpoint restore for past sessions
 ~/.claude/stats-cache.json
 Historical totals shown by
 /usage
+~/.claude/usage-data/
+Past
+/insights
+reports and the cached analysis data used to build them
+~/.claude/feedback-bundles/
+Feedback and bug-report archives you haven’t yet sent to your Anthropic account team
 ~/.claude/remote-settings.json
 Nothing. Re-fetched on next launch.
 ~/.claude/cache/changelog.md

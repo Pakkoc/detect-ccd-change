@@ -383,6 +383,10 @@ api.anthropic.com
 when it is blocked
 storage.googleapis.com
 Native installer and native auto-updater on versions prior to 2.1.116
+registry.npmjs.org
+Plugin installs (fetching npm-source plugin packages and installing plugins’ Node.js package dependencies),
+npx
+-launched MCP servers, and the package registry for npm and bun installs of Claude Code itself
 bridge.claudeusercontent.com
 Claude in Chrome
 extension WebSocket bridge

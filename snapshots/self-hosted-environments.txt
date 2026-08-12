@@ -72,7 +72,7 @@ Claude Code on the web
 scheduled routines
 , and the terminal, with
 claude --cloud
-or a scripted
+or an
 --environment
 dispatch
 , can run in self-hosted environments.
@@ -81,7 +81,7 @@ Claude Tag
 Claude Security
 , and
 Code Review
-sessions don’t route to them yet; support for those surfaces follows separately.
+sessions don’t route to them yet. Support for those surfaces follows separately.
 Repositories
 : sessions check out repositories from GitHub; see
 GitHub authentication options

@@ -180,7 +180,10 @@ Creates, updates, runs, and lists
 Routines
 on claude.ai. Backs the
 /schedule
-command. Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry
+command. The
+RemoteTrigger
+input reference
+documents every action and the organization policies that remove the tool. Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry
 No
 ReportFindings
 Reports code-review findings as a structured list, with a file, summary, and failure scenario per finding, so Claude Code can render them instead of printing them as text. Claude calls it when active code-review instructions tell it to. Requires Claude Code v2.1.196 or later. As of v2.1.199, a finding can also carry an optional
@@ -214,7 +217,11 @@ teammate, a
 subagent it resumes
 by agent ID or name, or one of your other Claude Code sessions, on this machine or beyond it. Messaging other sessions requires Claude Code v2.1.224 or later;
 cross-session messaging
-covers which sessions Claude can reach and each case’s requirements. A receiver never treats a message from another agent as your consent or approval
+covers which sessions Claude can reach and each case’s requirements. A receiver never treats a message from another agent as your consent or approval. Claude can include an optional
+summary
+input, typically 5-10 words, that Claude Code shows as a one-line preview. When Claude omits it on a
+plain-text message
+, Claude Code uses the first line of the message as the summary. Claude Code truncates a summary longer than 200 characters with an ellipsis
 No
 SendUserFile
 Sends files from the session to you with an optional caption, so a generated report, diagram, screenshot, or built artifact reaches your device instead of only being mentioned in the transcript. As of v2.1.196, the optional
@@ -576,11 +583,18 @@ to start the command as a background task and continue working while it runs. Li
 flag,
 background tasks end shortly after the run’s final result
 .
-When a command reaches its timeout without finishing, Claude Code moves it to the background instead of stopping it, so Claude keeps working while the command runs to completion. Claude Code never auto-backgrounds a command that starts with
-sleep
-, and setting
+When a command reaches its timeout without finishing, Claude Code moves it to the background instead of stopping it. Claude keeps working while the command runs to completion. Setting
 CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1
-disables auto-backgrounding along with the rest of the background task functionality. The result of a command moved this way states what happened:
+disables auto-backgrounding along with the rest of the background task functionality.
+Claude Code never auto-backgrounds three kinds of command. It stops them at the timeout instead:
+A command that starts with
+sleep
+.
+A command that runs
+git
+anywhere in it.
+A compound command Claude Code can’t fully parse into simple commands.
+The result of a command moved to the background states what happened:
 When the timeout triggers the move, the result reports it explicitly:
 Command did not complete within its 120s timeout and was moved to the background
 , with the seconds matching the timeout that applied, followed by the task ID and the path of the file the output is being written to.
@@ -1032,14 +1046,20 @@ environment variable.
 As of v2.1.196, exit code 1 from
 grep
 ,
+rg
+,
 egrep
 ,
 fgrep
+,
+findstr
 , and
 git grep
-means no matches, and exit code 1 from
+means no matches. Exit code 1 from
 git diff
-means differences exist, so these results aren’t reported to Claude as command failures.
+means differences exist. Neither result is reported to Claude as a command failure. For
+robocopy
+, exit codes 0 through 7 are informational results, such as files copied or extra files detected. Exit codes of 8 or higher count as failures.
 ​
 Windows encoding and exit codes
 On Windows, the following PowerShell encoding and exit-code behaviors require Claude Code v2.1.214 or later:

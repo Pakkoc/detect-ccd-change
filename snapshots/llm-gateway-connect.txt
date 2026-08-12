@@ -628,7 +628,9 @@ is a command Claude Code runs to fetch your gateway credential, instead of readi
 Use a helper when the credential expires on a schedule, comes from a vault or SSO command, or your administrator told you to configure one. If your credential is a fixed string you set once, the
 credential variable
 is all you need and you can skip this section.
-The helper is any shell command that prints the current credential to stdout. Claude Code runs it through your system shell, so on Windows it can be an executable or a PowerShell invocation. Write the script, make it executable, and reference it from
+The helper is any shell command that prints the current credential to stdout. Claude Code runs it through your system shell, so on Windows it can be an executable or a PowerShell invocation. Make the command print nothing but the credential. On Claude Code v2.1.227 or later, a banner or a log line printed alongside the key makes the
+helper fail
+. Write the script, make it executable, and reference it from
 apiKeyHelper
 in your
 settings file
@@ -978,16 +980,17 @@ credential table
 Your apiKeyHelper script is failing
 The command in the
 apiKeyHelper
-setting exited with an error, timed out, or printed nothing, so requests carry a placeholder key
+setting didn’t produce a usable key, so requests carry a placeholder key
 Run the command directly to see why it fails, and re-authenticate with your credential provider if it reports an expired session; see
 the error reference
-Unable to connect to API (ConnectionRefused)
-when nothing answers at the address,
-Unable to connect to API (FailedToOpenSocket)
-when the hostname doesn’t resolve, or
-(ECONNREFUSED)
-from npm installs, often after a silent pause while Claude Code
+Connection refused — a firewall or proxy may be blocking it (ConnectionRefused)
+when nothing answers at the address, or
+Can't reach the API server — check your internet or DNS (ENOTFOUND)
+when the hostname doesn’t resolve, often after a silent pause while Claude Code
 retries with backoff
+. The code in parentheses varies;
+Unable to connect to API
+covers the code spellings and the earlier wording
 Nothing answered at the base URL: the address is wrong, or a VPN or firewall blocks the path to the gateway
 Run the
 curl test above

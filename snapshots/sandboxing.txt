@@ -263,7 +263,9 @@ excludedCommands
 .
 When the same filesystem array is defined in multiple
 settings scopes
-, the arrays are merged: paths from every scope are combined, not replaced.
+, the arrays are merged: paths from every scope are combined, not replaced. When you edit these lists during a session, Claude Code
+applies the change to the running session
+, so the next sandboxed command runs under the new paths.
 Path prefixes control how paths are resolved:
 Prefix
 Meaning
@@ -296,7 +298,9 @@ for absolute and
 /path
 for project-relative. Sandbox filesystem paths use standard conventions:
 /tmp/build
-is absolute.
+is absolute. For how Claude Code treats a trailing slash or a wildcard in these paths, see
+Sandbox path prefixes
+.
 You can also deny write or read access using
 sandbox.filesystem.denyWrite
 and
@@ -1054,6 +1058,100 @@ To skip filesystem isolation entirely while keeping network isolation, set
 sandbox.filesystem.disabled
 .
 ​
+Protected paths
+Inside the directories that sandboxed commands can write to, the sandbox still denies writes to the files Claude Code loads configuration and code from. A command that could edit those files could grant itself permissions, or add a hook or MCP server that Claude Code runs outside the sandbox. The permission system has its own
+protected paths
+, which control what Claude Code approves before a tool runs; the sandbox’s list applies to a command that is already running. It covers four groups of paths:
+In your working directory and the directories above it
+: the
+.claude
+settings files, the
+.claude/skills
+,
+.claude/agents
+,
+.claude/commands
+, and
+.claude/hooks
+directories,
+.mcp.json
+, and the files Claude Code runs on its own, such as
+.claude/workflows
+and
+.claude/scheduled_tasks.json
+In your working directory only
+: shell startup files such as
+.bashrc
+and
+.zshrc
+,
+.gitconfig
+, the
+.vscode
+and
+.idea
+directories, and
+hooks
+and
+config
+inside
+.git
+Files that would turn your working directory into a bare git repository
+:
+HEAD
+,
+objects
+, and
+refs
+at the top level, plus
+config
+and
+hooks
+there when they already exist, even when the
+config
+directory belongs to your project rather than to git. On Linux and WSL2, the sandbox deletes a top-level
+HEAD
+file or
+objects
+or
+refs
+directory that appears while a sandboxed command is running
+In
+~/.claude
+, or the directory
+CLAUDE_CONFIG_DIR
+points to
+: most of its contents, plus
+~/.claude.json
+and the
+.credentials.json
+credential store
+If a symlink appears at a protected settings file’s path during the session, the sandbox also denies writes to the file it points to, starting with the next command.
+There is no way to exempt one of these paths: an
+allowWrite
+entry or an
+Edit
+allow rule that covers the path doesn’t lift the protection. The only way to turn the protection off is
+filesystem.disabled
+, which turns off filesystem isolation for every path. To see most of these paths resolved for your machine, run
+/sandbox
+and open the
+Config
+tab, which lists them under
+Denied within allowed
+, mixed in with your own
+denyWrite
+entries.
+If
+git merge
+or
+git checkout
+fails with
+unable to unlink old
+on one of these paths, see
+Troubleshooting
+.
+​
 Network isolation
 Network access is controlled through a proxy server running outside the sandbox:
 Domain restrictions
@@ -1382,6 +1480,29 @@ docker *
 to
 excludedCommands
 to run it outside the sandbox.
+A git command fails with
+unable to unlink old
+:
+git merge
+,
+git checkout
+, and similar commands fail this way when they need to replace a file the sandbox denies writes to, whether that file is under a
+protected path
+such as
+.claude/skills
+, under one of your
+denyWrite
+entries, or outside the directories the sandbox lets commands write to at all. On Linux and WSL2 the error ends with
+Read-only file system
+. After the failure, Claude may
+offer to rerun the command outside the sandbox
+; approve that retry, or run the git command yourself in another terminal. If you’ve set
+allowUnsandboxedCommands
+to
+false
+, Claude can’t offer the retry, so run the command yourself or, if the same git command fails often, add that command to
+excludedCommands
+.
 Bubblewrap fails to start inside a container
 : in an unprivileged container, bubblewrap cannot mount a fresh
 /proc
@@ -1444,19 +1565,6 @@ open
 and
 osascript
 work, but it removes code-execution isolation: sandboxed commands can launch other applications unsandboxed with no user prompt, and can send AppleScript commands to running applications, subject to the per-app macOS automation-consent prompt (TCC). It is only honored from user, managed, or CLI settings. Project settings cannot enable it.
-Settings files protected
-: the sandbox automatically denies write access to the files a sandboxed command could otherwise edit its own policy through, unless you
-disable filesystem isolation
-, which turns these deny rules off. The protected set:
-Claude Code’s
-settings.json
-files at every scope, and the managed settings directory
-.mcp.json
-at the project root, and at the root of each directory added with
---add-dir
-or
-/add-dir
-The target of any symlink that appears at a protected settings file path after startup, added to the deny list for the next command so a linked settings file can’t be edited through the link. Before v2.1.210, the deny rules didn’t resolve symlinks
 ​
 Platform and tool compatibility
 Platform support

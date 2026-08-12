@@ -204,9 +204,11 @@ Approve
 delivers that one message to Claude.
 Deny
 , or dismissing the dialog, drops it.
-Left unanswered past the
+When the dialog stays unanswered past the
 dialogExpiry
-deadline, the dialog closes and Claude Code drops the message. The deadline defaults to five minutes.
+deadline, Claude Code closes it and drops the message. The deadline defaults to five minutes. While no terminal is attached to a
+background session
+, Claude Code leaves the dialog open past the deadline. After you attach, Claude Code closes the dialog and drops the message only if it stays unanswered for a full deadline period.
 If this session’s permission-mode class changes while messages are held, Claude Code re-applies the inbound rules, delivers the messages they now accept, and shows a notice.
 If a change makes
 refuse
@@ -226,11 +228,25 @@ A
 -p
 session can’t show the approval dialog. When the
 inbound default
-holds a message there, Claude Code delivers it if a later mode or settings change allows it, and otherwise drops it when the
+holds a message there, Claude Code keeps it for the same
 dialogExpiry
-deadline passes and reports the expiry to the sender. Before v2.1.225, a held message stayed held in a
+deadline the dialog uses, five minutes by default:
+Before the deadline
+: if a mode or settings change allows the message, Claude Code delivers it.
+Past the deadline
+: Claude Code drops the message and reports it as expired to a sender it can reach.
+Set
+dialogExpiry
+to
+"never"
+to keep default-held messages until the session ends. A message held by an explicit
+hold
+setting doesn’t expire; Claude Code delivers it only when an
+accept
+later applies.
+When the session ends with messages still held, Claude Code reports them as expired to each sender it can reach. Before v2.1.225, no deadline applied in a
 -p
-session, with no sender notice and no expiry.
+session: a held message stayed held unless a permission-mode change during the run delivered it, and a session that ended with held messages reported nothing to their senders.
 To let a
 -p
 worker take messages unattended, start it with
@@ -298,7 +314,7 @@ With this set, Claude Code asks for your approval before Claude’s message to a
 bypassPermissions
 mode, which skips ordinary permission prompts. A
 true
-from any settings scope applies, so a checked-in project file can turn the requirement on but not off. Messages between sessions on the same machine don’t prompt.
+from any settings scope applies, so a checked-in project file can turn the requirement on but not off. Claude Code doesn’t prompt for messages between sessions on the same machine.
 ​
 Turn off cross-session messaging
 Receiving and sending are separate controls, so turn off whichever direction you need, or both. Use

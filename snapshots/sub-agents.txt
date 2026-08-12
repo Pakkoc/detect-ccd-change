@@ -465,7 +465,10 @@ runs its Bash and PowerShell commands inside its worktree. A command whose worki
 This working-directory check covers the whole repository containing the directory you launched Claude Code from. When your session runs in a linked
 worktree
 of its own, the check also covers the main checkout that worktree is linked from. Before v2.1.210, the check covered only the launch directory itself. A command whose working directory resolved elsewhere in the same repository, such as the repository root when you launched Claude Code from a monorepo subdirectory, ran there instead of failing.
-For Bash commands, Claude Code also checks the command itself and blocks one that redirects git into the main checkout; the redirect vectors and the too-complex-to-check rule are listed under
+For Bash commands, Claude Code also checks the command itself in two ways:
+It blocks a command that redirects git into the main checkout.
+It refuses a command whose shape it can’t verify stays inside the worktree. This refusal applies even to a command that runs no git.
+The redirect vectors and the shape rules are listed under
 How Claude Code enforces isolation
 . PowerShell commands get only the working-directory check.
 Monitor
@@ -1024,7 +1027,7 @@ option, since those are explicit caller input.
 Permission modes
 The
 permissionMode
-field controls how the subagent handles permission prompts. Subagents inherit the permission context from the main conversation and can override the mode, except when the parent mode takes precedence as described below.
+field controls how the subagent handles permission prompts. Subagents inherit the permission context from the main conversation and can override the mode, except in the cases described below.
 Mode
 Behavior
 default
@@ -1097,6 +1100,11 @@ auto mode
 , the subagent inherits auto mode and any
 permissionMode
 in its frontmatter is ignored: the classifier evaluates the subagent’s tool calls with the same block and allow rules as the parent session.
+If bypass mode is disabled by
+permissions.disableBypassPermissionsMode
+, Claude Code ignores
+permissionMode: bypassPermissions
+in the frontmatter and the subagent runs with the parent session’s mode. Before v2.1.223, Claude Code applied the frontmatter mode even with bypass disabled.
 ​
 Preload skills into subagents
 Use the
@@ -1128,9 +1136,7 @@ You can’t preload skills that set
 disable-model-invocation: true
 , since preloading draws from the same set of skills Claude can invoke. This includes the bundled
 /verify
-and
-/code-review
-skills: only you can run them, so they can’t be preloaded either.
+skill: only you can run it, so it can’t be preloaded either.
 If a listed skill is missing or disabled, Claude Code skips it and logs a warning to the debug log.
 This is the inverse of
 running a skill in a subagent
@@ -1732,9 +1738,9 @@ The work is self-contained and can return a summary
 Consider
 Skills
 instead when you want reusable prompts or workflows that run in the main conversation context rather than isolated subagent context.
-For a quick question about something already in your conversation, use
+For a question about something already in your conversation, use
 /btw
-instead of a subagent. It sees your full context but has no tool access, and the answer is discarded rather than added to history.
+instead of a subagent. It sees your full context but has no tool access, and the answer isn’t added to history.
 ​
 Let subagents spawn their own subagents
 By default, a subagent can spawn subagents of its own, up to three layers below the main conversation. At the depth limit, Claude Code withholds the

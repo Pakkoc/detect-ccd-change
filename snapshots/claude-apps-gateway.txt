@@ -875,6 +875,8 @@ ANTHROPIC_AUTH_TOKEN
 ANTHROPIC_API_KEY
 ,
 apiKeyHelper
+,
+Anthropic profiles
 , and any earlier claude.ai login are ignored while signed in, so developers don’t need to log out of claude.ai first.
 Managed settings
 : locked keys can’t be overridden locally. The CLI applies the policy at startup and on each hourly poll.

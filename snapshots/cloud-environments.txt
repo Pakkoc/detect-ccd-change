@@ -63,11 +63,19 @@ fills the selection when you haven’t picked one.
 From the CLI, sessions use your
 /remote-env
 pick
-, or fall back to your first available cloud environment. Passing
+, or fall back to your first available cloud environment. For a
+self-hosted environment
+, passing
 --environment <environment-id>
-on a
-scripted dispatch
-overrides both for that invocation; the flag requires Claude Code v2.1.224 or later.
+with its
+ccpool_
+ID
+when you dispatch a session
+overrides both for that invocation. The flag rejects Anthropic-hosted
+env_
+IDs, so use
+/remote-env
+to target those. The flag requires Claude Code v2.1.224 or later.
 Configure an environment when the default isn’t enough: when Claude needs to reach domains outside the
 default allowlist
 , needs environment variables set for its sessions, or needs dependencies installed before it starts working.

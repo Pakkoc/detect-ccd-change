@@ -169,7 +169,7 @@ During a session
 As a default
 : set
 claudeCode.initialPermissionMode
-in VS Code settings, or use the Claude Code extension settings panel.
+in your VS Code user settings, or use the Claude Code extension settings panel.
 The mode indicator shows these labels, mapped to the mode each one applies:
 UI label
 Mode
@@ -189,13 +189,9 @@ auto mode section
 claudeCode.initialPermissionMode
 setting does not accept
 auto
-. To start in auto mode by default, set
-defaultMode
-in your
-user settings
-instead. Claude Code ignores
-defaultMode: "auto"
-in project and local settings.
+. To switch a session into auto mode, select
+Auto
+from the mode indicator.
 Bypass permissions requires the
 Allow dangerously skip permissions
 toggle in the extension settings before it appears in the mode indicator.
@@ -389,7 +385,15 @@ or
 .
 ​
 Set plan mode as the default
-To make plan mode the default for a project, set
+In a session the
+VS Code extension
+started, a settings-file
+defaultMode
+doesn’t set the starting mode. Set
+claudeCode.initialPermissionMode
+to
+plan
+in your VS Code user settings instead. Elsewhere, to make plan mode the default for a project, set
 defaultMode
 in
 .claude/settings.json
@@ -462,7 +466,11 @@ or
 auto
 from those files so a repository cannot grant itself auto mode. Move it to
 ~/.claude/settings.json
-.
+. In a session the
+VS Code extension
+started, a settings-file
+defaultMode
+doesn’t set the starting mode: select the mode from the extension’s mode indicator instead.
 ​
 Auto mode on Bedrock, Agent Platform, or Foundry
 On
@@ -475,12 +483,16 @@ Microsoft Foundry
 Claude apps gateway
 sessions, auto mode appears in the
 Shift+Tab
-cycle by default. Appearing in the cycle doesn’t change the mode a session starts in: sessions still start in your
+cycle by default. Appearing in the cycle doesn’t change the mode a session starts in. Except in sessions the
+VS Code extension
+starts, where the extension resolves the starting mode, sessions still start in your
 defaultMode
 , which is Manual unless you change it. Only Claude Sonnet 5, Opus 4.7 or later, and Fable 5 are supported on these providers.
 To make auto mode the default starting mode, set
 "permissions": {"defaultMode": "auto"}
-in user or managed settings.
+in user or managed settings. In sessions the VS Code extension starts, select
+Auto
+from the mode indicator instead.
 The
 /doctor
 checkup proposes this user-settings default on these providers the same way it does on the Anthropic API.

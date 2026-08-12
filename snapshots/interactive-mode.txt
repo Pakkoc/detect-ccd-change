@@ -14,18 +14,9 @@ Alt+F
 Alt+Y
 ,
 Alt+P
-) require configuring Option as Meta in your terminal:
-iTerm2
-: Settings → Profiles → Keys → General → set Left/Right Option key to “Esc+”
-Apple Terminal
-: Settings → Profiles → Keyboard → check “Use Option as Meta Key”
-VS Code
-: set
-"terminal.integrated.macOptionIsMeta": true
-in VS Code settings
-See
-Terminal configuration
-for details.
+) require configuring Option as Meta in your terminal. See
+Enable Option key shortcuts on macOS
+for the setting in each terminal.
 ​
 General controls
 Shortcut
@@ -118,14 +109,12 @@ Ctrl+P
 /
 Ctrl+N
 Move cursor or navigate command history
-When the input spans more than one visual row, whether wrapped or multiline, first moves the cursor within the prompt. Once the cursor is on the first or last visual row, pressing again navigates command history. As of v2.1.169, wrapped single-line input behaves the same as multiline
+When the input spans more than one visual row, whether wrapped or multiline, first moves the cursor within the prompt. Once the cursor is on the first or last visual row, pressing again navigates command history
 Esc
 Interrupt Claude, or close a dialog
 Stop the current response or tool call mid-turn so you can redirect. Claude keeps the work done so far. When a dialog such as a permission prompt is open,
 Esc
-closes the dialog rather than interrupting Claude. Before v2.1.202,
-Esc
-on some dialogs interrupted Claude and left the dialog open
+closes the dialog rather than interrupting Claude
 Esc
 +
 Esc
@@ -138,9 +127,7 @@ recalls it. When the input is empty, double
 Esc
 opens the
 rewind menu
-to restore or summarize code and conversation from a previous point. Before v2.1.216, double
-Esc
-at an empty prompt could stop opening the menu for the rest of a long-running session that used background tasks
+to restore or summarize code and conversation from a previous point
 Shift+Tab
 , or
 Alt+M
@@ -262,16 +249,14 @@ Option as Meta
 on macOS
 Shift+Enter
 Shift+Enter
-Native in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal, Windows Terminal
+Native in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal, Windows Terminal. For other terminals, see
+Enter multiline prompts
 Control sequence
 Ctrl+J
 Works in any terminal without configuration
 Paste mode
 Paste directly
 For code blocks, logs
-Shift+Enter works without configuration in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal, and Windows Terminal. For VS Code, Cursor, Devin Desktop, Alacritty, and Zed, run
-/terminal-setup
-to install the binding.
 ​
 Quick commands
 Shortcut
@@ -303,22 +288,14 @@ on empty input
 Toggle the shortcut help panel
 Typing
 ?
-when the input already contains text inserts the character. Before v2.1.211, an edit that left a lone
-?
-in the input, such as backspacing from
-?x
-, also toggled the panel and discarded the edit
+when the input already contains text inserts the character
 ​
 Transcript viewer
 When the transcript viewer is open (toggled with
 Ctrl+O
 ), these shortcuts are available. Run
 /tui
-with no argument to check which renderer is active. In
-fullscreen rendering
-, press
-?
-to show the full shortcut reference panel inside the viewer.
+with no argument to check which renderer is active.
 Ctrl+E
 can be rebound via
 transcript:toggleShowAll
@@ -513,7 +490,7 @@ Repeat last f/F/t/T motion in reverse
 /
 Open reverse history search, same as
 Ctrl+R
-. As of v2.1.191, the empty search prompt shows a hint: press
+. The empty search prompt shows a hint: press
 Esc
 then
 i
@@ -588,17 +565,7 @@ Join lines
 u
 Undo
 .
-Repeat last change. Before v2.1.216, repeating a change operator such as
-cw
-or
-cc
-replayed only the inserted text without the deletion, and
-.
-after
-p
-/
-P
-repeated the previous change instead of the paste
+Repeat last change
 ​
 Text objects (NORMAL mode)
 Text objects work with operators like
@@ -698,7 +665,6 @@ Running
 /clear
 starts a new session: recall then lists the new session’s prompts first, with earlier sessions’ prompts after them. The previous session’s conversation is preserved and can be resumed.
 Submitting the same prompt twice in a row records one history entry, so pressing Up steps to the previous distinct prompt
-Use Up/Down arrows to navigate (see keyboard shortcuts above)
 When you recall a prompt that included pasted text, Claude Code sends the full pasted content again when you resubmit. If the content has since been
 cleaned up
 , Claude Code doesn’t send the literal
@@ -760,8 +726,8 @@ to cancel and restore your original input
 Press
 Backspace
 on empty search to cancel
-The inline search scans your full prompt history, newest first, with duplicates collapsed to the newest occurrence. The fullscreen dialog lists the 100 most recent unique prompts in the selected scope. Matching prompts display with the search term highlighted, so you can find and reuse previous inputs.
-Accepting a match or canceling the search takes effect immediately, even while Claude Code is still loading the history. Before v2.1.202, accepting or canceling during that load could report an internal error.
+The inline search scans your full prompt history, newest first, with duplicates collapsed to the newest occurrence. The fullscreen dialog searches your whole prompt history in the selected scope, newest first, with duplicates collapsed to the newest occurrence: the most recent prompts appear immediately, and matches from older prompts fill in as Claude Code loads the rest. Matching prompts display with the search term highlighted, so you can find and reuse previous inputs.
+Accepting a match or canceling the search takes effect immediately, even while Claude Code is still loading the history.
 ​
 Background Bash commands
 Claude Code supports running Bash commands in the background, allowing you to continue working while long-running processes execute.
@@ -789,7 +755,9 @@ to turn this off. Requires Claude Code v2.1.193 or later. Background commands ow
 subagent
 are instead terminated after 60 minutes, configurable in milliseconds with
 CLAUDE_SUBAGENT_BG_SHELL_MAX_MS
-. Before v2.1.218, neither limit covered commands moved to the background with
+. A command owned by a subagent running in the foreground also ends when that subagent gives its final response; see
+Background commands
+in the tools reference. Before v2.1.218, neither the memory-pressure reap nor the 60-minute limit covered commands moved to the background with
 Ctrl+B
 To disable all background task functionality, set the
 CLAUDE_CODE_DISABLE_BACKGROUND_TASKS
@@ -854,7 +822,7 @@ Pasting text that starts with
 into an empty prompt enters shell mode automatically, matching typed
 !
 behavior
-As of v2.1.186, Claude responds to the command output automatically once it lands in the transcript, so you can run
+Claude responds to the command output automatically once it lands in the transcript, so you can run
 ! npm test
 and get an explanation of the failures without a second prompt. The response costs the same as sending a normal prompt. To restore the earlier behavior where the output is added to context without a response, set
 respondToBashCommands
@@ -863,7 +831,6 @@ false
 in
 settings.json
 . Before v2.1.186, shell mode always added output to context without a response.
-This is useful for quick shell operations while maintaining conversation context.
 ​
 Prompt suggestions
 When you first open a session, a grayed-out example command appears in the prompt input to help you get started. Claude Code picks this from your project’s git history, so it reflects files you’ve been working on recently.
@@ -949,22 +916,35 @@ settings.json
 Side questions with /btw
 Use
 /btw
-to ask a quick question about your current work without adding to the conversation history. This is useful when you want a fast answer but don’t want to clutter the main context or derail Claude from a long-running task.
+to ask a question about your current work without adding to the conversation history.
 /btw what was the name of that config file again?
-Side questions have full visibility into the current conversation, so you can ask about code Claude has already read, decisions it made earlier, or anything else from the session. The question and answer are ephemeral: they appear in a dismissible overlay and never enter the conversation history.
+Claude answers a side question from what’s already in the conversation: your messages, its replies, and the tool results it has gathered. You can ask about code Claude has already read, decisions it made earlier, or anything else from the session. A later side question also sees your earlier side questions: Claude Code replays the newest 20 exchanges with each ask, until you clear them. The question and answer never enter the conversation history. In the terminal, they appear in a dismissible overlay. The terminal keeps the thread in memory: press
+x
+to clear the earlier exchanges, and it’s gone when you exit Claude Code.
+In the
+VS Code extension
+’s chat panel,
+/btw
+opens a panel rather than the overlay this section describes, and you ask follow-up questions right in the panel. The panel’s thread survives window reloads, on the retention schedule that page describes. You need the extension at v2.1.227 or later. Earlier extension versions don’t offer
+/btw
+.
 Available while Claude is working
 : you can run
 /btw
-even while Claude is processing a response. The side question runs independently and doesn’t interrupt the main turn.
+even while Claude is processing a response. The side question runs independently and doesn’t interrupt the main turn. It sees everything in the conversation so far, except the reply Claude is still writing.
 No tool access
 : side questions answer only from what is already in context. Claude can’t read files, run commands, or search when answering a side question.
 Single response
-: there are no follow-up turns in the overlay. To continue the thread, fork it into its own session with
+: there are no follow-up turns in the overlay. To continue the thread, ask another
+/btw
+question. To continue with full tool access, fork this question and answer into their own session with
 f
 .
 Low cost
-: the side question reuses the parent conversation’s prompt cache, so the additional cost is minimal.
-Earlier side questions from the same session appear as a dimmed list above the current answer. They stay out of the conversation history but remain visible in the overlay until you clear them.
+: while the conversation’s
+prompt cache
+is warm, a side question costs little beyond the answer itself.
+Your five newest earlier side questions appear as a dimmed list above the current answer, with a count of any older ones. They stay out of the conversation history.
 To return to the overlay after dismissing it, run
 /btw
 with no question. The overlay reopens on your most recent exchange. Press
@@ -990,7 +970,7 @@ Left
 Right
 Step between this answer and your earlier
 /btw
-answers from the session.
+answers.
 Left
 moves to older answers and
 Right
@@ -1056,7 +1036,7 @@ git push
 command runs in the session.
 Claude Code renders the badge as a hyperlink even when it can’t detect hyperlink support in your terminal, which commonly happens over SSH or in tmux. Set
 FORCE_HYPERLINK=0
-to render the badge as plain text. Before v2.1.217, the badge was a hyperlink only when detection succeeded.
+to render the badge as plain text.
 PR status requires the
 gh
 CLI to be installed and authenticated (

@@ -149,16 +149,16 @@ cat
 >
 /etc/claude/environment-secret
 )
-Create the base directory, replacing
+Choose a base directory, replacing
 <writable-dir>
-here and in the next command with an absolute path that the user running the runner can write to. The runner checks repositories out and creates per-session directories under this path. Without
+in the runner command below with an absolute path that the runner can write to or create. The runner creates the directory at startup, then checks repositories out and creates per-session directories under it. Without
 --base-dir
 it uses
 /workspace
-, which only works if that directory already exists and is writable or the runner runs as root.
-mkdir
--p
-'<writable-dir>'
+, which only works if that directory already exists and is writable or you start the runner as root.
+If the runner can’t create or write to the path, it exits at startup with an error naming the directory instead of registering. See
+Troubleshooting
+.
 Then start the runner with
 --environment-secret-file
 and

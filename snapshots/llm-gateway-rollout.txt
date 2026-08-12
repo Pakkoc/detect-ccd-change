@@ -339,8 +339,10 @@ Your gateway serves
 /v1/models
 and you want developers’ pickers populated from it
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
-Stops Claude Code sending pre-release capability headers and body fields
-Your gateway forwards to an Amazon Bedrock or Google Cloud’s Agent Platform upstream that rejects beta fields; see
+Stops Claude Code sending pre-release capability headers and body fields.
+Disable pre-release capabilities
+covers the exact scope
+Your gateway forwards to an Amazon Bedrock or Google Cloud’s Agent Platform upstream that rejects beta fields. See
 Gateway requirements
 CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS
 or

@@ -61,7 +61,9 @@ API base URL. Override only for testing.
 --base-dir <path>
 SELF_HOSTED_RUNNER_BASE_DIR
 /workspace
-Directory for repository checkouts and per-session working directories. The runner creates it and its subdirectories on first use, so the user running the runner needs write access to this path or its parent. Use the same value on every runner in an environment; see
+Directory for repository checkouts and per-session working directories. The runner needs write access to this path or its parent. The runner creates the directory at startup and exits with
+cannot create or write to base directory
+when it can’t create or write to it. Before v2.1.225, the runner created the directory when the first session started, so an unusable path failed sessions rather than startup. Use the same value on every runner in an environment. See
 Keep the base directory and capacity identical across runners
 .
 --capacity <n>

@@ -510,9 +510,9 @@ the rewind menu’s summarize options
 Customize compaction behavior in CLAUDE.md with instructions like
 "When compacting, always preserve the full list of modified files and any test commands"
 to ensure critical context survives summarization
-For quick questions that don’t need to stay in context, use
+For questions that don’t need to stay in context, use
 /btw
-. The answer appears in a dismissible overlay and never enters conversation history, so you can check a detail without growing context.
+. The answer never enters conversation history, so you can check a detail without growing context.
 ​
 Use subagents for investigation
 Delegate research with

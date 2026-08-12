@@ -425,6 +425,15 @@ the pinned Sonnet model supports, for example
 effort,thinking
 . See
 Model configuration
+ANTHROPIC_FEDERATION_RULE_ID
+Federation rule ID for
+Workload Identity Federation
+. When you set it together with
+ANTHROPIC_ORGANIZATION_ID
+, Claude Code selects federation credentials, which rank above your
+/login
+credential. See
+authentication precedence
 ANTHROPIC_FOUNDRY_API_KEY
 API key for Microsoft Foundry authentication (see
 Microsoft Foundry
@@ -457,6 +466,20 @@ ANTHROPIC_MODEL
 Name of the model setting to use (see
 Model Configuration
 )
+ANTHROPIC_ORGANIZATION_ID
+Organization ID for
+Workload Identity Federation
+. Set it together with
+ANTHROPIC_FEDERATION_RULE_ID
+. See
+authentication precedence
+ANTHROPIC_PROFILE
+Name of the Anthropic profile to authenticate with, such as one created by
+ant auth login
+. The named profile ranks above your
+/login
+credential. See
+authentication precedence
 ANTHROPIC_SMALL_FAST_MODEL
 [DEPRECATED] Name of
 Haiku-class model for background tasks
@@ -799,9 +822,14 @@ Set to
 1
 to disable
 1M context window
-support. When set, 1M model variants are unavailable in the model picker, and
+support. When set, 1M model variants are unavailable in the model picker, and Claude Code holds sessions on models with a native 1M window, such as
 Sonnet 5
-sessions are treated as having a 200K window. Useful for enterprise environments with compliance requirements
+and Fable 5, to a 200K window; see
+Extended context
+for how the hold is enforced. Useful for enterprise environments with compliance requirements. For its role in correcting the window for an unrecognized
+[1m]
+model ID, see
+Correct the window for a gateway or custom model ID
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 Set to
 1
@@ -980,9 +1008,13 @@ input_schema
 cache_control
 ) are preserved.
 MCP tool search
-is disabled and all MCP tools load upfront, even when
+is disabled and all MCP tools load upfront, even when you set
 ENABLE_TOOL_SEARCH
-is set
+. On Claude Code v2.1.227 or later,
+managed settings
+can keep tool search on.
+Disable pre-release capabilities
+covers where the override applies
 CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS
 Set to
 1
@@ -1118,6 +1150,18 @@ third-party providers
 ,
 0
 likewise omits the parameter, so the two variables behave the same there
+CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT
+Set to
+1
+to skip proactive
+auto-compaction
+when Claude Code doesn’t recognize the model ID, such as an
+LLM gateway
+alias. Without this variable, Claude Code compacts at the context window it assumes for the ID.
+CLAUDE_CODE_MAX_CONTEXT_TOKENS
+can correct the assumed window instead; see
+Correct the window for a gateway or custom model ID
+for when each variable applies. Requires Claude Code v2.1.223 or later
 CLAUDE_CODE_DISABLE_VIRTUAL_SCROLL
 Set to
 1
@@ -1421,9 +1465,9 @@ How many
 subagents
 can be running in one session before the Agent tool refuses to spawn another (default: 20). Accepts a positive whole number in plain digits; anything else is ignored, so the variable can adjust the cap but can’t disable it. Requires Claude Code v2.1.217 or later
 CLAUDE_CODE_MAX_CONTEXT_TOKENS
-Override the context window size Claude Code assumes for the active model. As of v2.1.193, applied directly for model names Claude Code does not recognize as a Claude model; for recognized Claude models it only takes effect when
-DISABLE_COMPACT
-is also set. Use this when routing to a model through
+Override the context window size Claude Code assumes for the active model. As of v2.1.193, how it applies depends on how Claude Code resolves the model ID; see
+Correct the window for a gateway or custom model ID
+. Use this when routing to a model through
 ANTHROPIC_BASE_URL
 whose context window does not match the built-in size for its name
 CLAUDE_CODE_MAX_OUTPUT_TOKENS
@@ -1966,8 +2010,14 @@ CLAUDE_CODE_SYNC_SKILLS
 Set to
 1
 to download your enabled claude.ai skills into
+~/.claude/skills/synced/
+before the first query and resync every 10 minutes. The
+synced
+folder name is
+reserved for this download
+. Before v2.1.227, the skills downloaded into
 ~/.claude/skills/
-before the first query and resync every 10 minutes. Applies only in non-interactive mode with the
+directly. Applies only in non-interactive mode with the
 -p
 flag. Requires claude.ai authentication.
 Claude Code on the web
@@ -2403,23 +2453,23 @@ instead
 ENABLE_TOOL_SEARCH
 Controls
 MCP tool search
-. Unset: all MCP tools deferred by default, but loaded upfront on Google Cloud’s Agent Platform models earlier than the Claude 4.5 generation, when
+. Unset, Claude Code defers all MCP tools by default. It still loads them upfront on Google Cloud’s Agent Platform models earlier than the Claude 4.5 generation, on a Microsoft Foundry deployment hosted on Azure, and when
 ANTHROPIC_BASE_URL
-points to a non-first-party host, or on a Microsoft Foundry deployment hosted on Azure. Values:
+points to a non-first-party host.
 true
-(always defer and send the beta header, except on a Microsoft Foundry deployment hosted on Azure and on Google Cloud’s Agent Platform models earlier than the Claude 4.5 generation, where Claude Code still loads tools upfront; requests fail on proxies that don’t support
+always defers and sends the beta header, except on those same Agent Platform models and Microsoft Foundry deployments; requests fail on proxies that don’t support
 tool_reference
-),
+.
 auto
-(threshold mode: load upfront if tools fit within 10% of context),
+loads upfront when tool definitions fit within 10% of context.
 auto:N
-(custom threshold, e.g.,
+sets a custom threshold, such as
 auto:5
-for 5%),
+for 5%.
 false
-(load all upfront). Ignored when
+loads all tools upfront. A value you set yourself is ignored when
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
-is set, which forces all tools to load upfront. Before v2.1.221, Claude Code disabled tool search for all models on Google Cloud’s Agent Platform unless you set this variable to
+is set. Before v2.1.221, Claude Code disabled tool search for all models on Google Cloud’s Agent Platform unless you set this variable to
 true
 FALLBACK_FOR_ALL_PRIMARY_MODELS
 Set to any non-empty value, such as

@@ -105,7 +105,7 @@ Run “Claude Code: Open Walkthrough” from the Command Palette for a guided to
 Use the prompt box
 The prompt box supports several features:
 Permission modes
-: click the mode indicator at the bottom of the prompt box to switch modes, or set the default in VS Code settings under
+: click the mode indicator at the bottom of the prompt box to switch modes, or set the default in your VS Code user settings under
 claudeCode.initialPermissionMode
 . See
 permission modes
@@ -144,6 +144,14 @@ Ctrl+Alt+F
 (Windows/Linux), or from the Command Palette with
 Claude Code: Toggle Focus view
 . Requires Claude Code v2.1.221 or later.
+Side questions
+: type
+/btw
+followed by a question, or pick it from the command menu, to ask about your session
+without adding to the conversation
+. The answer opens in a panel beside the chat, or below it when the view is narrow, and you can ask follow-up questions in the panel. The thread stays out of the conversation history and survives window reloads. Claude Code keeps the newest 20 exchanges and expires stored threads on the
+cleanupPeriodDays
+schedule. To clear a thread yourself, click the trash icon in the panel. Requires Claude Code v2.1.227 or later.
 Context indicator
 : the prompt box shows how much of Claude’s context window you’re using. Claude automatically compacts when needed, or you can run
 /compact
@@ -455,6 +463,11 @@ settings.json
 to get autocomplete and inline validation for all available settings directly in VS Code.
 ​
 Extension settings
+VS Code reads
+initialPermissionMode
+from your user settings and ignores workspace values. Before v2.1.225, VS Code defaulted the setting to
+default
+and applied workspace values.
 Setting
 Default
 Description
@@ -462,7 +475,7 @@ useTerminal
 false
 Launch Claude in terminal mode instead of graphical panel
 initialPermissionMode
-default
+-
 Controls approval prompts for new conversations:
 default
 ,
@@ -477,8 +490,8 @@ is an alias for
 default
 and selects the mode labeled
 Manual
-in the mode indicator. Requires Claude Code v2.1.200 or later. See
-permission modes
+in the mode indicator. When you leave it unset, Claude Code resolves the session’s starting mode itself. See
+how to switch permission modes and set the session default
 .
 preferredLocation
 panel

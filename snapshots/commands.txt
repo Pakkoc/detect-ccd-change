@@ -45,7 +45,7 @@ shows what’s filling the window and
 /compact
 summarizes it to free space. Use
 /btw
-for a quick aside that shouldn’t add to the conversation history.
+for a side question that shouldn’t add to the conversation history.
 Run work in parallel.
 Claude delegates side tasks to
 subagents
@@ -107,9 +107,9 @@ The table below lists all the commands included in Claude Code. Most are built-i
 Skill
 : a bundled skill. It works like skills you write yourself: a prompt handed to Claude, which Claude can also invoke automatically when relevant.
 /verify
-and
-/code-review
-run only when you invoke them. Before v2.1.215, Claude could also run them on its own.
+runs only when you invoke it. Before v2.1.215, Claude could also run
+/verify
+on its own.
 Workflow
 : a bundled
 dynamic workflow
@@ -211,9 +211,11 @@ subagent
 that reports back into this conversation, use
 /subtask
 /btw [question]
-Ask a quick
+Ask a
 side question
-without adding to the conversation. Without a question, reopens the overlay on your most recent side question from this session so you can browse earlier answers; with no side questions yet, it asks for one. Before v2.1.212,
+about the current session without adding to the conversation. If you run
+/btw
+without a question, Claude Code shows your most recent side question so you can browse earlier answers; if you haven’t asked one yet, Claude Code prints a usage line. Before v2.1.212,
 /btw
 required a question
 /bug [report]
@@ -361,7 +363,7 @@ to list every settable key with its options. Alias:
 /context [all]
 Visualize current context usage as a colored grid. Shows optimization suggestions for context-heavy tools, memory bloat, and capacity warnings. When the conversation exceeds the context window, the output includes a
 warning
-showing how far over the limit you are and which command frees space; this warning requires Claude Code v2.1.216 or later. In
+showing how far over the limit you are and which command frees space. In
 fullscreen mode
 ,
 /context
@@ -423,7 +425,9 @@ Run a setup checkup that diagnoses issues and can fix them. Checks installation 
 PATH
 problems, and unparseable settings files. Finds unused skills, MCP servers, and plugins versus their context cost, flags slow
 hooks
-, and checks for a newer version on your release channel. Deduplicates local
+, and checks for a newer version on your
+release channel
+. Deduplicates local
 CLAUDE.md
 files against checked-in ones, trims checked-in
 CLAUDE.md
@@ -431,7 +435,7 @@ files by cutting content Claude could derive from the codebase, and migrates the
 skills
 and nested
 CLAUDE.md
-files that load on demand. The trim cuts sections such as directory layouts, dependency lists, and architecture overviews, and keeps pitfalls, rationale, and conventions that differ from tool defaults. Also offers to make
+files that load on demand. Also offers to make
 auto mode
 your default and to
 pre-approve
@@ -441,11 +445,7 @@ prints read-only installation diagnostics without starting a session. Alias:
 /checkup
 . The
 CLAUDE.md
-trim check requires Claude Code v2.1.206 or later. Before v2.1.206, the version check compared Homebrew installs against the
-autoUpdatesChannel
-setting rather than the
-installed cask’s channel
-. Before v2.1.205,
+trim check requires Claude Code v2.1.206 or later. Before v2.1.205,
 /doctor
 opened a read-only diagnostics screen and pressing
 f
@@ -512,7 +512,7 @@ Scan your transcripts for common read-only Bash and MCP tool calls, then add a p
 .claude/settings.json
 to reduce permission prompts
 /focus
-Toggle the focus view, which shows only your last prompt, a one-line tool-call summary with edit diffstats, and the final response. As of v2.1.198, the tool-call summary also counts the subagents launched in the turn and collapses completed background-task notifications into a single count. The selection persists across sessions; set
+Toggle the focus view, which shows only your last prompt, a one-line tool-call summary with edit diffstats, and the final response. The tool-call summary also counts the subagents launched in the turn and collapses completed background-task notifications into a single count. The selection persists across sessions; set
 viewMode
 in settings to override it. Only available in
 fullscreen rendering
@@ -592,7 +592,11 @@ finds configuration from a coding agent that
 supports, it offers to carry it over with
 /import
 /insights
-Generate a report analyzing your Claude Code sessions, including project areas, interaction patterns, and friction points
+Generate an HTML report analyzing your recent sessions on this machine: which projects you work in, how you use Claude Code, where things go wrong, and features to try. Not available in
+cloud sessions
+. See
+Analyze your usage patterns
+for the report location, retention, and cost
 /install-github-app
 Install the Claude GitHub App for a repository, with an optional step to set up
 GitHub Actions
@@ -702,7 +706,7 @@ Generate a one-line summary of the current session on demand. See
 Session recap
 for the automatic recap that appears after you’ve been away
 /release-notes
-View the changelog in an interactive version picker. Select a specific version to see its release notes, or choose to show all versions. The notes appear in your transcript without entering the conversation Claude sees. Before v2.1.208, the viewed notes entered the conversation, including the entire changelog when showing all versions
+View the changelog in an interactive version picker. Select a specific version to see its release notes, or choose to show all versions. The notes appear in your transcript without entering the conversation Claude sees
 /reload-plugins [--force]
 Reload all active
 plugins
@@ -729,8 +733,8 @@ Rename the current session and show the name on the prompt bar. Without a name, 
 That name is empty once invisible characters are removed. Usage: /rename <name>
 . The character replacement and length cap require Claude Code v2.1.221 or later
 /resume [session]
-Resume a conversation by ID or name, or open the session picker. As of v2.1.144,
-background sessions
+Resume a conversation by ID or name, or open the session picker.
+Background sessions
 appear in the picker marked with
 bg
 ; one that is still running can’t be resumed here, so attach to it from
@@ -939,7 +943,7 @@ are aliases
 /usage-credits
 Configure usage credits, or request them from your admin, when you hit a limit. Opens your
 usage-credits billing settings
-in the browser, except that Team and Enterprise members without billing access instead send a usage-credits request to their admin from the CLI, after confirming in a dialog that the request notifies their admins. Before v2.1.211, Claude Code sent the request without a confirmation step. When no browser can open the billing page, for example over SSH, the command prints the URL to visit instead; this requires Claude Code v2.1.205 or later, and earlier versions showed nothing in that case. Previously
+in the browser, except that Team and Enterprise members without billing access instead send a usage-credits request to their admin from the CLI, after confirming in a dialog that the request notifies their admins. When no browser can open the billing page, for example over SSH, the command prints the URL to visit instead; this requires Claude Code v2.1.205 or later, and earlier versions showed nothing in that case. Previously
 /extra-usage
 /verify
 Skill

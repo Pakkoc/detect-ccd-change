@@ -89,7 +89,9 @@ for when to use each one. Set the
 defaultMode
 in your
 settings files
-:
+. In sessions the VS Code extension starts, the extension resolves the starting mode instead. See
+Switch permission modes
+.
 Mode
 Description
 default

@@ -221,6 +221,21 @@ background session
 from the list. The conversation transcript stays on your local machine, available through
 claude --resume
 claude rm 7c5dcf5d
+claude self-hosted-runner
+Start a runner process that registers this machine or container with a
+self-hosted environment
+and hosts Claude Code cloud sessions on your infrastructure. Run
+claude self-hosted-runner setup
+for a guided operator walkthrough,
+claude self-hosted-runner doctor
+to
+diagnose a deployed runner
+, and
+claude self-hosted-runner orchestrator
+to spawn
+on-demand runners
+. Requires Claude Code v2.1.224 or later
+claude self-hosted-runner setup
 claude setup-token
 Generate a long-lived OAuth token for CI and scripts. Prints the token to the terminal without saving it. Requires a Claude subscription. See
 Generate a long-lived token
@@ -499,17 +514,15 @@ cycle by default; use
 to start in it
 claude --permission-mode auto
 --environment <environment-id>
-With
--p
-, create a new
-cloud session
-on the named environment and exit without waiting for a reply; self-hosted environment IDs have the form
-ccpool_...
-. Can’t be combined with
---cloud
+Create a new cloud session that runs on the
+self-hosted environment
+with the given ID. Environment IDs start with
+ccpool_
 . See
-dispatch from a script
-claude -p "Run the smoke test" --environment ccpool_abc123
+--environment
+dispatch behavior
+for the interactive and non-interactive forms and the flag combinations it rejects. Requires Claude Code v2.1.224 or later
+claude -p "Fix the login bug" --environment ccpool_abc123
 --exclude-dynamic-system-prompt-sections
 Move per-machine sections from the system prompt (working directory, environment info, memory paths, git-repo flag) into the first user message. Improves prompt-cache reuse across different users and machines running the same task. Only applies with the default system prompt; ignored when
 --system-prompt
@@ -606,9 +619,7 @@ Get validated JSON output matching a JSON Schema after the agent completes its w
 structured outputs
 . Claude Code exits with an error on an invalid schema and accepts the
 format
-keyword as an annotation without client-side validation. Before v2.1.205, an invalid schema produced unstructured output with no error, and schemas using
-format
-were treated as invalid
+keyword as an annotation without client-side validation
 claude -p --json-schema '{"type":"object","properties":{...}}' "query"
 --maintenance
 Run
@@ -627,7 +638,7 @@ claude -p --max-budget-usd 5.00 "query"
 --max-turns
 Limit the number of agentic turns (print mode only). Exits with an error when the limit is reached. No limit by default. With
 --input-format stream-json
-, a message sent while Claude is working stays queued and runs as its own turn, with its own limit, when the limit ends the current one. Before v2.1.205, Claude Code discarded that message
+, a message sent while Claude is working stays queued and runs as its own turn, with its own limit, when the limit ends the current one
 claude -p --max-turns 3 "query"
 --mcp-config
 Load MCP servers from JSON files or strings (space-separated). When you pass this flag with
@@ -714,9 +725,7 @@ claude --permission-mode plan
 --permission-prompt-tool
 Specify an MCP tool to handle permission prompts in non-interactive mode. Claude Code waits for that tool’s MCP server to connect before running the first turn, up to the
 MCP_TIMEOUT
-startup timeout, 30 seconds by default. Before v2.1.206, a slow-starting server could make the run
-exit with an error that the MCP tool was not found
-.
+startup timeout, 30 seconds by default.
 The prompt tool can’t approve an MCP tool marked as
 requiring user interaction
 : Claude Code converts an
@@ -849,9 +858,7 @@ auto
 tmux
 , or
 iterm2
-(added in v2.1.186). The default changed from
-auto
-in v2.1.179. Overrides the
+(added in v2.1.186). Overrides the
 teammateMode
 setting for this session. See
 Choose a display mode

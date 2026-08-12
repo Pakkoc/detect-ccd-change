@@ -711,7 +711,12 @@ environment variable and the
 flag take precedence. Requires Claude Code v2.1.181 or later
 true
 blockedMarketplaces
-(Managed settings only) Blocklist of marketplace sources. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. Blocked sources are checked before downloading, so they never touch the filesystem. See
+(Managed settings only) Blocklist of marketplace sources. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. Blocked sources are checked before downloading, so they never touch the filesystem. A
+github
+entry may use the
+owner-wildcard form
+"owner/*"
+to block every repository under that GitHub owner. Requires Claude Code v2.1.223 or later. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "untrusted/plugins" }]
 browserExternalPageTools
@@ -750,7 +755,7 @@ days, minimum
 1
 . Claude Code deletes
 session files and other application data
-older than this period at startup. To disable transcript writes entirely, see
+older than this period at startup, as long as it can safely determine the retention period. To disable transcript writes entirely, see
 Plaintext storage
 .
 20
@@ -812,13 +817,11 @@ dialogExpiry
 Default
 :
 "5m"
-. Deadline for dialogs Claude Code forwards to a remote client, such as a
-Remote Control
-or SDK host, for example the model-choice prompt shown after a safety refusal, and for a
+. Deadline for dialogs Claude Code
+forwards to a remote client
+, such as a Remote Control or SDK host, and for the approval dialog for a
 held cross-session message
-awaiting approval. When no answer arrives before the deadline, Claude Code cancels the dialog and continues with its no-action default; when the deadline passes on a message the
-inbound default
-holds, Claude Code drops it. Permission prompts and
+. When no answer arrives before the deadline, Claude Code cancels the dialog and continues with its no-action default. Permission prompts and
 AskUserQuestion
 questions use their own flows and aren’t governed by this deadline. Accepts
 "60s"
@@ -2146,7 +2149,9 @@ from these directories
 defaultMode
 Default
 permission mode
-when opening Claude Code. Valid values:
+for new sessions. In sessions the
+VS Code extension
+starts, the extension resolves the starting mode instead. Valid values:
 default
 ,
 acceptEdits
@@ -2192,7 +2197,10 @@ to prevent
 bypassPermissions
 mode from being activated. This disables the
 --dangerously-skip-permissions
-command-line flag. Typically placed in
+command-line flag, and Claude Code ignores an
+agent definition’s
+permissionMode: bypassPermissions
+, so the subagent runs with the parent session’s mode. Before v2.1.223, Claude Code applied the frontmatter mode even with bypass disabled. Typically placed in
 managed settings
 to enforce organizational policy, but works from any scope
 "disable"
@@ -2787,6 +2795,50 @@ prefix for absolute paths still works. If you previously used single-slash
 expecting project-relative resolution, switch to
 ./path
 .
+Claude Code strips a trailing slash from a directory path, so
+~/.aws
+and
+~/.aws/
+match the same directory. Before v2.1.224, Claude Code passed the trailing slash through to the sandbox, and a
+denyRead
+or
+denyWrite
+entry written with one didn’t block its path.
+Claude Code also removes a trailing
+/**
+, so
+~/build/**
+and
+~/build
+cover the same directory. For the four
+filesystem
+lists, whether a wildcard such as
+*
+works depends on which list the entry is in and on the platform:
+allowWrite
+and
+denyWrite
+: on macOS, wildcards work. On Linux and WSL2, the sandbox mounts concrete paths, so Claude Code skips an entry that contains
+*
+,
+?
+, or
+[
+once the trailing
+/**
+is removed, and that entry has no effect. Claude Code adds the paths from your
+Edit
+permission rules to these lists, so the same limit applies to them, and the
+Config
+tab of
+/sandbox
+lists the
+Edit
+rules Claude Code skipped.
+denyRead
+and
+allowRead
+: wildcards work on every platform. On Linux and WSL2, Claude Code expands a read entry to the concrete paths it matches, which it doesn’t do for the write lists.
 This syntax differs from
 Read and Edit permission rules
 , which use
@@ -3832,15 +3884,22 @@ managed-settings.json
 )
 Cannot be overridden by user or project settings (highest precedence)
 Enforced before network and filesystem operations, so blocked sources never run
-Uses exact matching for source specifications (including
+Uses exact matching for most source specifications, including
 ref
-,
+and
 path
-for git sources), except
+for git sources.
 hostPattern
 and
 pathPattern
-, which use regex matching
+entries use regex matching.
+github
+entries with an owner-wildcard
+repo
+such as
+"acme-corp/*"
+follow their own matching rules. See
+Owner wildcards
 Allowlist behavior
 :
 undefined
@@ -3848,14 +3907,18 @@ undefined
 Empty array
 []
 : complete lockdown that blocks every marketplace source, including the official Anthropic marketplace, so users can’t add any new marketplaces
-List of sources: users can only add marketplaces that match exactly
+List of sources: users can only add marketplaces that match an entry in the list
 All supported source types
 :
-The allowlist supports multiple marketplace source types. Most sources use exact matching, while
+The allowlist supports multiple marketplace source types. Most sources use exact matching.
 hostPattern
 and
 pathPattern
-use regex matching against the marketplace host and filesystem path respectively.
+use regex matching against the marketplace host and filesystem path respectively, and
+github
+entries can use an
+owner wildcard
+.
 GitHub repositories
 :
 {
@@ -3897,6 +3960,15 @@ GitHub repositories
 :
 "marketplace"
 }
+{
+"source"
+:
+"github"
+,
+"repo"
+:
+"acme-corp/*"
+}
 Fields:
 repo
 (required),
@@ -3904,6 +3976,23 @@ ref
 (optional: branch or tag),
 path
 (optional: subdirectory)
+The
+"acme-corp/*"
+form is an owner wildcard that matches every repository under that GitHub owner. Owner wildcards require Claude Code v2.1.223 or later. Claude Code accepts them only in
+strictKnownMarketplaces
+and
+blockedMarketplaces
+. Everywhere else a
+github
+source appears, such as
+extraKnownMarketplaces
+or
+/plugin marketplace add
+, the
+repo
+value must name a single repository. For the matching rules, see
+Owner wildcards
+.
 Git repositories
 :
 {
@@ -4194,7 +4283,7 @@ Example: disable all marketplace additions, including the official Anthropic mar
 "strictKnownMarketplaces"
 : []
 }
-Example: allow only the official Anthropic marketplace. Matching is exact, so this entry doesn’t cover
+Example: allow only the official Anthropic marketplace. Claude Code matches a single-repository entry exactly, so this entry doesn’t cover
 ref
 or
 path
@@ -4245,11 +4334,19 @@ Example: allow all marketplaces from an internal git server:
 }
 Exact matching requirements
 :
-Marketplace sources must match exactly for a user’s addition to be allowed. For git-based sources (
+For most source types, Claude Code allows a user’s addition only when the marketplace source matches an entry exactly. The exceptions are
+owner-wildcard
+github
+entries
+and the regex-matched
+hostPattern
+and
+pathPattern
+entries. For the git-based sources
 github
 and
 git
-), this includes all optional fields:
+, exact matching includes all optional fields:
 The
 repo
 or
@@ -4268,6 +4365,63 @@ and
 { "source": "github", "repo": "acme-corp/plugins", "path": "marketplace" }
 and
 { "source": "github", "repo": "acme-corp/plugins" }
+Owner wildcards
+:
+A
+github
+entry whose
+repo
+value is
+"<owner>/*"
+matches every repository under that GitHub owner. Owner wildcards require Claude Code v2.1.223 or later. Before v2.1.223, Claude Code compared the entry literally, so an allowlist entry matched no repository and a blocklist entry blocked nothing. Single-repository entries are enforced on every version. This entry allows any marketplace repository in the
+acme-corp
+organization:
+{
+"strictKnownMarketplaces"
+: [
+{
+"source"
+:
+"github"
+,
+"repo"
+:
+"acme-corp/*"
+}
+]
+}
+Only the whole repository-name position can be a wildcard. Claude Code compares entries such as
+*
+,
+*/plugins
+, or
+acme-corp/tools-*
+literally, so they match no repository.
+The matching rules differ between the two settings:
+Rule
+strictKnownMarketplaces
+blockedMarketplaces
+Matching source spellings
+owner/repo
+form only. A git URL that clones the same repository doesn’t match
+Any spelling, including git URLs that resolve to the same github.com repository
+Owner case
+Case-sensitive, like exact-entry matching
+Case-insensitive
+ref
+Follows the exact-entry rules: an entry with a
+ref
+matches only sources with that exact ref, and an entry without one matches only sources that don’t specify a ref
+An entry without a
+ref
+blocks all refs of the repositories it matches
+path
+Looser than the exact-entry rules: an entry with a
+path
+requires that exact value, while an entry without one matches any path inside the repository
+An entry without a
+path
+blocks all paths of the repositories it matches
 Comparison with
 extraKnownMarketplaces
 :

@@ -110,9 +110,7 @@ Skills marked
 disable-model-invocation: true
 , including the bundled
 /verify
-and
-/code-review
-skills.
+skill
 Skills withheld from Claude by a
 skillOverrides
 setting or a

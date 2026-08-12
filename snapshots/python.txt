@@ -6132,7 +6132,7 @@ int
 :
 int
 ,
-# Total tokens used
+# Token count from the final API request, not the whole run
 "usage"
 : {
 # Token usage statistics
