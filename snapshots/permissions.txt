@@ -761,10 +761,10 @@ shares with Claude.
 A
 Read
 deny rule also blocks the
-Edit tool
-on the same path, including creating a new file there. Write and NotebookEdit aren’t covered, so add an
+Edit and Write tools
+on the same path, including creating a new file there. NotebookEdit isn’t covered, so add an
 Edit
-deny rule for paths no tool may change. Requires Claude Code v2.1.208 or later.
+deny rule for paths no tool may change. The check requires Claude Code v2.1.208 or later on edits, and v2.1.228 or later on writes.
 Claude Code checks file permissions against
 Edit(path)
 and
@@ -798,10 +798,6 @@ Glob(docs/**)
 . Claude Code doesn’t warn about a tool-name rule with no path, such as a deny rule for
 Write
 ; it matches that rule at the tool level everywhere. Requires Claude Code v2.1.210 or later.
-If you put a deny rule
-Write(docs/**)
-in project settings, Claude Code prints this startup warning:
-Permission deny rule (.claude/settings.json): Write(docs/**) is not matched by file permission checks — only Edit(path) rules are. Use Edit(docs/**) instead (Edit rules cover all file-editing tools).
 Read and Edit deny rules apply to Claude’s built-in file tools and to file commands Claude Code recognizes in Bash, such as
 cat
 ,
@@ -999,13 +995,7 @@ In gitignore patterns,
 *
 matches within a single path segment and can appear at any position in the pattern, while
 **
-matches across directories. To allow all file access, use only the tool name without parentheses:
-Read
-,
-Edit
-, or
-Write
-.
+matches across directories.
 When you approve a file path with “Yes, don’t ask again”, Claude Code escapes gitignore pattern characters in that path, such as
 [
 ,

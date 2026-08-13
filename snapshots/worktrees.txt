@@ -230,7 +230,9 @@ A periodic sweep removes worktrees that Claude created for subagents and
 background sessions
 once they are older than your
 cleanupPeriodDays
-setting. The sweep skips a worktree that still holds work: changed or untracked files, or unpushed commits. It never removes worktrees you create with
+setting, following the
+retention sweep rules
+. The sweep skips a worktree that still holds work: changed or untracked files, or unpushed commits. It never removes worktrees you create with
 --worktree
 .
 While an agent is running, Claude runs

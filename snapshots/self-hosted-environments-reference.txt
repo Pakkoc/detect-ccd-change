@@ -81,17 +81,17 @@ Configure git
 --confine-repo-settings <mode>
 SELF_HOSTED_RUNNER_CONFINE_REPO_SETTINGS
 warn
-Warn without refusing (
-warn
-, the default), enforce (
-enforce
-), or disable (
-off
-) the guard that flags a session when a repository’s committed settings try to grant write or read access outside that session’s own workspace, set environment variables, or override the operator’s sandbox or hooks posture, such as
+Sets the mode of the guard that flags a session when a repository’s committed settings try to grant write or read access outside that session’s own workspace, set environment variables, or override the operator’s sandbox or hooks posture, such as
 sandbox.enabled: false
 or
 disableAllHooks
-. See
+. The default
+warn
+logs the violation and still starts the session,
+enforce
+refuses the session, and
+off
+disables the scan. See
 Harden your deployment
 .
 --debug-token-dir <path>
@@ -110,7 +110,9 @@ SELF_HOSTED_RUNNER_DRAIN_WAIT_MS
 0
 On
 SIGTERM
-, wait up to N seconds for each session’s in-flight turn and background tasks to finish before terminating the child
+, wait up to N seconds for each session’s in-flight turn and background tasks to finish before terminating the child. During this wait, the runner counts a background task that has just finished as still running until the follow-up turn that reads its result starts, for at most the
+SELF_HOSTED_RUNNER_BG_RESULT_GRACE_MS
+window.
 --environment-secret-file <path>
 SELF_HOSTED_RUNNER_ENVIRONMENT_SECRET
 required
@@ -220,7 +222,9 @@ SELF_HOSTED_RUNNER_SESSION_IDLE_MS
 0
 Release a session slot after N minutes of inactivity once a turn finishes or the session waits for the user’s action. A session that’s still mid-turn, including one holding a never-finishing background task or an approval requested from inside a running tool call, doesn’t count as idle; pair with
 --kill-session-after-min
-as the hard backstop. A release that leaves the runner with no active sessions starts the same exit path as a normal drain, governed by
+as the hard backstop. After a session’s background task finishes, the runner considers the session busy until the follow-up turn that reads the result starts, for at most the
+SELF_HOSTED_RUNNER_BG_RESULT_GRACE_MS
+window. A release that leaves the runner with no active sessions starts the same exit path as a normal drain, governed by
 --drain-grace-sec
 .
 0
@@ -368,6 +372,20 @@ These runner settings are read from the environment only and cover behavior most
 Env var
 Default
 Description
+SELF_HOSTED_RUNNER_BG_RESULT_GRACE_MS
+30000
+How long the runner considers a session busy after a background task finishes while the follow-up turn that reads the result hasn’t started. The
+--drain-wait-sec
+and
+--release-idle-session-min
+rows
+describe where the hold applies on drain and idle release, and
+Runner lifecycle
+describes where it applies on
+--retire-at
+retirement.
+0
+or an unusable value falls back to the default, so the hold can’t be turned off. Requires Claude Code v2.1.228 or later.
 SELF_HOSTED_RUNNER_HOST_CONFIG_DIR
 ~/.claude
 Directory captured into the runner’s startup snapshot and seeded into each session’s

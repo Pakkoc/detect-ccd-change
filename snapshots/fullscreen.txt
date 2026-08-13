@@ -35,7 +35,9 @@ background sessions
 in any other session, Claude Code prints an explanation instead of switching and doesn’t change the saved
 tui
 setting.
-The relaunched session keeps the conversation as it appears on screen. If you ran
+The relaunched session keeps the conversation as it appears on screen. Claude Code also carries over the model you last picked with
+/model
+. If you ran
 /rewind
 earlier in the session, the relaunch resumes from the rewound point rather than the longer transcript saved on disk. If you rewound to before your first message, the relaunched session starts empty.
 You can also set the

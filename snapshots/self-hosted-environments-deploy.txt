@@ -16,7 +16,7 @@ Ephemeral, per-session containers
 --capacity 1
 and the default
 --drain-grace-sec 0
-so each container serves exactly one session. At a higher capacity, or with a positive drain grace, one container serves multiple sessions from the same locked account instead of one session each; see
+so each container serves exactly one session. At a higher capacity, or with a positive drain grace, one container serves multiple sessions from the same locked account; see
 Runner lifecycle
 . Don’t reuse a filesystem between runner restarts, except in the deliberate
 pre-warmed checkout
@@ -59,7 +59,7 @@ Per-runner filesystem isolation
 ~/.claude/
 read-only to the session, either built into the image or mounted read-only.
 Dispatch is organization-wide
-: any member of your Anthropic organization can dispatch a session to any of its environments, and there’s no per-environment access control on dispatch. Treat every runner host as reachable for code execution by every org member, and don’t place data or credentials on a runner host that any org member shouldn’t be able to read.
+: any member of your Anthropic organization can dispatch a session to any of its environments, and there’s no per-environment access control on dispatch. Treat every runner host as reachable for code execution by every org member, and place data or credentials on a runner host only if every org member is allowed to read them.
 --lock-to-account
 bounds which account’s sessions a given host executes, but dispatch into the environment itself stays organization-wide. To make self-hosted environments the only picker option, an
 Owner or admin
@@ -645,19 +645,22 @@ Known issues
 Throughout that whole path, the runner keeps heartbeating to the control plane at zero capacity, so the session lease doesn’t expire and get requeued to another runner while the
 post-session
 hook is still writing out uncommitted work. The heartbeat stops just before the runner deregisters.
-Set
+Give the runner at least the total it logs at startup before the host stops it. Where you set that depends on how your hosts stop:
+With a
+SIGTERM
+grace period
+: set
 terminationGracePeriodSeconds
 on Kubernetes,
 stop_grace_period
-on Docker Compose, or your orchestrator’s equivalent to at least the total the runner logs, so a container-wide kill never lands while a
-post-session
-hook is mid-run. If your hosts die at a known wall-clock time and you pass
+on Docker Compose, or your orchestrator’s equivalent to at least that total. The Kubernetes default of 30 seconds is shorter than the runner’s drain path, so Kubernetes stops the pod before the runner finishes draining.
+With
 --retire-at
-, size the margin between the retire time and the kill to cover typical turns plus this same budget, and compute the value at each launch, for example
+: size the margin between the retire time and the host’s stop time to cover typical turns, plus the background-task hold that
+Runner lifecycle
+describes, plus that same total. Compute the retire time at each launch, for example
 date +%s
-plus the runner’s intended lifetime, rather than baking a static value into a restartable manifest. The Kubernetes default of 30 seconds is shorter than the runner’s drain path and will kill the pod mid-cleanup. For the flags that control each phase, see the
-runner CLI reference
-.
+plus the runner’s intended lifetime.
 ​
 What reaches a running post-session hook
 The
@@ -894,7 +897,7 @@ Runner exits at startup with
 cannot create or write to base directory
 entry in this list.
 A session’s branch no longer exists on the remote
-: for a git source the session only reads from, the runner skips that source and continues on the remaining ones. For the source the session pushes results to, a deleted branch, typically because it was merged and auto-deleted, fails the session with an error naming the repository and branch and asking you to restore the branch and retry.
+: for a git source the session only reads from, the runner skips that source and continues on the remaining ones. For the source the session pushes results to, a deleted branch, typically because it was merged and auto-deleted, fails the session with an error naming the repository and branch and asking you to restore the branch and retry. The runner fails the session with the same error when skipping would leave it with no repository at all. Before v2.1.228, such a session started in an empty directory.
 Sessions take minutes to start
 : the initial clone usually dominates. Watch the
 claude_code_self_hosted_runner_session_init_duration_seconds

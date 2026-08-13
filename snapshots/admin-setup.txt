@@ -126,11 +126,6 @@ Windows user registry
 HKCU\SOFTWARE\Policies\ClaudeCode
 Lowest
 Windows only
-A configured
-policyHelper
-preempts all four sources: its output becomes the only managed configuration for the run. See
-Settings precedence
-.
 Server-managed settings reach devices at authentication time and refresh hourly during active sessions, with no endpoint infrastructure. Delivery through the claude.ai admin console requires a Claude for Teams or Enterprise plan. Deployments on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry can get the same remote delivery by running a
 Claude apps gateway
 , or use one of the file-based or OS-level mechanisms instead.
@@ -245,13 +240,13 @@ allowManagedHooksOnly
 ,
 allowedHttpHookUrls
 Login enforcement
-Restrict login to a specific method or Anthropic organization. The method restriction is enforced across the terminal, VS Code extension, Agent SDK,
+Restrict login to a specific method or Anthropic organization. The method restriction applies across the terminal, VS Code extension, Agent SDK,
 claude setup-token
 , and
 /install-github-app
-; the organization restriction covers the terminal, VS Code extension, and Agent SDK, except
+; Claude Code verifies the organization for claude.ai account logins in the terminal, VS Code extension, and Agent SDK, and doesn’t check it for Claude Console logins or for
 gateway
-sign-in, which doesn’t authenticate against an Anthropic organization. Before v2.1.212, only terminal logins enforced either key. When set, sessions authenticated by
+sign-in. Before v2.1.212, only terminal logins applied either key. When set, sessions authenticated by
 ANTHROPIC_API_KEY
 ,
 ANTHROPIC_AUTH_TOKEN

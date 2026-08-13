@@ -233,9 +233,9 @@ Beyond the config you author,
 holds data Claude Code writes during sessions. These files are plaintext. Anything that passes through a tool lands in a transcript on disk: file contents, command output, pasted text.
 ​
 Cleaned up automatically
-Files in the paths below are deleted on startup once they’re older than
+Claude Code deletes the files in the paths below once they’re older than
 cleanupPeriodDays
-. The default is 30 days and the minimum is 1; setting
+, as long as it can safely determine the retention period. The default is 30 days and the minimum is 1; setting
 0
 fails with a validation error. The same age cutoff applies to automatic removal of
 orphaned worktrees
@@ -293,17 +293,34 @@ statsig/
 ,
 logs/
 Legacy directories from older versions. No longer written. The sweep removes their contents and then the empty directory.
+Claude Code makes four exceptions to this sweep:
 sessions/
-holds one small file per running session, used to detect concurrent sessions and crashes. It isn’t part of the age-based sweep: Claude Code removes each file when its session exits and clears crash leftovers on the next launch.
-If Claude Code can’t read or parse a settings file, it pauses the retention cleanup sweep and shows a warning in
+: holds one small file per running session, used to detect concurrent sessions and crashes. It isn’t part of the age-based sweep: Claude Code removes each file when its session exits and clears crash leftovers on the next launch.
+Auto memory
+: Claude Code excludes a project’s
+auto memory
+directory,
+projects/<project>/memory/
+, from this sweep, and removes the directory itself only after it has been empty for the whole retention period. Before v2.1.228, the sweep treated folders inside the memory directory as session data and could delete old files beneath it.
+Bare mode
+: when you run
+claude -p
+with
+--bare
+, Claude Code doesn’t run the sweep in that session.
+Paused sweep
+: if Claude Code can’t safely determine the retention period, it pauses the retention cleanup sweep; the
+retention_sweep
+event
+lists each configuration that pauses it. When the cause is a settings file that can’t be read or parsed, or settings errors with
+cleanupPeriodDays
+explicitly set, Claude Code also shows a warning in
 /status
-until you fix the file, unless
+until you fix the settings errors. When
 managed settings
 provide
 cleanupPeriodDays
-, in which case the sweep runs at the managed value. Before v2.1.203, cleanup ran at the 30-day default in that state and could delete transcripts a longer
-cleanupPeriodDays
-was meant to keep; files newer than 30 days were never removed.
+, Claude Code runs the sweep at the managed value in either case.
 ​
 Kept until you delete them
 The following paths are not covered by automatic cleanup and persist indefinitely.
@@ -418,7 +435,7 @@ You can also delete any of the application-data paths above by hand. New session
 Delete
 You lose
 ~/.claude/projects/
-Resume, continue, and rewind for past sessions
+Resume, continue, and rewind for past sessions, and auto memory for every project
 ~/.claude/history.jsonl
 Up-arrow prompt recall
 ~/.claude/paste-cache/

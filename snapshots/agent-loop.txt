@@ -748,7 +748,7 @@ hooks
 Manual compaction:
 Send
 /compact
-as a prompt string to trigger compaction on demand. Commands sent this way are SDK inputs, not CLI-only shortcuts. See
+as a prompt string to trigger compaction on demand. Commands sent this way are ordinary SDK inputs. See
 commands in the SDK
 .
 Example: Summarization instructions in CLAUDE.md
@@ -808,11 +808,9 @@ session_store
 /
 sessionStore
 adapter
-so transcripts are mirrored to your own backend and any host can resume them. The Claude Code subprocess still writes to local disk first; point
-CLAUDE_CONFIG_DIR
-at a temp directory in
-options.env
-if the local copy needs to be ephemeral.
+so the SDK mirrors transcripts to your own backend and another host can resume them. The Claude Code subprocess still writes to local disk first. See
+Dual-write architecture
+for which copy outlives a fresh session versus a run resumed from the store, and how to keep the local copy ephemeral.
 In Python,
 ClaudeSDKClient
 handles session IDs automatically across multiple calls. See the
@@ -850,9 +848,10 @@ No valid structured output was produced within the configured retry limit: every
 No
 The
 result
-field (the final text output) is only present on the
+field holds the final text output and is only present on the
 success
-variant, so always check the subtype before reading it. All result subtypes carry
+variant, so always check the subtype before reading it.
+All result subtypes carry
 total_cost_usd
 ,
 usage
@@ -860,13 +859,32 @@ usage
 num_turns
 , and
 session_id
-so you can track cost and resume even after errors. In Python,
+so you can track cost and resume even after errors. Two things to guard for:
+After a session crash, the final result is an
+error_during_execution
+whose cost fields may be zeroed and whose
+stop_reason
+is
+null
+, and the process exits after emitting it. See
+Recover totals after a session crash
+.
+In Python,
 total_cost_usd
-and
+,
 usage
-are typed as optional and may be
+, and
+model_usage
+are typed as optional, so check that they aren’t
 None
-on some error paths, so guard before formatting them. See
+before you read them.
+The
+usage
+field covers only the main agent loop. Use
+modelUsage
+, or
+model_usage
+in Python, for whole-tree token and cost accounting. See
 Tracking costs and usage
 for details on interpreting the
 usage
@@ -877,7 +895,9 @@ query()
 call yields the final result message, then raises an error that includes the failure text, such as
 Reached maximum number of turns
 . The raise is intentional — wrap the loop in a try block if your code needs to continue past it. The underlying Claude Code process also exits with a nonzero code.
-A streaming input session stays alive, and you can keep sending messages.
+A streaming input session stays alive, and you can keep sending messages, except after a session crash, which emits a final
+error_during_execution
+result and exits the process.
 The result also includes a
 stop_reason
 field (
@@ -890,9 +910,12 @@ end_turn
 max_tokens
 (hit the output token limit), and
 refusal
-(the model declined the request). On error result subtypes,
+(the model declined the request). On error results that the loop produced,
 stop_reason
-carries the value from the last assistant response before the loop ended. To detect refusals, check
+carries the value from the last assistant response before the loop ended; the result Claude Code synthesizes after a session crash carries
+null
+.
+To detect refusals, check
 stop_reason === "refusal"
 (TypeScript) or
 stop_reason == "refusal"

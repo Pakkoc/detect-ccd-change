@@ -70,7 +70,9 @@ Environment
 Local
 for your machine,
 Cloud
-for cloud sessions, an
+for a
+cloud session
+that continues after you close the app, an
 SSH connection
 for a remote machine you manage, or on Windows a
 WSL distribution
@@ -196,7 +198,9 @@ explore first, then plan, then code
 for more on this workflow.
 Cloud sessions support Accept edits, Plan, and Auto. Accept edits corresponds to
 default
-mode: cloud sessions pre-approve file edits, so the selector shows Accept edits instead of Manual. Bypass permissions is not available in cloud sessions.
+mode: cloud sessions pre-approve file edits, so the selector shows Accept edits instead of Manual. Bypass permissions isn’t available in cloud sessions, including sessions in a
+self-hosted environment
+.
 Enterprise admins can restrict which permission modes are available. See
 enterprise configuration
 for details.
@@ -1588,7 +1592,9 @@ Claude Enterprise Administrator Guide
 Data handling
 Claude Code processes your code locally in local sessions, or in cloud sessions on Anthropic-managed infrastructure, unless your organization routes them to a
 self-hosted environment
-. Conversations and code context are sent to Anthropic’s API for processing. See
+. Cloud sessions, including in a self-hosted environment, send conversations and code context to Anthropic’s API for processing; local and SSH sessions send them to whichever
+model provider
+your deployment configures, Anthropic’s API by default. See
 data handling
 for details on data retention, privacy, and compliance.
 ​

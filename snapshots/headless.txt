@@ -598,11 +598,20 @@ touch
 mv
 , and
 cp
-. Other shell commands and network requests still need an
+. Apart from the
+read-only command set
+, other shell commands and network requests still need an
 --allowedTools
 entry or a
 permissions.allow
-rule, otherwise the run aborts when one is attempted:
+rule. See
+what
+acceptEdits
+auto-approves
+for the full list.
+This example applies lint fixes with
+acceptEdits
+as the baseline:
 claude
 -p
 "Apply the lint fixes"

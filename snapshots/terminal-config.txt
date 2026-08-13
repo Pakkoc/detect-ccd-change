@@ -551,12 +551,12 @@ Claude Code keeps the collapsed content under
 ~/.claude/paste-cache/
 , so when you recall a prompt from
 command history
-and resubmit it, Claude Code sends the full pasted content again, including in a later session, until the cache file ages past
-cleanupPeriodDays
-.
+and resubmit it, Claude Code sends the full pasted content again, including in a later session, until the retention sweep removes the cache file.
 Claude Code deletes cache files older than
 cleanupPeriodDays
-at startup, so a recalled prompt can reference pasted text that no longer exists. When you submit such a prompt, Claude Code never sends the literal
+, following the
+retention sweep rules
+, so a recalled prompt can reference pasted text that no longer exists. When you submit such a prompt, Claude Code never sends the literal
 [Pasted text #N]
 string, and shows a notification naming the missing paste:
 In a plain prompt with text remaining, Claude Code removes the placeholder and sends the remaining text.

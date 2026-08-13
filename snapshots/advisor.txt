@@ -32,18 +32,6 @@ Advisor Tool (experimental) is on and may use more tokens · /advisor
 notification appears after the session starts. To stop using it, see
 Turn the advisor off
 .
-Claude Code doesn’t offer Fable 5 as the advisor. For organizations with
-Fable 5 access
-, the
-/advisor
-picker lists it as a dimmed, unselectable row labeled
-Fable 5 (temporarily unavailable)
-, and Claude Code rejects
-/advisor fable
-and
---advisor fable
-. Fable 5 as the main model isn’t affected.
-A remotely configured rollout controls when Fable 5 returns as an advisor option.
 ​
 Use the
 /advisor
@@ -93,9 +81,7 @@ availableModels
 allowlist.
 ​
 Choose an advisor model
-The advisor must be at least as capable as the main model. Fable 5 satisfies the capability check but
-isn’t offered as the advisor
-, so the Fable entries in the following table apply once the rollout returns it as an option. The accepted advisors for each main model are:
+The advisor must be at least as capable as the main model. The accepted advisors for each main model are:
 Main model
 Accepted advisors
 Notes
@@ -115,15 +101,17 @@ Fable, and Opus 4.7 or later
 Opus 4.7 and later Opus models are ranked as equally capable, so any of them accepts another as an advisor. An Opus 4.7 main with an Opus 4.6 or Sonnet 5 advisor is rejected
 Fable 5 (v2.1.170+)
 Fable
-An Opus or Sonnet advisor is rejected. Fable isn’t offered as the advisor, so a Fable 5 main model runs without one
-Fable 5 requires Claude Code v2.1.170 or later and Fable 5 access, whether it acts as the main model or the advisor.
+An Opus or Sonnet advisor is rejected
+Fable 5 requires Claude Code v2.1.170 or later and
+Fable 5 access
+, whether it acts as the main model or the advisor.
 Set the advisor as
-opus
-or
-sonnet
-, or as
 fable
-once the rollout returns it as an option. These aliases resolve to Claude Code’s built-in default version for each model family, which advances with new Claude Code releases. You can also pass a full model ID such as
+,
+opus
+, or
+sonnet
+. These aliases resolve to Claude Code’s built-in default version for each model family, which advances with new Claude Code releases. You can also pass a full model ID such as
 claude-opus-5
 .
 Subagents inherit the configured advisor and apply the same pairing check against their own model.
@@ -134,9 +122,7 @@ command output and a notification show this. Subagents whose own model satisfies
 If the main model or the advisor is a model Claude Code does not recognize, the advisor is not attached.
 ​
 Common model pairings
-Any accepted pairing works. Pairings that use Fable 5 as the advisor apply once Fable 5
-returns as an advisor option
-. These combinations balance cost against capability in different ways:
+Any accepted pairing works. These combinations balance cost against capability in different ways:
 Pairing
 When to use
 Sonnet main + Opus advisor
@@ -197,11 +183,15 @@ configured with
 ANTHROPIC_BASE_URL
 , availability depends on whether the gateway forwards the request intact to the Anthropic API.
 Supported main model
-: Opus 4.6 or later, Sonnet 4.6 or later, or Haiku 4.5. Fable 5 also qualifies on Claude Code v2.1.170 or later, but a Fable 5 main
+: Opus 4.6 or later, Sonnet 4.6 or later, or Haiku 4.5. Fable 5 also qualifies on Claude Code v2.1.170 or later, and a Fable 5 main
 accepts only a Fable advisor
-and Fable
-isn’t offered as the advisor
-, so a Fable 5 session runs without one until the rollout returns it as an option.
+.
+Feature-flag fetching
+: Claude Code turns the advisor on through a feature flag it fetches from Anthropic. In a session where a variable that turns flag fetching off is set, such as
+DISABLE_TELEMETRY
+, the advisor stays off. See
+Features that need feature-flag fetching
+.
 ​
 Turn the advisor off
 To stop using the advisor and clear your saved
@@ -222,7 +212,7 @@ command becomes unavailable and any configured
 advisorModel
 is ignored. The
 --advisor
-flag is accepted but has no effect; existing scripts that pass it continue to work without errors. See
+flag is accepted but has no effect. See
 Environment variables
 .
 ​

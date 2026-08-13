@@ -137,21 +137,23 @@ new interactive sessions connect to Remote Control automatically
 . Requires Claude Code v2.1.203 or later.
 The Settings section also includes
 Focus view
-, which hides tool calls, tool results, and thinking behind one expandable row per turn, leaving your prompts and Claude’s responses. While Claude works, the row shows the tool currently running. When you turn Focus view on or off, the change applies to every open session immediately, and the choice persists across sessions. You can also toggle it with
+, which hides tool calls, tool results, and thinking behind expandable rows, leaving your prompts and Claude’s responses. Claude’s latest to-do list stays visible, and so does the text a pending question from Claude is asking about. Toggle it there, with
 Ctrl+Option+F
 (Mac) /
 Ctrl+Alt+F
 (Windows/Linux), or from the Command Palette with
 Claude Code: Toggle Focus view
-. Requires Claude Code v2.1.221 or later.
+. The change applies to every open session and persists across sessions. Requires Claude Code v2.1.221 or later.
 Side questions
 : type
 /btw
 followed by a question, or pick it from the command menu, to ask about your session
 without adding to the conversation
-. The answer opens in a panel beside the chat, or below it when the view is narrow, and you can ask follow-up questions in the panel. The thread stays out of the conversation history and survives window reloads. Claude Code keeps the newest 20 exchanges and expires stored threads on the
+. The answer opens in a panel beside the chat, where you can ask follow-up questions. The thread survives window reloads. Claude Code keeps the newest 20 exchanges and expires stored threads on the
 cleanupPeriodDays
-schedule. To clear a thread yourself, click the trash icon in the panel. Requires Claude Code v2.1.227 or later.
+schedule, as long as Claude Code can
+safely determine the retention period
+. To clear a thread, click the trash icon in the panel. Requires Claude Code v2.1.227 or later.
 Context indicator
 : the prompt box shows how much of Claude’s context window you’re using. Claude automatically compacts when needed, or you can run
 /compact
@@ -517,7 +519,7 @@ false
 Hide the onboarding checklist (graduation cap icon)
 focusView
 false
-Hide tool calls, tool results, and thinking behind one expandable row per turn, leaving your prompts and Claude’s responses. You can also toggle Focus view from the command menu. Requires Claude Code v2.1.221 or later
+Hide tool calls, tool results, and thinking behind expandable rows, leaving your prompts and Claude’s responses. Claude’s latest to-do list stays visible. You can also toggle Focus view from the command menu. Requires Claude Code v2.1.221 or later
 respectGitIgnore
 true
 Exclude .gitignore patterns from file searches

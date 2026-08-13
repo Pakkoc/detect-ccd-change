@@ -53,7 +53,7 @@ List dependencies in the
 dependencies
 array of your plugin’s
 .claude-plugin/plugin.json
-. Each entry is either a plugin name or an object with a version constraint.
+.
 The following manifest declares one unversioned dependency and one constrained dependency:
 .claude-plugin/plugin.json
 {

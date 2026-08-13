@@ -315,6 +315,9 @@ background subagents
 and
 background Bash commands
 Keep running. Their output appears in the new branch you switched into, not in the original session
+Remote Control
+connection
+Stays connected. A phone or browser connected to the session follows you into the branch and keeps receiving new messages there
 If you resume the same session in two terminals without forking, messages from both interleave into one transcript. For checkpoint-based rewind within a single session, see
 Checkpointing
 .
@@ -394,13 +397,14 @@ jq
 '.result'
 ​
 Where transcripts are stored
-By default, transcripts are stored as JSONL at
+By default, Claude Code stores transcripts as JSONL at
 ~/.claude/projects/<project>/<session-id>.jsonl
 , where
 <project>
 is your working directory path with non-alphanumeric characters replaced by
 -
-. Each line is a JSON object for a message, tool use, or metadata entry. The entry format is internal to Claude Code and changes between versions, so scripts that parse these files directly can break on any release. To build on session data, use
+. For a working directory whose converted name exceeds 200 characters, Claude Code truncates the name to 200 characters and appends a hash of the full path, so the directory name stays within filesystem limits.
+Each line is a JSON object for a message, tool use, or metadata entry. The entry format is internal to Claude Code and changes between versions, so scripts that parse these files directly can break on any release. To build on session data, use
 /export
 or the
 script interfaces

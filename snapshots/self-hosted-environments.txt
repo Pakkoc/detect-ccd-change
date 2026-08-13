@@ -160,7 +160,11 @@ set to a few minutes before that time. At the retire time:
 The runner stops taking new work.
 The runner releases each active session through the same release path the
 --release-idle-session-min
-flag uses, so the session resumes on a fresh runner when the user sends their next message. A session that’s mid-turn is released as soon as that turn finishes; a session whose finished turn left background tasks running gets up to 60 seconds of grace before releasing anyway.
+flag uses, so the session resumes on a fresh runner when the user sends their next message. When the runner releases each session depends on its state:
+The runner releases a session that’s mid-turn as soon as that turn finishes.
+When a turn finishes and leaves background tasks running, the runner waits up to 60 seconds for them, then releases the session even if they’re still running. If the tasks have finished but the follow-up turn that reads their results hasn’t run yet, the runner keeps the session until that turn finishes, and waits no longer than
+SELF_HOSTED_RUNNER_BG_RESULT_GRACE_MS
+for that turn to start.
 The runner exits 0 once all its sessions are released.
 A turn that outlives the kill is still lost;
 Shutdown timing
@@ -217,7 +221,7 @@ api.anthropic.com
 for model inference, and Anthropic stores the session transcript so you can resume the session from another
 supported surface
 .
-Session orchestration, queueing, and the claude.ai interface remain Anthropic-hosted: a self-hosted environment moves session execution into your network, not the control plane.
+A self-hosted environment moves session execution into your network. The control plane remains Anthropic-hosted: session orchestration, queueing, and the claude.ai interface continue to run on Anthropic’s infrastructure.
 ​
 Get started
 The self-hosted environments pages are organized by what you’re doing:

@@ -426,7 +426,7 @@ You can also add flags:
 ultra
 cloud review of a
 github.com
-pull request, posts the finished findings to the PR as one comment from your GitHub account; see
+pull request, preselects posting the finished findings to the PR in the launch dialog; see
 Post findings to the pull request
 . Requires Claude Code v2.1.227 or later
 2

@@ -77,7 +77,11 @@ caps its inherited model at Opus on the Claude API, and inherits the main conver
 Commands
 :
 /design-sync
-and
+,
+/import
+with its
+claude import
+subcommand form, and
 /radio
 are unavailable on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and Claude Platform on AWS,
 /voice
@@ -138,8 +142,10 @@ See note
 deployments hosted on Anthropic
 )
 Fast mode
-✓
-✓
+✓ (
+Owner-enabled
+on Team and Enterprise)
+✓ (provisioned organizations)
 ✗
 ✗
 ✗
@@ -263,13 +269,13 @@ Dashboard and API only.
 Contribution metrics
 requires a claude.ai Team or Enterprise organization.
 6
-Requires Claude Code v2.1.224 or later. WSL 2 counts as Linux; native Windows isn’t supported. With API key authentication, same-machine messaging only. Reaching your
+Requires Claude Code v2.1.224 or later. WSL 2 counts as Linux; native Windows isn’t supported. With API key authentication, same-machine messaging only. Claude can find your
 Claude Code on the web
-sessions requires
-cloud access
-, and reaching your sessions on other machines requires meeting the
+sessions and your sessions on other machines only from a session that is connected to
+Remote Control
+. Connecting needs a claude.ai sign-in and the other
 Remote Control requirements
-; both need a claude.ai sign-in. See
+. See
 Message sessions on other machines
 .
 If you authenticate through an
@@ -308,7 +314,9 @@ analytics dashboard
 server-managed settings
 , and the
 /design-sync
-and
+,
+/import
+, and
 /radio
 commands
 .
@@ -355,7 +363,9 @@ analytics dashboard
 server-managed settings
 , and the
 /design-sync
-and
+,
+/import
+, and
 /radio
 commands
 .
@@ -392,7 +402,9 @@ analytics dashboard
 server-managed settings
 , and the
 /design-sync
-and
+,
+/import
+, and
 /radio
 commands
 .
@@ -441,7 +453,9 @@ analytics dashboard
 server-managed settings
 , and the
 /design-sync
-and
+,
+/import
+, and
 /radio
 commands
 .
@@ -475,9 +489,13 @@ features that require a Claude subscription
 .
 Everything in
 CLI capabilities that vary by provider
-is available, as are
-server-managed settings
-when the API key belongs to a Team or Enterprise organization.
+is available, except that
+fast mode
+requires
+provisioned access
+.
+Server-managed settings
+are also available when your API key belongs to a Team or Enterprise organization.
 ​
 Availability by subscription plan
 If you authenticate through Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or an Anthropic Console API key, this section does not apply to you. When you sign in with a claude.ai account, your plan determines which of the features below are available.

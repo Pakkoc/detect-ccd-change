@@ -53,9 +53,11 @@ Before a tool call executes. Can block it
 PermissionRequest
 When a tool call needs a permission decision
 PermissionDenied
-When a tool call is denied by the auto mode classifier. Use JSON
+When auto mode denies a tool call, including denials without a classifier verdict. Use JSON
 hookSpecificOutput.retry: true
-to tell the model it may retry the denied tool call
+to tell the model it may retry the denied tool call. Claude Code ignores
+retry
+when the classifier produced no verdict
 PostToolUse
 After a tool call succeeds
 PostToolUseFailure
@@ -2181,7 +2183,10 @@ PermissionDenied
 No
 Exit code and stderr are ignored because the denial already occurred. Use JSON
 hookSpecificOutput.retry: true
-to tell the model it may retry
+to tell the model it may retry; Claude Code ignores
+retry: true
+for
+no-verdict denials
 Notification
 No
 Exit code and stderr are ignored
@@ -2325,7 +2330,12 @@ false
 Has no effect: Claude Code accepts the field but doesn’t act on it. A successful hook’s stdout is never shown in the transcript and is recorded in the debug log
 systemMessage
 none
-Warning message shown to the user
+Warning message shown to the user. In
+Agent SDK
+and
+--output-format stream-json
+output, it can arrive as an
+SDKInformationalMessage
 terminalSequence
 none
 A terminal escape sequence for Claude Code to emit on your behalf, such as a desktop notification, window title, or bell. Restricted to OSC
@@ -2459,10 +2469,6 @@ $seq
 The
 { "terminalSequence": "..." }
 shape is the same from any shell or language. On Windows, build the escape string in PowerShell or a script and emit the same JSON object.
-terminalSequence
-is the supported replacement for hooks that previously wrote escape sequences directly to
-/dev/tty
-. The allowlist is restricted to sequences that can’t move the cursor or alter colors, so a hook can never corrupt an on-screen prompt.
 ​
 Add context for Claude
 The
@@ -2582,7 +2588,8 @@ decision.behavior
 PermissionDenied
 hookSpecificOutput
 retry: true
-tells the model it may retry the denied tool call
+tells the model it may retry the denied tool call; Claude Code ignores it for
+no-verdict denials
 WorktreeCreate
 path return
 Command hook prints path on stdout; HTTP hook returns
@@ -3062,12 +3069,6 @@ SessionStart
 hooks with the
 startup
 matcher, then exits without starting a conversation.
---init
-and
---maintenance
-fire Setup hooks only when you combine them with
--p
-. In an interactive session, those two flags don’t currently fire Setup hooks.
 When you start or continue a conversation with
 -p
 , you also need to supply a prompt, as an argument or piped on stdin. You can skip the prompt when a
@@ -4532,7 +4533,9 @@ false
 }
 There is no timeout or retry limit. The session remains on disk until you resume it, subject to the
 cleanupPeriodDays
-retention sweep that deletes session files after 30 days by default. If the answer is not ready when you resume, the hook can return
+retention sweep, which deletes session files after 30 days by default, following the
+retention sweep rules
+. If the answer is not ready when you resume, the hook can return
 "defer"
 again and the process exits the same way. The calling process controls when to break the loop by eventually returning
 "allow"
@@ -5274,13 +5277,15 @@ stopReason
 , or from stderr on exit 2. You see it as a warning in the transcript, and it stays in the conversation, so Claude sees it when the conversation continues.
 ​
 PermissionDenied
-Runs when the
+Runs when
 auto mode
-classifier denies a tool call. This hook only fires in auto mode: it doesn’t run when you manually deny a permission dialog, when a
+denies a tool call, including when it denies without a classifier verdict because
+a safety check separate from auto mode refused the classifier’s own request
+or its response didn’t parse. This hook only fires in auto mode: it doesn’t run when you manually deny a permission dialog, when a
 PreToolUse
 hook blocks a call, or when a
 deny
-rule matches. Use it to log classifier denials, adjust configuration, or tell the model it may retry the tool call.
+rule matches. Use it to log denials, adjust configuration, or tell the model it may retry the tool call.
 Matches on tool name, same values as PreToolUse.
 ​
 PermissionDenied input
@@ -5343,7 +5348,11 @@ Description
 reason
 The denial reason: the fixed text
 Blocked by classifier
-in most sessions, or the classifier’s written explanation when the session’s classifier model provides one. See
+in most sessions, or the classifier’s written explanation when the session’s classifier model provides one. For a denial where a safety check separate from auto mode refused the classifier’s request or its response didn’t parse, the reason starts with
+Auto mode could not evaluate this action and is blocking it for safety
+. For a denial because the classifier model was unavailable, the reason is the fixed text
+Classifier unavailable
+. See
 Review denials
 ​
 PermissionDenied decision control
@@ -5368,9 +5377,14 @@ When
 retry
 is
 true
-, Claude Code adds a message to the conversation telling the model it may retry the tool call. The denial itself is not reversed. If your hook doesn’t return JSON, or returns
+, Claude Code adds a message to the conversation telling the model it may retry the tool call. Claude Code doesn’t reverse the denial itself. If your hook doesn’t return JSON, or returns
 retry: false
 , the denial stands and the model receives the original rejection message.
+Claude Code ignores
+retry: true
+when the classifier produced
+no verdict on the action
+: its response didn’t parse, or a safety check separate from auto mode refused the classifier’s own request. For those denials, Claude Code already tells the model in the rejection message whether to retry later or move on.
 ​
 Notification
 Runs when Claude Code sends notifications. Matches on notification type. Omit the matcher to run hooks for all notification types.
@@ -6362,11 +6376,7 @@ exit
 ​
 ConfigChange
 Runs when a configuration file changes during a session. Use this to audit settings changes, enforce security policies, or block unauthorized modifications to configuration files.
-ConfigChange hooks fire for changes to settings files, managed policy settings, and skill files. The
-source
-field in the input tells you which type of configuration changed, and the optional
-file_path
-field provides the path to the changed file.
+ConfigChange hooks fire for changes to settings files, managed policy settings, and skill files.
 The matcher filters on the configuration source:
 Matcher
 When it fires

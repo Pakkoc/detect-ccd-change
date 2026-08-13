@@ -702,13 +702,16 @@ inherit
 forced subagents onto the main conversation’s model and ignored both of those sources.
 Claude Code checks the environment variable, per-invocation parameter, and frontmatter values against your organization’s
 availableModels
-allowlist. When a blocked value is a family alias such as
+allowlist. For a blocked value, it substitutes another model:
+When the blocked value is a family alias such as
 opus
 , Claude Code runs the subagent on the newest version of that family the allowlist permits, following the same
 substitution rules and provider scope
 as
 /model
-. For any other blocked value, on providers where that substitution doesn’t operate, or when the allowlist permits no version of the family, Claude Code runs the subagent on the inherited model instead. Before v2.1.222, Claude Code ran the subagent on the inherited model for a blocked family alias as well.
+. Before v2.1.222, Claude Code ran the subagent on the inherited model for a blocked family alias as well.
+For any other blocked value, on providers where that substitution doesn’t operate, or when the allowlist permits no version of the family, Claude Code runs the subagent on the inherited model instead.
+In interactive sessions, Claude Code shows a warning naming the requested model and the model the subagent runs on, for either substitution.
 A per-invocation
 model
 parameter also applies when the subagent is
@@ -1137,7 +1140,7 @@ disable-model-invocation: true
 , since preloading draws from the same set of skills Claude can invoke. This includes the bundled
 /verify
 skill: only you can run it, so it can’t be preloaded either.
-If a listed skill is missing or disabled, Claude Code skips it and logs a warning to the debug log.
+If a listed skill is missing or disabled, for example by your organization’s policy, Claude Code skips it and logs a warning to the debug log.
 This is the inverse of
 running a skill in a subagent
 . With
@@ -1895,7 +1898,7 @@ to be enabled; only structured team-protocol messages such as
 shutdown_request
 and
 plan_approval_response
-do. Beyond subagents and teammates, in sessions where cross-session messaging is enabled, the same tool can message
+do. Beyond subagents and teammates, in sessions where cross-session messaging is enabled, Claude can use the same tool to message
 your other Claude Code sessions
 , on this machine or
 beyond it
@@ -1947,7 +1950,9 @@ after restarting Claude Code by resuming the same session.
 Automatic cleanup
 : Claude Code deletes subagent transcripts after the
 cleanupPeriodDays
-retention period, 30 days by default.
+retention period, 30 days by default, following the
+retention sweep rules
+.
 ​
 Auto-compaction
 Subagents support automatic compaction using the same logic as the main conversation. Compaction triggers under the same conditions, and

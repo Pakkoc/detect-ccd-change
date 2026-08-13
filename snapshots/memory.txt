@@ -517,7 +517,7 @@ sandbox.enabled
 Environment variables and API provider routing
 Managed settings:
 env
-Authentication method and organization lock
+Login method and organization restrictions
 Managed settings:
 forceLoginMethod
 ,
@@ -614,6 +614,13 @@ acts as an index of the memory directory. Claude reads and writes files in this 
 MEMORY.md
 to keep track of what’s stored where.
 Auto memory is machine-local. All worktrees and subdirectories within the same git repository share one auto memory directory. Files are not shared across machines or cloud environments.
+Claude Code deletes old session transcripts after the
+cleanupPeriodDays
+retention period, but excludes the files in the memory directory from that
+retention sweep
+.
+MEMORY.md
+and topic files stay until you or Claude edits or deletes them.
 ​
 How it works
 The first 200 lines of

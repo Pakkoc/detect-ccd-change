@@ -29,26 +29,30 @@ message.message.usage
 modelUsage
 on the result message, and a cumulative total on the result message.
 Python
-provides per-step token breakdowns on each assistant message (
+provides per-step token breakdowns on each assistant message as
 message.usage
-,
-message.message_id
-), per-model cost via
-model_usage
-on the result message, and the accumulated total on the result message (
-total_cost_usd
 and
-usage
-dict).
+message.message_id
+, per-model cost via
+model_usage
+on the result message, and the cumulative total on the result message as
+total_cost_usd
+.
 Both SDKs use the same underlying cost model and expose the same granularity. The difference is in field naming and where per-step usage is nested.
 Cost tracking depends on understanding how the SDK scopes usage data:
 query()
 call:
 one invocation of the SDK’s
 query()
-function. A single call can involve multiple steps (Claude responds, uses tools, gets results, responds again). Each call produces one
+function. A single call can involve multiple steps: Claude responds, uses tools, gets results, and responds again. Each call produces one
 result
-message at the end.
+message at the end, except in
+streaming input mode
+, where one
+query()
+call carries multiple user turns and each turn emits its own
+result
+message.
 Step:
 a single request/response cycle within a
 query()
@@ -93,28 +97,89 @@ call completes, the SDK emits a result message with
 total_cost_usd
 and cumulative
 usage
-. This is available in both TypeScript (
+, typed as
 SDKResultMessage
-) and Python (
+in TypeScript and
 ResultMessage
-). If you make multiple
+in Python. If you make multiple
 query()
-calls (for example, in a multi-turn session), each result only reflects the cost of that individual call. If you only need the estimated total, you can ignore the per-step usage and read this single value.
+calls, for example in a multi-turn session, each result reflects only the cost of that individual call. If you only need the estimated total, you can ignore the per-step usage and read this single value.
+In streaming input mode, each turn emits its own result message. See
+Track costs in streaming input mode
+for how to read call totals in that mode.
+​
+Track costs in streaming input mode
+In
+streaming input mode
+, one
+query()
+call carries multiple user turns and each turn emits its own result message. The result fields differ in scope:
+usage
+: covers only that turn, and within it only the main agent loop, not any subagents it ran.
+total_cost_usd
+and
+modelUsage
+, or
+model_usage
+in Python
+: carry the running total for the whole call so far.
+In a call where your app never sends
+/clear
+,
+/reset
+, or
+/new
+, read the latest result for call totals rather than summing across results.
+The running totals start over each time your app sends one of those three commands, and inside a
+query()
+call nothing else resets them. Three results matter for your accounting:
+The
+/clear
+turn’s own result
+: covers only what has run since the reset, and carries a new
+session_id
+.
+Every later result
+: keeps counting from that reset.
+The last result before each
+/clear
+: holds the total for the turns since the previous reset.
+To total the whole call, add the last result from before each
+/clear
+to the call’s final result. Every other result, including the
+/clear
+turn’s own, is superseded by a later one.
+In TypeScript, the SDK also emits an
+SDKConversationResetMessage
+at each reset, so you can detect resets from the stream. The Python SDK drops that message before it reaches your app, so in Python, count the resets yourself from the
+/clear
+turns your app sends.
+maxBudgetUsd
+, or
+max_budget_usd
+in Python, is compared against the same running total, so a
+/clear
+also starts the budget over.
 ​
 Get the total cost of a query
-The result message (
-TypeScript
-,
-Python
-) marks the end of the agent loop for a
+The result message, typed as
+SDKResultMessage
+in TypeScript and
+ResultMessage
+in Python, marks the end of the agent loop for a
 query()
 call. It includes
 total_cost_usd
-, the cumulative estimated cost across all steps in that call. This works for both success and error results, though in Python the field is typed as optional and may be
+, the cumulative estimated cost across all steps in that call. In Python the field is typed as optional, so check that it isn’t
 None
-on some error paths. If you use sessions to make multiple
+before you read it. Success and error results both carry it, though the final result of a
+session crash
+may carry it zeroed.
+If you use sessions to make multiple
 query()
-calls, each result only reflects the cost of that individual call.
+calls, each result reflects only the cost of that individual call. In streaming input mode, read call totals as described in
+Track costs in streaming input mode
+.
 The three result-level fields differ in what they count when the agent spawns
 subagents
 . Use
@@ -255,6 +320,11 @@ error
 "
 )
 asyncio.run(main())
+To bound how much subagents can add to
+total_cost_usd
+, set the
+depth, concurrency, and spend limits
+on the query.
 ​
 Track per-step and per-model usage
 The examples in this section use TypeScript field names. In Python, the equivalent fields are
@@ -277,12 +347,12 @@ usage
 object with token counts. When Claude uses tools in parallel, multiple messages share the same
 id
 with identical usage data. Track which IDs you’ve already counted and skip duplicates to avoid inflated totals.
-Parallel tool calls produce multiple assistant messages whose nested
-BetaMessage
-shares the same
-id
-and identical usage. Always deduplicate by ID to get accurate per-step token counts.
-The following example accumulates input and output tokens across all steps, counting each unique message ID only once:
+The deduplicated per-step values are accurate for input and cache tokens. Per-step
+output_tokens
+is a placeholder, so
+read output tokens from the result message
+.
+The following example accumulates input tokens across all steps, counting each unique main-loop message ID only once and skipping subagent messages, and reads the output total from the result message, which covers the main loop:
 import
 {
 query
@@ -304,7 +374,7 @@ totalInputTokens
 0
 ;
 let
-totalOutputTokens
+resultOutputTokens
 =
 0
 ;
@@ -328,6 +398,11 @@ message
 type
 ===
 "assistant"
+&&
+!
+message
+.
+parent_tool_use_id
 ) {
 const
 msgId
@@ -364,10 +439,20 @@ usage
 .
 input_tokens
 ;
-totalOutputTokens
-+=
+}
+}
+if
+(
 message
 .
+type
+===
+"result"
+) {
+// Per-step output_tokens is a placeholder; the result message
+// carries the accumulated output total.
+resultOutputTokens
+=
 message
 .
 usage
@@ -377,13 +462,12 @@ output_tokens
 }
 }
 }
-}
 catch
 (
 error
 ) {
 // A single-shot query() throws after yielding an error result, so the
-// totals below still reflect the steps that ran before the failure.
+// input total below still reflects the steps that ran before the failure.
 console
 .
 error
@@ -423,7 +507,7 @@ log
 (
 `Output tokens:
 ${
-totalOutputTokens
+resultOutputTokens
 }
 `
 );
@@ -576,9 +660,13 @@ Each
 query()
 call returns its own
 total_cost_usd
-. The SDK does not provide a session-level total, so if your application makes multiple
+. The SDK doesn’t provide a session-level total, so if your application makes multiple
 query()
-calls (for example, in a multi-turn session or across different users), accumulate the totals yourself.
+calls, for example in a multi-turn session or across different users, accumulate the totals yourself. In streaming input mode, read each call’s total as described in
+Track costs in streaming input mode
+. For a call that ended in a crash, see
+Recover totals after a session crash
+.
 The following examples run two
 query()
 calls sequentially, add each call’s
@@ -774,33 +862,95 @@ total_spend
 )
 asyncio.run(main())
 ​
-Handle errors, caching, and token discrepancies
-For accurate cost tracking, account for failed conversations, cache token pricing, and occasional reporting inconsistencies.
+Handle errors, caching, and output token counts
+For accurate cost tracking, account for the placeholder output count on assistant messages, the tokens a failed conversation consumed, and cache token pricing.
 ​
-Resolve output token discrepancies
-In rare cases, you might observe different
+Read output tokens from the result message
+Claude Code builds each assistant message from the usage the API reported when the response began, so the message’s
 output_tokens
-values for messages with the same ID. When this occurs:
-Use the highest value:
-the final message in a group typically contains the accurate total.
-Prefer the result message:
-the
-total_cost_usd
-in the result message reflects the SDK’s accumulated estimate across all steps, so it is more reliable than summing per-step values yourself. It is still an estimate and may differ from your actual bill.
-Report inconsistencies:
-file issues at the
-Claude Code GitHub repository
-.
+is only the count the API had reported at
+message_start
+, before the response was generated. One API response can produce several assistant messages, and every one of them carries that same placeholder.
+The API reports the real output count at the end of the response, and Claude Code adds it to the result message. Read output tokens from the result’s
+usage
+, or from
+modelUsage
+for a per-model breakdown.
+To watch a response’s output count grow while it streams, set
+includePartialMessages
+, or
+include_partial_messages
+in Python, and read
+usage
+from each
+message_delta
+stream event, typed as
+SDKPartialAssistantMessage
+in TypeScript and
+StreamEvent
+in Python.
 ​
 Track costs on failed conversations
 Both success and error result messages include
 usage
 and
 total_cost_usd
-; in Python both fields are typed as optional and may be
+; in Python both fields are typed as optional, so check that they aren’t
 None
-on some error paths. If a conversation fails mid-way, you still consumed tokens up to the point of failure. Always read cost data from the result message regardless of its
+before you read them.
+If a conversation fails midway, you still consumed tokens up to the point of failure. Read cost data from every result message, whether its
 subtype
+is
+success
+or one of the error subtypes. On some error results,
+usage
+reports less than the call spent:
+error_during_execution
+after a
+session crash
+: every cost field may be zeroed.
+error_max_budget_usd
+:
+usage
+leaves out the response that crossed the budget, while
+total_cost_usd
+and
+modelUsage
+include it.
+Where you have the choice, account from
+total_cost_usd
+or
+modelUsage
+rather than
+usage
+.
+​
+Recover totals after a session crash
+When the Claude Code process crashes, it emits a final
+error_during_execution
+result and exits, in single-shot and streaming input mode alike. That result may carry zeroed
+usage
+,
+total_cost_usd
+, and
+modelUsage
+, so recover the call’s totals from what arrived before it. Step 1 recovers the full totals whenever an earlier result exists; the fallback in step 2 recovers only the main loop’s input and cache tokens.
+Use the result of the turn before the crash. In streaming input mode, it holds the running total since the start of the call or since the last
+/clear
+. Go to step 2 instead when that result can’t help you:
+The call was single-shot, so no earlier result exists.
+The crash happened on the first turn.
+The turn before the crash was the
+/clear
+itself, so its result covers only the reset.
+Sum the
+usage
+on the assistant messages instead, counting each API response once, as the
+Track per-step usage
+example does. In single-shot mode, sum all of them; in streaming input mode, sum the ones that arrived after the last result. This gives you the main loop’s input and cache tokens. Subagent usage isn’t recoverable this way, and neither are output tokens or USD cost, because
+per-step
+output_tokens
+is a placeholder
 .
 ​
 Track cache tokens

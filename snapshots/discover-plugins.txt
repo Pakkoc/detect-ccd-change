@@ -626,11 +626,7 @@ directory, so the summary can report
 even when the plugin’s skills reloaded.
 Reloading has a token cost on the next request: newly loaded components announce themselves in content appended to the conversation, while the existing history still reads from the prompt cache. A plugin that provides MCP servers costs more when its tools aren’t deferred by
 tool search
-: the change invalidates the cache and the next request re-reads the entire conversation. In that case
-/reload-plugins
-shows a warning and does not apply the reload; pass
---force
-to apply anyway. See
+: the change invalidates the cache and the next request re-reads the entire conversation. See
 enabling or disabling a plugin
 for details.
 ​
@@ -708,7 +704,6 @@ export
 FORCE_AUTOUPDATE_PLUGINS
 =
 1
-This is useful when you want to manage Claude Code updates manually but still receive automatic plugin updates.
 ​
 Configure team marketplaces
 Team admins can set up automatic marketplace installation for projects by adding marketplace configuration to

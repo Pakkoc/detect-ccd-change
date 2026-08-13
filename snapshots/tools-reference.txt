@@ -129,11 +129,11 @@ Lists the agents Claude can message with
 SendMessage
 , apart from
 agent team
-teammates, which Claude reaches through the team’s roster: subagents in the session, your other local Claude Code sessions, your
-Claude Code on the web
-sessions when this session has cloud access, and your Remote Control sessions on other machines while this session is connected to
+teammates, which Claude reaches through the team’s roster: subagents in the session, your other local Claude Code sessions, and, while this session is connected to
 Remote Control
-. Backs the
+, your
+Claude Code on the web
+sessions and your Remote Control sessions on other machines. Backs the
 /list-agents
 command. See
 cross-session messaging
@@ -183,7 +183,8 @@ on claude.ai. Backs the
 command. The
 RemoteTrigger
 input reference
-documents every action and the organization policies that remove the tool. Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry
+documents every action and the organization policies that remove the tool. Routines live on claude.ai and require a Pro, Max, Team, or Enterprise plan, so this tool is not accessible from Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry. Also unavailable when you turn off
+feature-flag fetching
 No
 ReportFindings
 Reports code-review findings as a structured list, with a file, summary, and failure scenario per finding, so Claude Code can render them instead of printing them as text. Claude calls it when active code-review instructions tell it to. Requires Claude Code v2.1.196 or later. As of v2.1.199, a finding can also carry an optional
@@ -208,7 +209,8 @@ in
 Stop hook input
 . Not available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, where a
 /loop
-prompt with no interval runs on a fixed schedule instead
+prompt with no interval runs on a fixed schedule instead. The same happens when you turn off
+feature-flag fetching
 No
 SendMessage
 Sends a message to another agent: an
@@ -388,9 +390,9 @@ allow rule also grants read access to the same path, so you don’t need a match
 Read(...)
 rule. A
 Read(...)
-deny rule also blocks the Edit tool on the same path, including creating a new file there, because editing requires reading the result back. The
+deny rule also blocks the Edit and Write tools on the same path, including creating a new file there, because both tools change content Claude has to be able to read back. The
 Read
-deny check on edits requires Claude Code v2.1.208 or later.
+deny check requires Claude Code v2.1.208 or later on edits, and v2.1.228 or later on writes.
 Hook
 matcher
 fields use bare tool names, not the parenthesized rule format. See
@@ -578,12 +580,14 @@ For long-running processes such as dev servers or watch builds, Claude can set
 run_in_background: true
 to start the command as a background task and continue working while it runs. List and stop background tasks with
 /tasks
-. In non-interactive mode with the
+. When a
+subagent running in the foreground
+started the command, Claude Code ends it when that subagent gives its final response. Commands started by the main conversation or by a background subagent keep running. In non-interactive mode with the
 -p
 flag,
 background tasks end shortly after the run’s final result
 .
-When a command reaches its timeout without finishing, Claude Code moves it to the background instead of stopping it. Claude keeps working while the command runs to completion. Setting
+When a command reaches its timeout without finishing, Claude Code moves it to the background instead of stopping it. Claude keeps working while the command continues. Claude Code applies the same lifetime rules to a moved command as to any other background command, so it still ends a foreground subagent’s command at that subagent’s final response. Setting
 CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1
 disables auto-backgrounding along with the rest of the background task functionality.
 Claude Code never auto-backgrounds three kinds of command. It stops them at the timeout instead:
@@ -1132,7 +1136,7 @@ parameter, such as
 Jupyter notebooks
 :
 .ipynb
-files return all cells with their outputs, including code, markdown, and visualizations.
+files return all cells with their outputs, including code, markdown, and visualizations. Claude Code refuses to read a notebook file over 100 MB; the error tells Claude how to read a portion of the notebook instead, such as a slice of cells, with a shell command.
 Read only reads files, not directories. Claude lists directory contents with a shell command such as
 ls
 .
@@ -1220,7 +1224,16 @@ survives the clear, such as a running workflow, the count carries over instead.
 ​
 Write tool behavior
 The Write tool creates a new file or overwrites an existing one with the full content provided. It doesn’t append or merge.
-If the target path already exists, Claude must have read that file at least once in the current conversation before overwriting it. A Write to an unread existing file fails with an error. This constraint doesn’t apply to new files.
+Whether Claude must read an existing file in the current conversation before overwriting it depends on the model and the file:
+Claude Opus 4.6, Claude Haiku 4.5, and older models always require the read, so a Write to an unread existing file fails with an error.
+Newer models can overwrite a file they never read this session under the same conditions as
+read-before-edit
+: reading it wouldn’t need a permission prompt and the Read tool is available.
+Jupyter notebooks, and files Claude has read only partially with a
+PARTIAL view
+notice
+, require the read on every model.
+This constraint doesn’t apply to new files. Before v2.1.228, every model required the read before overwriting an existing file.
 Viewing the file with Bash also satisfies this requirement under the same rules described in
 Edit tool behavior
 .

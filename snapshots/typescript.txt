@@ -1258,7 +1258,7 @@ Hook callbacks for events
 includeHookEvents
 boolean
 false
-Include hook lifecycle events for every hook event in the message stream as
+Include hook lifecycle events in the message stream as
 SDKHookStartedMessage
 ,
 SDKHookProgressMessage
@@ -1268,7 +1268,23 @@ SDKHookResponseMessage
 SessionStart
 and
 Setup
-hooks are always included and don’t need this option
+hooks are always included and don’t need this option. Some hook events, such as
+Notification
+,
+SessionEnd
+,
+PreCompact
+, and
+PostCompact
+, never produce an
+SDKHookStartedMessage
+, even with this option. For those events, Claude Code still emits an
+SDKHookProgressMessage
+while a command hook that runs for more than a second produces output, and emits an
+SDKHookResponseMessage
+only when a hook
+that runs in the background
+finishes
 includePartialMessages
 boolean
 false
@@ -1390,6 +1406,14 @@ resume
 string
 undefined
 Session ID to resume
+resumeDropsTurn
+string
+undefined
+With
+resumeSessionAt
+: the prompt UUID of the turn the truncating resume intends to discard. Claude Code refuses the resume when the discarded range contains anything not attributable to that turn, such as absorbed queued messages or task notifications, and names the
+--resume-drops-turn
+flag in the rejection message. Only the Agent SDK and print-mode resumes read the pair. Requires Claude Code v2.1.223 or later
 resumeSessionAt
 string
 undefined
@@ -1407,7 +1431,7 @@ Use a specific UUID for the session instead of auto-generating one
 sessionStore
 SessionStore
 undefined
-Mirror session transcripts to an external backend so any host can resume them. See
+Mirror session transcripts to an external backend so another host can resume them. See
 Persist sessions to external storage
 sessionStoreFlush
 'batched' | 'eager'
@@ -3861,6 +3885,26 @@ request_sent_wall_ms
 : epoch milliseconds at which Claude Code dispatched the API request, for joins against server-side timestamps. Present only together with
 user_message_uuid
 .
+usage
+: main agent loop only. Excludes subagent and auxiliary model calls, and is per-turn in streaming-input sessions. Prefer
+modelUsage
+for token/cost accounting.
+modelUsage
+: per-model totals for every model call made through the query pipeline during this
+query()
+call, including the main loop, subagents, and internal calls such as compaction and Workflow agents. Helper calls outside that pipeline, such as the permission classifier and token-counting requests, are excluded. In streaming-input sessions the totals are cumulative across turns, so read the latest result rather than summing across results. See
+Track costs in streaming input mode
+for resets and
+Recover totals after a session crash
+for zeroed results.
+total_cost_usd
+: cumulative estimated cost in USD for this
+query()
+call, covering the same calls as
+modelUsage
+and reset at the same points. It is an estimate, not a billing statement. See
+Track cost and usage
+for accuracy caveats.
 terminal_reason
 : why the loop ended. One of
 "completed"
@@ -3958,11 +4002,18 @@ The
 origin
 field forwards the
 SDKMessageOrigin
-of the user message that triggered this result. When a background task finishes and the SDK injects a synthetic follow-up turn, the resulting
+of the user message that triggered this result. When the SDK injects a synthetic follow-up turn, such as for a finished background task, the resulting
 SDKResultMessage
 carries
 origin: { kind: "task-notification" }
-. Check this field to distinguish results that answer your prompt from results emitted for background-task follow-ups, so you can route or suppress the latter. The field is absent for results emitted before any user turn, such as startup errors.
+. Routines whose trigger fired and server-verified messages from your other sessions arrive with this kind too, each with the
+subkind
+described in
+Task-notification subkinds
+. Check
+kind
+to distinguish results that answer your prompt from injected follow-ups before routing or suppressing them.
+The field is absent for results emitted before any user turn, such as startup errors.
 When a
 PreToolUse
 hook returns
@@ -4349,13 +4400,36 @@ string
 };
 ​
 SDKPermissionDeniedMessage
-Stream event emitted when the permission system auto-denies a tool call without an interactive prompt. Use it to render the denial in your UI as it happens, rather than only observing the
+Stream event emitted when the permission system denies a tool call without an interactive prompt. Use it to render the denial in your UI as it happens, rather than only observing the
 is_error
-tool result that follows. The interactive ask path reaches your application separately through the
+tool result that follows. Which denials it reports depends on how the run handles permission prompts:
+With a
 canUseTool
-callback. Denials issued by a
+callback
+: permission prompts go to your callback, and this event reports the denials Claude Code decides on its own without calling it.
+With neither
+: a bare
+-p
+run, or
+query()
+that sets neither
+canUseTool
+nor
+permissionPromptToolName
+, denies any tool call that would have prompted, and this event reports those denials as well as the ones Claude Code decides on its own. Before v2.1.223, Claude Code didn’t emit this event in runs without a callback.
+With an MCP prompt tool
+, set with
+permissionPromptToolName
+or the
+--permission-prompt-tool
+flag: Claude Code doesn’t emit this event at all, not even for the rule denials it decides on its own.
+In every configuration, this event skips any denial decided on the
 PreToolUse
-hook are not reported through this event.
+hook path, whether the hook denied the call itself or a deny rule overrode the hook’s allow or ask decision. The event is also best-effort: occasionally Claude Code records a denial without emitting this event, so
+permission_denials
+on the
+result message
+is the authoritative record.
 type
 SDKPermissionDeniedMessage
 =
@@ -4522,6 +4596,13 @@ number
 kind
 :
 "task-notification"
+;
+subkind
+?:
+"scheduled-trigger"
+|
+"peer-send-message"
+;
 }
 |
 {
@@ -4534,6 +4615,12 @@ kind
 kind
 :
 "auto-continuation"
+}
+|
+{
+kind
+:
+"unclassified"
 };
 kind
 Meaning
@@ -4565,8 +4652,12 @@ cross-session peer
 Peer origin fields
 for the per-field semantics and the trust model.
 task-notification
-Synthetic turn injected after a background task finished. See
+Synthetic turn injected for a delivery that arrives without a fresh user prompt, such as a finished background task; see
 SDKTaskNotificationMessage
+for that arm. The optional
+subkind
+marks what raised the notification. See
+Task-notification subkinds
 .
 coordinator
 Message from a team coordinator in an
@@ -4574,6 +4665,62 @@ agent team
 .
 auto-continuation
 Synthetic turn injected when the session continues without fresh user input, such as a command result that triggers a follow-up prompt.
+unclassified
+Injected turn whose origin couldn’t be determined. Requires Claude Code v2.1.223 or later. When Claude Code receives an
+SDKUserMessage
+with
+isSynthetic: true
+and can’t classify it as any other
+kind
+, it sets this kind as the message arrives and frames the turn to the model as a non-user source rather than treating it as human input. Your application shouldn’t set this value.
+​
+Task-notification subkinds
+When Claude Code delivers a task notification into a session, it sets
+subkind
+on the notification’s
+origin
+only if Anthropic servers verified where that notification came from.
+subkind
+requires Claude Code v2.1.213 or later, and it takes one of two values:
+scheduled-trigger
+: the notification is a
+routine
+’s stored prompt, delivered because one of the routine’s triggers fired: its schedule, its
+API trigger
+, its
+GitHub trigger
+, or
+Run now
+. Claude Code frames these to the model as the session’s assigned task, with a different notice from the
+notice that other task notifications carry
+.
+peer-send-message
+: the notification is a message that another of your sessions sent with the server-side
+send_message
+tool that
+Claude Code on the web
+sessions use to message each other, not the
+cross-session
+SendMessage
+tool
+, and Anthropic servers verified that both sessions belong to the same private group of sessions. Requires Claude Code v2.1.224 or later. A
+send_message
+delivery the servers didn’t verify that way gets no subkind.
+Every other task notification has no
+subkind
+. That includes
+scheduled tasks
+that fire on your own machine,
+PR activity
+delivered into a session, and background events such as a finished task. Messages from the
+cross-session
+SendMessage
+tool
+aren’t task notifications at all: whether they come from a session on the same machine or through Anthropic servers from another machine, Claude Code gives them
+kind: "peer"
+and the
+peer origin fields
+.
 ​
 Peer origin fields
 A
@@ -7422,7 +7569,9 @@ cancels the pending wakeup and ends the self-paced
 stop
 field requires Claude Code v2.1.202 or later. See the
 ScheduleWakeup row in the tools reference
-for provider availability; it isn’t available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry.
+for availability; it isn’t available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, nor when you turn off
+feature-flag fetching
+.
 ​
 RemoteTrigger
 Tool name:
@@ -7518,6 +7667,8 @@ cursor
 pages through either action’s results. Both actions require Claude Code v2.1.227 or later.
 This tool is available only when the session is authenticated with a claude.ai account on a plan with Routines enabled, and is absent when your organization’s policy disables
 Claude Code on the web
+or when you turn off
+feature-flag fetching
 . On Claude Code v2.1.227 or later, the tool is also absent when an Owner has
 turned off routines for the organization
 . Before v2.1.227, a session with only the routines toggle turned off still showed the tool, and the server denied its calls.
@@ -8140,6 +8291,19 @@ iterations
 ?:
 unknown
 ;
+output_tokens_details
+?:
+{
+thinking_tokens
+?:
+number
+|
+null
+;
+}
+|
+null
+;
 };
 toolStats
 ?:
@@ -8288,15 +8452,26 @@ modelsUsed
 and the backgrounding behavior of
 resolvedModel
 require Claude Code v2.1.212 or later.
-On the
-completed
-variant,
+If Claude Code
+kept the subagent’s isolated worktree
+,
 worktreePath
-is set when the subagent ran in an isolated git worktree, and
+on the
+completed
+result is where to find it.
 worktreeBranch
-names that worktree’s branch when Claude Code created it.
+is its branch, present when Claude Code created the worktree with git.
+Claude Code fills
+usage
+and
+totalTokens
+from the subagent’s final API request, not from the whole run, so
 usage.service_tier
-carries the service tier string the API reported for the subagent’s requests.
+is the service tier string the API reported on that request. When present,
+usage.output_tokens_details.thinking_tokens
+is the number of that request’s output tokens that were thinking tokens. The
+output_tokens_details
+field requires TypeScript SDK v0.3.228 or later, which bundles Claude Code v2.1.228.
 Before v2.1.207, the published type was narrower. It omitted
 worktreePath
 ,
@@ -8435,6 +8610,10 @@ backgroundCwdHint
 ?:
 string
 ;
+backgroundEndsWithFinalResponse
+?:
+true
+;
 dangerouslyDisableSandbox
 ?:
 boolean
@@ -8566,6 +8745,11 @@ popd
 , or
 chdir
 , and notes that the session working directory didn’t change. Both fields require Claude Code v2.1.210 or later.
+When a subagent running in the foreground owns a backgrounded command, Claude Code terminates the command when that subagent gives its final response. Claude Code sets
+backgroundEndsWithFinalResponse
+to
+true
+on such commands, and omits the field when the command survives the turn, as commands started by the main conversation or by background subagents do. The field requires Claude Code v2.1.227 or later.
 ​
 Monitor
 Tool name:
@@ -11771,13 +11955,19 @@ session_id
 string
 ;
 };
-Claude Code prepends a notice to every task notification it sends to the model. The notice states that no human input has occurred, so the model doesn’t treat the notification as a user instruction or approval. To detect a task-notification turn, check
+Claude Code prepends a notice to every task notification it sends to the model, except deliveries stamped with the
+scheduled-trigger
+subkind
+, which carry an assigned-task framing instead. The notice states that no human input has occurred, so the model doesn’t treat the notification as a user instruction or approval.
+To detect a task-notification turn, check
 origin.kind === "task-notification"
-on
+on the
 SDKUserMessage
 or
 SDKResultMessage
-rather than matching on the notice text. Before v2.1.205, Claude Code left the notice off notifications that arrived while the session was idle.
+rather than matching on the notice text. Read
+subkind
+from the same field if you need to know what raised it. Before v2.1.205, Claude Code left the notice off notifications that arrived while the session was idle.
 ​
 SDKToolUseSummaryMessage
 Summary of tool usage in a conversation.
@@ -12520,11 +12710,11 @@ hasChargeableSavedPaymentMethod
 indicates whether a saved payment method is on file. All three fields are absent on rate-limit events that are not credits-required rejections. Requires Claude Code v2.1.181 or later.
 ​
 SDKLocalCommandOutputMessage
-Output from a local slash command (for example,
+Output from a local command such as
 /voice
 or
 /usage
-). Displayed as assistant-style text in the transcript.
+. Displayed as assistant-style text in the transcript.
 type
 SDKLocalCommandOutputMessage
 =
@@ -12612,9 +12802,11 @@ string
 };
 ​
 SDKConversationResetMessage
-Emitted when the session’s conversation is replaced without ending the session, such as after
+Emitted when the session’s conversation is replaced without ending the session. In a
+query()
+call, only
 /clear
-, on plan-mode exit, or when a fresh conversation starts. Mount an empty transcript under
+and its aliases produce this message. Mount an empty transcript under
 new_conversation_id
 and discard any cached session title.
 type
@@ -12946,8 +13138,8 @@ allowedDomains
 strictAllowlist
 boolean
 false
-Deny sandboxed commands access to hosts not in
-allowedDomains
+Deny sandboxed commands access to hosts outside the
+network allowlist
 instead of prompting. Enforced for sandboxed commands only; in-process tools such as WebFetch aren’t gated by it. Only honored from user, managed, or CLI
 --settings
 settings; project settings are ignored. Requires Claude Code v2.1.219 or later
@@ -12958,7 +13150,9 @@ Managed-settings only. When set in
 managed settings
 , only
 allowedDomains
-entries from managed settings are honored and entries from user, project, or local settings are ignored. Has no effect when set via SDK options
+entries and
+WebFetch(domain:...)
+allow rules from managed settings are honored, and allow entries from user, project, or local settings are ignored. Has no effect when set via SDK options
 allowLocalBinding
 boolean
 false

@@ -11,7 +11,9 @@ Use
 /fast
 to toggle on fast mode in the Claude Code CLI. Fast mode is not supported in the VS Code extension.
 Fast mode pricing per MTok input/output is $10/$50 on Opus 5 and Opus 4.8.
-Available to all Claude Code users on subscription plans (Pro/Max/Team/Enterprise) and Claude Console.
+Available to Claude Code users on subscription plans (Pro/Max/Team/Enterprise) and on Claude Console. Team and Enterprise organizations need an Owner to enable it first, and Console organizations need access provisioned first, both described under
+Requirements
+.
 For Claude Code users on subscription plans (Pro/Max/Team/Enterprise), fast mode is available via usage credits only and not included in the subscription rate limits.
 ​
 Toggle fast mode
@@ -156,7 +158,9 @@ for maximum speed on straightforward tasks.
 Requirements
 Fast mode requires all of the following:
 Anthropic API or subscription only
-: fast mode is available through the Anthropic Console API and for Claude subscription plans using usage credits. It is not available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS.
+: fast mode is available through the Anthropic Console API and for Claude subscription plans using usage credits. It is not available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS. Console organizations must also have
+fast mode access provisioned
+.
 Usage credits turned on for subscription plans
 : on a Pro, Max, Team, or Enterprise plan, your account must have
 usage credits
@@ -199,6 +203,14 @@ Where you enable fast mode depends on which product your organization uses:
 Console
 (API customers): an admin enables it in
 Claude Code preferences
+. Fast mode is in
+research preview
+, so your organization must also have fast mode access provisioned before fast mode requests succeed. To get access, contact your account manager or join the waitlist, as described in
+fast mode on the Claude API
+.
+Without provisioned access, the API rejects each fast mode request with a 429, and Claude Code treats each rejection as a
+fast mode rate limit
+. Unlike a rate limit’s cooldown, the rejections continue until access is provisioned.
 Claude AI
 (Team and Enterprise): an Owner enables it at
 Admin Settings > Claude Code

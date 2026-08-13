@@ -669,11 +669,11 @@ claude
 auto
 -p
 "fix all lint errors"
-For non-interactive runs with the
+When the classifier repeatedly blocks actions in a non-interactive run with the
 -p
-flag, auto mode aborts if the classifier repeatedly blocks actions, since there is no user to fall back to. See
+flag, Claude Code doesn’t stop the run. See
 when auto mode falls back
-for thresholds.
+for what happens instead and for the thresholds.
 ​
 Add an adversarial review step
 Before treating a task as done, have a subagent review the diff in a fresh context and report gaps.

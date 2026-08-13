@@ -151,7 +151,9 @@ to bring configuration from other coding agents into Claude Code. Accepts the sa
 --dry-run
 and
 --yes
-options as the command. Requires Claude Code v2.1.213 or later
+options as the command. Not available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS. Also unavailable when you turn off
+feature-flag fetching
+. Requires Claude Code v2.1.213 or later
 claude import codex --dry-run
 claude logs <id>
 Print recent output from a
@@ -253,7 +255,14 @@ non-interactively. Prints findings to stdout and exits 0 on success or 1 on fail
 --json
 for the raw payload and
 --timeout <minutes>
-to override the 30-minute default
+to override the 30-minute default. Use
+--post
+on a
+github.com
+pull request target to post the finished findings to the PR as one plain comment from your GitHub account.
+--no-post
+is the default. Requires Claude Code v2.1.227 or later. See
+Post findings to the pull request
 claude ultrareview 1234 --json
 If you mistype a subcommand, Claude Code suggests the closest match and exits without starting a session. For example,
 claude udpate
@@ -298,16 +307,17 @@ claude --add-dir ../apps ../lib
 Enable the server-side
 advisor tool
 for this session with a model alias,
+fable
+,
 opus
-or
+, or
 sonnet
 , or a full model ID. Takes precedence over the
 advisorModel
 setting for the session.
-Claude Code doesn’t offer Fable 5 as the advisor
-:
-claude --advisor fable
-exits with an error
+fable
+requires
+Fable 5 access
 claude --advisor opus
 --agent
 Specify an agent for the current session (overrides the
@@ -569,7 +579,11 @@ blocks. Requires
 --print
 and
 --output-format stream-json
-. The
+. Claude Code also forwards messages from
+nested subagents
+, setting
+parent_tool_use_id
+to the ID of the Agent tool call that spawned each one; this requires Claude Code v2.1.219 or later. The
 CLAUDE_CODE_FORWARD_SUBAGENT_TEXT
 environment variable enables the same behavior. Requires Claude Code v2.1.211 or later
 claude -p --output-format stream-json --verbose --forward-subagent-text "query"
@@ -594,11 +608,27 @@ SessionStart
 hooks, then exit without starting a conversation
 claude --init-only
 --include-hook-events
-Include hook lifecycle events from every hook event in the output stream.
+Include hook lifecycle events in the output stream.
 SessionStart
 and
 Setup
-hook events are always included and don’t need this flag. Requires
+hook events are always included and don’t need this flag. Some hook events, such as
+Notification
+,
+SessionEnd
+,
+PreCompact
+, and
+PostCompact
+, never produce a
+hook_started
+event, even with this flag. For those events, Claude Code still emits
+hook_progress
+while a command hook that runs for more than a second produces output, and emits
+hook_response
+only when a
+hook that runs in the background
+finishes. Requires
 --output-format stream-json
 claude -p --output-format stream-json --verbose --include-hook-events "query"
 --include-partial-messages
@@ -806,7 +836,7 @@ appear in the picker marked with
 bg
 claude --resume auth-refactor
 --safe-mode
-Start with all customizations disabled to troubleshoot a broken configuration: CLAUDE.md, skills, plugins, hooks, MCP servers, custom commands and agents, output styles, workflows, custom themes, custom keybindings, status line and file-suggestion commands, LSP servers, and auto-memory do not load. Authentication, model selection, built-in tools, and permissions work normally, which differs from
+Start with all customizations disabled to troubleshoot a broken configuration: CLAUDE.md, skills, plugins, hooks, MCP servers, custom commands and agents, output styles, workflows, custom themes, custom keybindings, status line and file-suggestion commands, LSP servers, and auto memory do not load. Authentication, model selection, built-in tools, and permissions work normally, which differs from
 --bare
 . Managed settings policy still applies, including policy-configured hooks, status line, and file-suggestion commands; managed plugins, managed skills, managed CLAUDE.md, and policy-configured MCP servers do not. Useful for checking whether a customization is what triggers
 automatic model fallback

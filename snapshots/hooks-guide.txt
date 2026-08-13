@@ -905,9 +905,11 @@ Before a tool call executes. Can block it
 PermissionRequest
 When a tool call needs a permission decision
 PermissionDenied
-When a tool call is denied by the auto mode classifier. Use JSON
+When auto mode denies a tool call, including denials without a classifier verdict. Use JSON
 hookSpecificOutput.retry: true
-to tell the model it may retry the denied tool call
+to tell the model it may retry the denied tool call. Claude Code ignores
+retry
+when the classifier produced no verdict
 PostToolUse
 After a tool call succeeds
 PostToolUseFailure
@@ -1672,9 +1674,6 @@ reason, set when you run
 ]
 }
 }
-For full matcher syntax, see the
-Hooks reference
-.
 ​
 Filter by tool name and arguments with the
 if

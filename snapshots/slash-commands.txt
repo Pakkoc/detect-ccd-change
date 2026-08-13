@@ -634,15 +634,15 @@ instead.
 ​
 Creating Custom Slash Commands
 In addition to using built-in slash commands, you can create your own custom commands that are available through the SDK. You define custom commands as markdown files in specific directories, the same way you configure subagents.
-The
+Custom commands have been merged into skills. A file in
 .claude/commands/
-directory is the legacy format. The recommended format is
+and a skill at
 .claude/skills/<name>/SKILL.md
-, which supports the same slash-command invocation (
+both create
 /name
-) plus autonomous invocation by Claude. See
+and work the same way. For new work, prefer skills, which add features like a directory for supporting files; see
 Skills
-for the current format. The CLI continues to support both formats, and the examples below remain accurate for
+for SDK usage. The CLI supports both locations, and the examples below remain accurate for
 .claude/commands/
 .
 ​
@@ -651,15 +651,15 @@ Save custom slash commands in one of these directories, depending on their scope
 Project commands
 :
 .claude/commands/
-- Available only in the current project (legacy; prefer
+- Available only in the current project. For new work, prefer
 .claude/skills/
-)
+.
 Personal commands
 :
 ~/.claude/commands/
-- Available across all your projects (legacy; prefer
+- Available across all your projects. For new work, prefer
 ~/.claude/skills/
-)
+.
 ​
 File Format
 Each custom command is a markdown file where:

@@ -301,12 +301,6 @@ name
 field for the invocation name. Use the
 skills/
 layout for plugins that may grow to more than one skill.
-Next steps
-: Ready to add more features? Jump to
-Develop more complex plugins
-to add agents, hooks, MCP servers, and LSP servers. For complete technical specifications of all plugin components, see
-Plugins reference
-.
 ​
 Develop more complex plugins
 Once you’re comfortable with basic plugins, you can create more sophisticated extensions.

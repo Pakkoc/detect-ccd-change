@@ -126,8 +126,7 @@ Learn more about Amazon Bedrock API keys
 .
 ​
 Credential caching and resolution timeout
-Claude Code resolves the AWS default credential provider chain once and keeps the resolved credentials in memory. It reuses them until five minutes before they expire, or for one hour when they carry no expiration, so an SSO-backed profile requests credentials from IAM Identity Center about once per credential lifetime. A credential error from the API clears the cache, and the retry resolves fresh credentials.
-Before v2.1.207, Claude Code resolved the chain on every API request, so an SSO-backed profile requested fresh credentials from IAM Identity Center each time and could be throttled in large deployments.
+Claude Code resolves the AWS default credential provider chain once and keeps the resolved credentials in memory. It reuses them until five minutes before they expire, or for one hour when they carry no expiration, so an SSO-backed profile requests credentials from IAM Identity Center about once per credential lifetime. A credential error from the API clears the cache, and the retry resolves fresh credentials. Requires Claude Code v2.1.207 or later.
 The cache covers every credential option above except an Amazon Bedrock API key, which doesn’t use the provider chain. To resolve the chain on every request instead, set
 CLAUDE_CODE_SKIP_AWS_CRED_CACHE=1
 .
@@ -171,7 +170,7 @@ directory, such as updating credentials, SSO cache, or config files. The command
 awsCredentialExport
 : Only use this if you can’t modify
 .aws
-and must directly return credentials. This command runs whenever credentials need to be refreshed, not only when credentials are expired. Output is captured silently and not shown to the user. The command must output JSON in this format:
+and must directly return credentials. Output is captured silently and not shown to the user. The command must output JSON in this format:
 {
 "Credentials"
 : {
@@ -205,7 +204,7 @@ When you configure
 awsCredentialExport
 without
 awsAuthRefresh
-, Claude Code uses the exported credentials directly and doesn’t re-resolve the AWS default credential provider chain at startup. Before v2.1.206, startup also re-resolved the default provider chain, which made a live SSO or STS call outside your proxy configuration and could block the first prompt for several minutes on networks with restricted egress.
+, Claude Code uses the exported credentials directly and doesn’t re-resolve the AWS default credential provider chain at startup. Requires Claude Code v2.1.206 or later.
 ​
 3. Configure Claude Code
 Set the following environment variables to enable Amazon Bedrock:
@@ -460,7 +459,6 @@ alias. Claude Code skips the availability check for the built-in default your mo
 Model aliases such as
 opus
 don’t act as pins, and neither does a model ID Claude Code doesn’t recognize, such as an application inference profile ARN.
-Before v2.1.211, Claude Code checked the default model’s availability even when a session model was explicitly configured, and could show a fallback notice for a default the session didn’t use.
 ​
 Cross-region inference profile prefixes
 On the Amazon Bedrock

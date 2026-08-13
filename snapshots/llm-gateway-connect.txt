@@ -541,7 +541,7 @@ ANTHROPIC_API_KEY
 ANTHROPIC_AUTH_TOKEN
 , or an
 apiKeyHelper
-is active. As of v2.1.196, Remote Control is also disabled while
+is active. Remote Control is also disabled while
 ANTHROPIC_BASE_URL
 points at a non-Anthropic host, so signing in with claude.ai isn’t enough on its own.
 To restore either feature, log in with claude.ai and unset the gateway variables that feature checks. The Remote Control section of
@@ -741,13 +741,7 @@ Set the block for the provider your gateway team named. The skip-auth variables 
 ANTHROPIC_AUTH_TOKEN
 after the block, except for Microsoft Foundry, which uses
 ANTHROPIC_FOUNDRY_API_KEY
-as shown. A Microsoft Foundry gateway that expects a bearer token can use
-ANTHROPIC_FOUNDRY_AUTH_TOKEN
-instead; it takes precedence over
-ANTHROPIC_FOUNDRY_API_KEY
-when both are set.
-ANTHROPIC_FOUNDRY_AUTH_TOKEN
-requires Claude Code v2.1.203 or later.
+as shown.
 ​
 Amazon Bedrock
 Bash or Zsh
@@ -956,6 +950,27 @@ env:
 CLAUDE_CODE_USE_ANTHROPIC_AWS
 =
 "1"
+​
+Confirm the provider route
+Start
+claude
+from the shell where you set the block and run
+/status
+. With the Amazon Bedrock block, the
+Status
+tab shows rows like these:
+API provider: Amazon Bedrock
+Bedrock base URL: https://llm-gateway.example.com/bedrock
+AWS auth skipped
+The other blocks produce the same rows under their provider’s names, for example
+Vertex base URL
+and
+GCP auth skipped
+for Google Cloud’s Agent Platform; the Microsoft Foundry block shows an auth skipped row only if you set
+CLAUDE_CODE_SKIP_FOUNDRY_AUTH
+. If you also route through a corporate proxy, a
+Proxy
+row shows the proxy URL. If the base URL row is missing, the variable didn’t reach the session.
 ​
 Troubleshoot gateway errors
 These are the most common errors when running Claude Code through a gateway, with the gateway-side cause and the fix:

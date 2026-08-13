@@ -2579,7 +2579,7 @@ session_store
 SessionStore
 | None
 None
-Mirror session transcripts to an external backend so any host can resume them. See
+Mirror session transcripts to an external backend so another host can resume them. See
 Persist sessions to external storage
 session_store_flush
 Literal["batched", "eager"]
@@ -2748,7 +2748,7 @@ No
 Additional instructions to append to the preset system prompt
 exclude_dynamic_sections
 No
-Move per-session context such as working directory, the git-repo flag, and auto-memory paths from the system prompt into the first user message. Improves prompt-cache reuse across users and machines. See
+Move per-session context such as working directory, the git-repo flag, and auto memory paths from the system prompt into the first user message. Improves prompt-cache reuse across users and machines. See
 Modify system prompts
 ​
 SystemPromptFile
@@ -4364,6 +4364,12 @@ SDKResultMessage.terminal_reason
 , which lists the full set of values.
 The
 usage
+dict covers the main agent loop only and excludes subagent and other nested or auxiliary model calls. In
+streaming input mode
+, the values are per-turn. Prefer
+model_usage
+for token and cost accounting. The
+usage
 dict contains the following keys when present:
 Key
 Type
@@ -4386,11 +4392,31 @@ int
 Tokens read from existing cache entries.
 The
 model_usage
-dict maps model names to per-model usage. Each value is a
+dict maps model names to per-model usage. It covers every model call made through the query pipeline: the main loop, subagents, and internal calls such as compaction and Workflow agents. Helper calls outside that pipeline, such as the permission classifier and token-counting requests, are excluded from
+model_usage
+. Treat
+model_usage
+as an estimate, not a billing statement.
+In
+streaming input mode
+,
+model_usage
+and
+total_cost_usd
+are cumulative across turns, so read the latest result rather than summing across results. See
+Track costs in streaming input mode
+for resets and
+Recover totals after a session crash
+for zeroed results.
+Each value in
+model_usage
+is a
 ModelUsage
-TypedDict whose keys use camelCase, because the value is passed through unmodified from the underlying CLI process. Import via
+TypedDict, imported via
 from claude_agent_sdk.types import ModelUsage
-. The keys are:
+. Its keys use camelCase because the SDK passes the value through unmodified from the underlying CLI process, matching the TypeScript
+ModelUsage
+type:
 Key
 Type
 Description
@@ -6205,6 +6231,17 @@ None
 |
 None
 ,
+"output_tokens_details"
+: {
+"thinking_tokens"
+:
+int
+|
+None
+}
+|
+None
+,
 },
 "toolStats"
 : {
@@ -6258,14 +6295,14 @@ str
 |
 None
 ,
-# Present for worktree-isolated runs
+# Present when Claude Code kept the subagent's worktree
 "worktreeBranch"
 :
 str
 |
 None
 ,
-# Present for worktree-isolated runs
+# Present when Claude Code created that worktree with git
 }
 Output (status:
 "async_launched"
@@ -6371,13 +6408,15 @@ for tasks Claude Code dispatched to a remote cloud session, where
 sessionUrl
 links to that session and
 taskId
-identifies it. Worktree-isolated runs include
+identifies it. If Claude Code
+kept the subagent’s isolated worktree
+,
 worktreePath
-and
-worktreeBranch
 on the
 completed
-variant.
+variant is where to find it, and
+worktreeBranch
+is its branch when Claude Code created the worktree with git.
 On the
 completed
 variant,
@@ -6397,6 +6436,19 @@ modelsUsed
 and the backgrounding-time
 resolvedModel
 behavior require Claude Code v2.1.212 or later.
+Claude Code fills
+usage
+and
+totalTokens
+from the subagent’s final API request, not from the whole run. When present,
+thinking_tokens
+under
+output_tokens_details
+in
+usage
+is the number of that request’s output tokens that were thinking tokens. The
+output_tokens_details
+key requires Python SDK v0.2.136 or later, which bundles Claude Code v2.1.228.
 ​
 AskUserQuestion
 Tool name:
@@ -8915,7 +8967,9 @@ bool
 False
 Managed-settings only: when set in managed settings, ignore
 allowedDomains
-from non-managed settings sources. Has no effect when set via SDK options
+and
+WebFetch(domain:...)
+allow rules from non-managed settings sources. Has no effect when set via SDK options
 allowUnixSockets
 list[str]
 []
