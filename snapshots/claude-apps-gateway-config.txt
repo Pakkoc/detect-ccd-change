@@ -1802,7 +1802,9 @@ OTEL_EXPORTER_OTLP_ENDPOINT=<public_url>
 OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
 The pushed endpoint is built from the public URL, so metrics and logs need no OTEL configuration from developers or policies. The pushed configuration is applied at the managed tier, overriding
 OTEL_*
-variables a developer sets locally. Independently of the push, a signed-in CLI that has OTLP/HTTP export enabled sends those exports to the gateway rather than to a locally configured endpoint, and without a
+variables a developer sets locally. Whether or not the gateway pushes these variables, a CLI signed in through
+/login
+that has OTLP/HTTP export enabled sends its exports to the gateway rather than to a locally configured endpoint, and without a
 forward_to
 destination for a signal the gateway accepts and discards it; if you already collect Claude Code telemetry directly, add your collector as a
 forward_to

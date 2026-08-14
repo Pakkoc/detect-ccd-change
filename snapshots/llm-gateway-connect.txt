@@ -1107,13 +1107,14 @@ use fast mode behind proxies and LLM gateways
 Claude Code asks you to log in even though the
 curl test
 succeeds
-The CLI has no credential of its own: a reachable base URL isn’t one, and an
+The CLI has no credential of its own: a reachable base URL isn’t one, and in an interactive session an
 env
 block in a project’s
 .claude/settings.json
 or
 .claude/settings.local.json
-applies only after the first-run wizard and trust prompt
+applies only after the first-run wizard and
+trust prompt
 Set
 ANTHROPIC_AUTH_TOKEN
 somewhere Claude Code reads before first-run setup: a shell export, the

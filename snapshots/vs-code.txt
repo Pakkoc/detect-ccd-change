@@ -144,6 +144,15 @@ Ctrl+Alt+F
 (Windows/Linux), or from the Command Palette with
 Claude Code: Toggle Focus view
 . The change applies to every open session and persists across sessions. Requires Claude Code v2.1.221 or later.
+To report a bug, click
+Report a problem
+at the bottom of the menu, or type
+/bug
+or
+/feedback
+with an optional description that prefills the report. When you submit the report and you’re signed in to Anthropic on a first-party connection, Claude Code sends it to Anthropic. On a third-party provider, or without Anthropic credentials, the dialog still opens, but submitting shows an error and sends nothing: unlike the CLI’s
+/bug
+, the extension doesn’t write a local archive. Requires Claude Code v2.1.229 or later.
 Side questions
 : type
 /btw
@@ -227,7 +236,7 @@ Track your costs
 .
 ​
 Customize your workflow
-Once you’re up and running, you can reposition the Claude panel, run multiple sessions, or switch to terminal mode.
+You can reposition the Claude panel, run multiple conversations, organize the sessions list into groups, or switch to terminal mode.
 ​
 Choose where Claude lives
 You can drag the Claude panel to reposition it anywhere in VS Code. Grab the panel’s tab or title bar and drag it to:
@@ -246,6 +255,22 @@ or
 Open in New Window
 from the Command Palette to start additional conversations. Each conversation maintains its own history and context, allowing you to work on different tasks in parallel.
 When using tabs, a small colored dot on the spark icon indicates status: blue means a permission request is pending, orange means Claude finished while the tab was hidden.
+​
+Organize sessions into groups
+In the sessions list in the Activity Bar, you can collect related sessions into named, collapsible groups. Requires Claude Code v2.1.229 or later.
+Group or ungroup a session
+: right-click a session to create a group from it, move it into an existing group, or remove it from its group. Each session belongs to one group at a time, so moving it into another group removes it from the first.
+Move several sessions at once
+:
+Cmd
+-click (Mac) /
+Ctrl
+-click (Windows/Linux) each session, or
+Shift
+-click to select a range, then right-click the selection.
+Rename or delete a group
+: right-click a group header. Deleting a group removes only the group, and its sessions return to the ungrouped list.
+The extension saves groups per workspace folder, so they survive window reloads and appear in every window where you open the same folder. When you search the list, the extension shows matches in one flat list across all groups.
 ​
 Switch to terminal mode
 By default, the extension opens a graphical chat panel. If you prefer the CLI-style interface, open the

@@ -209,6 +209,8 @@ Start a
 Remote Control
 server to control Claude Code from Claude.ai or the Claude app. Runs in server mode (no local interactive session). See
 Server mode flags
+. After you stop the server, you can bring back the sessions it was serving. See
+Resume sessions after stopping the server
 claude remote-control --name "My Project"
 claude respawn <id>
 Restart a
@@ -700,7 +702,9 @@ Set a display name for the session, shown in
 /resume
 and the terminal title. You can resume a named session with
 claude --resume <name>
-.
+. In an interactive session, if another live session on this machine already uses the name, Claude Code applies
+a variant of it
+instead.
 /rename
 changes the name mid-session and also shows it on the prompt bar
 claude -n "my-feature-work"
@@ -783,7 +787,7 @@ claude -p "query"
 --prompt-suggestions
 Emit a
 prompt_suggestion
-message after each turn with a predicted next user prompt. Requires
+message with a predicted next user prompt after each turn that generates one; very short conversations can produce none. Requires
 --print
 ,
 --output-format stream-json
@@ -864,7 +868,9 @@ claude --settings ./settings.json
 --strict-mcp-config
 Only use MCP servers from
 --mcp-config
-, ignoring all other MCP configurations
+, ignoring all other MCP configurations. See
+Exclusive control with managed-mcp.json
+for what the flag does under a managed MCP file
 claude --strict-mcp-config --mcp-config ./mcp.json
 --system-prompt
 Replace the entire system prompt with custom text
@@ -909,11 +915,7 @@ for all, or tool names like
 "Bash,Edit,Read"
 . The flag doesn’t affect MCP tools; to deny those too, use
 --disallowedTools "mcp__*"
-, or pass
---strict-mcp-config
-without
---mcp-config
-so no MCP servers load. A list that omits
+. A list that omits
 EndConversation
 doesn’t remove it;
 ""

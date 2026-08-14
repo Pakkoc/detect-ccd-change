@@ -1819,7 +1819,9 @@ Run
 in Claude Code to browse all configured hooks grouped by event.
 To disable hooks, set
 "disableAllHooks": true
-in your settings file. Hooks configured in managed settings still run unless
+in your settings file. Claude Code reads the value left after
+settings precedence
+applies, so a project’s settings file can override yours. Hooks configured in managed settings still run unless
 disableAllHooks
 is also set there.
 If you edit settings files directly while Claude Code is running, the file watcher normally picks up hook changes automatically.
@@ -2108,20 +2110,11 @@ Verify you’re triggering the right event type:
 PreToolUse
 fires before tool execution,
 PostToolUse
-fires after
-In non-interactive mode with the
--p
-flag,
+fires after. A
 PermissionRequest
-hooks fire only when the Agent SDK’s
-canUseTool
-callback supplies the prompt, or for tool calls inside background subagents. In plain
--p
-runs or with
---permission-prompt-tool
-, use
-PreToolUse
-hooks instead
+hook fires when Claude Code is about to ask you for permission; see the
+limitations
+for the non-interactive cases
 ​
 Hook error in output
 You see a message like “PreToolUse hook error: …” in the transcript.

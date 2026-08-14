@@ -1032,11 +1032,14 @@ ip
 'TargetGroups[0].TargetGroupArn'
 --output
 text)"
-Add the HTTPS listener and raise the idle timeout.
+Add the HTTPS listener.
 --ssl-policy
 pins a modern TLS floor, since omitting it falls back to the legacy
 ELBSecurityPolicy-2016-08
-default, which still accepts TLS 1.0/1.1. The idle timeout matters for streaming: the ALB closes a connection after 60 seconds with no data by default, which cuts off streams during quiet periods, such as long prompt processing before the first token:
+default, which still accepts TLS 1.0/1.1.
+The ALB closes a connection after 60 seconds with no data by default. The gateway’s keepalive pings keep streams inside that default, so raising the timeout adds margin above the ping cadence; the
+Troubleshooting
+row on dropped streams covers the mechanism and older gateways. The commands below add the listener and raise the timeout:
 aws
 elbv2
 create-listener
@@ -1258,7 +1261,8 @@ with the ACM certificate
 alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
 , so the listener doesn’t fall back to the legacy default policy that accepts TLS 1.0 and 1.1
 alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=3600
-, so a 60-second data gap in a stream doesn’t close the connection
+, a margin above the gateway’s streaming keepalive; see
+Troubleshooting
 With IRSA, the AWS SDK reads a projected service-account token and exchanges it with AWS STS, so the pod never needs the EC2 instance metadata service; an egress NetworkPolicy may block
 169.254.169.254
 for gateway pods. The node hop-limit problem in
@@ -1380,8 +1384,10 @@ Add the build step’s two Dockerfile lines that copy the bundle and set
 NODE_EXTRA_CA_CERTS
 , then rebuild, push under a new tag, and redeploy
 Streaming responses drop mid-stream after a quiet period
-The ALB idle timeout closes the connection after 60 seconds with no data by default. A stream that is actively emitting tokens isn’t affected; one that goes quiet, during long prompt processing before the first token or extended thinking with no streamed output, is cut at the gap
-Set the
+A gateway older than v2.1.229 on a Bedrock or Claude Platform on AWS upstream sends nothing while the upstream is quiet, for example during extended thinking with no streamed output. The ALB closes a connection after 60 seconds with no data by default, so it cuts the stream at that gap. Gateways v2.1.229 and later keep a quiet stream under that timeout: on those upstreams the gateway emits an SSE
+ping
+event once about 15 seconds pass with no stream data, and on an Anthropic API upstream it relays the API’s own pings
+Update the gateway to v2.1.229 or later, or set the
 idle_timeout.timeout_seconds
 attribute to
 3600

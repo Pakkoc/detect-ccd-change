@@ -93,7 +93,12 @@ Unique identifier and skill namespace. Skills are prefixed with this (e.g.,
 description
 Shown in the plugin manager when browsing or installing plugins.
 version
-Optional. If set, users only receive updates when you bump this field. If omitted, the version comes from the next source in
+Optional. If set, users only receive updates when you bump this field, except for a
+command
+source
+; see
+version management
+. If omitted, the version comes from the next source in
 version management
 .
 author

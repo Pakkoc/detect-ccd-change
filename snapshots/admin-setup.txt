@@ -1,6 +1,4 @@
-Claude Code enforces organization policy through managed settings that take precedence over local developer configuration, apart from the exceptions under
-Settings precedence
-. You deliver those settings from the Claude admin console, your mobile device management (MDM) system, or a file on disk. The settings control which tools, commands, servers, and network destinations Claude can reach.
+Claude Code enforces organization policy through managed settings that take precedence over local developer configuration. You deliver those settings from the Claude admin console, your mobile device management (MDM) system, or a file on disk. The settings control which tools, commands, servers, and network destinations Claude can reach.
 This page walks through the deployment decisions in order. Each row links to the section below and to the reference page for that area.
 SSO, SCIM provisioning, and seat assignment are configured at the Claude account level. See the
 Claude Enterprise Administrator Guide
@@ -142,15 +140,13 @@ C:\Program Files\ClaudeCode
 policy to WSL on the same machine, set
 wslInheritsWindowsSettings: true
 in either of those admin-only Windows sources.
-Whichever mechanism you choose, managed values take precedence over user and project settings, apart from the exceptions under
-Settings precedence
+Whichever mechanism you choose, managed values take precedence over user and project settings, apart from a few security-sensitive
+exceptions
 . Array settings such as
 permissions.allow
 and
 permissions.deny
 merge entries from all sources, so developers can extend managed lists but not remove from them. For
-two exceptions
-,
 fallbackModel
 and
 availableModels
@@ -223,19 +219,26 @@ allowManagedMcpServersOnly
 managed-mcp.json
 file
 Plugin marketplace control
-Restrict which marketplace sources users can add and install from, reject the CLI flags that sideload plugins, agents, and MCP servers for a single run, and allowlist which marketplaces’ plugins can be suggested
+Restrict which marketplace sources users can add and install from, reject the CLI flags that sideload plugins, agents, and MCP servers for a single run, block
+command
+plugin sources
+, and allowlist which marketplaces’ plugins can be suggested
 strictKnownMarketplaces
 ,
 blockedMarketplaces
 ,
 disableSideloadFlags
 ,
+disableCommandPluginSources
+,
 pluginSuggestionMarketplaces
 Customization lockdown
 Block skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings
 strictPluginOnlyCustomization
 Hook restrictions
-Only managed hooks load; restrict HTTP hook URLs
+Restrict which hooks run and restrict HTTP hook URLs; see
+Hook configuration
+for the full effect list
 allowManagedHooksOnly
 ,
 allowedHttpHookUrls

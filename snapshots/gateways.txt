@@ -80,9 +80,9 @@ allowlist, but the developer still picks within it.
 Other network traffic
 : Claude Code itself sends version checks and downloads directly to Anthropic, separate from the gateway path. Whether the optional client telemetry stream is also on depends on your provider; the
 telemetry defaults table
-covers each case. On a signed-in Claude apps gateway session, the gateway credential disables the Anthropic-bound analytics and pins OTLP export to the gateway, which relays it to the destinations in
-telemetry forwarding
-. Your network still needs egress to the
+covers each case. On a signed-in Claude apps gateway session, the gateway credential disables the Anthropic-bound analytics, and the
+telemetry destination
+depends on how the session signed in. Your network still needs egress to the
 required domains
 , or set
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC

@@ -151,7 +151,9 @@ to the call’s final result. Every other result, including the
 turn’s own, is superseded by a later one.
 In TypeScript, the SDK also emits an
 SDKConversationResetMessage
-at each reset, so you can detect resets from the stream. The Python SDK drops that message before it reaches your app, so in Python, count the resets yourself from the
+at each reset, so you can detect resets from the stream. In Python, the SDK likewise emits a
+ConversationResetMessage
+. Before Python SDK v0.2.137, the Python iterator dropped that message, so on those versions count the resets yourself from the
 /clear
 turns your app sends.
 maxBudgetUsd

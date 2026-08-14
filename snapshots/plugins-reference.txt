@@ -724,7 +724,7 @@ manifest is loaded as a plugin named
 <name>@skills-dir
 on the next session, with no marketplace and no install step. Scaffold one with
 plugin init
-. Unlike a marketplace install, the plugin is discovered in place rather than copied into the plugin cache.
+. Unlike a copied marketplace install, the plugin is discovered in place rather than copied into the plugin cache.
 A skills directory tree supports three distinct things:
 What you have
 What it is
@@ -755,9 +755,11 @@ project
 Only after you accept the workspace
 trust dialog
 for that folder
-A project-scope plugin is checked into the repository and reaches every collaborator who clones it. Because that content comes from the repository rather than from you, it loads only after the same trust gate that governs
+A project-scope plugin is checked into the repository and reaches every collaborator who clones it. Because that content comes from the repository rather than from you, it loads only after the same trust gate that governs project allow rules in
 .claude/settings.json
-, and components that run code are restricted further:
+, so trusting a parent folder or running with
+-p
+isn’t enough, and components that run code are restricted further:
 MCP servers it declares go through the
 same per-server approval
 as a project
@@ -1009,7 +1011,12 @@ name
 "Deployment Tools"
 version
 string
-Optional. Semantic version. Setting this pins the plugin to that version string, so users only receive updates when you bump it. If also set in the marketplace entry,
+Optional. Semantic version. Setting this pins the plugin to that version string, so users only receive updates when you bump it, except for a
+command
+source
+; see
+Version management
+. If also set in the marketplace entry,
 plugin.json
 wins. If omitted, the version comes from the next source in
 Version management
@@ -1607,7 +1614,11 @@ plugin caching
 for cleanup semantics.
 When a plugin updates mid-session, hook commands, monitors, MCP servers, and LSP servers keep using the previous version’s path. Run
 /reload-plugins
-to switch hooks, MCP servers, and LSP servers to the new path; monitors require a session restart.
+to switch hooks, MCP servers, and LSP servers to the new path; monitors require a session restart. For a plugin with a
+command
+source, Claude Code
+can reload the plugin itself
+.
 MCP servers can also call the
 roots/list
 request to read the session’s working directories at runtime. See
@@ -1746,8 +1757,11 @@ plugins to the user’s local
 plugin cache
 (
 ~/.claude/plugins/cache
-) rather than using them in-place.
-Each installed version is a separate directory in the cache, grouped by marketplace and plugin and named for the resolved version, with its own copy of the plugin’s files and
+) rather than using them in place, except for
+command
+sources in link mode
+, which Claude Code uses in place through links in the cache entry.
+For copied plugins, each installed version is a separate directory in the cache, grouped by marketplace and plugin and named for the resolved version, with its own copy of the plugin’s files and
 Node.js package dependencies
 . A dependency resolved from a
 release tag
@@ -1762,7 +1776,7 @@ package.json
 . For plugins that depend on other plugins, see
 plugin dependency versions
 .
-Claude Code runs the install inside the cached version directory each time it creates one: when you install a plugin, when Claude Code updates a plugin to a new version, and at session start when an enabled plugin isn’t cached yet, such as on a new machine. The install runs only when the plugin’s root directory contains both a
+Claude Code runs the install inside the copied version directory each time it creates one: when you install a plugin, when Claude Code updates a plugin to a new version, and at session start when an enabled plugin isn’t cached yet, such as on a new machine. The install runs only when the plugin’s root directory contains both a
 package.json
 and a supported lockfile:
 Lockfile
@@ -1829,7 +1843,7 @@ persistent data directory
 .
 ​
 Path traversal limitations
-Installed plugins cannot reference files outside their directory. Paths that traverse outside the plugin root (such as
+Copied plugins cannot reference files outside their directory. Paths that traverse outside the plugin root (such as
 ../shared-utils
 ) will not work after installation because those external files are not copied to the cache.
 ​
@@ -1845,7 +1859,10 @@ Outside the marketplace:
 the symlink is skipped for security. This prevents plugins from pulling arbitrary host files such as system paths into the cache.
 For plugins installed with
 --plugin-dir
-or from a local path, only symlinks that resolve within the plugin’s own directory are preserved. All others are skipped.
+, from a local path, or from a
+command
+source
+in copy mode, only symlinks that resolve within the plugin’s own directory are preserved. All others are skipped.
 The following command creates a link from inside a marketplace plugin to a shared skill defined by a sibling plugin. On Windows, use
 mklink /D
 from an elevated Command Prompt or enable Developer Mode:
@@ -2131,6 +2148,11 @@ user
 Set a
 userConfig
 option declared in the plugin’s manifest. Repeat the flag to set multiple options
+-y, --yes
+Accept the command that a plugin with a
+command
+source
+runs, without the confirmation prompt. Claude Code still prints the command first. Required when stdin or stdout isn’t a TTY. Has no effect inside a Claude Code session, so run the command from your own terminal
 -h, --help
 Display help for command
 Scope determines which settings file the installed plugin is added to. For example,
@@ -2335,6 +2357,11 @@ local
 , or
 managed
 user
+-y, --yes
+Accept the command that a plugin with a
+command
+source
+runs, without the confirmation prompt. Claude Code still prints the command first. Required when stdin or stdout isn’t a TTY. Has no effect inside a Claude Code session, so run the command from your own terminal
 -h, --help
 Display help for command
 ​
@@ -2636,7 +2663,9 @@ Version management
 Claude Code uses the plugin’s version as the cache key that determines whether an update is available. When you run
 /plugin update
 or auto-update fires, Claude Code computes the current version and skips the update if it matches what’s already installed.
-The version is resolved from the first of these that is set:
+For every source type except
+command
+, Claude Code resolves the version from the first of these that is set:
 The
 version
 field in the plugin’s
@@ -2662,7 +2691,19 @@ unknown
 , for
 npm
 sources or local directories not inside a git repository
-This gives you three ways to version a plugin:
+For a
+command
+source
+, Claude Code always derives the version from what the command produced: a 12-character content hash on its own, or appended to the
+plugin.json
+version as
+<version>-<hash>
+when one is set. Claude Code ignores the marketplace entry’s
+version
+field for command sources. A command whose hashed output changes therefore produces a new version, even when the authored version string stays the same. In
+link mode
+, the hash covers the printed directory’s real path and its top-level entries rather than the file contents.
+For those source types, this gives you three ways to version a plugin:
 Approach
 How
 Update behavior

@@ -596,11 +596,13 @@ settings scope
 }
 The value must be an absolute path or start with
 ~/
-. When set in a project’s
+. When you set it in a project’s
 .claude/settings.json
 or
 .claude/settings.local.json
-, the value is honored only after you accept the workspace trust dialog for that folder, the same gate that governs hooks.
+, Claude Code honors it under the same
+workspace trust rule as hooks in settings files
+.
 The directory contains a
 MEMORY.md
 entrypoint and optional topic files:

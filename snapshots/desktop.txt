@@ -188,11 +188,9 @@ disableAutoMode
 key in
 managed settings
 .
-In Enterprise deployments that route Desktop to Google Cloud’s Agent Platform, auto mode is
-available by default
-, and only Claude Sonnet 5, Opus 4.7 or later, and Fable 5 are supported there. Before Claude Code v2.1.207, Enterprise deployments on Google Cloud’s Agent Platform had to set
-CLAUDE_CODE_ENABLE_AUTO_MODE
-to enable auto mode.
+In Enterprise deployments that route Desktop to Google Cloud’s Agent Platform, auto mode is also available by default; see
+Auto mode on Bedrock, Agent Platform, or Foundry
+for the supported models.
 Start complex tasks in Plan so Claude maps out an approach before making changes. Once you approve the plan, switch to Accept edits or Manual to execute it. See
 explore first, then plan, then code
 for more on this workflow.
@@ -1256,17 +1254,11 @@ file, though these reach Claude sessions only and not dev servers. See
 environment variables
 for the full list of supported variables.
 Extended thinking
-is enabled by default, which improves performance on complex reasoning tasks but uses additional tokens. To disable thinking, set
+is enabled by default, which improves performance on complex reasoning tasks but uses additional tokens. On the Anthropic API, set
 MAX_THINKING_TOKENS
 to
 0
-in the local environment editor; this has no effect on Fable 5, which always uses extended thinking. On
-third-party providers
-,
-0
-omits the
-thinking
-parameter instead, and adaptive-reasoning models may still think. On models with
+in the local environment editor to turn thinking off; this has no effect on Fable 5, which always uses extended thinking. On models with
 adaptive reasoning
 , any other
 MAX_THINKING_TOKENS

@@ -47,6 +47,24 @@ for a subscription token.
 Claude Code then pushes a branch with the workflow files you select, already set to use that secret, and opens GitHub in your browser with a pull request ready to create. Create and merge that pull request, and
 @claude
 works in the repository.
+If you select the review workflow, Claude posts each review on the pull request itself, as an inline comment on each issue it finds or as one summary comment when it finds none. Claude skips some pull requests, such as drafts. The
+review workflow example
+uses the same skill and lists them. Before v2.1.229, Claude wrote its review only to the workflow run log.
+To update a review workflow that an earlier version generated, do one of the following:
+Run
+/install-github-app
+again. When the repository already has a
+claude.yml
+, select
+Update workflow file with latest version
+. Claude Code pushes fresh copies of the workflow files to a new branch and opens the pull request, the same as a first install.
+Add the
+--comment
+argument and the
+claude_args
+line from the
+review workflow example
+to the checked-in file yourself, which keeps any other edits you made to it.
 After installing the GitHub App, Claude Code asks whether to continue with GitHub Actions setup. Choose
 Skip for now
 to stop with only the GitHub App installed. Run
@@ -245,7 +263,11 @@ by default, in an issue or pull request comment, in a pull request review, or in
 Automation mode
 : when the workflow provides a
 prompt
-input, Claude runs without waiting for a mention, subject only to the access checks below. Results appear in the workflow run log rather than a comment.
+input, Claude runs without waiting for a mention, subject only to the
+access checks
+. By default, results appear in the workflow run log rather than a comment. Claude can post to the issue or pull request when the prompt directs it to and it has a tool that can post, as in the
+code-review example
+.
 ​
 Who can trigger runs
 In both modes, the Claude Code GitHub Action runs two checks on the triggering actor before Claude starts, and the run fails when either check rejects it:
@@ -397,7 +419,7 @@ plugin-name@marketplace-name
 , where the marketplace name comes from the marketplace’s own manifest rather than its repository URL.
 The following workflow installs the
 code-review
-plugin and runs its skill on each new or updated pull request. It runs the same plugin as the review workflow from quick setup. Use a workflow like this when you want to control the prompt, model, and triggers yourself. For automatic reviews without maintaining a workflow file, see
+plugin and runs its skill when a pull request is opened, updated, reopened, or marked ready for review. It runs the same plugin as the review workflow from quick setup. Use a workflow like this when you want to control the prompt, model, and triggers yourself. For automatic reviews without maintaining a workflow file, see
 Code Review
 . On public repositories, GitHub withholds secrets from runs triggered by fork pull requests, so the review runs only on pull requests from branches in the same repository.
 name
@@ -412,6 +434,10 @@ types
 opened
 ,
 synchronize
+,
+ready_for_review
+,
+reopened
 ]
 jobs
 :
@@ -462,8 +488,22 @@ plugins
 "code-review@claude-code-plugins"
 prompt
 :
-"/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
-Claude writes its findings to the workflow run log rather than posting them on the pull request. Open the run from the repository’s Actions tab to read them.
+"/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+claude_args
+:
+'--allowedTools "mcp__github_inline_comment__create_inline_comment"'
+Two lines in this workflow control where the review goes:
+--comment
+: Claude posts its review on the pull request, as an inline comment on each issue it finds or as one summary comment when it finds none. Without it, Claude posts nothing, and you read the findings in the workflow run log.
+claude_args
+: keep this line even though the skill’s own
+allowed-tools
+frontmatter names the same tool, because the Claude Code GitHub Action starts the MCP server that posts inline comments only when
+--allowedTools
+in
+claude_args
+names it.
+Claude skips draft and closed pull requests, pull requests it judges not to need a review, such as automated or trivial ones, and pull requests that already have a comment from Claude.
 ​
 Run on a schedule
 With a

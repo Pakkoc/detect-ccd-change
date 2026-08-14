@@ -131,7 +131,9 @@ ANTHROPIC_AWS_BASE_URL
 ping
 events and comment lines, and aborts a stream that goes silent for 300 seconds by default. The upstream’s pings are the only traffic during long thinking pauses, so if your gateway strips or buffers them, Claude Code aborts the stream during those pauses;
 Automatic retries
-covers what an aborted stream reports based on how far the response had progressed. Gateways reached through
+covers what an aborted stream reports based on how far the response had progressed. An upstream that sends no pings at all, such as Amazon Bedrock’s binary event-stream, leaves those pauses with nothing to forward. When translating from such an upstream, emit your own
+ping
+events during silent gaps. Gateways reached through
 ANTHROPIC_BEDROCK_BASE_URL
 ,
 ANTHROPIC_VERTEX_BASE_URL
@@ -227,6 +229,24 @@ If your gateway must reshape system content, set
 CLAUDE_CODE_ATTRIBUTION_HEADER=0
 so Claude Code omits the block. Anthropic and the cloud providers’ Claude endpoints read the block for attribution, so omit it at the client rather than stripping or moving it in the gateway.
 Requests that reach the endpoint unmodified are unaffected.
+The variable exists for gateway and third-party caching compatibility, not as a privacy control: on a direct connection the full request already goes to the Anthropic API either way. When both of these hold, Claude Code keeps the block on
+auto mode
+classifier requests even when you set the variable to
+0
+:
+The requests go to
+api.anthropic.com
+, with
+ANTHROPIC_BASE_URL
+unset or naming that host and no third-party provider selected.
+The active credential isn’t an
+Anthropic profile or federation credential
+.
+Classifier requests skip the rest of Claude Code’s system prompt, so on those requests the block is the only marker in the request body that identifies them as Claude Code traffic. When either condition fails, through an LLM gateway, on a third-party provider, or with a profile or federation credential active, setting
+0
+removes the block from classifier requests too. Before v2.1.229, this exception didn’t exist: setting
+0
+removed the block from those classifier requests, and when the API declined the unidentified requests, auto mode failed on every action it sent to the classifier.
 From Claude Code v2.1.181, the block is stable for the lifetime of a conversation when requests route through a custom base URL, so a gateway-side prompt cache keyed on the full request body works without disabling it, and any provider your gateway forwards to receives a stable prompt prefix. Before v2.1.181 the block included a per-request token that changed the start of the system prompt on every request. On those versions, set
 CLAUDE_CODE_ATTRIBUTION_HEADER=0
 when your gateway does either of these:

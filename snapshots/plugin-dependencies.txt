@@ -318,12 +318,24 @@ plugin.json
 at that commit has a stale value. The cache directory name for a tag-resolved install includes a 12-character commit-SHA suffix, so if a maintainer force-moves a tag to a different commit, the next install gets a fresh cache directory instead of reusing stale content.
 For dependencies with an
 npm
-or
+,
 archive
+, or
+command
 plugin source
 , the constraint does not control which version is fetched, since tag-based resolution applies only to git-backed sources. The constraint is still checked at load time, and the dependent plugin is disabled with
 dependency-version-unsatisfied
-if the installed version does not satisfy it.
+if the installed version does not satisfy it. For a
+command
+source, Claude Code checks the version in the dependency’s
+plugin.json
+and ignores the content-hash suffix; a dependency whose
+plugin.json
+sets no version satisfies no constraint, so set one before you constrain it. Claude Code never installs a dependency with a
+command
+source itself, so users
+install it first
+.
 ​
 How constraints interact
 When several installed plugins constrain the same dependency, Claude Code intersects their ranges and resolves the dependency to the highest version that satisfies all of them. The table below shows how common combinations resolve.

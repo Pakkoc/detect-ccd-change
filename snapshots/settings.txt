@@ -62,8 +62,8 @@ Machine-specific settings that won’t work for others
 How scopes interact
 When the same setting appears in multiple scopes, Claude Code applies them in priority order:
 Managed
-(highest): can’t be overridden by any other scope, apart from the exceptions under
-Settings precedence
+(highest): can’t be overridden by any other scope, apart from the
+exceptions to managed settings precedence
 Command line arguments
 : temporary session overrides
 Local
@@ -78,7 +78,7 @@ to
 true
 and project settings set it to
 false
-, the project value applies. Permission rules behave differently because they merge across scopes rather than override, and a few security-sensitive settings honor a restrictive value from certain scopes that otherwise couldn’t override them. See
+, the project value applies. Permission rules merge across scopes instead, and a few security-sensitive keys are exceptions. See
 Settings precedence
 .
 ​
@@ -162,9 +162,7 @@ step that
 .claude/settings.json
 allow rules require. If the repository supplies the file, for example by committing it, workspace trust still applies.
 Managed settings
-: For organizations that need centralized control, Claude Code supports multiple delivery mechanisms for managed settings. All use the same JSON format and cannot be overridden by user or project settings, apart from the exceptions listed under
-Settings precedence
-:
+: For organizations that need centralized control, Claude Code supports multiple delivery mechanisms for managed settings. All use the same JSON format and cannot be overridden by user or project settings:
 Server-managed settings
 : delivered remotely at sign-in, either from Anthropic’s servers via the claude.ai admin console or from a self-hosted
 Claude apps gateway
@@ -356,10 +354,24 @@ Field
 Behavior when present but invalid
 allowedMcpServers
 Enforced as an empty allowlist, so no MCP servers are admitted until the value is fixed. An individual invalid entry is stripped and the valid subset is enforced.
+allowManagedHooksOnly
+Treated as
+true
+, so the
+hook restrictions
+apply until the value is fixed and, unless
+disableCommandPluginSources
+is explicitly
+false
+, command-sourced plugins are disabled. Applies in v2.1.229 and later.
 allowManagedMcpServersOnly
 Treated as
 true
 .
+disableCommandPluginSources
+Treated as
+true
+, so command-sourced plugins stay disabled until the value is fixed. Applies in v2.1.229 and later.
 availableModels
 Enforced as an empty allowlist, so only the Default model is available until the value is fixed. An individual non-string entry is stripped and the valid subset is enforced. Applies in v2.1.175 and later.
 enforceAvailableModels
@@ -465,9 +477,9 @@ Push when Claude decides
 Mobile push notifications
 true
 allowAllClaudeAiMcps
-(Managed settings only) Load claude.ai connectors alongside a deployed
+(Managed settings only) Load the claude.ai connectors Claude Code fetches itself alongside a deployed
 managed-mcp.json
-, which otherwise takes exclusive control and suppresses them. See
+, which otherwise takes exclusive control and suppresses them. Connectors delivered to cloud sessions stay suppressed. See
 Managed MCP configuration
 true
 allowedChannelPlugins
@@ -487,10 +499,9 @@ When set in managed-settings.json, allowlist of MCP servers users can configure.
 Managed MCP configuration
 [{ "serverName": "github" }]
 allowManagedHooksOnly
-(Managed settings only) Only managed hooks, SDK hooks, and hooks from plugins force-enabled in managed settings
-enabledPlugins
-are loaded. User, project, and all other plugin hooks are blocked. See
+(Managed settings only) Restrict which hooks run; see
 Hook configuration
+for the full effect list
 true
 allowManagedMcpServersOnly
 (Managed settings only) Only
@@ -596,7 +607,9 @@ Custom directory for
 auto memory
 storage. Accepts an absolute path or a
 ~/
--prefixed path. From project or local settings, this is honored only after you accept the workspace trust dialog, since a cloned repository can supply this file
+-prefixed path. From project or local settings, Claude Code honors it under the same
+workspace trust rule as hooks
+, since a cloned repository can supply this file
 "~/my-memory-dir"
 autoMemoryEnabled
 Default
@@ -791,7 +804,13 @@ ladder, than the value those trusted sources give. When none of the trusted sour
 hold
 or
 refuse
-still applies, replacing the per-message default. Requires Claude Code v2.1.224 or later
+still applies, replacing the per-message default. Requires Claude Code v2.1.224 or later. In sessions with cross-session messaging, appears in
+/config
+as
+Messages from your other sessions
+, which writes this key to user settings. The row requires Claude Code v2.1.232 or later, and Claude Code hides it while the
+--settings
+flag or managed settings set the key
 "hold"
 defaultShell
 Default
@@ -841,7 +860,13 @@ questions use their own flows and aren’t governed by this deadline. Accepts
 CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS
 environment variable overrides this setting. Read from user, managed, and
 --settings
-sources only. Requires Claude Code v2.1.224 or later
+sources only. Requires Claude Code v2.1.224 or later. Appears in
+/config
+as
+Dialog expiry
+, which writes this key to user settings. The row requires Claude Code v2.1.232 or later, and Claude Code hides it while the
+--settings
+flag or managed settings set the key
 "10m"
 disableAgentView
 Set to
@@ -864,8 +889,11 @@ true
 disableAllHooks
 Disable all
 hooks
-and any custom
+, any custom
 status line
+, and any custom
+file suggestion
+command
 true
 disableArtifact
 Set to
@@ -943,6 +971,18 @@ true
 are unaffected. To deny individual connectors instead of all of them, use
 deniedMcpServers
 . Requires Claude Code v2.1.182 or later
+true
+disableCommandPluginSources
+(Managed settings only) Control the
+command
+plugin source
+, which installs a plugin by running a marketplace-declared command on the user’s machine. Set to
+true
+to block command-sourced plugins entirely. Claude Code never runs the command, doesn’t install or update those plugins, and stops loading the ones already installed. Set to
+false
+to allow them explicitly. When unset, Claude Code follows
+allowManagedHooksOnly
+, so an organization that restricts hook execution to managed settings gets command sources disabled too. Requires Claude Code v2.1.229 or later
 true
 disableDeepLinkRegistration
 Set to
@@ -1373,7 +1413,7 @@ Default
 , Claude Code drops the parent-supplied settings. With
 "merge"
 , Claude Code applies them under the admin tier through a restrictive-only filter. For the filter’s limits and how the managed sources interact, see
-Settings precedence
+Parent settings from embedding hosts
 and
 Restrict parent settings
 "merge"
@@ -1515,8 +1555,8 @@ Enable Remote Control for all sessions
 true
 from project or local settings; for the full per-scope behavior, see
 Enable Remote Control for all sessions
-and the exceptions under
-Settings precedence
+and the
+exceptions to managed settings precedence
 false
 requiredMaximumVersion
 Managed settings only. Maximum Claude Code version allowed to start. If the running version is newer, Claude Code exits at startup and instructs the user to install an approved version through the organization’s approved method;
@@ -1717,6 +1757,10 @@ true
 locks all four surfaces; an array locks only the named ones. See
 strictPluginOnlyCustomization
 ["skills", "hooks"]
+subagentStatusLine
+Configure a custom command that rewrites rows in the subagent task display. See
+Subagent status lines
+{"type": "command", "command": "~/.claude/subagent-statusline.sh"}
 switchModelsOnFlag
 Default
 :
@@ -2455,9 +2499,7 @@ Hosts where the sandbox proxy substitutes the real value of a file
 mask
 entry. Behaves the same as
 credentials.envVars[].injectHosts
-: each host must be covered by
-network.allowedDomains
-, and when unset the proxy substitutes the value on requests to every host in
+. When unset, the proxy substitutes the value on requests to every host in
 network.allowedDomains
 . Accepted but ignored when
 mode
@@ -2561,11 +2603,16 @@ credentials.files[].maskClaims
 credentials.envVars[].injectHosts
 Hosts where the sandbox proxy substitutes the real value of a
 mask
-entry. Each host must also be covered by
+entry. The proxy injects only on connections
 network.allowedDomains
-, either exactly or by a wildcard. When unset, the proxy substitutes the value on requests to every host in
+admits, so each destination must also pass that list. When unset, the proxy substitutes the value on requests to every host in
 network.allowedDomains
-. Accepted but ignored when
+. Write an IPv6 destination as the bare canonical compressed address, such as
+"::1"
+, not the bracketed form. See
+IPv6 destinations in
+injectHosts
+for what each list matches. Accepted but ignored when
 mode
 is
 deny
@@ -2649,13 +2696,21 @@ Additional XPC/Mach service names the sandbox may look up (macOS only). Supports
 for prefix matching. Needed for tools that communicate via XPC such as the iOS Simulator or Playwright.
 ["com.apple.coresimulator.*"]
 network.allowedDomains
-Array of domains to allow for outbound network traffic. Supports wildcards (e.g.,
+Array of domains to allow for outbound network traffic. Supports wildcards, such as
 *.example.com
-).
+. Write IPv6 literals bracketed, with an optional port:
+"[::1]"
+allows every port and
+"[::1]:443"
+one port. The bracketed form requires Claude Code v2.1.229 or later. See
+IPv6 addresses in domain lists
+.
 ["github.com", "*.npmjs.org"]
 network.deniedDomains
 Array of domains to block for outbound network traffic. Supports the same wildcard syntax as
 allowedDomains
+. For IPv6 literals, see
+IPv6 addresses in domain lists
 . Takes precedence over
 allowedDomains
 when both match. Merged from all settings sources regardless of
@@ -2995,6 +3050,11 @@ File suggestion settings
 Configure a custom command for
 @
 file path autocomplete. The built-in file suggestion uses fast filesystem traversal, but large monorepos may benefit from project-specific indexing such as a pre-built file index or custom tooling.
+Claude Code can skip your custom command without warning and serve
+@
+autocomplete from the built-in file suggestion instead. The
+Hook configuration
+section describes the gates.
 {
 "fileSuggestion"
 : {
@@ -3179,7 +3239,45 @@ enabledPlugins
 are loaded. This lets administrators distribute vetted hooks through an organization marketplace while blocking everything else. Trust is granted by full
 plugin@marketplace
 ID, so a plugin with the same name from a different marketplace stays blocked
-User hooks, project hooks, and all other plugin hooks are blocked
+User hooks, project hooks, local hooks, and all other plugin hooks are blocked
+Claude Code also disables plugins with a
+command
+source
+, including plugins force-enabled in managed settings
+enabledPlugins
+, unless
+disableCommandPluginSources
+is explicitly set to
+false
+Claude Code also narrows
+statusLine
+,
+fileSuggestion
+, and
+subagentStatusLine
+to managed settings, following the two decisions below
+Status line and file suggestion gates:
+Claude Code makes two decisions for
+statusLine
+,
+fileSuggestion
+, and
+subagentStatusLine
+. It turns the feature off entirely when managed settings set
+disableAllHooks
+, or when the folder isn’t trusted under the same
+workspace trust rule as hooks in settings files
+. It narrows the source to managed settings when
+allowManagedHooksOnly
+is set or when
+disableAllHooks
+is
+true
+outside managed settings after
+settings precedence
+applies. Under narrowing, Claude Code runs a managed value if one is deployed; otherwise it skips your value without warning, the status line is disabled, and
+@
+autocomplete falls back to the built-in file suggestion.
 Restrict HTTP hook URLs:
 Limit which URLs HTTP hooks can target. Supports
 *
@@ -3258,82 +3356,149 @@ undefined and applies nothing:
 }
 When the helper emits
 managedSettings
-, that object becomes the only managed settings source for the run, taking precedence over remote, MDM, and file-based sources. When the helper exits non-zero at startup, Claude Code prints the error and refuses to start, so a helper that needs outage resilience should serve from its own cache and exit
+, that object becomes the only managed settings source for the run: Claude Code ignores remote, MDM, and file-based sources, reads the
+cross-source keys
+from the helper’s output alone, and never merges
+parent settings
+. A helper that exits 0 without emitting
+managedSettings
+contributes no managed settings, and the other sources apply as usual. When the helper exits non-zero at startup, Claude Code prints the error and refuses to start, so a helper that needs outage resilience should serve from its own cache and exit
 0
 .
 ​
 Settings precedence
-Settings apply in order of precedence. From highest to lowest:
+Claude Code reads settings from these levels, highest precedence first. A few security-sensitive keys and one host-integration case don’t follow this order, in either direction;
+Exceptions to managed settings precedence
+lists them.
 Managed settings
 (
 server-managed
 ,
 MDM/OS-level policies
 , or
-managed settings
+managed settings files
 )
-Policies deployed by IT through server delivery, MDM configuration profiles, registry policies, or managed settings files
-Cannot be overridden by any other level, including command line arguments, apart from the exceptions in the bullets below
-A few security-sensitive settings honor a restrictive value from scopes that otherwise couldn’t override them:
-A
-true
-for
-disableClaudeAiConnectors
-applies from any scope, even when a managed source sets
-false
-A
-false
-for
-remoteControlAtStartup
-in project or local settings (
-.claude/settings.json
-,
+Your organization deploys these through server delivery, MDM configuration profiles, registry policies, or managed settings files
+No other level overrides them, including command line arguments, apart from the
+exceptions to managed settings precedence
+When your organization delivers more than one managed source,
+precedence within the managed tier
+determines what Claude Code reads from each
+Command line arguments
+Values you pass for one session. JSON you pass with
+--settings <file-or-json>
+merges with your settings files by the same rules as the other levels: a key you set here overrides the same key in local, project, or user settings, and a key you omit keeps its lower-level value
+Local project settings
+(
 .claude/settings.local.json
-) applies even when a managed source sets
+)
+Your personal settings for this project
+Shared project settings
+(
+.claude/settings.json
+)
+Settings your team checks into source control
+User settings
+(
+~/.claude/settings.json
+)
+Your personal settings for every project
+The same order applies whether you run Claude Code from the CLI, the
+VS Code extension
+, or a
+JetBrains IDE
+. For example, if you set
+spinnerTipsEnabled
+to
+true
+in your user settings and your team sets it to
+false
+in the project’s shared settings, the project value applies.
+Array settings merge across scopes.
+When you set the same array-valued key, such as
+sandbox.filesystem.allowWrite
+or
+permissions.allow
+, in more than one scope, Claude Code concatenates and deduplicates the arrays instead of replacing one with another, so each scope can add entries without removing another scope’s. For example, if managed settings set
+allowWrite
+to
+["/opt/company-tools"]
+and you add
+["~/.kube"]
+in your user settings, Claude Code allows writes to both paths.
+Two array keys don’t merge this way:
+fallbackModel
+is an ordered chain where position carries meaning, so Claude Code takes the whole value from the highest-precedence file that defines it.
+availableModels
+: when the
+highest-precedence managed source
+defines it, Claude Code applies that list as-is, apart from a
+host platform that supplies its own
+, and ignores entries you add in user, project, or local settings. Across non-managed scopes the arrays merge as usual. See
+Merge behavior
+.
+​
+Exceptions to managed settings precedence
+For a few security-sensitive keys, Claude Code honors a restrictive value from a scope that otherwise couldn’t override managed settings. Find the key in this table to see which value it honors and from where.
+Key
+Value Claude Code honors
+Notes
+disableClaudeAiConnectors
+true
+from any scope
+Honored even when a managed source sets
+false
+isolatePeerMachines
+true
+from any scope
+Honored even when a managed source sets
+false
+remoteControlAtStartup
+false
+from
+.claude/settings.json
+or
+.claude/settings.local.json
+Honored even when a managed source sets
 true
 . Claude Code ignores a
 true
-there; only user settings, the
+in those two files: you can turn auto-connect on only from user settings, the
 --settings
-flag, and managed sources can turn auto-connect on, and a user
+flag, or managed settings, and a
 false
-doesn’t override a managed
+in your user settings doesn’t override a managed
 true
-A
-true
-for
-isolatePeerMachines
-applies from any scope, even when a managed source sets
-false
-A stricter
 crossSessionInbound
-value in project or local settings (
+A stricter value from
 .claude/settings.json
-,
+or
 .claude/settings.local.json
-), on the
+, on the
 accept
 <
 hold
 <
 refuse
-ladder, applies over the value managed settings, the
+ladder
+Honored over the value from managed settings, the
 --settings
-flag, or user settings give. Claude Code ignores a project or local value that isn’t stricter, so for this key a checked-in
+flag, or user settings. Claude Code ignores a project or local value that isn’t stricter, so a checked-in
 accept
-never overrides your user
+never overrides the
 hold
 or
 refuse
-Host platforms that embed Claude Code and set
+in your user settings
+A host platform that embeds Claude Code and sets
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
-are also an exception. The host’s model configuration takes precedence over the
+is also an exception. Claude Code takes the host’s model configuration over the
 model
 ,
 fallbackModel
 , and
 modelOverrides
-keys from every managed source, and over the model-selection environment variables in a managed
+keys from every managed source, and over the model-selection variables in a managed
 env
 block, such as
 ANTHROPIC_MODEL
@@ -3341,127 +3506,72 @@ and the
 ANTHROPIC_DEFAULT_*_MODEL
 family. A managed
 availableModels
-allowlist stays in force unless the host supplies its own
-Within the managed tier, apart from the exception keys listed after the ranking, only one source is used and the others are ignored rather than merged. Precedence, highest first:
+allowlist stays in force unless the host supplies its own.
+​
+Precedence within the managed tier
+A
 policyHelper
-output: when configured, this is the only managed source used
-Remote (claude.ai
-server-managed
-or
+can replace every source in this list; that section says when. Otherwise, apart from the cross-source keys listed after the ranking, Claude Code uses the first of these sources that delivers a non-empty configuration and ignores the rest rather than merging them:
+Remote settings, delivered from claude.ai as
+server-managed settings
+or by a
 Claude apps gateway
--delivered)
-MDM/OS-level policies
-File-based (
+MDM or OS-level policies
+Managed settings files,
 managed-settings.d/*.json
 and
 managed-settings.json
-, merged together)
-HKCU registry (Windows only)
-A few keys are honored when any admin-controlled managed source sets them, rather than only the winning source. The user-writable HKCU registry source is excluded, and when a
-policyHelper
-is configured, its output is the only source these checks read. The exception keys are:
-the sandbox lock keys
+merged together
+The HKCU registry, on Windows only
+Claude Code honors a few keys from any admin-controlled managed source, not only the one it selected above. The user-writable HKCU registry source is excluded from these checks. These cross-source keys are:
+The sandbox lock keys
 sandbox.network.allowManagedDomainsOnly
 and
 sandbox.filesystem.allowManagedReadPathsOnly
 , with their associated allowlists
 allowAllClaudeAiMcps
-the sandbox binary paths
+The sandbox binary paths
 sandbox.bwrapPath
 and
 sandbox.socatPath
 forceRemoteSettingsRefresh
 env
-, which merges per key across the admin-controlled sources: for each environment variable, the highest-priority source defining it wins, and lower admin sources fill in variables the higher sources leave unset, or for which a cached server value is
-withheld pending server confirmation
+, which Claude Code merges per variable across the admin-controlled sources: each variable comes from the highest-priority source that defines it, so lower sources fill in variables the higher ones leave unset, or whose cached server value Claude Code is
+withholding pending server confirmation
 . The telemetry unit and credential-paired routing variables follow their own rules; see
 Per-key exceptions across managed sources
-. Requires Claude Code v2.1.223 or later. Before v2.1.223, Claude Code applies the winning source’s whole
+. Requires Claude Code v2.1.223 or later. Before v2.1.223, Claude Code applied the selected source’s whole
 env
-block only.
-Embedding hosts such as Claude Desktop can supply policy via the SDK
+block only
+​
+Parent settings from embedding hosts
+An embedding host such as Claude Desktop can supply policy through the SDK
 managedSettings
-option. By default this is ignored when an admin-deployed managed source is present: server-managed settings, an MDM or OS-level policy, or a managed settings file. The user-writable HKCU registry fallback does not count as an admin-deployed source. Administrators can opt in by setting
+option. By default, Claude Code ignores those parent settings whenever an admin-deployed managed source is present: server-managed settings, an MDM or OS-level policy, or a managed settings file. The user-writable HKCU registry source doesn’t count as admin-deployed.
+To have Claude Code merge parent settings alongside an admin-deployed source, set
 parentSettingsBehavior
 to
 "merge"
-in the highest-priority managed source; only that source’s value is read. The embedder’s values pass through a restrictive-only filter, but the filter isn’t strictly tighten-only: unless the
+in the highest-priority managed source; Claude Code reads the key from that source only. It then passes the host’s values through a restrictive-only filter, with one gap to know about: unless you also set the
 allowManaged*Only
-locks are set, allow-direction settings such as permission allow rules and sandbox allowlists still apply. See
+locks, allow-direction settings from the host, such as permission allow rules and sandbox allowlists, still apply. See
 Restrict parent settings
-for the locks. While a
+for the locks. A
 policyHelper
-is configured, parent settings are never merged, regardless of this key.
+can turn parent merging off regardless of this key; that section says when.
+Claude Code also applies these checks to specific parent-supplied values:
 When any admin-controlled managed source sets
 allowManagedPermissionRulesOnly
 , Claude Code drops
 parent-supplied
 permission allow rules and
 additionalDirectories
-as it reads them, even when a higher-priority source leaves the key unset; the key’s effect on the developer’s own permission rules comes from the highest-priority source only
+as it reads them, even when a higher-priority source leaves the key unset. The key’s effect on your own permission rules still comes from the highest-priority source only
 A
 forceLoginOrgUUID
 or
 allowedMcpServers
-value in the highest-priority admin source blocks a parent-supplied one and is the value Claude Code enforces. A value in a non-winning admin source neither applies nor blocks the parent’s. Before v2.1.223, a value in any admin source blocked the parent’s
-Command line arguments
-Temporary overrides for a specific session. JSON passed via
---settings <file-or-json>
-merges with file-based settings using the same rules as the other layers: a key set here overrides the same key in local, project, or user settings, and omitting a key leaves the lower-layer value in place
-Local project settings
-(
-.claude/settings.local.json
-)
-Personal project-specific settings
-Shared project settings
-(
-.claude/settings.json
-)
-Team-shared project settings in source control
-User settings
-(
-~/.claude/settings.json
-)
-Personal global settings
-This hierarchy applies organizational policies first, apart from the exceptions under
-Settings precedence
-, while still allowing teams and individuals to customize their experience. The same precedence applies whether you run Claude Code from the CLI, the
-VS Code extension
-, or a
-JetBrains IDE
-.
-For example, if your user settings set
-permissions.defaultMode
-to
-acceptEdits
-and a project’s shared settings set it to
-default
-, the project value applies. The example below covers how array-valued settings such as permission rules combine instead.
-Array settings merge across scopes.
-When the same array-valued setting (such as
-sandbox.filesystem.allowWrite
-or
-permissions.allow
-) appears in multiple scopes, the arrays are
-concatenated and deduplicated
-, not replaced. This means lower-priority scopes can add entries without overriding those set by higher-priority scopes, and vice versa. For example, if managed settings set
-allowWrite
-to
-["/opt/company-tools"]
-and a user adds
-["~/.kube"]
-, both paths are included in the final configuration.
-Two array settings do not merge this way:
-fallbackModel
-is an ordered chain where position carries meaning: the highest-precedence file that defines it supplies the entire value.
-availableModels
-: when the
-highest-precedence managed source
-defines it, that list applies as-is, apart from a
-host platform that supplies its own
-, and user, project, and local entries cannot extend it. Across non-managed scopes the arrays merge as usual. See
-Merge behavior
-.
+value in the highest-priority admin source blocks a parent-supplied one, and Claude Code enforces the admin value. A value in a non-selected admin source neither applies nor blocks the parent’s. Before v2.1.223, a value in any admin source blocked the parent’s
 ​
 Verify active settings
 Run
@@ -3524,8 +3634,7 @@ or loaded by Claude automatically
 MCP servers
 : Extend Claude Code with additional tools and integrations
 Precedence
-: Higher-level configurations (Managed) override lower-level ones (User/Project), apart from the exceptions under
-Settings precedence
+: Higher-level configurations (Managed) override lower-level ones (User/Project)
 Inheritance
 : Settings merge across scopes; scalar values from higher-priority scopes override and arrays concatenate, each with the exceptions described under
 Settings precedence
@@ -3658,9 +3767,9 @@ instead.
 Plugins force-enabled by managed settings cannot be disabled this way, since managed settings override local settings.
 Enabling a plugin from an external source such as a GitHub repository or npm package in a project’s
 .claude/settings.json
-doesn’t install it for other people. As of Claude Code v2.1.195, every path that loads plugins asks each user to
-install and trust the plugin
-before it runs.
+doesn’t install it for other people. On every path that loads plugins, Claude Code reports the plugin as not installed until each user
+installs it themselves
+.
 Example
 :
 {
@@ -3714,13 +3823,15 @@ are ignored, because these values are substituted into plugin hook, MCP, and LSP
 ​
 extraKnownMarketplaces
 Defines additional marketplaces that should be made available for the repository. Typically used in repository-level settings to ensure team members have access to required plugin sources.
-When a repository includes
+When a repository’s
+.claude/settings.json
+includes
 extraKnownMarketplaces
-:
-Team members are prompted to install the marketplace when they trust the folder
-Team members are then prompted to install plugins from that marketplace
-Users can skip unwanted marketplaces or plugins (stored in user settings)
-Installation respects trust boundaries and requires explicit consent
+, Claude Code adds those marketplaces for a team member after they accept the workspace trust dialog for that repository, with no separate prompt. In a folder they haven’t trusted, including a
+-p
+run there or a repository under a parent folder they trusted earlier, Claude Code ignores the entries without a message.
+What runs before you trust a folder
+compares this with the other content a repository can supply.
 Example
 :
 {
@@ -4091,7 +4202,9 @@ headers
 (optional: HTTP headers for authenticated access)
 URL-based marketplaces only download the
 marketplace.json
-file. They do not download plugin files from the server. Plugins in URL-based marketplaces must use external sources (GitHub, npm, git URL, or archive) rather than relative paths. For plugins with relative paths, use a Git-based marketplace instead. See
+file. They don’t download plugin files from the server. Plugins in URL-based marketplaces must use a
+plugin source
+other than a relative path. For plugins with relative paths, use a Git-based marketplace instead. See
 Troubleshooting
 for details.
 NPM packages

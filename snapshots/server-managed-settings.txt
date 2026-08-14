@@ -197,8 +197,8 @@ Server-managed settings and
 endpoint-managed settings
 both occupy the highest tier in the Claude Code
 settings hierarchy
-. No other settings level can override them, including command line arguments, apart from the exceptions listed in the
-settings reference’s precedence section
+. No other settings level can override them, including command line arguments, apart from the
+exceptions to managed settings precedence
 .
 Within the managed tier, a configured
 policyHelper

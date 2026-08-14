@@ -4541,14 +4541,20 @@ id
 to keep the default rendering for that row; emit an empty
 content
 string to hide it.
-The same trust and
+The same trust,
 disableAllHooks
+, and
+allowManagedHooksOnly
 gates that apply to
 statusLine
 apply here. Plugins can ship a default
 subagentStatusLine
 in their
 settings.json
+, but unlike hooks, plugin values don’t run under
+allowManagedHooksOnly
+even when the plugin is force-enabled in managed settings
+enabledPlugins
 .
 ​
 Tips
@@ -4582,11 +4588,26 @@ Windows configuration
 .
 If
 disableAllHooks
-is set to
+is
 true
-in your settings, the status line is also disabled. Remove this setting or set it to
+outside managed settings after
+settings precedence
+applies, Claude Code runs only a
+statusLine
+from managed settings, and with no managed
+statusLine
+the status line is disabled. Remove the setting, or set it to
 false
-to re-enable.
+in the file that sets it, to re-enable. See
+Hook configuration
+.
+If your organization sets
+allowManagedHooksOnly
+in managed settings, your custom status line disappears without warning: you can only get a status line from a
+statusLine
+value in those managed settings. See
+Hook configuration
+for the full behavior, and ask your administrator whether this setting applies to you.
 Run
 claude --debug
 to log the exit code and stderr from the first status line invocation in a session
@@ -4640,12 +4661,12 @@ Complex escape sequences (ANSI colors, OSC 8 links) can occasionally cause garbl
 If you see corrupted text, try simplifying your script to plain text output
 Multi-line status lines with escape codes are more prone to rendering issues than single-line plain text
 Workspace trust required
-The status line command only runs if you’ve accepted the workspace trust dialog for the current directory. Because
+Because
 statusLine
-executes a shell command, it requires the same trust acceptance as hooks and other shell-executing settings.
-If you haven’t accepted the
-workspace trust dialog
-for this folder, the status line stays blank, and
+executes a shell command, Claude Code runs it under the same
+workspace trust rule as hooks in settings files
+. Accepting the dialog for the folder or one of its parent directories is enough.
+Until then, the status line stays blank, and
 claude --debug
 logs
 Status line command skipped: workspace trust not accepted

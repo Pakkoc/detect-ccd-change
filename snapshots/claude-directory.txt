@@ -42,7 +42,10 @@ Installed plugins
 ~/.claude/plugins
 Cloned marketplaces, installed plugin versions, and per-plugin data, managed by
 claude plugin
-commands. See
+commands. For a plugin installed from a marketplace
+command
+source
+in link mode, Claude Code stores links here instead of a copy, and the plugin’s files stay in the directory the command prints. See
 plugin caching
 for how orphaned versions are cleaned up.
 ~/.claude

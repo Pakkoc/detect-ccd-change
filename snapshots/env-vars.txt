@@ -692,11 +692,15 @@ Set to
 0
 to omit the
 attribution block
-, which carries the client version and a prompt fingerprint, from the start of the system prompt. Caching on a direct connection to the Anthropic API is unaffected either way. Before v2.1.181 the block included a per-request token on custom base URLs and Microsoft Foundry connections, so on those versions set it to
+, which carries the client version and a prompt fingerprint, from the start of the system prompt. Caching on a direct connection to the Anthropic API is unaffected either way. In some direct-connection setups, Claude Code keeps the block on
+auto mode
+classifier requests even when you set
 0
-when your
-LLM gateway
-caches on the request body or forwards requests to a third-party provider, or when you connect to Microsoft Foundry directly
+. In
+System prompt attribution block
+, check which connections and credentials this covers. Before v2.1.181 the block included a per-request token on custom base URLs and Microsoft Foundry connections, so on those versions set it to
+0
+when your LLM gateway caches on the request body or forwards requests to a third-party provider, or when you connect to Microsoft Foundry directly
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
 Set the
 auto-compact window
@@ -1110,7 +1114,11 @@ command, release notes,
 gateway model discovery
 refreshes, and availability checks such as the
 fast mode
-check.
+check. It also stops the
+background runs of plugin
+command
+sources
+, which are local commands rather than network traffic, because they can trigger dependency installs.
 Setting it to
 0
 or
@@ -1382,30 +1390,19 @@ CLAUDE_CODE_NO_FLICKER
 fullscreen rendering
 , this doesn’t change the renderer
 CLAUDE_CODE_FORK_SUBAGENT
-Set to
-1
-to let Claude spawn
+Controls
+fork mode
+, which lets Claude spawn
 forked subagents
-, or
-0
-to disable them, overriding any server-side rollout. When enabled, Claude can request the
-fork
-subagent type to spawn a fork, a subagent that inherits the full conversation context instead of starting fresh. When Claude doesn’t request a subagent type, it still gets the general-purpose subagent, and every subagent runs in the background. The explicit
-/subtask
-command, named
-/fork
-on v2.1.161 through v2.1.211, works without this variable; on v2.1.117 through v2.1.160,
-/fork
-is the forked-subagent command only when this variable is set to
+itself and is on by default in interactive sessions only. Set to
 1
-or a server-side rollout enabled it. Works in interactive mode and via the SDK or
+to turn it on in
 claude -p
-. When
-agent view is turned off
-,
+and the Agent SDK as well, or
+0
+to turn it off in every kind of session. The
 /subtask
-isn’t available and the command stays
-/fork
+command works whether or not fork mode is on. The interactive default requires Claude Code v2.1.232 or later
 CLAUDE_CODE_FORWARD_SUBAGENT_TEXT
 Set to
 1
@@ -1604,11 +1601,13 @@ Space-separated OAuth scopes the refresh token was issued with, such as
 CLAUDE_CODE_OAUTH_REFRESH_TOKEN
 is set
 CLAUDE_CODE_OAUTH_TOKEN
-OAuth access token for Claude.ai authentication. Alternative to
+OAuth access token for claude.ai authentication. Alternative to
 /login
 for SDK and automated environments. Takes precedence over keychain-stored credentials. Generate one with
 claude setup-token
-. Claude Code uses the token you set for the whole session. To replace an expired token, generate a new one and restart
+. Unless you run
+/login
+, Claude Code uses the token you set for the whole session. To replace an expired token, generate a new one and restart
 CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE
 Removed in v2.1.160 and now a no-op. Previously pinned
 fast mode
@@ -1743,7 +1742,7 @@ in
 managed settings
 , whichever managed source delivers them, so the host’s model configuration takes precedence over an out-of-date managed model pin; an
 availableModels
-allowlist in managed settings still applies unless the host supplies its own. Claude Code also skips the automatic telemetry opt-out for Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry, so telemetry follows the standard
+allowlist in managed settings still applies unless the host supplies its own. Claude Code also skips the automatic telemetry opt-out it otherwise applies on third-party providers such as Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry, so telemetry follows the standard
 DISABLE_TELEMETRY
 opt-out. See
 Default behaviors by API provider
@@ -2160,6 +2159,18 @@ PowerShell tool
 CLAUDE_CODE_USE_VERTEX
 Use
 Google Cloud’s Agent Platform
+CLAUDE_CODE_WORKFLOW_PREFIX_STAGGER_MS
+Upper bound in milliseconds on how long a
+workflow
+agent waits for a same-prefix sibling’s first response to begin before sending its own first request. When a fan-out starts several agents that share a
+prompt-cache prefix
+, Claude Code holds all but the first agent for up to this long so the rest read the cached prefix instead of each processing it uncached. Default
+5000
+. Set to
+0
+to disable the wait. When
+DISABLE_PROMPT_CACHING
+is set, agents never wait. Requires Claude Code v2.1.229 or later
 CLAUDE_CONFIG_DIR
 Override the configuration directory (default:
 ~/.claude
@@ -2359,11 +2370,17 @@ is also accepted
 DISABLE_GROWTHBOOK
 Set to
 1
+or
+true
 to disable GrowthBook feature-flag fetching and use code defaults for every flag. This makes
 Remote Control
 and the other
 features that need feature-flag fetching
-unavailable. Telemetry event logging stays on unless
+unavailable. Setting it to
+0
+or
+false
+leaves fetching on. Telemetry event logging stays on unless
 DISABLE_TELEMETRY
 is also set
 DISABLE_INSTALLATION_CHECKS

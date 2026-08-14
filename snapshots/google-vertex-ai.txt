@@ -153,7 +153,11 @@ Claude Code shows you the command’s output, but can’t send the command inter
 gcpAuthRefresh
 in project settings such as
 .claude/settings.json
-, the command runs only after you accept the workspace trust prompt.
+, Claude Code runs it under the same
+workspace trust rule as hooks in settings files
+, which includes
+-p
+sessions in folders you’ve never trusted.
 ​
 4. Configure Claude Code
 Set the following environment variables:

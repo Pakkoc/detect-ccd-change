@@ -82,7 +82,7 @@ You can also watch from the task panel below the input box: a one-line progress 
 4
 Read the report
 When the run finishes, the report lands in your session. It cites the sources each claim came from, with claims that didn’t survive cross-checking already filtered out.
-As of v2.1.196, when the verifier agents can’t check a claim, such as after a rate limit or API error, the report lists that claim as unverified instead of counting it as refuted.
+When the verifier agents can’t check a claim, such as after a rate limit or API error, the report lists that claim as unverified instead of counting it as refuted.
 To run a workflow for your own task,
 have Claude write one
 , and once a run does what you wanted you can
@@ -100,7 +100,7 @@ Fans out web searches on a question across several angles, fetches and cross-che
 WebSearch tool
 to be available
 /deep-research
-runs only when you invoke it. Before v2.1.218, Claude could also start it on its own.
+runs only when you invoke it.
 Workflows you save
 yourself become commands the same way and appear in
 /
@@ -289,11 +289,7 @@ CLAUDE_CONFIG_DIR
 , this location is the
 workflows/
 directory under that path.
-The save dialog shows the resolved path for the personal location. Before v2.1.208, it showed
-~/.claude/workflows/
-even when
-CLAUDE_CONFIG_DIR
-was set; the file was still saved under the configured directory.
+The save dialog shows the resolved path for the personal location.
 Press Enter to save. The workflow runs as
 /<name>
 in future sessions from either location.
@@ -492,6 +488,18 @@ The runtime tracks each agent’s result as the run progresses, which is what ma
 resumable
 within the same session.
 ​
+Prompt caching in a fan-out
+Agents in the same run can read each other’s
+prompt cache
+. Two agents that run with the same model, effort level, agent type, tools, output schema, and working directory build the same tools-and-system-prompt prefix, so an agent that starts after a matching sibling’s response has begun reads that sibling’s cache on its first request.
+When a fan-out starts several matching agents at once, Claude Code holds all but the first until the first agent’s response begins, then releases the held agents together so their first requests read the shared prefix instead of each processing it uncached. Claude Code caps the hold at
+CLAUDE_CODE_WORKFLOW_PREFIX_STAGGER_MS
+milliseconds,
+5000
+by default. Set it to
+0
+to disable the hold.
+​
 Behavior and limits
 The runtime applies the following constraints:
 Constraint
@@ -504,8 +512,12 @@ No module loading: a script that contains
 import()
 fails before the run starts
 The script body is plain JavaScript. Put work that needs a library in an agent’s task
-Up to 16 concurrent agents, fewer on machines with limited CPU cores
+Up to 16 concurrent agents, fewer when Claude Code has fewer CPUs available, including inside a CPU-limited container
 Bounds local resource use
+In a fan-out, agents that share the first agent’s prompt-cache prefix start up to 5 seconds after it by default
+All but the first read the
+prefix the first agent cached
+instead of each processing it uncached
 1,000 agents total per run
 Prevents runaway loops
 ​
@@ -544,7 +556,7 @@ Claude Code also flags a run that grows unusually large. When a workflow schedul
 Large workflow
 warning. The warning points you to
 /workflows
-, where you can stop the run. Requires Claude Code v2.1.203 or later.
+, where you can stop the run.
 The warning is advisory: it doesn’t pause or limit the run. Two settings change when you see it:
 If you choose a
 size guideline

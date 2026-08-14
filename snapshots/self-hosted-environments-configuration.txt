@@ -59,6 +59,22 @@ act.email
 claim without signature verification. Suitable for labelling, such as commit trailers. When the email gates credential issuance, verify the token and read the claim from it instead; see
 Provision credentials scoped to the session creator
 . Unset when the token carries no creator email. Treat as personally identifiable information.
+CLAUDE_RUNNER_CLIENT_PLATFORM
+The client surface that created the session, such as
+web_claude_ai
+,
+desktop_app
+,
+ios
+,
+claude_code_cli
+, or
+scheduled_trigger
+. Anthropic records the value once at session creation, so the wrapper and every lifecycle hook see the same value. Use it for adoption analytics and labelling only, not as an authorization signal. Unset when the session has no recorded or recognized surface, so reference it as
+${CLAUDE_RUNNER_CLIENT_PLATFORM:-}
+under
+set -u
+. Requires Claude Code v2.1.229 or later.
 CLAUDE_RUNNER_CLAUDE_BIN
 Absolute path to the runner’s own Claude Code binary. End your wrapper with
 exec "$CLAUDE_RUNNER_CLAUDE_BIN" "$@"
@@ -260,6 +276,14 @@ CLAUDE_RUNNER_SESSION_UUID
 The same session ID in canonical UUID form
 CLAUDE_RUNNER_API_BASE_URL
 Anthropic API base URL for session-scoped calls
+CLAUDE_RUNNER_CLIENT_PLATFORM
+The client surface that created the session, such as
+web_claude_ai
+,
+desktop_app
+, or
+ios
+. Unset when the session has no recorded or recognized surface.
 CLAUDE_CODE_SESSION_ACCESS_TOKEN
 The session access token, for session-scoped API calls
 The script must leave a working tree at
@@ -328,6 +352,14 @@ CLAUDE_RUNNER_DEBUG_LOG_PATH
 Path to the session’s debug log, still on disk while the hook runs
 CLAUDE_RUNNER_API_BASE_URL
 Anthropic API base URL for session-scoped calls
+CLAUDE_RUNNER_CLIENT_PLATFORM
+The client surface that created the session, such as
+web_claude_ai
+,
+desktop_app
+, or
+ios
+. Unset when the session has no recorded or recognized surface.
 CLAUDE_CODE_SESSION_ACCESS_TOKEN
 The session access token, for session-scoped API calls
 CLAUDE_RUNNER_EXIT_REASON
@@ -534,6 +566,20 @@ JSON array of
 for all the session’s git sources, for hooks that route on a secondary repository. Empty when there are no sources.
 CLAUDE_RUNNER_CORRELATION_ID
 The correlation ID supplied at session create, echoed back so the hook can map this work order to the request that created the session. Empty when the session has none.
+CLAUDE_RUNNER_CLIENT_PLATFORM
+The client surface that created the session, such as
+web_claude_ai
+,
+desktop_app
+,
+ios
+, or
+scheduled_trigger
+, for adoption analytics. Unset when the session has no recorded or recognized surface, and for pre-warming requests; check it with
+[ -n "${CLAUDE_RUNNER_CLIENT_PLATFORM:-}" ]
+, which stays safe under
+set -u
+.
 The spawned runner registers with the work order in place of the environment secret:
 Start it with the work order
 : point
@@ -613,9 +659,13 @@ at its standard system path:
 /etc/claude-code/managed-mcp.json
 on Linux runner hosts,
 /Library/Application Support/ClaudeCode/managed-mcp.json
-on macOS hosts. Use it for locked-down fleets where only administrator-listed servers may load; see
+on macOS hosts. Use it for locked-down fleets where only administrator-listed servers may load. See
 exclusive control with managed-mcp.json
-for the precedence rules.
+for the precedence rules. When this file is on the runner host, Claude Code skips the MCP servers Anthropic’s control plane delivers to a session, including claude.ai connectors, and names them in a warning on the session child’s stderr, which the runner records at the
+debug
+log level. Before v2.1.229, those sessions exited at startup with
+You cannot dynamically configure MCP servers when an enterprise MCP config is present
+.
 <repo>/.mcp.json
 : project scope. Commit the file to the repository; its servers are auto-approved in cloud sessions.
 When connector delivery is enabled for your organization, Anthropic’s control plane delivers the connectors you’ve configured on claude.ai to interactively-created sessions through server-provided MCP configuration, routed through
@@ -957,6 +1007,31 @@ env
 blocks merge per key across managed sources. See
 settings precedence
 .
+When Anthropic’s control plane supplies a session with
+Claude Code hooks
+, the runner installs them alongside, not over, your own configuration. Requires Claude Code v2.1.229 or later.
+Where they land
+: the runner writes each supplied hook script to a reserved
+hooks/.ccr-launcher/
+subdirectory of the session’s config directory and registers the scripts in a separate settings file it passes to the session with
+--settings
+, leaving the seeded
+settings.json
+and your own scripts at
+hooks/<name>
+untouched. The runner recreates the reserved subdirectory for each session and doesn’t seed host content at
+~/.claude/hooks/.ccr-launcher/
+into sessions.
+Who authors them
+: the control plane populates the scripts from fixed constants in its own deployment, never from per-session or third-party input.
+What still governs them
+: hooks delivered through
+--settings
+enter the ordinary merged hook configuration, not the managed tier, so your managed settings still apply.
+disableAllHooks
+disables them, and they are not among the categories
+allowManagedHooksOnly
+keeps loaded.
 ​
 Repository-committed permission rules
 Don’t put a bare

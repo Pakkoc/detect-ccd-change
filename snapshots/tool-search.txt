@@ -51,13 +51,13 @@ Tool search is always on, except on a Microsoft Foundry deployment hosted on Azu
 tool_reference
 blocks.
 auto
-Checks the combined token count of all tool definitions against the model’s context window. If they exceed 10%, tool search activates. If they’re under 10%, all tools are loaded into context normally.
+Counts the tokens in the tool definitions that tool search can defer and compares the total against the model’s context window. When the total reaches 10% of the window, tool search activates. Below that, the SDK loads every tool definition into context upfront.
 auto:N
 Same as
 auto
 with a custom percentage.
 auto:5
-activates when tool definitions exceed 5% of the context window. Lower values activate sooner.
+activates when those definitions reach 5% of the context window. Lower values activate sooner.
 false
 Tool search is off. All tool definitions are loaded into context on every turn.
 Setting
@@ -71,9 +71,11 @@ Disable pre-release capabilities
 covers where the override applies and what the variable strips.
 Tool search applies to all registered tools, whether they come from remote MCP servers or
 custom SDK MCP servers
-. When using
+. When you use
 auto
-, the threshold is based on the combined size of all tool definitions across all servers.
+, the SDK counts every definition that tool search can defer toward one combined threshold: each MCP tool that isn’t marked
+alwaysLoad
+, from any server, plus the built-in tools that load on demand. The SDK always loads core built-in tools such as Bash, Read, and Edit upfront and doesn’t count them toward the threshold.
 Set the value in the
 env
 option on
@@ -86,7 +88,7 @@ to keep inherited variables. In Python,
 env
 is merged on top of the inherited environment. This example connects to a remote MCP server that exposes many tools, pre-approves all of them with a wildcard, and uses
 auto:5
-so tool search activates when their definitions exceed 5% of the context window:
+so tool search activates when the definitions it can defer reach 5% of the context window:
 TypeScript
 Python
 import
@@ -139,7 +141,7 @@ env
 // env replaces the subprocess environment, so keep inherited variables
 ENABLE_TOOL_SEARCH:
 "auto:5"
-// Activate tool search when tools exceed 5% of context
+// Activate tool search when deferrable definitions reach 5% of context
 }
 }
 })) {
@@ -224,7 +226,7 @@ env
 "ENABLE_TOOL_SEARCH"
 :
 "auto:5"
-# Activate tool search when tools exceed 5% of context
+# Activate tool search when deferrable definitions reach 5% of context
 },
 )
 try

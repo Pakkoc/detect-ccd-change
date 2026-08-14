@@ -304,9 +304,6 @@ Task list
 Shared list of work items that teammates claim and complete
 Mailbox
 Messaging system for communication between agents
-See
-Choose a display mode
-for display configuration options. Teammate messages arrive at the lead automatically.
 Each agent’s mailbox is a JSON file at
 ~/.claude/teams/{team-name}/inboxes/{agent-name}.json
 . Claude Code validates every entry when it reads a mailbox file. Entries that don’t match the message format are reported as errors and removed from the file; the valid messages are still delivered. Before v2.1.207, a single malformed mailbox entry caused a repeated error every second and blocked delivery for that mailbox until you deleted the file manually.
@@ -498,7 +495,7 @@ Agents stopping early
 Teammates may stop after encountering errors instead of recovering. Check their output by selecting the teammate in the agent panel and pressing Enter in in-process mode, or by clicking the pane in split mode, then either:
 Give them additional instructions directly
 Spawn a replacement teammate to continue the work
-As of v2.1.198, a message from the lead or another teammate wakes an in-process teammate that is waiting to retry a failed API request, so it retries immediately instead of waiting for the full retry delay.
+A message from the lead or another teammate wakes an in-process teammate that is waiting to retry a failed API request, so it retries immediately instead of waiting for the full retry delay.
 The lead can stop early too, deciding the team is finished before all tasks are actually complete. If that happens, tell it to keep going.
 ​
 Orphaned tmux sessions
@@ -543,11 +540,6 @@ Permissions set at spawn
 : all teammates start with the lead’s permission mode. You can change individual teammate modes after spawning, but you can’t set per-teammate modes at spawn time.
 Split panes require tmux or iTerm2
 : the default in-process mode works in any terminal. Split-pane mode isn’t supported in VS Code’s integrated terminal, Windows Terminal, or Ghostty.
-CLAUDE.md
-works normally
-: teammates read
-CLAUDE.md
-files from their working directory. Use this to provide project-specific guidance to all teammates.
 ​
 Next steps
 Explore related approaches for parallel work and delegation:

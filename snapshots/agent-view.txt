@@ -97,9 +97,6 @@ setting
 is on, and the hint is hidden in
 screen reader mode
 .
-The count appears on every provider, including
-Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry
-.
 ​
 Monitor sessions with agent view
 Run
@@ -244,9 +241,9 @@ Needs input · double jump or wall climb?
 . In the default state grouping, the group header already names the state, so the row shows only the summary.
 The end-of-turn summary and each mid-turn rewrite are one short Haiku-class request through your normal provider, billed and handled under the same
 data usage terms
-as the session itself. The 15-second updates between model rewrites reuse the session’s own output and don’t send a request. On third-party providers such as Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and custom gateways, the request falls back to the session’s main model when no Haiku model is configured. Set
+as the session itself. The 15-second updates between model rewrites reuse the session’s own output and don’t send a request. On a third-party provider or gateway with no Haiku-class model configured, the request uses the session’s main model instead; set
 ANTHROPIC_DEFAULT_HAIKU_MODEL
-to choose the model for these summaries on those providers.
+to choose one.
 ​
 Pull request status
 When a session opens a pull request, a
@@ -1291,7 +1288,9 @@ Load MCP servers from a config file or JSON string
 --strict-mcp-config
 Use only the MCP servers from
 --mcp-config
-, ignoring other MCP configuration
+, ignoring other MCP configuration. See
+Exclusive control with managed-mcp.json
+for what the flag does under a managed MCP file
 Repeat
 --add-dir
 ,
@@ -1489,7 +1488,7 @@ PATH
 is applied to the worker the same way, so shell commands the session runs find the same tools your terminal does.
 A background session doesn’t inherit gateway endpoint variables such as
 ANTHROPIC_BASE_URL
-or the equivalent Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry base URL variables from the shell that started the supervisor. Without a gateway exported in the shell you dispatch from, the session uses your stored credentials and any
+, or a provider’s equivalent base URL variable, from the shell that started the supervisor. Without a gateway exported in the shell you dispatch from, the session uses your stored credentials and any
 env
 values in the project directory’s
 settings
@@ -1627,9 +1626,6 @@ state.json
 preserves fields it doesn’t recognize and keeps the session listed. The session list in
 roster.json
 follows the same rule, so sessions started by the newer version stay reachable and keep accepting input after the supervisor restarts.
-On Windows,
-claude daemon status
-surfaces the underlying file error when the daemon’s pipe-key file is locked or unreadable instead of reporting a generic connection failure.
 ​
 Turn off agent view
 To turn off background agents and agent view entirely, set the

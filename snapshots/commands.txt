@@ -225,7 +225,11 @@ required a question
 Report a bug or share your conversation. You choose how much session history to include and confirm on a consent screen before anything is sent. When you’re signed in to Anthropic on a first-party connection, the report goes to Anthropic; on a third-party provider, or without Anthropic credentials, Claude Code writes the report to a
 local archive under
 ~/.claude/feedback-bundles/
-that you forward yourself. Alias:
+that you forward yourself. In the
+VS Code extension
+,
+/bug
+opens the extension’s own feedback dialog instead; requires Claude Code v2.1.229 or later. Alias:
 /share
 . Before v2.1.212,
 /bug
@@ -491,15 +495,11 @@ Export the current conversation as plain text. With a filename, writes directly 
 /fast [on|off]
 Toggle
 fast mode
-on or off. In non-interactive mode (
+on or off. Availability in non-interactive mode with
 -p
-),
-/fast
-works only in a session launched with fast mode in its
---settings
-value, for example
-claude -p --settings '{"fastMode": true}'
-; the toggle then applies to the current session only and isn’t saved as your default, and in any other non-interactive session the command reports that fast mode isn’t available. Requires Claude Code v2.1.205 or later
+is limited; see
+Toggle fast mode
+. Requires Claude Code v2.1.205 or later
 /feedback [report]
 Send product feedback about Claude Code. Opens the same dialog as
 /bug
@@ -734,7 +734,9 @@ Rename the current session and show the name on the prompt bar. Without a name, 
 -p
 ); requires Claude Code v2.1.205 or later. From every rename surface, including claude.ai and the desktop app, Claude Code replaces control and invisible characters in the new name with spaces and caps the name at 200 characters. If the name is empty once invisible characters are removed, Claude Code rejects it and shows
 That name is empty once invisible characters are removed. Usage: /rename <name>
-. The character replacement and length cap require Claude Code v2.1.221 or later
+. The character replacement and length cap require Claude Code v2.1.221 or later. If another live session on this machine already uses a name you pass, Claude Code applies
+a variant of it
+instead
 /resume [session]
 Resume a conversation by ID or name, or open the session picker.
 Background sessions

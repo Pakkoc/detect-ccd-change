@@ -2221,6 +2221,18 @@ fork_session:
 bool
 =
 False
+resume_session_at:
+str
+|
+None
+=
+None
+resume_drops_turn:
+str
+|
+None
+=
+None
 agents: dict[
 str
 , AgentDefinition]
@@ -2514,6 +2526,20 @@ False
 When resuming with
 resume
 , fork to a new session ID instead of continuing the original session
+resume_session_at
+str | None
+None
+When resuming, load the conversation only up to and including the message with this UUID. Use with
+resume
+, and usually
+fork_session
+, to branch from an earlier point
+resume_drops_turn
+str | None
+None
+UUID of the user prompt whose turn a
+resume_session_at
+truncation discards. When set, the CLI refuses the resume if the discarded range holds entries not attributable to that turn. Requires Claude Code v2.1.223 or later; the bundled CLI satisfies this
 agents
 dict[str, AgentDefinition] | None
 None
@@ -4020,6 +4046,8 @@ ResultMessage
 StreamEvent
 |
 RateLimitEvent
+|
+ConversationResetMessage
 )
 ​
 UserMessage
@@ -4051,6 +4079,11 @@ str
 None
 =
 None
+origin: MessageOrigin
+|
+None
+=
+None
 Field
 Type
 Description
@@ -4066,6 +4099,11 @@ Tool use ID if this message is a tool result response
 tool_use_result
 dict[str, Any] | None
 Tool result data if applicable
+origin
+MessageOrigin | None
+Provenance of this message, populated on injected turns such as task notifications and peer messages.
+None
+when the CLI didn’t attribute it
 ​
 AssistantMessage
 Assistant response message with content blocks.
@@ -4282,6 +4320,11 @@ str
 None
 =
 None
+origin: MessageOrigin
+|
+None
+=
+None
 The
 subtype
 field determines which other fields are populated. It is one of
@@ -4362,6 +4405,16 @@ None
 on CLI versions that predate the field, on results that bypassed the query loop such as local slash commands, or on synthesized error results emitted when the session fails fatally. Mirrors the TypeScript SDK’s
 SDKResultMessage.terminal_reason
 , which lists the full set of values.
+origin
+: origin of the user message that triggered this turn. In
+streaming input mode
+, check this to tell the result of your own prompt, where
+origin
+is
+None
+or
+{"kind": "human"}
+, from the result of an injected turn such as a background-task notification.
 The
 usage
 dict covers the main agent loop only and excludes subagent and other nested or auxiliary model calls. In
@@ -4648,6 +4701,40 @@ Why overage is unavailable, if status is
 raw
 dict[str, Any]
 Full raw dict from the CLI, including fields not modeled above
+​
+ConversationResetMessage
+Emitted when the conversation is replaced without ending the connection, such as after
+/clear
+. See
+Track costs in streaming input mode
+for how a reset affects the running totals on later
+ResultMessage
+objects.
+@dataclass
+class
+ConversationResetMessage
+:
+new_conversation_id:
+str
+uuid:
+str
+session_id:
+str
+Field
+Type
+Description
+new_conversation_id
+str
+Opaque identifier for the fresh conversation. Not the
+session_id
+of subsequent messages; read that from the next message
+uuid
+str
+Unique message identifier
+session_id
+str
+ID of the session that was reset. Messages after the reset carry a new
+session_id
 ​
 TaskStartedMessage
 Emitted when a background task starts. A background task is anything tracked outside the main turn: a backgrounded Bash command, a

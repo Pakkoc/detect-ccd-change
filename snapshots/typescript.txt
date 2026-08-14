@@ -1769,6 +1769,33 @@ Promise
 <
 SDKControlGetContextUsageResponse
 >;
+readFile
+(
+path
+:
+string
+,
+options
+?:
+{
+maxBytes
+?:
+number
+;
+encoding
+?:
+'utf-8'
+|
+'base64'
+}
+)
+:
+Promise
+<
+SDKControlReadFileResponse
+|
+null
+>;
 accountInfo
 ()
 :
@@ -1911,6 +1938,18 @@ SDKControlGetContextUsageResponse
 breaking down the session’s context window usage by category, skill, and tool. The same data
 /context
 shows in an interactive session
+readFile(path, options?)
+Reads a file from the session’s filesystem. Claude Code resolves the path against
+cwd
+and applies the same read-permission rules as the Read tool. Pass
+{ maxBytes }
+to change the read cap (default 1 MB, ceiling 10 MB) and
+{ encoding: 'base64' }
+for binary files such as images. Resolves with an
+SDKControlReadFileResponse
+, or
+null
+on permission denial, a missing file, or a transport error. Requires TypeScript SDK v0.2.121 or later
 accountInfo()
 Returns account information
 reconnectMcpServer(serverName)
@@ -2578,6 +2617,46 @@ systemTools
 , and
 systemPromptSections
 diagnostics unset, so expect them to be absent even though the type declares them.
+​
+SDKControlReadFileResponse
+Return type of
+readFile()
+.
+type
+SDKControlReadFileResponse
+=
+{
+contents
+:
+string
+;
+absPath
+:
+string
+;
+truncated
+?:
+boolean
+;
+encoding
+?:
+'base64'
+;
+};
+contents
+holds the file text, or base64 data when you requested
+encoding: 'base64'
+; the response’s
+encoding
+field is set to
+'base64'
+in that case.
+absPath
+is the resolved absolute path.
+truncated
+is set when the file was longer than the
+maxBytes
+cap and the contents were cut at that limit.
 ​
 AgentDefinition
 Configuration for a subagent defined programmatically.
@@ -4104,6 +4183,10 @@ slash_commands
 :
 string
 [];
+terminal_slash_commands
+?:
+string
+[];
 output_style
 :
 string
@@ -4144,6 +4227,14 @@ fast_mode_disabled_reason
 names the check that blocked it; the field requires Claude Code v2.1.219 or later. For the reason codes and their meanings, see
 fast_mode_disabled_reason
 on the result message.
+terminal_slash_commands
+names the entries in
+slash_commands
+whose interface is bound to the local terminal, such as
+exit
+. You can send them like any other entry in
+slash_commands
+; the field exists so a remote or mobile client can hide them from its command menus. The field is present only when non-empty, and requires Agent SDK v0.3.229 or later.
 The
 capabilities
 array names the protocol behaviors this CLI implements, so you can feature-detect instead of comparing
