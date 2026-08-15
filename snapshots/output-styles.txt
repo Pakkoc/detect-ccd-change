@@ -12,7 +12,7 @@ There are three additional built-in output styles:
 Proactive
 : Claude executes immediately, makes reasonable assumptions instead of pausing for routine decisions, and prefers action over planning. This is stronger autonomous-execution guidance than
 auto mode
-applies, and it works without changing your permission mode, so you still see permission prompts before tools run.
+applies, and it works without changing your permission mode, so your permission mode still decides what runs without asking you.
 Explanatory
 : Provides educational “Insights” in between helping you complete software engineering tasks. Helps you understand implementation choices and codebase patterns.
 Learning

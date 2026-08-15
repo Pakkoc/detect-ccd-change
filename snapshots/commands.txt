@@ -537,7 +537,7 @@ instead
 /goal [condition|clear]
 Set a
 goal
-: Claude keeps working across turns until the condition is met. With no argument, shows the current or most recently achieved goal.
+: Claude keeps working across turns until the condition is met or judged impossible. With no argument, shows the current or most recently achieved goal.
 clear
 ,
 stop

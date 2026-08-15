@@ -318,12 +318,8 @@ claude
 plan
 You can also press
 Shift+Tab
-mid-session to cycle to plan mode. The cycle runs
-default
-→
-acceptEdits
-→
-plan
+mid-session until the status bar shows
+⏸ plan mode on
 . See
 Plan mode
 for the approval flow and editing the plan in your text editor.

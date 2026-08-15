@@ -2,9 +2,6 @@ Auto mode
 lets Claude Code run without routine permission prompts by routing tool calls through a classifier that blocks anything irreversible, destructive, or aimed outside your environment. Deny and explicit ask rules are evaluated before the classifier and still block or prompt. Use the
 autoMode
 settings block to tell that classifier which repos, buckets, and domains your organization trusts, so it stops blocking routine internal operations.
-Starting August 14, 2026, auto mode becomes the default permission mode for new sessions on Pro, Max, and Team plans. You can switch modes at any time. A default you set yourself stays in place unless you accept the one-time switch prompt, and a default your organization manages is unchanged. For details, see
-the announcement
-on the blog.
 Auto mode is available to all users on every provider, including the Anthropic API,
 Claude Platform on AWS
 , Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and signed-in
@@ -17,8 +14,8 @@ CLAUDE_CODE_ENABLE_AUTO_MODE=1
 By default, the classifier trusts only the working directory and the current repo’s configured remotes. Actions like pushing to your company’s source-control org or writing to a team cloud bucket are blocked until you add them to
 autoMode.environment
 .
-For how to enable auto mode and what it blocks by default, see
-Permission modes
+For how sessions end up in auto mode and what the classifier blocks by default, see
+auto mode on the Permission modes page
 . This page is the configuration reference.
 This page covers how to:
 Add a human checkpoint
@@ -531,7 +528,7 @@ hook
 ​
 See also
 Permission modes
-: what auto mode is, what it blocks by default, and how to enable it
+: what auto mode is, what it blocks by default, and which sessions start in it
 Managed settings
 : deploy
 autoMode

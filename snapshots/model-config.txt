@@ -105,7 +105,7 @@ automatic model fallback
 .
 To get the most from Fable 5:
 Describe the outcome, not the steps
-: hand it the result you want and let it plan the path. To keep it working until that outcome holds,
+: hand it the result you want and let it plan the path. To keep it working toward that outcome,
 set a goal
 .
 Hand it ambiguous problems

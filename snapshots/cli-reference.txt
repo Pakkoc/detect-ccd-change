@@ -327,11 +327,8 @@ agent
 setting)
 claude --agent my-custom-agent
 --agents
-Define custom subagents dynamically via JSON. Uses the same field names as subagent
-frontmatter
-, plus a
-prompt
-field for the agent’s instructions
+Define custom subagents dynamically via JSON. Accepts the
+fields listed for CLI-defined subagents
 claude --agents '{"reviewer":{"description":"Reviews code","prompt":"You are a code reviewer"}}'
 --allow-dangerously-skip-permissions
 Add
@@ -357,7 +354,9 @@ instead
 --append-subagent-system-prompt
 Append custom text to the end of every
 subagent
-’s system prompt, including nested subagents. Only applies in non-interactive mode with
+’s system prompt, nested subagents included, apart from a
+forked subagent
+, which reuses the conversation’s own prompt. Only applies in non-interactive mode with
 -p
 . Requires Claude Code v2.1.205 or later
 claude -p --append-subagent-system-prompt "Cite file paths in every answer" "query"

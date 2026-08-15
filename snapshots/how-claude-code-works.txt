@@ -77,11 +77,6 @@ Extend Claude Code
 for guidance on choosing the right extension for your needs.
 ​
 What Claude can access
-This guide focuses on the terminal. Claude Code also runs in
-VS Code
-,
-JetBrains IDEs
-, and other environments.
 When you run
 claude
 in a directory, Claude Code gains access to:

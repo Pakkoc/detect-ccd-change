@@ -208,14 +208,16 @@ and your project’s
 ,
 /deploy
 runs the personal one.
-A skill at any of these levels also overrides a bundled skill with the same name.
+A skill at any of these levels also overrides a bundled skill with the same name, but not the bundled skill’s aliases.
 For example, a
 code-review
 skill in your project’s
 .claude/skills/
 replaces the bundled
 /code-review
-.
+, and typing the bundled alias
+/review
+never runs your skill.
 Plugin skills use a
 plugin-name:skill-name
 namespace, so they can’t conflict with other levels.
@@ -357,7 +359,11 @@ Files in
 .claude/commands/
 support the same
 frontmatter
-. Skills are recommended since they support additional features like supporting files.
+, except
+name
+and
+paths
+, which Claude Code ignores in a command file. You invoke a command file by its file name. Skills are recommended since they support additional features like supporting files.
 ​
 Skills from additional directories
 The
@@ -366,9 +372,11 @@ flag and
 /add-dir
 command
 grant file access
-rather than configuration discovery, but skills are an exception:
+rather than configuration discovery, but skills and commands are an exception: Claude Code loads
 .claude/skills/
-within an added directory is loaded automatically. This exception applies only to
+and
+.claude/commands/
+from each added directory automatically. This exception applies only to
 --add-dir
 and
 /add-dir
@@ -376,12 +384,12 @@ and
 permissions.additionalDirectories
 setting in
 settings.json
-grants file access only and does not load skills. See
+grants file access only and doesn’t load skills or commands. See
 Live change detection
-for how edits are picked up during a session.
+for how skill edits are picked up during a session.
 Other
 .claude/
-configuration such as commands and output styles is not loaded from additional directories. See the
+configuration such as output styles is not loaded from additional directories. See the
 exceptions table
 for the complete list of what is and isn’t loaded, and the recommended ways to share configuration across projects.
 CLAUDE.md files from
@@ -694,9 +702,11 @@ user-invocable
 No
 Set to
 false
-to hide from the
+when only Claude should invoke the skill: Claude Code hides it from the
 /
-menu. Use for background knowledge users shouldn’t invoke directly. Default:
+menu and doesn’t run it when you type
+/name
+. Use for background knowledge users shouldn’t invoke directly. Default:
 true
 .
 allowed-tools
@@ -765,9 +775,11 @@ true
 . Requires Claude Code v2.1.218 or later.
 hooks
 No
-Hooks scoped to this skill’s lifecycle. See
+Hooks that Claude Code registers when the skill is invoked and keeps running for the rest of the session. See
 Hooks in skills and agents
-for configuration format.
+for the configuration format and the
+once
+option.
 paths
 No
 Glob patterns that limit when this skill is activated. Accepts a comma-separated string or a YAML list. When set, Claude loads the skill automatically only when working with files matching the patterns. Uses the same format as
@@ -857,7 +869,7 @@ The command you type to invoke a skill comes from where the skill file lives and
 name
 field. In a personal or project skill,
 name
-sets only the display label shown in skill listings, and the command still comes from the directory or file name. In a plugin skill,
+sets only the display label shown in skill listings, and the command still comes from the directory name. In a plugin skill,
 name
 sets the last segment of the command and the plugin prefix stays in place.
 The table below shows where the command name comes from for each layout:
@@ -1505,7 +1517,7 @@ to any other command you expect to exit non-zero. A check script that exits 1 wh
 Injected commands never prompt for permission. When a command’s permission check returns anything other than allow, Claude Code aborts the invocation. This includes a rule that would normally ask you. The abort shows
 Shell command permission check failed for pattern "..."
 .
-To keep a command from aborting at the default permission prompt, pre-approve it with
+To keep an unmatched command from aborting here, pre-approve it with
 allowed-tools
 . A matching ask or deny rule still aborts the invocation regardless of
 allowed-tools
@@ -1658,11 +1670,11 @@ Hide individual skills
 by adding
 disable-model-invocation: true
 to their frontmatter. This removes the skill from Claude’s context entirely.
-The
-user-invocable
-field only controls menu visibility, not Skill tool access. Use
+With
+user-invocable: false
+, you can’t invoke the skill, but Claude still can. To keep Claude from invoking it through the Skill tool, set
 disable-model-invocation: true
-to block programmatic invocation.
+.
 ​
 Override skill visibility from settings
 The

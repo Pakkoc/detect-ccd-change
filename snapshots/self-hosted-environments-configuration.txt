@@ -947,7 +947,7 @@ Bash
 , and cloud sessions
 pre-approve file edits regardless of mode
 . A call that nothing pre-approves prompts through the session UI.
-Only enable auto mode on an environment whose session containers run with
+Only pin auto mode on an environment whose session containers run with
 default-deny network egress
 and the rest of the
 hardening section

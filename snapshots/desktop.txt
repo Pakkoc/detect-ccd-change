@@ -126,7 +126,7 @@ Attach files
 : attach images, PDFs, and other files to your prompt using the attachment button, or drag and drop files directly into the prompt. This is useful for sharing screenshots of bugs, design mockups, or reference documents.
 ​
 Choose a permission mode
-Permission modes control how much autonomy Claude has during a session: whether it asks before editing files, running commands, or both. You can switch modes at any time using the mode selector next to the send button. Start with Manual to see exactly what Claude does, then move to Accept edits or Plan as you get comfortable.
+Permission modes control how much autonomy Claude has during a session: whether it asks before editing files, running commands, or both. You can switch modes at any time using the mode selector next to the send button. To approve each change yourself, switch to Manual.
 To set a default mode for new local sessions, add
 permissions.defaultMode
 to your
@@ -139,7 +139,7 @@ Settings key
 Behavior
 Manual
 default
-Claude asks before editing files or running commands. You see a diff and can accept or reject each change. Recommended for new users.
+Claude asks before editing files or running commands. You see a diff and can accept or reject each change.
 Accept edits
 acceptEdits
 Claude auto-accepts file edits and common filesystem commands like
@@ -1430,9 +1430,9 @@ to prevent users from enabling Bypass permissions mode.
 disableAutoMode
 set to
 "disable"
-to prevent users from enabling
+to remove
 Auto
-mode. Removes Auto from the mode selector. Also accepted under
+mode from the mode selector. Also accepted under
 permissions
 .
 autoMode
@@ -1470,7 +1470,7 @@ restrict
 SSH sessions
 to hosts whose resolved hostname matches one of these patterns. An empty array disables SSH sessions. Read from managed settings only.
 managedMcpServers
-push MCP server configurations to all users in a third-party deployment. Each entry specifies a transport of
+push MCP server configurations to all users. Available in third-party (3P) Desktop deployments only. In each entry, set a transport of
 "http"
 ,
 "sse"
@@ -1478,7 +1478,10 @@ push MCP server configurations to all users in a third-party deployment. Each en
 "stdio"
 , connection details, and optionally a
 toolPolicy
-map that restricts which tools in that server users can invoke. Available in third-party (3P) Desktop deployments only. Deliver this key through the managed settings file or MDM, since third-party deployments do not receive admin-console settings.
+map to restrict which of that server’s tools users can invoke. Deliver it through the managed settings file, MDM, or a Claude apps gateway policy’s
+desktop
+block
+, since 3P deployments don’t receive admin-console settings. To deliver it through the gateway, you need Claude Code v2.1.232 or later on the gateway server.
 Which managed settings reach a Desktop session depends on where that session runs. Model restrictions such as
 availableModels
 are enforced in Desktop’s Claude Code sessions the same way as in the terminal CLI; see
@@ -1571,6 +1574,15 @@ platform.claude.com
 *.livepreview.claude.app
 *.claudeusercontent.com
 *.claudemcpcontent.com
+An
+artifact
+that loads a typeface from
+Google Fonts
+also requests
+fonts.googleapis.com
+and
+fonts.gstatic.com
+. Both hosts are optional. If you block them, artifacts render in fallback typefaces. Block with a fast rejection rather than a silent drop so the font request fails immediately instead of delaying the page’s first render.
 ​
 Authentication and SSO
 Enterprise organizations can require SSO for all users. See

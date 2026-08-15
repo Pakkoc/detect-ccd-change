@@ -21,9 +21,13 @@ skill
 , which runs through the existing
 Skill
 tool rather than adding a new tool entry.
-The
+On Pro, Max, and Team plans, Claude Code starts sessions in
+auto mode
+, where a classifier decides most of these prompts instead of you. The
 Permission required
-column shows whether the tool prompts in the default permission mode for paths inside the working directory. File-access tools marked No, including
+column shows whether the tool prompts in
+Manual mode
+for paths inside the working directory. File-access tools marked No, including
 Read
 ,
 Grep
@@ -42,7 +46,13 @@ Permission required
 Agent
 Spawns a
 subagent
-with its own context window to handle a task. See
+with its own context window to handle a task. With
+agent teams
+enabled, a call that carries a
+name
+can launch a
+teammate
+instead. See
 Agent tool behavior
 No
 Artifact
@@ -273,7 +283,7 @@ TaskUpdate
 Updates task status, dependencies, details, or deletes tasks
 No
 TodoWrite
-Manages the session task checklist. Disabled by default as of v2.1.142 in favor of
+Manages the session task checklist. Disabled by default in favor of
 TaskCreate
 ,
 TaskGet
@@ -404,7 +414,13 @@ PreToolUse input reference
 .
 ​
 Agent tool behavior
-The Agent tool spawns a subagent in a separate context window. The subagent works through its task autonomously, then returns a single text result to the parent conversation. The parent doesn’t see the subagent’s intermediate tool calls or outputs, only that final result.
+The Agent tool spawns a subagent in a separate context window. The subagent works through its task autonomously, then returns a single text result to the parent conversation. The parent doesn’t see the subagent’s intermediate tool calls or outputs, only that final result. With
+agent teams
+enabled, a call that carries a
+name
+can launch a
+teammate
+instead, which reports back through team messages rather than by returning a result.
 To cap how many turns a subagent runs, set
 maxTurns
 in the
@@ -416,8 +432,8 @@ wherever
 fork mode
 is on. A fork inherits the full parent conversation instead of starting fresh, runs in the background apart from the
 cases that stay in the foreground
-, and still surfaces permission prompts in your terminal. The rest of this section describes named subagents.
-Which tools a named subagent can use depends on the
+, and still surfaces permission prompts in your terminal. The rest of this section describes non-fork subagents.
+Which tools a non-fork subagent can use depends on the
 tools
 and
 disallowedTools
@@ -653,6 +669,12 @@ replace_all
 Viewing a file with Bash also satisfies the read-before-edit requirement when the command is
 cat
 ,
+nl
+,
+bat
+,
+batcat
+,
 head
 ,
 tail
@@ -662,8 +684,10 @@ sed -n 'X,Yp'
 grep
 ,
 egrep
-, or
+,
 fgrep
+, or
+rg
 on a single file with no pipes or redirects. Piped output and other Bash commands don’t count toward the read-before-edit check.
 This affects edit eligibility only, not permissions.
 Read and Edit deny rules
@@ -883,7 +907,9 @@ and
 deny
 patterns you have set for Bash apply here too. The
 WebSocket source
-has its own approval prompt.
+has its own approval prompt, which the classifier decides in
+auto mode
+.
 The tool is not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. It is also not available when
 DISABLE_TELEMETRY
 or
@@ -935,7 +961,9 @@ persistent
 is set, and
 TaskStop
 cancels it early.
-Opening a WebSocket prompts for approval, and the prompt doesn’t offer an option to skip future prompts for the same host.
+Opening a WebSocket prompts for approval; in
+auto mode
+the classifier decides instead. The prompt doesn’t offer an option to skip future prompts for the same host.
 Claude Code denies URLs that point at a private, link-local, or cloud-metadata address, including hostnames that resolve to one. It also denies hosts in
 sandbox.network.deniedDomains
 , and when
@@ -1156,7 +1184,9 @@ Large pages are truncated to a fixed character limit before processing.
 Responses are cached for 15 minutes, so repeated fetches of the same URL return quickly.
 When a URL redirects to a different host, WebFetch returns a text result that names the original URL and the redirect target instead of following it. Claude then fetches the new URL with a second WebFetch call.
 When the extraction step hits an overloaded API, Claude Code retries it with backoff; a fetch that still fails returns an error result. Before v2.1.212, the API error text could reach Claude as if it were the extracted page content.
-In the default and
+In the
+default
+and
 acceptEdits
 permission modes, WebFetch prompts the first time it reaches a new domain, except for a built-in set of preapproved documentation domains that fetch without a prompt. To allow another domain in advance without a prompt, add a permission rule like
 WebFetch(domain:example.com)

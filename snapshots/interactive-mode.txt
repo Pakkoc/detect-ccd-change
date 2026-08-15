@@ -139,10 +139,14 @@ default
 acceptEdits
 ,
 plan
-, and any modes you have enabled, such as
-auto
-or
+, and, when available,
 bypassPermissions
+and then
+auto
+. From
+auto
+, the first press switches to
+default
 . See
 permission modes
 .

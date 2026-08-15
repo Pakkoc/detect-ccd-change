@@ -1,7 +1,11 @@
 Claude Code supports fine-grained permissions so that you can specify exactly what the agent is allowed to do and what it can’t. You can check permission settings into version control to share them with every developer in your organization, and each developer can customize their own.
 ​
 Permission system
-Claude Code uses a tiered permission system to balance power and safety:
+Claude Code uses a tiered permission system to balance power and safety. The table shows, for each tool type, whether Manual mode asks before the action runs. The other
+permission modes
+change which of these ask you; in auto mode a classifier reviews actions instead of you, and
+how the classifier evaluates actions
+lists which ones it sees.
 Tool type
 Example
 Approval required
@@ -85,17 +89,17 @@ PreToolUse hook
 Permission modes
 Claude Code supports several permission modes that control how it approves tool calls. See
 Permission modes
-for when to use each one. Set the
+for when to use each one. To change the mode sessions start in, set
 defaultMode
 in your
 settings files
-. In sessions the VS Code extension starts, the extension resolves the starting mode instead. See
-Switch permission modes
 .
+Which mode a session starts in
+covers the built-in default for each plan and what the VS Code extension reads.
 Mode
 Description
 default
-Standard behavior: prompts for permission on first use of each tool. Labeled Manual in the CLI, the VS Code and JetBrains extensions, and the desktop app, and Claude Code accepts
+Prompts for permission on first use of each tool. Labeled Manual in the CLI, the VS Code and JetBrains extensions, and the desktop app, and Claude Code accepts
 manual
 as an alias. The label and alias require Claude Code v2.1.200 or later. The desktop app’s label doesn’t depend on your CLI version
 acceptEdits
@@ -532,9 +536,9 @@ setsid
 ionice
 , and
 flock
-always prompt and can’t be auto-approved by a prefix rule like
+can’t be auto-approved by a prefix rule like
 Bash(watch *)
-. The same applies to
+, so in Manual mode they always prompt. The same applies to
 find
 with
 -exec
@@ -585,7 +589,7 @@ ls *.ts
 and
 wc -l src/*.py
 run without a prompt.
-Commands from this set still prompt in these cases:
+In Manual mode, commands from this set still prompt in these cases:
 Unquoted globs for commands with write-capable flags
 : commands with write-capable or exec-capable flags, such as
 find
@@ -1273,6 +1277,10 @@ Skills
 in
 .claude/skills/
 Yes, with live reload
+Command files
+in
+.claude/commands/
+Yes. When the added directory and your project both define a command with the same name, Claude Code runs your project’s command
 Subagents
 in
 .claude/agents/
@@ -1298,7 +1306,7 @@ CLAUDE.local.md
 additionally requires the
 local
 setting source, which is enabled by default
-Claude Code discovers commands and output styles from the current working directory and its parents, your user directory at
+Claude Code discovers output styles from the current working directory and its parents, your user directory at
 ~/.claude/
 , and managed settings. Hooks and other
 .claude/settings.json

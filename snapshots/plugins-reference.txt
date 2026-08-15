@@ -1501,7 +1501,7 @@ at its root, no
 skills/
 subdirectory, and no
 skills
-manifest field is automatically loaded as a single-skill plugin in Claude Code v2.1.142 and later. You do not need to set
+manifest field is automatically loaded as a single-skill plugin. You do not need to set
 "skills": ["./"]
 in
 plugin.json

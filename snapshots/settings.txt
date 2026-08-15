@@ -914,9 +914,13 @@ from being activated. Removes
 auto
 from the
 Shift+Tab
-cycle and rejects
+cycle, and any session that would otherwise
+start in auto mode
+, whether from
 --permission-mode auto
-at startup. Also accepted under
+, a settings file, or the built-in default, starts in
+default
+instead. Also accepted under
 permissions
 as
 permissions.disableAutoMode
@@ -2199,11 +2203,12 @@ not discovered
 from these directories
 [ "../docs/" ]
 defaultMode
-Default
-permission mode
-for new sessions. In sessions the
-VS Code extension
-starts, the extension resolves the starting mode instead. Valid values:
+Permission mode
+that new sessions start in. When unset, sessions start in the
+built-in default
+for your plan and surface. For conversations the VS Code extension starts, see
+what the extension reads
+. Valid values:
 default
 ,
 acceptEdits
@@ -2223,7 +2228,7 @@ default
 manual
 alias requires Claude Code v2.1.200 or later.
 auto
-is ignored when set in project or local settings, so a repository can’t grant itself auto mode; set it in
+doesn’t take effect from project or local settings; set it in
 ~/.claude/settings.json
 instead. Before v2.1.142, project settings could set
 auto

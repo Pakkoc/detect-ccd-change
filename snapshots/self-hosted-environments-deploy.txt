@@ -840,9 +840,11 @@ allowedMcpServers
 and
 deniedMcpServers
 policy settings
-, which apply to server-delivered connectors too. An allowlist you deploy for other servers also blocks delivered connectors. To keep connectors available alongside a URL-based allowlist, add an entry matching the session proxy URL, such as
+, which apply to server-delivered connectors too. An allowlist you deploy for other servers also blocks delivered connectors. To keep connectors available alongside a URL-based allowlist, add entries that match the Anthropic proxy paths for server-delivered MCP servers:
 https://api.anthropic.com/v2/ccr-sessions/*
-. If tool traffic must stay inside your network, run the equivalent tools as local MCP servers on the runner image instead. See
+https://api.anthropic.com/v1/code/sessions/*
+https://api.anthropic.com/v1/code/mcp/*
+If tool traffic must stay inside your network, run the equivalent tools as local MCP servers on the runner image instead. See
 MCP servers
 .
 ​

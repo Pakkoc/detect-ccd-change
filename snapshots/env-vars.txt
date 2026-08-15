@@ -1105,6 +1105,12 @@ fullscreen rendering
 while keeping mouse-wheel scrolling. Use this when you want wheel scroll to work inside Claude Code but don’t want clicks to position the cursor, expand tool output, or open links.
 CLAUDE_CODE_DISABLE_MOUSE
 takes precedence when both are set. Requires Claude Code v2.1.195 or later
+CLAUDE_CODE_DISABLE_MTLS_RELOAD_ON_STALE_CONNECTION
+Set to
+1
+to stop Claude Code from re-reading the
+mTLS client certificate and key
+when an API request fails with a connection-level error, such as a connection reset or a TLS handshake error. With the reload disabled, Claude Code loads rotated files only when it next applies settings or at the next startup. Requires Claude Code v2.1.232 or later
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 Set to any non-empty value, such as
 1
@@ -1220,9 +1226,11 @@ Adjust effort level
 CLAUDE_CODE_ENABLE_APPEND_SUBAGENT_PROMPT
 Set to
 1
-to enable appending extra text to the end of every
+to enable appending extra text to the end of the system prompt of every
 subagent
-’s system prompt. The
+other than a
+forked subagent
+. The
 --append-subagent-system-prompt
 flag supplies the appended text and sets this variable automatically, so you don’t need to set it yourself. Requires Claude Code v2.1.205 or later
 CLAUDE_CODE_ENABLE_AUTO_MODE
@@ -1324,9 +1332,9 @@ TaskGet
 TaskList
 ) or the legacy
 TodoWrite
-tool. As of Claude Code v2.1.142, Task tools are the default in all modes. Set to
+tool. Task tools are the default in all modes. Set to
 0
-to revert to
+to use
 TodoWrite
 . See
 Task list
@@ -2616,9 +2624,9 @@ pre-configured credentials
 . Avoids the interactive prompt when adding a server with
 --client-secret
 MCP_CONNECTION_NONBLOCKING
-Controls whether startup waits for MCP servers to connect before the first query. MCP startup is non-blocking by default: servers connect in the background and their tools become available as they finish; before v2.1.142, the blocking wait was the default. Set to
+Controls whether startup waits for MCP servers to connect before the first query. MCP startup is non-blocking by default: servers connect in the background and their tools become available as they finish. Set to
 0
-to restore the blocking 5-second connection wait. Servers configured with
+to make Claude Code wait for servers to connect before the first query. Servers configured with
 alwaysLoad: true
 still make startup wait regardless, except when served from the
 discovery cache
@@ -2827,38 +2835,47 @@ Monitoring
 for configuration details.
 ​
 Features that need feature-flag fetching
-Claude Code turns some features on through feature flags it fetches from Anthropic.
+Claude Code turns some features on through feature flags it fetches from Anthropic. You turn flag fetching off for a session by setting
 DISABLE_GROWTHBOOK
 ,
 DISABLE_TELEMETRY
 ,
 DO_NOT_TRACK
-, and
+, or
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-all turn flag fetching off when set to a value that disables them, and each variable’s row says which values do that. A session running with fetching off can’t use:
+. Each variable’s row says which values do that. With fetching off, you can’t:
+Start sessions in auto mode by default
+on Pro, Max, and Team plans; Claude Code starts your sessions in Manual instead
+Have the VS Code extension
+read settings files for the starting mode
+Use
 Remote Control
-Cross-session messaging
+Send or receive
+cross-session messages
+Run
 claude import
-and the
+or the
 /import
 command
-The
+Create routines from the CLI with
 /schedule
-command
-for creating routines from the CLI
-The advisor tool
+Use
+the advisor tool
+Let
+Claude choose the
 /loop
-self-pacing
-, so a
+interval
+; Claude Code runs a
 /loop
-prompt with no interval runs on the fixed 10-minute schedule instead
-The built-in
+prompt with no interval on the fixed 10-minute schedule instead
+Run
+the built-in
 /loop
 maintenance prompt
-, so
+; Claude Code shows the usage message instead when you run
 /loop
-with no prompt shows the usage message instead
-In such a session you can still type
+with no prompt
+With fetching off, you can still type
 /code-review
 yourself, but
 Claude can’t start the review on its own, and a scheduled
@@ -2867,7 +2884,7 @@ reaches Claude as plain text
 instead of running the review.
 ​
 First session after an install or upgrade
-A feature in this list can be missing from your first session after you install Claude Code, or after you upgrade to a version that adds the feature, even with none of these variables set. Claude Code fetches the flags during that session, so a feature that’s otherwise available to you is there in your next session. Two features work differently in that first session:
+You can also miss a feature in this list in your first session after you install Claude Code, or after you upgrade to a version that adds the feature, even with none of these variables set. Claude Code fetches the flags during that session, so a feature that’s otherwise available to you is there in your next session. Two features behave differently in that first session:
 Claude Code
 binds the session’s inbox socket
 and exports the messaging variables partway through the session, as soon as the fetch completes, so other sessions can message it before you restart.
