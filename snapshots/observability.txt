@@ -296,7 +296,7 @@ tool
 hook
 spans are children of the enclosing
 claude_code.interaction
-span. When the agent spawns a subagent through the Task tool, the subagent’s
+span. When the agent spawns a subagent through the Agent tool, the subagent’s
 llm_request
 and
 tool

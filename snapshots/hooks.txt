@@ -5785,7 +5785,9 @@ tool instead.
 TaskCreated
 Runs when a task is being created via the
 TaskCreate
-tool. Use this to enforce naming conventions, require task descriptions, or prevent certain tasks from being created.
+tool. Use this to enforce naming conventions, require task descriptions, or prevent certain tasks from being created. In a
+session without the Task tools
+, this event doesn’t fire.
 TaskCreated hooks don’t support matchers and fire on every occurrence.
 ​
 TaskCreated input

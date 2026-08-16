@@ -196,8 +196,10 @@ A
 session sleeping between iterations. The row shows its run count and a countdown
 The
 #N
-label that can appear at the right edge of a row is a
-pull request the session is linked to
+or
+!N
+label that can appear at the right edge of a row is a link to the session’s
+pull request or merge request
 , not part of the state icon.
 The terminal tab title shows the awaiting-input count while agent view is open:
 2 awaiting input · claude agents
@@ -246,13 +248,18 @@ ANTHROPIC_DEFAULT_HAIKU_MODEL
 to choose one.
 ​
 Pull request status
-When a session opens a pull request, a
+When a session
+opens a pull request
+, Claude Code adds a label at the right edge of the row, linked to the pull request:
+Claude Code writes the label as
 #1234
-label appears at the right edge of the row, linked to the pull request. Claude Code emits the link even when it can’t detect hyperlink support, for example over SSH or tmux; set
+for a pull request and as
+!1234
+for a GitLab merge request.
+Claude Code emits the link even when it can’t detect hyperlink support, for example over SSH or tmux. Set
 FORCE_HYPERLINK=0
-to render the label as plain text. The label persists when you send a follow-up to the session, so the pull request remains visible while the row reverts to live progress. Claude opens these pull requests from the session itself when the task calls for one;
-How file edits are isolated
-covers what Claude commits and pushes without asking and when it asks first.
+to render the label as plain text.
+After you send a follow-up to the session, Claude Code keeps the label while the row returns to live progress.
 A session that works on an existing pull request is linked to it the same way. Claude Code finds the pull request differently depending on the command Claude runs:
 When Claude edits, comments on, closes, or marks a pull request ready with
 gh
@@ -568,8 +575,8 @@ s:working
 s:blocked
 for everything waiting on you
 #<number>
-or a PR URL
-The session working on that pull request
+or a pull or merge request URL
+The session working on that pull request or merge request
 Any other URL
 The session whose first prompt contained that URL
 ​
@@ -667,8 +674,8 @@ to dispatch as the prompt
 ! <command>
 Run a shell command as a background job instead of starting a Claude session. The job appears as a row you can attach to, watch, and detach from
 #<number>
-or a pull request URL
-If a session is already working on that PR, select it instead of dispatching
+or a pull or merge request URL
+If a session is already working on that pull request or merge request, Claude Code selects its row instead of dispatching a new session
 Shift+Enter
 Dispatch and immediately attach to the new session
 A small set of commands run in agent view itself instead of dispatching:
@@ -1851,6 +1858,14 @@ unknown option
 error. The table below lists when each flag and behavior was added.
 Version
 Change
+v2.1.233
+For a session linked to a GitLab merge request, Claude Code writes the row’s label in GitLab’s
+!1234
+reference syntax. You can also paste the merge request’s URL into the
+dispatch input
+to select that session. Before this release, the label rendered as
+#1234
+, and a pasted merge request URL matched a session only when its first prompt contained the URL.
 v2.1.227
 Deleting a session
 keeps the session and its worktree while another live Claude Code session is running inside that worktree directory. Agent view shows

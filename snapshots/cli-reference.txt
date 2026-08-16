@@ -349,7 +349,9 @@ Tools that execute without prompting for permission. See
 permission rule syntax
 for pattern matching. To restrict which tools are available, use
 --tools
-instead
+instead. If you name one of the
+task-tracking tools
+here, Claude Code also opts the session in
 "Bash(git log *)" "Bash(git diff *)" "Read"
 --append-subagent-system-prompt
 Append custom text to the end of every
@@ -912,7 +914,9 @@ to disable all,
 "default"
 for all, or tool names like
 "Bash,Edit,Read"
-. The flag doesn’t affect MCP tools; to deny those too, use
+. If you name one of the
+task-tracking tools
+here, Claude Code also opts the session in. The flag doesn’t affect MCP tools; to deny those too, use
 --disallowedTools "mcp__*"
 . A list that omits
 EndConversation
@@ -937,11 +941,13 @@ Start Claude in an isolated
 git worktree
 at
 <repo>/.claude/worktrees/<name>
-. If no name is given, one is auto-generated. Pass
+. If you don’t give a name, Claude Code generates one. Pass
 #<number>
-or a GitHub pull request URL to fetch that PR from
+, a GitHub pull request URL, or a GitLab merge request URL to
+fetch that PR or MR from
 origin
 and branch the worktree from it
+. Branching from a GitLab merge request requires Claude Code v2.1.233 or later
 claude -w feature-auth
 ​
 System prompt flags

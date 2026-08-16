@@ -1,23 +1,45 @@
 The Claude Agent SDK includes built-in todo functionality that helps organize complex workflows and keep users informed about task progression.
-As of TypeScript Agent SDK 0.3.142 and Claude Code v2.1.142, sessions use the structured Task tools
+On TypeScript Agent SDK 0.3.233 and later, or Python Agent SDK 0.2.139 and later, the following tools aren’t available on Opus 4.8, Sonnet 5, Fable 5, Mythos 5, or later versions of those families unless you opt in:
+TodoWrite
 TaskCreate
-,
-TaskUpdate
-,
 TaskGet
-, and
+TaskUpdate
 TaskList
-instead of
+On other models, Claude Code provides the Task tools by default and
 TodoWrite
-. The Python SDK gets this change from the Claude Code CLI it launches, not from the Python package version: the switch applies once that CLI — the copy bundled inside the pip package, or one you point to with
-cli_path
-— is v2.1.142 or later. See
-Migrate to Task tools
-for how monitoring code changes. The examples on this page set
+only when you set
 CLAUDE_CODE_ENABLE_TASKS=0
-to keep showing
-TodoWrite
-for sessions that have not migrated yet.
+.
+​
+Model availability
+On the
+models that don’t get the task-tracking tools
+, you see no
+tool_use
+blocks for them in the message stream unless you opt in. If you point
+cli_path
+in Python or
+pathToClaudeCodeExecutable
+in TypeScript at your own Claude Code install, you get whichever tools that install provides. To get the same tools as on other models, do one of the following:
+Name one of the tools in the
+allowedTools
+option,
+allowed_tools
+in Python
+List the tools in the
+tools
+option, which restricts the session’s built-in tools to the ones it names. Include the tools you want alongside the other built-in tools you use
+Set
+CLAUDE_CODE_ENABLE_TODO_TOOLS=1
+in the
+env
+option, as the examples on this page do. In TypeScript,
+env
+replaces the subprocess environment, so spread
+...process.env
+to keep inherited variables. In Python,
+env
+is merged on top of the inherited environment
 ​
 Todo Lifecycle
 Claude moves each todo through a predictable lifecycle:
@@ -39,7 +61,9 @@ TaskUpdate
 call
 ​
 When Todos Are Used
-Claude creates todos for most multi-step work, such as:
+In a
+session that has the task-tracking tools
+, Claude creates todos for most multi-step work, such as:
 Complex multi-step tasks
 requiring 3 or more distinct actions
 User-provided task lists
@@ -96,7 +120,8 @@ prompt:
 "Optimize my React app performance and track progress with todos"
 ,
 // Re-enable TodoWrite, which this example monitors. Without it, the SDK uses
-// Task tools instead and these tool_use blocks never appear.
+// Task tools instead and these tool_use blocks never appear. ENABLE_TODO_TOOLS
+// keeps the tools on models where Claude Code otherwise doesn't provide them.
 options:
 {
 maxTurns:
@@ -111,6 +136,9 @@ env
 ,
 CLAUDE_CODE_ENABLE_TASKS:
 "0"
+,
+CLAUDE_CODE_ENABLE_TODO_TOOLS:
+"1"
 } }
 })) {
 // Todo updates are reflected in the message stream
@@ -259,7 +287,8 @@ prompt
 "Optimize my React app performance and track progress with todos"
 ,
 # Re-enable TodoWrite, which this example monitors. Without it, the SDK uses
-# Task tools instead and these tool_use blocks never appear.
+# Task tools instead and these tool_use blocks never appear. ENABLE_TODO_TOOLS
+# keeps the tools on models where Claude Code otherwise doesn't provide them.
 options
 =
 ClaudeAgentOptions(
@@ -273,6 +302,10 @@ env
 "CLAUDE_CODE_ENABLE_TASKS"
 :
 "0"
+,
+"CLAUDE_CODE_ENABLE_TODO_TOOLS"
+:
+"1"
 }),
 ):
 # Todo updates are reflected in the message stream
@@ -564,7 +597,7 @@ query
 ({
 prompt
 ,
-// Re-enable TodoWrite, which this tracker watches for.
+// On every model, re-enable TodoWrite, which this tracker watches for.
 options:
 {
 maxTurns:
@@ -579,6 +612,9 @@ env
 ,
 CLAUDE_CODE_ENABLE_TASKS:
 "0"
+,
+CLAUDE_CODE_ENABLE_TODO_TOOLS:
+"1"
 } }
 })) {
 if
@@ -845,7 +881,7 @@ query(
 prompt
 =
 prompt,
-# Re-enable TodoWrite, which this tracker watches for.
+# On every model, re-enable TodoWrite, which this tracker watches for.
 options
 =
 ClaudeAgentOptions(
@@ -859,6 +895,10 @@ env
 "CLAUDE_CODE_ENABLE_TASKS"
 :
 "0"
+,
+"CLAUDE_CODE_ENABLE_TODO_TOOLS"
+:
+"1"
 }),
 ):
 if
@@ -926,9 +966,7 @@ and
 TaskGet
 available for the model to read back the current list. Your monitoring code still inspects
 tool_use
-blocks in the assistant stream, but maintains a map keyed by task ID instead of replacing the whole list on every call. The Task tools are the default as of TypeScript Agent SDK 0.3.142 and Claude Code v2.1.142, so no
-options.env
-change is needed.
+blocks in the assistant stream, but maintains a map keyed by task ID instead of replacing the whole list on every call.
 With
 TodoWrite
 With Task tools
@@ -978,9 +1016,16 @@ input. It comes back in the matching
 tool_result
 as
 { task: { id, subject } }
-, so capture it from the result block to key your map. The following example shows the minimal change to the
+, so capture it from the result block to key your map.
+The following example shows the minimal change to the
 Monitoring Todo Changes
-loop. It reads only
+loop. It leaves
+CLAUDE_CODE_ENABLE_TASKS
+unset, because the Task tools are the default, and sets only
+CLAUDE_CODE_ENABLE_TODO_TOOLS=1
+, the
+opt-in
+for the models that otherwise don’t get the tools. It reads only
 tool_use
 inputs and skips capturing IDs from
 tool_result
@@ -1028,11 +1073,22 @@ query
 prompt:
 "Optimize my React app performance and track progress with todos"
 ,
+// Keeps the Task tools on models where Claude Code otherwise doesn't provide them.
 options:
 {
 maxTurns:
 15
-},
+,
+env:
+{
+...
+process
+.
+env
+,
+CLAUDE_CODE_ENABLE_TODO_TOOLS:
+"1"
+} },
 })) {
 if
 (
@@ -1212,13 +1268,21 @@ prompt
 =
 "Optimize my React app performance and track progress with todos"
 ,
+# Keeps the Task tools on models where Claude Code otherwise doesn't provide them.
 options
 =
 ClaudeAgentOptions(
 max_turns
 =
 15
-),
+,
+env
+=
+{
+"CLAUDE_CODE_ENABLE_TODO_TOOLS"
+:
+"1"
+}),
 ):
 if
 not

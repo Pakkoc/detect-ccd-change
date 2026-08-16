@@ -3834,7 +3834,7 @@ includes
 extraKnownMarketplaces
 , Claude Code adds those marketplaces for a team member after they accept the workspace trust dialog for that repository, with no separate prompt. In a folder they haven’t trusted, including a
 -p
-run there or a repository under a parent folder they trusted earlier, Claude Code ignores the entries without a message.
+run there, Claude Code ignores the entries without a message.
 What runs before you trust a folder
 compares this with the other content a repository can supply.
 Example

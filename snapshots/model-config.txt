@@ -276,7 +276,9 @@ environment variable, or the
 model
 setting; a mistyped value there produces
 There’s an issue with the selected model
-on the first request instead.
+on the first request instead. Claude Code can still write the
+unrecognized-model diagnostic line
+at request time, on every provider.
 When the requested model has a scheduled retirement date or is automatically remapped to a newer version, Claude Code shows a warning that names the requested model. Interactive sessions show it as a startup notice. From v2.1.182, the same warning is written to stderr in
 non-interactive mode
 when using the default text output format. The check also covers a
@@ -1861,6 +1863,10 @@ settings file
 Keys must be Anthropic model IDs as listed in the
 Models overview
 . For dated model IDs, include the date suffix exactly as it appears there. Unknown keys are ignored.
+To stop the
+[claude-code:unrecognized_model]
+diagnostic line
+for an ID such as a gateway alias, add an entry with that ID as its value.
 Overrides replace the built-in model IDs that back each entry in the
 /model
 picker. On Amazon Bedrock,

@@ -24,7 +24,8 @@ connects Claude to external services and tools
 Subagents
 run their own loops in isolated context, returning summaries
 Agent teams
-coordinate multiple independent sessions with shared tasks and peer-to-peer messaging
+coordinate multiple independent sessions with peer-to-peer messaging, plus a shared task list for
+agents that have the Task tools
 Hooks
 run your script, HTTP request, prompt, or subagent when Claude Code reaches a lifecycle event
 Plugins
@@ -233,7 +234,8 @@ Reports results back to the main agent only
 Teammates message each other directly
 Coordination
 Main agent manages all work
-Shared task list with self-coordination
+Self-coordination through messages, plus a shared task list for
+agents that have the Task tools
 Best for
 Focused tasks where only the result matters
 Complex work requiring discussion and collaboration

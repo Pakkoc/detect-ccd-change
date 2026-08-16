@@ -983,7 +983,11 @@ entries change availability.
 allowedTools
 and scoped
 disallowedTools
-rules change permission only.
+rules change permission. If you name one of the
+task-tracking tools
+in
+allowedTools
+, Claude Code also opts the session in.
 Option
 Layer
 Effect
@@ -995,7 +999,7 @@ Availability
 All built-ins are removed. Claude can only use your MCP tools.
 allowed tools
 Permission
-Listed tools run without a permission prompt. Unlisted tools remain available; calls go through the
+Listed tools run without a permission prompt. Other unlisted tools remain available; calls go through the
 permission flow
 .
 disallowed tools

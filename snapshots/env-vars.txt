@@ -1322,21 +1322,21 @@ promptSuggestionEnabled
 setting. See
 Prompt suggestions
 CLAUDE_CODE_ENABLE_TASKS
-Controls whether sessions use the structured Task tools (
+Selects which task-tracking tools Claude Code provides in
+sessions that have them
+. By default, Claude Code provides the Task tools
 TaskCreate
 ,
 TaskUpdate
 ,
 TaskGet
-,
+, and
 TaskList
-) or the legacy
-TodoWrite
-tool. Task tools are the default in all modes. Set to
+. Set to
 0
-to use
+to get the legacy
 TodoWrite
-. See
+tool instead. See
 Task list
 and
 Migrate to Task tools
@@ -1345,6 +1345,16 @@ Set to
 1
 to enable OpenTelemetry data collection for metrics and logging. Required before configuring OTel exporters. See
 Monitoring
+CLAUDE_CODE_ENABLE_TODO_TOOLS
+Set to
+1
+to get the task-tracking tools on the models listed under
+Task tool availability
+, where Claude Code otherwise leaves them out.
+CLAUDE_CODE_ENABLE_TASKS
+still selects the Task tools or
+TodoWrite
+. Requires Claude Code v2.1.233 or later
 CLAUDE_CODE_EXIT_AFTER_STOP_DELAY
 Time in milliseconds to wait after the query loop becomes idle before automatically exiting. Useful for automated workflows and scripts using SDK mode
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
@@ -2077,7 +2087,9 @@ to disable syntax highlighting in diff output. Useful when colors interfere with
 syntaxHighlightingDisabled
 setting
 CLAUDE_CODE_TASK_LIST_ID
-Share a task list across sessions. Set the same ID in multiple Claude Code instances to coordinate on a shared task list. See
+Share a task list across sessions. Set the same ID in multiple Claude Code instances to coordinate on a shared task list, in
+sessions that have the Task tools
+. See
 Task list
 CLAUDE_CODE_TEAM_TEARDOWN_PARK_TIMEOUT_MS
 Override, in milliseconds, how long a non-interactive session waits at exit for its
