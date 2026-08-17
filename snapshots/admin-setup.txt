@@ -151,11 +151,6 @@ fallbackModel
 and
 availableModels
 , the managed value replaces lower layers rather than merging.
-See
-Server-managed settings
-and
-Settings files and precedence
-.
 ​
 WSL sessions in Claude Code Desktop
 On Windows,

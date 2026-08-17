@@ -1752,7 +1752,9 @@ statusLine
 documentation
 {"type": "command", "command": "~/.claude/statusline.sh"}
 strictKnownMarketplaces
-(Managed settings only) Allowlist of plugin marketplace sources. Undefined = no restrictions, empty array = lockdown. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. See
+(Managed settings only) Allowlist of plugin marketplace sources. Undefined = no restrictions, empty array = lockdown. Enforced on marketplace add and on plugin install, update, refresh, and auto-update, so a marketplace added before the policy was set cannot be used to fetch plugins. The
+allowedMarketplaces
+alias requires Claude Code v2.1.232 or later. See
 Managed marketplace restrictions
 [{ "source": "github", "repo": "acme-corp/plugins" }]
 strictPluginOnlyCustomization
@@ -3993,12 +3995,35 @@ enabledPlugins
 }
 }
 }
+Marketplace key aliases
+On Claude Code v2.1.232 or later, you can also write
+extraKnownMarketplaces
+as
+additionalMarketplaces
+and
+strictKnownMarketplaces
+as
+allowedMarketplaces
+, and Claude Code treats each alias as follows.
+Earlier versions ignore the alias, so keep the canonical spelling in a file that older versions also read. A managed settings file for a fleet with mixed Claude Code versions is one such file.
+In any settings file that accepts the canonical key, Claude Code reads the alias exactly as it reads the canonical key.
+Claude Code may rewrite
+additionalMarketplaces
+to
+extraKnownMarketplaces
+when it updates the file.
+If you set both spellings to values in one file, Claude Code uses the canonical value and ignores the alias.
 ​
 strictKnownMarketplaces
 Managed settings only
 : Controls which plugin marketplaces users are allowed to add and install plugins from. This setting can only be configured in
 managed settings
 and provides administrators with strict control over marketplace sources.
+You can also write this key as
+allowedMarketplaces
+.
+Marketplace key aliases
+describes how Claude Code treats the alias and which version accepts it.
 Managed settings file locations
 :
 macOS

@@ -873,15 +873,17 @@ TypeScript
 settings.json
 . From
 settings.json
-it strips the three keys that misbehave under a temporary config directory:
+it strips the keys that misbehave under a temporary config directory:
 enabledPlugins
 ,
 extraKnownMarketplaces
-, and any
+, its
+additionalMarketplaces
+alias, and any
 CLAUDE_CONFIG_DIR
 in the file’s
 env
-block. Auth configured in settings, such as
+block. Before Agent SDK v0.3.232, the SDK didn’t strip the alias. Auth configured in settings, such as
 apiKeyHelper
 , works when you resume from the store. Before Agent SDK v0.3.222, the TypeScript SDK copied only credentials and
 .claude.json

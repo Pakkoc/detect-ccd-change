@@ -1154,6 +1154,15 @@ Set to
 to disable automatic registration of the official plugin marketplace. Claude Code reads the variable when it is about to register the marketplace, usually during a machine’s first interactive launch. If the variable is set at that point, Claude Code skips the registration permanently. Unsetting the variable later doesn’t undo the skip. Run
 claude plugin marketplace add anthropics/claude-plugins-official
 to register the marketplace at any time
+CLAUDE_CODE_DISABLE_PERMISSION_PROMPT_NOTIFY_HOOKS
+Set to
+1
+to stop Claude Code from running your
+Notification
+hooks for unanswered permission requests
+in sessions where Claude Code sends them to the Agent SDK’s
+canUseTool
+callback, which is how Claude Desktop and the VS Code extension host Claude Code. Has no effect in terminal sessions. Requires Claude Code v2.1.233 or later
 CLAUDE_CODE_DISABLE_POLICY_SKILLS
 Set to
 1
@@ -2129,6 +2138,26 @@ to your
 . See
 Terminal configuration
 for other tmux settings
+CLAUDE_CODE_TOOL_MEMORY_LIMIT
+On Linux and WSL, set to a size such as
+4G
+to
+cap the memory that Bash and PowerShell tool commands can use
+. Write the size in plain digits, alone for a number of bytes or with a
+K
+,
+M
+,
+G
+, or
+T
+suffix. Set
+0
+or
+off
+to turn the cap off. Once a tool command has turned the cap on or off, a changed value takes effect the next time you launch
+claude
+. Requires Claude Code v2.1.233 or later
 CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS
 Deadline in milliseconds for dialogs Claude Code forwards to a remote client, such as a
 Remote Control
@@ -2179,6 +2208,18 @@ PowerShell tool
 CLAUDE_CODE_USE_VERTEX
 Use
 Google Cloud’s Agent Platform
+CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS
+Set to the number of milliseconds
+WebFetch
+keeps each fetched URL’s response cached. The default is
+900000
+, which is 15 minutes. Takes plain digits only;
+0
+, a decimal, or any other spelling keeps the default. Claude Code reads the value once per launch, so a change in a settings
+env
+block applies when you next launch
+claude
+. Requires Claude Code v2.1.233 or later
 CLAUDE_CODE_WORKFLOW_PREFIX_STAGGER_MS
 Upper bound in milliseconds on how long a
 workflow

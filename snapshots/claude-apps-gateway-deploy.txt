@@ -107,9 +107,6 @@ oidc.scopes: [openid, profile, email]
 and
 oidc.extra_auth_params: { access_type: offline, prompt: consent }
 .
-For support with an identity provider not covered above, see
-Troubleshooting
-.
 Refresh tokens let the gateway renew a developer’s session silently, without sending the developer back to the browser. They also drive deprovisioning, because when the IdP disables a user, the next refresh fails and the session ends within
 ttl_hours
 . The gateway requests
@@ -221,17 +218,12 @@ GET /healthz
 For a complete worked example on AWS, covering ECS Fargate or EKS, Amazon RDS, and AWS Secrets Manager, see
 Deploy on AWS
 .
-Workload identity
-Prefer the platform’s workload identity over static keys: IRSA on EKS for Amazon Bedrock and for Claude Platform on AWS, Workload Identity on GKE for Google Cloud’s Agent Platform, and workload identity on AKS for Microsoft Foundry. Set
-auth: {}
-in the upstream block, or
-use_azure_ad: true
-for Microsoft Foundry, and the gateway picks up the pod’s identity through that provider’s default credential chain. For a cross-cloud pairing, such as an Amazon Bedrock upstream on GKE, set explicit credentials in the upstream’s
-auth
-block instead. The
+Prefer the platform’s workload identity over static keys; the
 upstreams
 reference
-has per-platform setup details.
+has per-platform setup details. For a cross-cloud pairing, such as an Amazon Bedrock upstream on GKE, set explicit credentials in the upstream’s
+auth
+block instead.
 ​
 Cloud Run
 Configure the service as follows:
@@ -400,9 +392,6 @@ The OAuth discovery document at
 also returns
 200
 only after config load, OIDC discovery, upstream client construction, and Postgres migration all succeed, so it doubles as an end-to-end boot check.
-A running gateway also serves a description of the paths and request shapes it accepts at
-<public_url>/protocol
-, matched to the version you’re running. The contents aren’t stable across releases.
 ​
 Outage behavior
 If Postgres goes down, the gateway itself keeps serving signed-in developers and new sign-ins fail. Whether developers actually keep working depends on how your orchestrator handles readiness:

@@ -3,7 +3,6 @@ Admin Settings > Claude Code > Managed settings
 in the claude.ai console. Claude Code clients fetch these settings automatically when users authenticate with an organization OAuth login or a directly configured API key, on platforms where server-managed delivery is supported. See
 Platform availability
 .
-This approach is designed for organizations that don’t have device management infrastructure in place, or that need to manage settings for users on unmanaged devices.
 Server-managed settings are available for
 Claude for Teams
 and
@@ -117,25 +116,14 @@ This example runs an audit script after every file edit across the organization:
 ]
 }
 }
-To configure the
-auto mode
-classifier so it knows which repos, buckets, and domains your organization trusts:
-{
-"autoMode"
-: {
-"environment"
-: [
-"Source control: github.example.com/acme-corp and all repos under it"
-,
-"Trusted cloud buckets: s3://acme-build-artifacts, gs://acme-ml-datasets"
-,
-"Trusted internal domains: *.corp.example.com"
-]
-}
-}
 Because hooks execute shell commands, users see a
 security approval dialog
-before they’re applied. See
+before they’re applied.
+To configure the
+auto mode
+classifier so it knows which repos, buckets, and domains your organization trusts, deliver an
+autoMode
+block the same way; see
 Configure auto mode
 for how the
 autoMode
