@@ -1152,16 +1152,9 @@ falls through to a prompt. Not invoked for calls auto-approved by
 allowedTools
 , allow rules, or
 permissionMode
-.
-AskUserQuestion
-, connector tools
-your organization set to
-ask
-, and MCP tools marked
-requiresUserInteraction
-reach it even if you’ve allowed them; in
-dontAsk
-mode these are denied instead. See
+. An allow rule doesn’t pre-approve the
+actions no mode auto-approves
+. See
 CanUseTool
 for details
 continue
@@ -3033,15 +3026,15 @@ bypassPermissions
 PreToolUse
 hook
 instead.
-AskUserQuestion
-, MCP tools marked
-requiresUserInteraction
-, and connector tools
-your organization set to
-ask
-reach the function even when an allow rule matches. In
+An allow rule doesn’t pre-approve the
+actions no mode auto-approves
+; see
+How permissions are evaluated
+for which of them reach the callback and what happens in
 dontAsk
-mode these calls are denied instead, without invoking it.
+and
+auto
+mode.
 type
 CanUseTool
 =
@@ -13769,10 +13762,9 @@ is set to
 bypassPermissions
 and
 allowUnsandboxedCommands
-is enabled, the model can autonomously execute commands outside the sandbox without approval prompts (an explicit
-ask
-rule
-still forces one). This combination effectively allows the model to escape sandbox isolation silently.
+is enabled, the model can autonomously execute commands outside the sandbox without approval prompts, apart from the
+actions no mode auto-approves
+. This combination effectively allows the model to escape sandbox isolation silently.
 ​
 See also
 SDK overview

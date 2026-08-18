@@ -425,7 +425,7 @@ Plugins
 project scope
 from the main checkout also load in worktrees of the same repository, so you don’t need to reinstall them per worktree. Requires Claude Code v2.1.200 or later.
 Permission approvals
-: choosing “Yes, don’t ask again” for a Bash command in a worktree session saves the rule to the main checkout’s
+: choosing “Yes, and don’t ask again” for a Bash command in a worktree session saves the rule to the main checkout’s
 .claude/settings.local.json
 , so it applies in the main checkout and in every other worktree of the repository, and it survives the worktree’s removal. Before v2.1.211, an approval granted in a worktree was saved inside that worktree, didn’t apply elsewhere, and was lost when the worktree was removed. See
 where approvals are saved

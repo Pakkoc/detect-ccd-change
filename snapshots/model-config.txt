@@ -370,9 +370,7 @@ frontmatter, the Agent tool’s
 model
 parameter,
 agent team
-teammate models including the
-teammateDefaultModel
-setting,
+teammate models,
 CLAUDE_CODE_SUBAGENT_MODEL
 , and, on v2.1.197 and earlier, the model picker in the
 /agents
@@ -423,10 +421,8 @@ Subagent or teammate override
 : Claude Code falls back to the
 subagent’s inherited model
 or the
-default teammate model
-rather than failing the request. In interactive sessions, Claude Code warns you when it substitutes a subagent’s model, by this fallback or by the newest-permitted-version substitution above, naming the requested and substituted models; it doesn’t report a teammate’s fallback. When the blocked value is the
-Default teammate model
-setting itself, Claude Code runs the teammate on your provider’s default Opus model, or on the lead’s model when the allowlist blocks that too. Where the newest-permitted-version substitution above operates, a blocked family alias follows it instead; before v2.1.222, an alias fell back like any other blocked value on every provider
+lead’s model for a teammate
+rather than failing the request. In interactive sessions, Claude Code warns you when it substitutes a subagent’s model, by this fallback or by the newest-permitted-version substitution above, naming the requested and substituted models; it doesn’t report a teammate’s fallback. Where the newest-permitted-version substitution above operates, a blocked family alias follows it instead; before v2.1.222, an alias fell back like any other blocked value on every provider
 Skill or command override
 : Claude Code ignores the override, including a blocked family alias, and the skill or command runs on the session model. A skill or command that
 runs in a subagent

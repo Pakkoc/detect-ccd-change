@@ -19,7 +19,15 @@ permissions
 Command parsing for permissions
 : Before executing bash commands, Claude Code parses them into an AST and matches the result against your permission rules. Commands that cannot be parsed cleanly, or that do not match an allow rule, require explicit approval. A small set of constructs such as
 eval
-always require approval regardless of allow rules. This is a permission gate, not a sandbox; it does not infer whether a command is dangerous from its target path or effects.
+always require approval regardless of allow rules. This is a permission gate, not a sandbox; apart from built-in safety checks such as the
+critical-path check
+on
+rm
+and
+rmdir
+and the
+protected paths
+list, it does not infer whether a command is dangerous from its target path or effects.
 Web search summarization
 : Search results are summarized rather than passing raw content directly into the context, reducing the risk of prompt injection from malicious web content.
 Sandbox mode

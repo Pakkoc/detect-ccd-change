@@ -2072,6 +2072,18 @@ name
 .
 --disable-slash-commands
 : sessions started with this flag don’t watch these directories and always need a restart to load new files.
+A file under an added directory
+: Claude Code loads
+.claude/agents/
+from directories added with the
+add_dirs
+(Python) or
+additionalDirectories
+(TypeScript) option, or the CLI’s
+--add-dir
+or
+/add-dir
+, but doesn’t watch them, so a new or edited file there needs a session restart.
 A programmatic agent with the same name
 :
 agents

@@ -221,7 +221,9 @@ Claude Platform on AWS
 endpoint URL. Use for custom regions or when routing through an
 LLM gateway
 . Defaults to
-https://aws-external-anthropic.{AWS_REGION}.api.aws
+https://aws-external-anthropic.{region}.api.aws
+. Claude Code resolves the region with the
+same precedence as on Amazon Bedrock
 ANTHROPIC_AWS_WORKSPACE_ID
 Required for
 Claude Platform on AWS
@@ -1427,9 +1429,11 @@ to turn it on in
 claude -p
 and the Agent SDK as well, or
 0
-to turn it off in every kind of session. The
+to turn it off in every kind of session. You can run
 /subtask
-command works whether or not fork mode is on. The interactive default requires Claude Code v2.1.232 or later
+whether or not fork mode is on. The interactive default requires Claude Code v2.1.232 or later; on earlier versions, set the variable to
+1
+to turn fork mode on
 CLAUDE_CODE_FORWARD_SUBAGENT_TEXT
 Set to
 1
@@ -2617,7 +2621,9 @@ false
 no
 , or
 off
-enables hyperlinks rather than disabling them. Claude Code renders the footer PR badge as a hyperlink even when it can’t detect terminal support, such as over SSH. Set
+enables hyperlinks rather than disabling them. Claude Code renders the footer
+PR or merge request badge
+as a hyperlink even when it can’t detect terminal support, such as over SSH. Set
 0
 to render the badge as plain text
 FORCE_PROMPT_CACHING_5M
@@ -2928,6 +2934,9 @@ maintenance prompt
 ; Claude Code shows the usage message instead when you run
 /loop
 with no prompt
+Have Claude Code refresh the
+PR review status badge
+less often while you’re idle; Claude Code refreshes it every 60 seconds instead
 With fetching off, you can still type
 /code-review
 yourself, but

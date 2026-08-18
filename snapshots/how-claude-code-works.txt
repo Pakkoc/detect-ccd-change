@@ -225,7 +225,9 @@ to keep descriptions out of context until you need them. For skills you didn’t
 skillOverrides
 to do the same from settings.
 Subagents
-get their own fresh context, completely separate from your main conversation. Their work doesn’t bloat your context. When done, they return a summary. This isolation is why subagents help with long sessions.
+work in their own context window. A subagent starts fresh unless it’s a
+fork
+, which starts with a copy of your conversation so far. Either way, the subagent’s tool calls stay out of your context, and Claude gets back a summary when the subagent finishes.
 See
 context costs
 for what each feature costs, and

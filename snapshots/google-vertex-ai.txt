@@ -192,6 +192,15 @@ Environment variables reference
 for the full list. Check
 Google Cloud’s Agent Platform Model Garden
 to determine which models support global endpoints versus regional only.
+If a region value isn’t shaped like a region or location name, Claude Code treats it as unset. For example, Claude Code treats a value containing a slash, dot, or space as unset. Claude Code falls back to a different source for each variable:
+VERTEX_REGION_CLAUDE_*
+: Claude Code falls back to
+CLOUD_ML_REGION
+.
+CLOUD_ML_REGION
+: Claude Code falls back to
+us-east5
+.
 Prompt caching
 is enabled automatically. To disable it, set
 DISABLE_PROMPT_CACHING=1

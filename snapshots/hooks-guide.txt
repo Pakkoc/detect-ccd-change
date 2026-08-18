@@ -1434,8 +1434,6 @@ logout
 ,
 prompt_input_exit
 ,
-bypass_permissions_disabled
-,
 other
 Notification
 notification type

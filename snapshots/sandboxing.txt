@@ -166,9 +166,9 @@ are always respected
 rm
 or
 rmdir
-commands that target
-/
-, your home directory, or other critical system paths still go through the regular permission flow
+commands that target a
+critical path
+still go through the regular permission flow
 Content-scoped
 ask rules
 like
@@ -1357,24 +1357,17 @@ A classifier that reviews actions
 Whether each tool call runs
 Nothing.
 Protected path
-checks are also skipped; only explicit
-ask rules
-, connector tools
-your organization set to
-ask
-, MCP tools marked
-requiresUserInteraction
-, removing
-/
-or your home directory, and the
-cross-session messaging safeguards
-still prompt
+checks are also skipped; the
+actions no mode auto-approves
+still apply
 The sandbox’s
 auto-allow mode
 is separate from
 auto mode
 : auto-allow approves Bash commands because the sandbox boundary contains them, while auto mode uses a classifier to review actions. The two work independently and can be combined. To choose an isolation boundary for unattended runs, see
 Sandbox environments
+. For a table of common permission mode and sandbox pairings with the flags that start each one, see
+Common setups
 .
 ​
 Configure the sandbox for your organization

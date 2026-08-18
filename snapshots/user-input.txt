@@ -99,21 +99,23 @@ is consulted. If you list a tool bare in
 allowed_tools
 , a
 canUseTool
-check for that tool never runs unless an ask rule or
+check for that tool runs only when the
+evaluation flow
+routes the call back to a prompt, such as an ask rule or
 plan
-mode routes the call back to a prompt. For logic that must apply to every tool call, use a
+mode. For logic that must apply to every tool call, use a
 PreToolUse
 hook
 , which executes before the rest of the flow and can allow, deny, or modify requests.
-AskUserQuestion
-, MCP tools marked
-requiresUserInteraction
-, and connector tools
-your organization set to
-ask
-reach the callback even when an allow rule matches. In
+An allow rule doesn’t pre-approve the
+actions no mode auto-approves
+; see
+How permissions are evaluated
+for which of them reach the callback and what happens in
 dontAsk
-mode these calls are denied instead, without invoking the callback.
+and
+auto
+mode.
 You can also use the
 PermissionRequest
 hook

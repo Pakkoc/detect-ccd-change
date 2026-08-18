@@ -450,7 +450,11 @@ flag or agent settings configured
 pr.number
 ,
 pr.url
-Open pull request for the current branch. Mirrors the PR badge in the bottom status bar. Absent until a PR is found, when not in a git repository, or once the PR merges or closes
+Open pull request for the current branch. Mirrors the PR badge in the footer. In a repository with a GitLab remote, Claude Code fills these fields from the branch’s open
+merge request
+instead, so
+pr.number
+is the merge request number. Merge request data requires Claude Code v2.1.234 or later. Absent when not in a git repository, until a pull request or merge request is found, or once it merges or closes
 pr.review_state
 Review status of the open PR:
 approved
@@ -463,6 +467,21 @@ draft
 . May be independently absent even when
 pr
 is present
+pr.kind
+mr
+when
+pr
+describes a
+GitLab merge request
+. Absent for GitHub pull requests, so scripts written before this field keep working. For a merge request, Claude Code sets
+review_state
+to
+approved
+when GitLab reports it mergeable,
+pending
+for any other open state, and
+draft
+for a draft. Requires Claude Code v2.1.234 or later
 worktree.name
 Name of the active worktree. Present only during
 --worktree
@@ -733,8 +752,10 @@ agent
 --agent
 flag or agent settings configured
 pr
-: appears only while an open PR is found for the current branch, and is removed once the PR merges or closes.
+: appears only while an open PR or GitLab merge request is found for the current branch, and is removed once it merges or closes.
 pr.review_state
+and
+pr.kind
 may be independently absent
 worktree
 : appears only during
@@ -4665,7 +4686,7 @@ Because
 statusLine
 executes a shell command, Claude Code runs it under the same
 workspace trust rule as hooks in settings files
-. Accepting the dialog for the folder or one of its parent directories is enough.
+. Accepting the dialog for the folder, or for a parent directory whose trust extends to it, is enough.
 Until then, the status line stays blank, and
 claude --debug
 logs

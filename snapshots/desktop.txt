@@ -159,22 +159,13 @@ availability requirements
 below; there is no separate Settings toggle for it.
 Bypass permissions
 bypassPermissions
-Claude runs without permission prompts, except those forced by explicit
-ask rules
-, connector tools
-your organization set to
-ask
-, MCP tools marked
-requiresUserInteraction
-, removals targeting
-/
-or your home directory, safety classifiers when Claude
+Claude runs without permission prompts, except for the
+actions no mode auto-approves
+, safety classifiers when Claude
 acts on external sites
 , or desktop actions where Claude always asks first, such as
 archiving a session
-; the CLI’s
-cross-session messaging safeguards
-also still apply. Equivalent to
+. Equivalent to
 --dangerously-skip-permissions
 in the CLI. On Pro and Max plans, enable it in your Settings → Claude Code under “Allow bypass permissions mode”; on Team and Enterprise plans there is no Settings toggle, and organization policy controls it instead. Only use this in sandboxed containers or VMs.
 Earlier versions of the Code tab labeled these modes Ask permissions, Auto accept edits, and Plan mode.
@@ -1509,17 +1500,6 @@ permissions.disableBypassPermissionsMode
 and
 disableAutoMode
 also work in user and project settings, but placing them in managed settings prevents users from overriding them.
-Claude Code reads
-autoMode
-from user settings, the
---settings
-flag, and managed settings, but not from
-.claude/settings.json
-or
-.claude/settings.local.json
-: both files live in the repo directory, so a cloned repo or build step can’t inject its own classifier rules. Before v2.1.207, Claude Code also read
-.claude/settings.local.json
-.
 For the complete list of managed-only settings including
 allowManagedPermissionRulesOnly
 and
@@ -1748,9 +1728,6 @@ Permission modes
 All modes including
 dontAsk
 Manual, Accept edits, Plan, and Auto. Bypass permissions appears in the mode selector once enabled: through the Settings toggle on Pro and Max plans, or through organization policy on Team and Enterprise plans
---dangerously-skip-permissions
-CLI flag
-Bypass permissions mode. On Pro and Max plans, enable it in Settings → Claude Code → “Allow bypass permissions mode”; on Team and Enterprise plans, organization policy controls it
 Third-party providers
 Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry
 Anthropic’s API by default. For gateway routing, see
@@ -1805,15 +1782,9 @@ Not available
 What’s not available in Desktop
 The following features are only available in the CLI or VS Code extension, except where noted:
 Third-party providers
-: Desktop connects to Anthropic’s API by default. To route Desktop through a gateway, see
-connect the desktop app to a gateway
-. Enterprise deployments can configure Google Cloud’s Agent Platform and gateway providers via
-managed settings
-. For Amazon Bedrock or Microsoft Foundry in the CLI, see the
-quickstart
-. As an exception to the section above,
-Claude Desktop on 3P
-runs the Code tab on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or a self-hosted LLM gateway.
+: Desktop connects to Anthropic’s API by default. To route Desktop through a gateway, or to run the Code tab on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or a self-hosted LLM gateway, follow the links in the
+Third-party providers row
+.
 Linux (beta)
 : Computer Use isn’t yet available in the Linux desktop app. See
 Claude Desktop on Linux

@@ -393,7 +393,8 @@ Diagnostics after edits; symbol locations on lookup
 Low; reduces file reads elsewhere
 Subagents
 When spawned
-Fresh context with specified skills
+Fresh context with specified skills, or the parent conversation for a
+fork
 Isolated from main session
 Hooks
 On trigger
@@ -401,7 +402,7 @@ Nothing (runs externally)
 Zero, unless hook returns additional context
 *By default, skill descriptions load at session start so Claude can decide when to use them. Set
 disable-model-invocation: true
-in a skill’s frontmatter to hide it from Claude entirely until you invoke it manually. This reduces context cost to zero for skills you only trigger yourself. For a skill you didn’t write, set
+in a skill’s frontmatter to hide it from Claude entirely until you invoke it manually. For a skill you didn’t write, set
 skillOverrides
 in settings to do the same without editing its file.
 ​
@@ -490,8 +491,11 @@ field
 CLAUDE.md and git status, except the built-in Explore and Plan agents
 omit both
 Whatever context the lead agent passes in the prompt
+For a
+fork
+, Claude Code loads the parent’s conversation so far, system prompt, and tools instead.
 Context cost:
-Isolated from main session. Subagents don’t inherit your conversation history or invoked skills.
+Isolated from main session.
 Use subagents for work that doesn’t need your full conversation context. Their isolation prevents bloating your main session.
 When:
 On trigger. Claude Code runs hooks at specific lifecycle events like tool execution, session boundaries, prompt submission, permission requests, and compaction. See

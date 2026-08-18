@@ -361,14 +361,47 @@ add
 anthropics/claude-code
 ​
 Add from other Git hosts
-Add any git repository by providing the full URL. This works with any Git host, including GitLab, Bitbucket, and self-hosted servers. Include the
+Add a git marketplace repository by providing its full URL. For an
+https://
+URL, whether to include the
+.git
+suffix depends on the host:
+github.com
+and
+gitlab.com
+: Claude Code recognizes a repository URL with or without the
+.git
+suffix and clones it. Adding a
+gitlab.com
+URL without the suffix requires Claude Code v2.1.232 or later. Before v2.1.232, Claude Code treated it as a direct link to a hosted
+marketplace.json
+file.
+Azure DevOps
+: omit the suffix. Claude Code clones any URL whose path contains
+/_git/
+. If you append
+.git
+to a
+/_git/
+path, the clone fails.
+Every other host, including self-managed GitLab servers
+: include the
 .git
 suffix so Claude Code clones the repository rather than treating the URL as a direct link to a hosted
 marketplace.json
-file.
+file. For a host whose clone URLs don’t carry the suffix, such as AWS CodeCommit, add the marketplace as a git entry in
+extraKnownMarketplaces
+instead. Claude Code clones a git entry whether or not its URL ends in
+.git
+.
+Claude Code also clones a
+gitlab.com
+URL with nested subgroups, such as
+https://gitlab.com/group/subgroup/project
+.
 Include the
 https://
-prefix as well. Claude Code v2.1.196 and later reject a host typed without it, such as
+prefix. Claude Code v2.1.196 and later reject a host typed without it, such as
 gitlab.com/company/plugins.git
 , as an invalid GitHub
 owner/repo
@@ -383,6 +416,9 @@ Using SSH:
 marketplace
 add
 git@gitlab.com:company/plugins.git
+Claude Code clones an SSH address whether or not it ends in
+.git
+.
 To add a specific branch or tag, append
 #
 followed by the ref:
@@ -461,11 +497,11 @@ With a marketplace name
 plugin-name@marketplace-name
 , in a session or with
 claude plugin install
-, Claude Code refreshes that marketplace before the lookup, whether or not you turned on
+, Claude Code refreshes that marketplace before the lookup. Claude Code runs the refresh even if you turned off
 auto-update
-for it and even if you set
+for the marketplace or set
 DISABLE_AUTOUPDATER
-. Before v2.1.232, Claude Code didn’t refresh the marketplace before the lookup. Claude Code skips this refresh in four cases:
+. Before v2.1.232, Claude Code didn’t refresh the marketplace before the lookup. Claude Code skips this refresh when:
 The marketplace wasn’t
 added from GitHub, another Git host, or a remote URL
 .
@@ -476,14 +512,16 @@ Claude Code refreshed the marketplace within the last 30 seconds.
 You set
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 .
+Managed settings
+block the marketplace, in which case Claude Code also refuses the install.
 Plugin name only
 : when you run
 /plugin install plugin-name
 in a session, Claude Code refreshes only the marketplaces it also
 updates in the background
-, and only after the lookup misses.
+, and only after the lookup misses. When you run
 claude plugin install plugin-name
-reads the cached catalogs without refreshing. To install a plugin that was published after your last refresh, run
+, Claude Code reads the cached catalogs without refreshing. To install a plugin that was published after your last refresh, run
 /plugin marketplace update <marketplace-name>
 in a session or
 claude plugin marketplace update <marketplace-name>

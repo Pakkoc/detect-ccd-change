@@ -100,7 +100,8 @@ MCP servers
 ~/.claude.json
 .mcp.json
 ~/.claude.json
-(per-project)
+, under the
+project’s entry
 Plugins
 ~/.claude/settings.json
 .claude/settings.json
@@ -1523,7 +1524,9 @@ gh
 github.com
 . Does not affect
 #123
-autolinks in Claude’s prose
+autolinks in Claude’s prose, or the
+GitLab merge request badge
+, which keeps its GitLab URL
 "https://reviews.example.com/{owner}/{repo}/pull/{number}"
 remote.defaultEnvironmentId
 Default
@@ -2089,19 +2092,8 @@ false
 to turn the shortcut off
 false
 teammateDefaultModel
-Default model for
-agent team
-teammates when the spawn prompt doesn’t specify one. Set to a model alias such as
-"sonnet"
-, or
-null
-to inherit the lead’s current
-/model
-selection. Appears in
-/config
-as
-Default teammate model
-"sonnet"
+Removed in v2.1.234; Claude Code ignores a leftover value. See
+Specify teammates and models
 ​
 Worktree settings
 Configure how

@@ -430,7 +430,7 @@ displayName
 string
 Human-readable name shown in UI surfaces. Falls back to
 name
-when omitted. May contain spaces and any casing. Not used for namespacing or lookup. Requires Claude Code v2.1.143 or later.
+when omitted. May contain spaces and any casing. Not used for namespacing or lookup.
 description
 string
 Brief plugin description
@@ -1822,6 +1822,27 @@ entry:
 . Requires Claude Code v2.1.223 or later. For the matching rules, which differ between the blocklist and the allowlist, see
 Owner wildcards
 .
+When a user adds an
+https://
+repository URL that Claude Code
+clones rather than fetches
+, such as a bare
+github.com
+or
+gitlab.com
+repository URL, Claude Code also checks it against the
+url
+entries in
+blockedMarketplaces
+. Claude Code blocks the addition if an entry names the same URL. In that comparison, Claude Code ignores the
+.git
+suffix and any ref the user appends after
+#
+. Requires Claude Code v2.1.232 or later. Before v2.1.232, Claude Code matched a
+url
+entry only against a URL it fetched as a hosted
+marketplace.json
+file.
 The allowlist uses exact matching for most source types, apart from owner-wildcard
 github
 entries. For a marketplace to be allowed, all specified fields must match:
@@ -1842,7 +1863,7 @@ sources: the marketplace host is matched against the regex pattern
 For
 pathPattern
 sources: the marketplace’s filesystem path is matched against the regex pattern
-Exact matching doesn’t normalize URLs: a trailing slash,
+The allowlist’s exact matching doesn’t normalize URLs: a trailing slash,
 .git
 suffix, or
 ssh://

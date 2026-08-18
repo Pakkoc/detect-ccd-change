@@ -81,11 +81,6 @@ Connect from your terminal
 for the
 /web-setup
 walkthrough.
-The GitHub App is required for
-Auto-fix
-, which uses the App to receive PR webhooks. If you connect with
-/web-setup
-and later want Auto-fix, install the App on those repositories.
 Team and Enterprise Owners can disable
 /web-setup
 with the Quick web setup toggle at
@@ -151,7 +146,6 @@ In plan mode, Claude reads files, runs commands to explore, and proposes a plan 
 claude
 --cloud
 "Execute the migration plan in docs/migration-plan.md"
-This pattern gives you control over the strategy while letting Claude execute autonomously in the cloud.
 Run tasks in parallel
 : each
 --cloud

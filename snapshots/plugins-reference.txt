@@ -1007,7 +1007,7 @@ picker and other UI surfaces. Falls back to
 name
 when omitted. Unlike
 name
-, may contain spaces and any casing. Not used for namespacing or lookup. Requires Claude Code v2.1.143 or later.
+, may contain spaces and any casing. Not used for namespacing or lookup.
 "Deployment Tools"
 version
 string

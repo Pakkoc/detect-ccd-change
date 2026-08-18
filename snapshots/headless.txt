@@ -613,7 +613,9 @@ touch
 mv
 , and
 cp
-. Apart from the
+. The
+actions no mode auto-approves
+still apply. Apart from the
 read-only command set
 , other shell commands and network requests still need an
 --allowedTools

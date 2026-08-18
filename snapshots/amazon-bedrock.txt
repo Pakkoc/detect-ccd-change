@@ -237,6 +237,7 @@ the
 region
 set on your active AWS profile, read from the AWS shared credentials file first and then the shared config file, matching AWS SDK precedence
 us-east-1
+If a value from any of these sources isn’t shaped like a region name, Claude Code treats it as unset and continues down the order. For example, Claude Code treats a value containing a slash, dot, or space as unset.
 The active profile is
 AWS_PROFILE
 if set, otherwise
@@ -245,11 +246,12 @@ default
 AWS_SHARED_CREDENTIALS_FILE
 or
 AWS_CONFIG_FILE
-to point at non-default file paths. Run
+to point at non-default file paths.
+Run
 /status
-to see the resolved region. When the region came from your AWS config files or the default fallback,
+to see the resolved region. When the region came from your AWS config files or the default fallback, Claude Code also notes the source in the
 /status
-also notes the source. On v2.1.171 and earlier, Claude Code does not read the AWS config files, so set
+output. On v2.1.171 and earlier, Claude Code doesn’t read the AWS config files, so set
 AWS_REGION
 explicitly.
 When using Amazon Bedrock, the

@@ -416,6 +416,15 @@ npx
 bridge.claudeusercontent.com
 Claude in Chrome
 extension WebSocket bridge
+*.frame.claudeusercontent.com
+Artifact
+content reads. The CLI fetches an artifact’s files from this host when Claude opens one, and only when the Artifact tool is
+available
+for your account. To disable the tool and drop this requirement, set
+CLAUDE_CODE_DISABLE_ARTIFACT=1
+or the
+disableArtifact
+setting
 raw.githubusercontent.com
 Changelog feed for
 /release-notes
@@ -513,11 +522,11 @@ carries the hosted pre-session flows over an outbound connection instead, so the
 Desktop and claude.ai
 The preceding table covers the standalone CLI. The Claude Desktop app and claude.ai in a browser load their application code and user content from additional Anthropic CDN hosts, including
 assets-proxy.anthropic.com
-and the
+and the other
 *.claudeusercontent.com
 origins that serve
 artifacts
-. Allowing
+in those apps. Allowing
 claude.ai
 while blocking those hosts produces a blank page rather than an error. See
 network access requirements

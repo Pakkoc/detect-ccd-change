@@ -196,7 +196,6 @@ claude.ai/admin-settings/claude-code
 .
 Pin one to a channel
 in the Claude Tag admin settings.
-Shared environments add to members’ selectors rather than replacing them.
 ​
 Network access
 Each environment sets one network access level, which controls the outbound connections its sessions can make. The default level,
@@ -272,6 +271,11 @@ Trusted domains
 too, check
 Also include default list of common package managers
 ; leave it unchecked to allow only what you list.
+If sessions in the environment work with
+artifacts
+, include
+*.frame.claudeusercontent.com
+in your list. Claude Code fetches artifact content from that host. If you leave it out, Claude can’t read artifacts in sessions that run in the environment.
 Each environment has its own allowed-domains list; there’s no organization-level allowlist that admins can push to every member’s environments.
 Server-managed settings
 still apply inside cloud sessions, but none of them adds domains to the environment’s network allowlist.
@@ -845,11 +849,6 @@ Adds startup latency
 : hooks run each time a session starts or resumes, unlike setup scripts which benefit from
 environment caching
 . Keep install scripts fast by checking whether dependencies are already present before reinstalling.
-To persist environment variables for subsequent Bash commands, write to the file at
-$CLAUDE_ENV_FILE
-. See
-SessionStart hooks
-for details.
 To customize the base image, use a setup script to install what you need on top of the
 provided image
 , or run your own image as a container alongside Claude with

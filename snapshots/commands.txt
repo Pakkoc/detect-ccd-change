@@ -9,13 +9,19 @@ skills
 are the exception: a skill invocation followed by more skills, such as
 /skill-a /skill-b do XYZ
 , loads every skill named at the start and passes the trailing text to each as arguments. Up to six skills can be chained.
-If you send a command while Claude is responding, it queues and runs after the current turn finishes. Some commands, such as
+If you send a command while Claude is responding, Claude Code queues it and runs it after the current turn finishes. Claude Code runs some commands immediately without interrupting the response, such as
 /status
 ,
 /tasks
 , and
 /usage
-, run immediately without interrupting the response.
+. In
+fullscreen rendering
+, Claude Code also opens dialog commands such as
+/theme
+and
+/help
+immediately. Before v2.1.234, Claude Code queued those dialogs until the turn finished.
 ​
 Commands across a typical workflow
 Most commands are useful at a specific point in a session, from setting up a project to shipping a change.
@@ -141,6 +147,7 @@ not discovered
 from the added directory. A successful add runs your
 DirectoryAdded
 hooks
+. When you run it while Claude is responding, Claude Code asks you to confirm the directory right away, and once you confirm, Claude’s next tool call in the same turn can access it. Before v2.1.234, Claude Code queued the command until the turn finished
 /advisor [model|off]
 Enable or disable the
 advisor tool
@@ -229,7 +236,7 @@ that you forward yourself. In the
 VS Code extension
 ,
 /bug
-opens the extension’s own feedback dialog instead; requires Claude Code v2.1.229 or later. Alias:
+opens the extension’s own feedback dialog instead; requires Claude Code v2.1.229 or later. When you run it while Claude is responding, Claude Code opens the dialog immediately. Before v2.1.232, Claude Code queued the command until the turn finished. Alias:
 /share
 . Before v2.1.212,
 /bug
@@ -503,7 +510,7 @@ Toggle fast mode
 /feedback [report]
 Send product feedback about Claude Code. Opens the same dialog as
 /bug
-with the same consent step and sending rules
+, with the same consent step, sending rules, and mid-turn behavior
 /fewer-permission-prompts
 Skill
 .
@@ -674,7 +681,7 @@ Share a free week of Claude Code with friends. Only visible if your account is e
 /permissions
 Manage allow, ask, and deny rules for tool permissions. Opens an interactive dialog where you can view rules by scope, add or remove rules, manage working directories, and review
 recent auto mode denials
-. Alias:
+. When you run it while Claude is responding, Claude Code opens the dialog immediately and applies your changes starting with Claude’s next tool call in the same turn. Before v2.1.234, Claude Code queued the command until the turn finished. Alias:
 /allowed-tools
 /plan [description]
 Enter plan mode directly from the prompt. Pass an optional description to enter plan mode and immediately start with that task, for example

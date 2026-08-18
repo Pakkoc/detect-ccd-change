@@ -213,18 +213,16 @@ Specify teammates and models
 Claude decides the number of teammates to spawn based on your task, or you can specify exactly what you want:
 Spawn 4 teammates to refactor these modules in parallel. Use Sonnet for
 each teammate.
-Teammates don’t inherit the lead’s
-/model
-selection by default. To change the model used when the prompt doesn’t specify one, set
-Default teammate model
-in
-/config
-. Pick
-Default (leader’s model)
-to have teammates follow the lead’s current model.
-Claude Code checks each teammate’s model, whether requested in your prompt or set through
-Default teammate model
-, against your organization’s
+When your prompt doesn’t name a model for a teammate, Claude Code runs the teammate on the lead’s current model, unless
+CLAUDE_CODE_SUBAGENT_MODEL
+is set.
+teammateDefaultModel
+was removed in v2.1.234; Claude Code ignores a leftover value. Name the model in your prompt or set
+CLAUDE_CODE_SUBAGENT_MODEL
+instead.
+Claude Code checks the model your prompt requests for a teammate, or the one
+CLAUDE_CODE_SUBAGENT_MODEL
+supplies, against your organization’s
 availableModels
 allowlist. When the allowlist blocks a value, Claude Code substitutes another model:
 Family alias such as
@@ -233,9 +231,7 @@ opus
 substitution doesn’t operate
 , a blocked alias falls back like any other blocked value per the next bullet
 Any other blocked value, including a family alias on providers where the substitution doesn’t operate or whose family has no permitted version
-: Claude Code uses the default teammate model. When the blocked value is the
-Default teammate model
-setting itself, Claude Code uses your provider’s default Opus model, or the lead’s model when the allowlist blocks that too
+: Claude Code runs the teammate on the lead’s model
 Teammates inherit the lead’s
 effort level
 . In split-pane mode this applies from v2.1.186; earlier versions did not pass the lead’s session effort to split-pane teammates.

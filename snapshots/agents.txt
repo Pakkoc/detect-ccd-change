@@ -43,9 +43,11 @@ background bash command
 runs one shell command without blocking the conversation. It doesn’t spawn an agent.
 A
 forked subagent
-, started with
+is a subagent that inherits your full conversation context instead of starting fresh. It’s a way to spawn a subagent, not a separate surface. Start one with
 /subtask
-, is a subagent that inherits your full conversation context instead of starting fresh. It’s a way to spawn a subagent, not a separate surface. To copy the whole session into a new
+. Claude also spawns one itself where
+fork mode
+is on. To copy the whole session into a new
 background session
 that runs alongside it, use
 /fork

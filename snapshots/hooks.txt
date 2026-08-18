@@ -700,8 +700,6 @@ logout
 ,
 prompt_input_exit
 ,
-bypass_permissions_disabled
-,
 other
 Notification
 notification type
@@ -4347,11 +4345,15 @@ Field
 Description
 permissionDecision
 "allow"
-skips the permission prompt, except for
-tools that require user interaction
-and connector tools
-your organization set to
-ask
+skips the permission prompt, except for the
+actions no mode auto-approves
+and for
+AskUserQuestion
+and
+ExitPlanMode
+, which need
+updatedInput
+paired with it
 .
 "deny"
 prevents the tool call.
@@ -7179,10 +7181,12 @@ logout
 User logged out
 prompt_input_exit
 User exited while prompt input was visible
-bypass_permissions_disabled
-Bypass permissions mode was disabled
 other
 Other exit reasons
+bypass_permissions_disabled
+Removed in v2.1.234; Claude Code doesn’t send it. Drop it from your
+SessionEnd
+matchers
 ​
 SessionEnd input
 In addition to the
@@ -8158,7 +8162,7 @@ Interactive session
 ~/.claude/settings.json
 , until you accept the
 workspace trust dialog
-for the folder or one of its parent directories
+for the folder, or for a parent directory whose trust extends to it
 -p
 or SDK session
 : Claude Code never shows the dialog and treats the folder as trusted, so hooks committed in a repository’s
