@@ -244,12 +244,16 @@ Esc
 twice to rewind to a previous state, or ask Claude to undo.
 Checkpoints are separate from git and remain available when you resume a conversation. They only cover file changes, and a restore
 skips symlinked and hard-linked files
-. Actions that affect remote systems (databases, APIs, deployments) can’t be checkpointed, which is why Claude asks before running commands with external side effects.
+. Actions that affect remote systems (databases, APIs, deployments) can’t be checkpointed. You control those with your permission mode and permission rules.
 ​
 Control what Claude can do
-Press
+Choose a permission mode to set what Claude can do without asking you. Press
 Shift+Tab
-to cycle through permission modes:
+to cycle through the permission modes:
+Auto
+: a classifier reviews most actions in the background and blocks the risky ones instead of asking you. On Pro, Max, and Team plans, it’s the
+built-in starting permission mode
+for interactive terminal and VS Code sessions
 Manual
 : Claude asks before file edits and shell commands
 Accept edits
@@ -260,8 +264,6 @@ mv
 without asking, still asks for other commands
 Plan
 : Claude explores and proposes a plan without editing your source files
-Auto
-: Claude evaluates all actions with background safety checks
 You can also allow specific commands in
 .claude/settings.json
 so Claude doesn’t ask each time. This is useful for trusted commands like
@@ -295,7 +297,9 @@ Interrupt and steer
 You can redirect Claude at any point without waiting for the turn to finish or starting over:
 Press
 Esc
-to stop Claude immediately. The running tool call is canceled and Claude waits for your next instruction.
+to stop Claude immediately. The running tool call is canceled and Claude waits for your next instruction. If you have messages queued, Claude Code
+sends them next
+.
 Type a correction and press
 Enter
 to send it without stopping the running tool. Claude reads it as soon as the current action completes and adjusts before deciding its next step.
@@ -314,9 +318,11 @@ Implement validateEmail. Test cases: 'user@example.com' → true,
 For visual work, paste a screenshot of the design and ask Claude to compare its implementation against it.
 ​
 Explore before implementing
-For complex problems, separate research from coding. Use plan mode (
+For complex problems, separate research from coding. Press
 Shift+Tab
-twice) to analyze the codebase first:
+until the status bar shows
+⏸ plan mode on
+, then ask Claude to analyze the codebase first:
 Read src/auth/ and understand how we handle sessions.
 Then create a plan for adding OAuth support.
 Review the plan, refine it through conversation, then let Claude implement. This two-phase approach produces better results than jumping straight to code.

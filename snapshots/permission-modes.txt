@@ -3,9 +3,9 @@ auto mode
 , a second model, the classifier, reviews actions instead of you;
 how the classifier evaluates actions
 lists which actions it reviews and which skip it.
-On Pro, Max, and Team plans, the built-in starting mode is auto mode.
+On Pro, Max, and Team plans, the built-in starting permission mode is auto mode.
 Which mode a session starts in
-covers the surfaces and settings that change the starting mode. You can also change a running session’s permission mode at any time.
+covers the surfaces and settings that change the starting permission mode. You can also change a running session’s permission mode at any time.
 ​
 Available modes
 Each mode makes a different tradeoff between convenience and oversight. The table below shows what Claude can do without a permission prompt in each mode. Manual mode appears under its config value,
@@ -142,7 +142,7 @@ approve a plan
 Work hands-off with a classifier reviewing each action
 claude --permission-mode auto
 , the
-built-in starting mode
+built-in starting permission mode
 on Pro, Max, and Team
 None; a sandbox or container adds defense in depth
 Requires a
@@ -212,7 +212,7 @@ The built-in default depends on how you run Claude Code, on your plan, and on wh
 Switch permission modes
 .
 How you run Claude Code
-Built-in starting mode
+Built-in starting permission mode
 Any settings file sets
 disableAutoMode
 to
@@ -237,7 +237,7 @@ VS Code extension
 auto
 An Enterprise plan or a Claude Console API key
 default
-In those same two cases, feature-flag fetching off or the first session after an install or upgrade, the VS Code extension ignores every settings file when choosing the starting mode and uses
+In those same two cases, feature-flag fetching off or the first session after an install or upgrade, the VS Code extension ignores every settings file when choosing the starting permission mode and uses
 default
 .
 When the flag, a settings file, or the built-in default selects
@@ -285,7 +285,7 @@ in the project’s
 .claude/settings.json
 . Sessions you start in a terminal honor every value except
 auto
-; sessions the VS Code extension starts don’t read project settings for the starting mode
+; sessions the VS Code extension starts don’t read project settings for the starting permission mode
 Every terminal session in your organization
 Set
 permissions.defaultMode
@@ -316,7 +316,7 @@ The next session you start shows
 in the status bar.
 ​
 Switch permission modes
-Each interface has its own control for switching modes during a session and its own way of choosing the permission mode new sessions start in. Asking Claude in chat to change the permission mode doesn’t work. Select your interface to see its controls.
+Each interface has its own control for switching permission modes during a session and its own way of choosing the permission mode new sessions start in. Asking Claude in chat to change the permission mode doesn’t work. Select your interface to see its controls.
 CLI
 VS Code
 JetBrains
@@ -325,7 +325,7 @@ Web and mobile
 During a session
 : press
 Shift+Tab
-to cycle modes. From
+to cycle permission modes. From
 auto
 , the first press switches to
 default
@@ -358,7 +358,7 @@ Not every mode is in the default cycle:
 auto
 : appears when your account meets the
 auto mode requirements
-; cycling to it switches modes without a confirmation prompt
+; cycling to it switches permission modes without a confirmation prompt
 bypassPermissions
 : appears after you start with
 --permission-mode bypassPermissions
@@ -454,9 +454,9 @@ The extension never reads a project’s
 .claude/settings.json
 or
 .claude/settings.local.json
-for the starting mode, and in conversations that don’t meet item 3’s conditions it reads no settings file at all. When
+for the starting permission mode, and in conversations that don’t meet item 3’s conditions it reads no settings file at all. When
 claudeCode.claudeProcessWrapper
-is set, items 3 and 4 don’t apply either: those conversations start in Manual unless item 1 or item 2 sets a mode.
+is set, items 3 and 4 don’t apply either: those conversations start in Manual unless item 1 or item 2 sets a permission mode.
 Auto mode appears in the mode indicator when your account meets every requirement listed in the
 auto mode section
 .
@@ -468,7 +468,7 @@ value from item 1 or item 3 starts the conversation in Manual instead. Auto from
 See the
 VS Code guide
 for extension-specific details.
-The JetBrains plugin runs Claude Code in the IDE terminal, so switching modes works the same as in the CLI: press
+The JetBrains plugin runs Claude Code in the IDE terminal, so switching permission modes works the same as in the CLI: press
 Shift+Tab
 to cycle, or pass
 --permission-mode
@@ -524,7 +524,7 @@ on your local machine: Manual, Accept edits, and Plan. You can’t select Auto o
 or
 claude --remote-control
 didn’t report their mode at all, so claude.ai and the mobile app could show a mode the session wasn’t in. The mismatch affected only the label: Claude Code generated permission prompts from the session’s actual mode, and they still appeared in the app for approval.
-For Remote Control, the local machine running the session must be signed in with your claude.ai account; API keys aren’t supported. You can also set the starting mode when launching that local session:
+For Remote Control, the local machine running the session must be signed in with your claude.ai account; API keys aren’t supported. You can also set the starting permission mode when launching that local session:
 claude
 remote-control
 --permission-mode
@@ -671,7 +671,7 @@ in
 .claude/settings.json
 . Conversations the
 VS Code extension
-starts don’t read project settings for the starting mode. There, set
+starts don’t read project settings for the starting permission mode. There, set
 claudeCode.initialPermissionMode
 to
 plan
@@ -690,7 +690,7 @@ Auto mode lets Claude execute without routine permission prompts. A separate cla
 ask rules
 still force a prompt.
 On Pro, Max, and Team plans, auto mode is the
-built-in starting mode
+built-in starting permission mode
 .
 The classifier also reviews each message Claude sends to another agent with
 SendMessage
@@ -772,7 +772,7 @@ VS Code extension
 start in Manual unless
 claudeCode.initialPermissionMode
 or a mode you picked in the extension sets one. Only Claude Sonnet 5, Opus 4.7 or later, and Fable 5 are supported on these providers.
-To make auto mode the default starting mode, set
+To make auto mode the default starting permission mode, set
 "permissions": {"defaultMode": "auto"}
 in user or managed settings. In sessions the VS Code extension starts, select
 Auto
@@ -953,10 +953,12 @@ Claude in Chrome
 navigation to a trusted internal domain, localhost, or a URL you named
 Sandbox network access requests are routed through the classifier rather than allowed by default. As of v2.1.198, the classifier reuses its verdict for a network host and port instead of re-running on every connection:
 An allow is reused until new content enters the conversation, at which point that host is checked again
-In the interactive CLI, a deny is dropped when the turn ends
-In
+Claude Code v2.1.234 and later reuse a deny caused by the conversation outgrowing the classifier’s context window until new content enters the conversation, or until
+compaction
+shrinks what the classifier reads. Claude Code then checks the host again
+A deny that the classifier reached by evaluating the request lasts for the turn in the interactive CLI. In
 non-interactive mode
-and Agent SDK sessions there is no turn boundary, so a deny is reused for the rest of the run
+and Agent SDK sessions, Claude Code reuses that deny for the rest of the run, because those sessions have no turn boundary
 Changing your permission mode or rules drops all cached verdicts
 Run
 claude auto-mode defaults

@@ -489,7 +489,9 @@ opt-in logs and traces
 CLI → gateway → your collector
 Never
 Identity (email, groups, sub)
-IdP → gateway → JWT → CLI; the CLI stamps it on OTLP exports
+IdP → gateway → JWT → CLI; the CLI stamps it on OTLP exports. If you turn on
+forward_user_identity
+, the gateway also sends the developer’s email and IdP subject as headers to your proxy
 Never
 Managed settings
 Your gateway YAML → CLI
@@ -824,6 +826,21 @@ CLAUDE_CODE_CERT_STORE
 controls this behavior. If the CA is installed in the OS trust store, ensure developers are on a current runtime. Otherwise set
 NODE_EXTRA_CA_CERTS
 to the CA certificate PEM before launching. The first-connect fingerprint prompt still applies.
+CLI
+/login
+completes the browser sign-in, then the session ends with
+Cloud gateway sign-in was not completed
+and a TLS certificate mismatch
+On the first request after sign-in, the gateway presented a certificate that doesn’t match the fingerprint Claude Code pinned, so Claude Code kept no gateway credential. The usual causes are replicas behind one address that serve different certificates, or something on the network path that intercepts TLS.
+Serve one certificate for the hostname, for example by terminating TLS once at the ingress, then have the developer run
+/login
+again. If that certificate differs from the pinned one, Claude Code shows the
+trust prompt
+again with a warning that the certificate changed.
+The mismatch message includes the gateway hostname and the first 16 characters of each fingerprint, the pinned one and the presented one.
+If Claude Code reports
+couldn't load your organization's managed settings
+after a gateway sign-in, Claude Code names the reason, restarts in place, and resumes the conversation. If Claude Code can’t restart, for example in a background session, Claude Code ends the session and keeps the sign-in.
 ​
 Related
 Claude apps gateway overview

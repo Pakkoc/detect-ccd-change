@@ -17,6 +17,8 @@ Login loops, OAuth errors,
 Troubleshoot installation and login
 Settings not applying, hooks not firing, MCP servers not loading
 Debug your configuration
+Session started in auto mode, or Claude edits files and runs commands without asking
+Which mode a session starts in
 API Error: 5xx
 ,
 529 Overloaded

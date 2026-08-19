@@ -496,6 +496,60 @@ identity_token_file
 /var/run/secrets/anthropic/id-token
 # workspace_id: wrkspc_...       # required if the rule covers >1 workspace
 # service_account_id: svac_...   # optional expected-target check
+Per-user identity headers for a proxy you run
+You can point a
+provider: anthropic
+upstream’s
+base_url
+at a proxy you run instead of at the Anthropic API. To tell that proxy which developer sent each request, set
+forward_user_identity: true
+on that upstream. The proxy can then attribute spend per developer. Requires a gateway running Claude Code v2.1.233 or later.
+For example, for a proxy at
+upstream-gateway.internal.example.com
+:
+upstreams
+:
+-
+provider
+:
+anthropic
+base_url
+:
+https://upstream-gateway.internal.example.com
+auth
+:
+api_key
+:
+${PROXY_KEY}
+forward_user_identity
+:
+true
+# default false
+The gateway adds these headers to every request it forwards to that upstream.
+Header
+Value
+x-litellm-end-user-id
+The developer’s email, when the IdP supplied one.
+x-claude-gateway-user-id
+The developer’s IdP subject, from the token’s
+sub
+claim.
+x-claude-gateway-user-email
+The developer’s email, when the IdP supplied one.
+When the IdP token carries no email, the gateway sends only
+x-claude-gateway-user-id
+and omits the two email headers. If your IdP puts the email in a different claim, set
+oidc.email_claim
+to that claim.
+Set
+forward_user_identity
+only on an upstream whose
+base_url
+is a proxy you operate. The gateway sends developer emails to whatever server that
+base_url
+names. If the
+base_url
+is the Anthropic API, which is the default, the gateway refuses to start.
 ​
 Amazon Bedrock
 For the client-side Amazon Bedrock deployment that the gateway replaces or fronts, see
@@ -1021,7 +1075,9 @@ IdP group names. A gateway JWT whose
 groups
 claim includes one of these has full admin access, read and write, and audits as
 oidc:<sub>
-. Use this for human admins; use API keys for machines.
+. Use this for human admins; use API keys for machines. An empty entry in this list stops the gateway at boot. See
+Matcher values that stop the gateway at boot
+.
 blocked_message
 No
 Appended verbatim to the
@@ -1332,6 +1388,58 @@ Group membership
 session.ttl_hours
 .
 ​
+Matcher values that stop the gateway at boot
+At boot, the gateway checks the
+match
+block of every policy and the
+admin_groups
+list. Any of these values stops the gateway with an error that names the field:
+An empty
+groups
+list
+An empty entry in
+groups
+or in
+admin_groups
+An empty
+email_domain
+An
+email_domain
+that contains
+@
+, whitespace, or a comma. The gateway trims the value and strips one leading
+@
+before this check. Write one bare domain, such as
+example.com
+.
+Before v2.1.232, the gateway started with these values. Each value had this effect:
+An empty
+email_domain
+: the gateway skipped the domain check, so a policy with an empty
+email_domain
+and no
+groups
+list matched every authenticated user
+An empty
+groups
+list: the policy matched no one
+An
+email_domain
+containing
+@
+, whitespace, or a comma: the policy matched no one
+An empty entry in
+groups
+or in
+admin_groups
+: the entry matched a user only when that user’s IdP
+groups
+claim also contained an empty entry. In
+admin_groups
+, that match granted admin access. If your
+admin_groups
+list never contained an empty entry, no one gained admin access this way.
+​
 What goes in
 cli
 Each
@@ -1463,6 +1571,12 @@ shell-execution settings such as
 apiKeyHelper
 and
 statusLine
+the sandbox binary settings
+sandbox.bwrapPath
+,
+sandbox.socatPath
+, and
+sandbox.ripgrep
 managed CLAUDE.md content
 Approval memory
 covers how long an approval lasts and when the dialog appears again.
@@ -1703,6 +1817,10 @@ sandbox.socatPath
 : filesystem paths to the
 sandbox
 helper binaries
+sandbox.ripgrep
+: the
+ripgrep
+binary the sandbox uses
 forceRemoteSettingsRefresh
 : blocks startup until remote managed settings are freshly fetched, so an MDM or file policy that sets it is honored even when a cached remote payload that lacks the key is the highest-priority source
 env

@@ -249,6 +249,8 @@ On Google Cloud’s Agent Platform, web search is available for Claude 4 models 
 2
 On these providers, auto mode supports only Claude Sonnet 5, Opus 4.7 or later, and Fable 5. See
 Auto mode configuration
+. The built-in starting permission mode on these providers is Manual. See
+which mode a session starts in
 . In v2.1.158 through v2.1.206, auto mode on these providers also required setting
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 ; v2.1.207 removed the requirement.

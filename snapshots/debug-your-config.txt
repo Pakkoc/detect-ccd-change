@@ -57,15 +57,7 @@ environment variables
 , which act as another override layer. When a setting doesn’t seem to apply, the value you set is usually being overridden by another scope or an environment variable.
 Run
 /doctor
-to check your configuration and installation. It reports what it finds, including invalid settings files, duplicate installations, unused extensions, and checked-in
-CLAUDE.md
-content Claude can derive from the codebase, then proposes fixes it applies only after you confirm. The
-CLAUDE.md
-trim check requires Claude Code v2.1.206 or later. Before v2.1.205,
-/doctor
-opened a read-only diagnostics screen and pressing
-f
-sent the report to Claude to fix.
+to find invalid settings files.
 From the terminal,
 claude doctor
 prints read-only installation and settings diagnostics without starting a session.
@@ -327,12 +319,19 @@ MCP servers in
 never load
 File is under
 .claude/
-or uses Claude Desktop’s config format
+, or its servers sit under a top-level
+servers
+key, as in VS Code’s
+mcp.json
+, instead of
+mcpServers
 Project MCP config goes at the repository root as
 .mcp.json
 , not inside
 .claude/
-. See
+, with servers under the
+mcpServers
+key. See
 MCP configuration
 .
 MCP servers added under

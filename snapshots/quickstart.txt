@@ -165,22 +165,17 @@ Claude Code reads your project files as needed. You don’t have to manually add
 Step 5: Make your first code change
 Now let’s make Claude Code do some actual coding. Try a simple task:
 add a hello world function to the main file
-Claude Code will:
-Find the appropriate file
-Show you the proposed changes
-Ask for your approval before changing files, depending on your permission mode
-Make the edit
-Whether Claude Code asks before changing files depends on your
-permission mode
-. In default mode, Claude asks for approval before each change. Press
+Claude Code finds the appropriate file and shows you the change. In your first session after installing, it asks before each change. Select
+Yes
+to approve.
+After your first session, auto mode is the
+built-in starting permission mode
+for interactive terminal and VS Code sessions on Pro, Max, and Team plans: a classifier reviews actions instead of you, and Claude edits most files and runs most commands without asking you. On other plans, Manual mode is the built-in starting permission mode.
+Your settings or your organization can set a different starting permission mode.
+Which permission mode a session starts in
+lists what does. Press
 Shift+Tab
-to cycle through modes:
-acceptEdits
-auto-approves file edits, and
-plan
-lets Claude propose changes without editing. Some accounts also have an
-auto
-mode that runs a background safety check and blocks risky actions, returning to prompts only after repeated blocks.
+at any time to switch the permission mode of the session you’re in.
 ​
 Step 6: Use Git with Claude Code
 Claude Code makes Git operations conversational:

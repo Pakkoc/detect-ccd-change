@@ -195,6 +195,15 @@ Only managed permission rules apply; disable
 allowManagedPermissionRulesOnly
 ,
 permissions.disableBypassPermissionsMode
+Starting permission mode
+Choose the permission mode your developers’ terminal sessions start in instead of the built-in starting permission mode, or remove auto mode. The VS Code extension reads a
+defaultMode
+you set only on Pro, Max, and Team plans;
+Switch permission modes
+lists what the extension reads
+permissions.defaultMode
+,
+permissions.disableAutoMode
 Sandboxing
 OS-level filesystem and network isolation with domain allowlists
 sandbox.enabled

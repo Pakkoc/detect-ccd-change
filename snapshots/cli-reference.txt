@@ -749,13 +749,21 @@ as an alias for
 default
 . The
 manual
-alias selects the mode the UI labels Manual and requires Claude Code v2.1.200 or later;
+alias selects the permission mode the UI labels Manual and requires Claude Code v2.1.200 or later;
 claude --help
 lists it in place of
 default
 , and both values work. Overrides
 defaultMode
-from settings files
+from settings files. Without this flag or
+--dangerously-skip-permissions
+, a new session starts in the permission mode described in
+which permission mode a session starts in
+. For
+-p
+, that’s
+default
+when nothing is configured
 claude --permission-mode plan
 --permission-prompt-tool
 Specify an MCP tool to handle permission prompts in non-interactive mode. Claude Code waits for that tool’s MCP server to connect before running the first turn, up to the

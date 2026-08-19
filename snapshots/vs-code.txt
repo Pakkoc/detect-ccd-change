@@ -96,7 +96,11 @@ Alt+K
 Here’s an example of asking about a particular line in a file:
 4
 Review changes
-When Claude wants to edit a file, it shows a side-by-side comparison of the original and proposed changes, then asks for permission. You can accept, reject, or tell Claude what to do instead. If you edit the proposed content directly in the diff view before accepting, Claude is told that you modified it so it does not assume the file matches its original proposal.
+What you see depends on the
+permission mode
+shown at the bottom of the prompt box:
+In Auto or Edit automatically mode, Claude edits most files in your workspace without asking.
+In Manual mode, when Claude wants to edit a file, it shows a side-by-side comparison of the original and proposed changes, then asks for permission. You can accept, reject, or tell Claude what to do instead. If you edit the proposed content directly in the diff view before accepting, Claude is told that you modified it so it doesn’t assume the file matches its original proposal.
 For more ideas on what you can do with Claude Code, see
 Common workflows
 .
@@ -105,11 +109,13 @@ Run “Claude Code: Open Walkthrough” from the Command Palette for a guided to
 Use the prompt box
 The prompt box supports several features:
 Permission modes
-: click the mode indicator at the bottom of the prompt box to switch modes, or set the default in your VS Code user settings under
-claudeCode.initialPermissionMode
-. See
-permission modes
-for every mode the indicator offers.
+: click the mode indicator at the bottom of the prompt box to switch permission modes. On Pro, Max, and Team plans, Auto is the built-in starting permission mode. See
+how the extension chooses the starting permission mode
+for what changes that, and every permission mode the indicator offers.
+Auto
+: a classifier reviews most actions instead of asking you. See
+auto mode
+for what it reviews and blocks.
 Manual
 : Claude asks permission before file edits and most shell commands.
 Plan
@@ -480,7 +486,9 @@ to open settings.
 Claude Code settings
 in
 ~/.claude/settings.json
-: shared between the extension and CLI. Use for allowed commands, environment variables, hooks, and MCP servers. See
+: shared between the extension and CLI. Use it for allowed commands, environment variables, hooks, and MCP servers. On Pro, Max, and Team plans, it’s also one input to the permission mode conversations start in.
+Switch permission modes
+lists the order. See
 Settings
 for details.
 Add
@@ -517,8 +525,8 @@ is an alias for
 default
 and selects the mode labeled
 Manual
-in the mode indicator. When you leave it unset, Claude Code resolves the session’s starting mode itself. See
-how to switch permission modes and set the session default
+in the mode indicator. When you leave it unset, the extension chooses the starting permission mode as described in
+Switch permission modes
 .
 preferredLocation
 panel
@@ -564,7 +572,11 @@ claudeProcessWrapper
 -
 Executable used to launch the Claude process. The bundled binary path is passed as an argument when present. Set this to a separately installed
 claude
-binary if the extension build doesn’t include one for your platform. An “Unsupported platform” error at activation means no binary is bundled for your platform; see
+binary if the extension build doesn’t include one for your platform. In a wrapped setup, conversations start in Manual mode unless you set
+initialPermissionMode
+or picked Manual, Edit automatically, or Auto in an earlier conversation, because the extension skips the settings and built-in-default steps there; see
+Switch permission modes
+. An “Unsupported platform” error at activation means no binary is bundled for your platform; see
 which platforms have prebuilt binaries
 .
 ​
@@ -754,7 +766,7 @@ tasks.json
 Enable
 VS Code Restricted Mode
 for untrusted workspaces
-Use manual approval mode instead of auto-accept for edits
+Use Manual mode instead of Edit automatically or Auto for edits
 Review changes carefully before accepting them
 ​
 The built-in IDE MCP server

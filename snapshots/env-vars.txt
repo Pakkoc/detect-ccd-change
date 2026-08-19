@@ -590,7 +590,12 @@ to disable all built-in
 subagent
 types such as Explore and Plan. Only applies in non-interactive mode (the
 -p
-flag). Useful for SDK users who want a blank slate
+flag). Useful for SDK users who want a blank slate. This also removes
+general-purpose
+, the subagent Claude Code runs when an Agent tool call omits
+subagent_type
+. Such a call then fails with
+subagent_type is required
 CLAUDE_AGENT_SDK_MCP_NO_PREFIX
 Set to
 1
@@ -613,6 +618,16 @@ Set to
 to force-enable automatic backgrounding of long-running agent tasks. When enabled, subagents are moved to the background after running for approximately two minutes. Also enables
 automatic backgrounding of long MCP tool calls
 in non-interactive mode on Claude Code v2.1.212 or later
+CLAUDE_AX_PREPARK_MS
+In
+screen reader mode
+, how many milliseconds Claude Code waits, with the cursor at the start of the line, before it writes a new or changed line. Default
+50
+. Set
+0
+to write immediately. Claude Code caps the wait at
+5000
+. Requires Claude Code v2.1.233 or later
 CLAUDE_AX_SCREEN_READER
 Set to
 1
@@ -1485,6 +1500,16 @@ respectGitignore
 setting
 CLAUDE_CODE_GLOB_TIMEOUT_SECONDS
 Timeout in seconds for Glob tool file discovery. Defaults to 20 seconds on most platforms and 60 seconds on WSL
+CLAUDE_CODE_GOAL_CHECKIN_MINUTES
+How many minutes background work can keep an active goal waiting before Claude Code
+asks Claude to check on it
+. Default
+30
+. Set
+0
+to turn check-ins off. Give whole minutes in plain digits, at most
+10080
+, which is one week. Claude Code treats any other value as unset and uses the default. Requires Claude Code v2.1.234 or later
 CLAUDE_CODE_HIDE_CWD
 Set to
 1
@@ -2906,7 +2931,7 @@ CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 Start sessions in auto mode by default
 on Pro, Max, and Team plans; Claude Code starts your sessions in Manual instead
 Have the VS Code extension
-read settings files for the starting mode
+read settings files for the starting permission mode
 Use
 Remote Control
 Send or receive

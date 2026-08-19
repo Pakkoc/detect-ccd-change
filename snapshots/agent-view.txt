@@ -31,11 +31,9 @@ returns to that conversation instead. Your sessions keep running while you’re 
 Dispatch a session
 Type a prompt describing a task and press
 Enter
-. A new background session starts on that task and appears as a row showing whether it’s working, waiting on you, or done. The new session uses the model shown in the agent view header and the same
-permission mode
-you’d get running
-claude
-in that directory.
+. A new background session starts on that task and appears as a row showing whether it’s working, waiting on you, or done. The new session uses the model shown in the agent view header.
+Which permission mode it starts in
+depends on how you opened agent view.
 Every prompt you enter here starts its own new session. Typing another prompt and pressing
 Enter
 launches a second session alongside the first rather than sending a follow-up to it. You can run several in parallel this way.
@@ -1121,6 +1119,9 @@ model
 field.
 ​
 Permission mode, model, and effort
+A background session takes its settings, provider, permission mode, model, and effort from where and how you dispatched it. The subsections below cover each source, and what persists when the supervisor restarts the session.
+​
+Settings and provider
 A background session reads its
 settings
 from the directory it runs in, the same as if you had started
@@ -1144,65 +1145,36 @@ ANTHROPIC_BASE_URL
 exported in that shell can reach the session too; see
 the supervisor process
 for the conditions and for how background sessions source provider settings and credentials.
+​
+Permission mode
 The
 permission mode
-depends on how you started the session. Backgrounding an existing session with
+depends on how you started the session:
+Backgrounded with
 /bg
 or
 ←
-keeps the current permission mode, so a session you switched to
+: Claude Code keeps the permission mode the session was in, so one you switched to
 acceptEdits
 or
 auto
-stays in that mode after detaching. Dispatching from the agent view input or running
-claude --bg
-from your shell uses the
-defaultMode
-from that directory’s settings, or the
-permissionMode
-from the dispatched
-subagent’s frontmatter
-.
-The permission mode, model, and effort you chose for a background session, along with the
-configuration flags it carries
-, all persist when the supervisor later
-stops and restarts
-its process. A session you launched with
-claude --bg --dangerously-skip-permissions
-or
-claude --bg --permission-mode bypassPermissions
-stays in
-bypassPermissions
-after that restart instead of falling back to the directory’s
-defaultMode
-, and a model or effort you changed mid-session with
-/model
-or
-/effort
-is kept.
-An effort the session took from the
-effortLevel
-setting
-rather than from
---effort
-or
-/effort
-isn’t fixed at dispatch: each process started for the session reads the setting again, so editing
-effortLevel
-in
-settings.json
-reaches sessions you background with
+stays there after detaching
+Dispatched from an agent view you opened with
 ←
-or
-/bg
-and their later restarts.
-A name you set with
-/rename
-or
-Ctrl+R
-also persists across that restart, so
-claude --resume <name>
-still resolves the session.
+: the new session starts in the permission mode of the session you came from
+Dispatched from
+claude agents
+started in a shell, or with
+claude --bg
+: the new session starts the way a new
+claude
+session in that directory would, unless you dispatched it from an agent view you opened with
+dispatch defaults
+.
+Which permission mode a session starts in
+lists the order
+​
+Dispatch defaults
 To set defaults for every session you dispatch from agent view, pass any of
 --permission-mode
 ,
@@ -1273,6 +1245,46 @@ bypassPermissions
 available in the
 Shift+Tab
 cycle of those sessions without starting them in it.
+​
+What persists across restarts
+The permission mode, model, and effort you chose for a background session, along with the
+configuration flags it carries
+, all persist when the supervisor later
+stops and restarts
+its process. A session you launched with
+claude --bg --dangerously-skip-permissions
+or
+claude --bg --permission-mode bypassPermissions
+stays in
+bypassPermissions
+after that restart. A model or effort you changed mid-session with
+/model
+or
+/effort
+is kept too.
+If the session took its effort from the
+effortLevel
+setting
+rather than from
+--effort
+or
+/effort
+, Claude Code reads the setting again each time it starts a process for the session. So when you edit
+effortLevel
+in
+settings.json
+, the change reaches sessions you background with
+←
+or
+/bg
+, and their later restarts.
+Claude Code also keeps a name you set with
+/rename
+or
+Ctrl+R
+across that restart, so you can still run
+claude --resume <name>
+to reach the session.
 ​
 Settings, plugins, and MCP servers
 Agent view accepts the same configuration flags as

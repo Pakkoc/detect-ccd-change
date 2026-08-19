@@ -617,9 +617,9 @@ Create a dedicated AWS account for Claude Code to simplify cost tracking and acc
 1M token context window
 Claude Sonnet 5, Opus 4.6 and later, and Sonnet 4.6 support the
 1M token context window
-on Amazon Bedrock. Sonnet 5 is served through the
+on Amazon Bedrock. Sonnet 5 always runs with the 1M window on both the Invoke API and the
 Mantle endpoint
-and always runs with the 1M window, with no
+, with no
 [1m]
 variant to select. For the other models, Claude Code automatically enables the extended context window when you select a 1M model variant.
 The

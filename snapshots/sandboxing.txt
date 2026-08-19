@@ -1217,6 +1217,20 @@ allowedDomains
 and
 WebFetch(domain:...)
 allow rules from managed settings are honored.
+Corporate proxy
+: when your network requires outbound traffic to go through a corporate proxy, set
+HTTPS_PROXY
+,
+HTTP_PROXY
+, and
+NO_PROXY
+as
+proxy configuration
+describes, in the
+env
+block of your settings so that
+background agents
+get them too, or in the environment you launch Claude Code from. Claude Code enforces the domain allowlist and then tunnels allowed connections through that upstream proxy.
 Custom proxy support
 : advanced users can implement custom rules on outgoing traffic
 Comprehensive coverage

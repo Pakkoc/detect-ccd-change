@@ -456,7 +456,9 @@ requires
 Fable 5 access
 . Written automatically when you run
 /advisor
-. Unset to disable the advisor.
+, except when you pick Fable while the
+usage-credits consent
+is pending. Unset to disable the advisor.
 "opus"
 agent
 Run the main thread as a named subagent, and set the default agent for sessions dispatched from
@@ -1698,6 +1700,13 @@ before fetching. Set to
 true
 in environments that block traffic to Anthropic, such as Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry deployments with restrictive egress. When skipped, WebFetch attempts any URL without consulting the blocklist
 true
+spellcheck
+Underline misspelled words in the prompt input as you type, using a spell checker you install. Read from user settings, the
+--settings
+flag, and managed settings only. See
+Check spelling as you type
+. Requires Claude Code v2.1.235 or later
+{"enabled": true, "language": "en_GB"}
 spinnerTipsEnabled
 Default
 :
@@ -2796,6 +2805,23 @@ osascript
 Removes code-execution isolation.
 Sandboxed commands can launch other applications unsandboxed with no user prompt; they can also send AppleScript commands to running applications such as Terminal, subject to the per-app macOS automation-consent prompt (TCC). Only honored from user, managed, or CLI settings, not from project settings. Default: false
 true
+ripgrep
+Custom
+ripgrep
+binary for the sandbox. Set
+command
+to the binary’s path. To pass arguments to that binary, also set
+args
+. If you don’t set
+ripgrep
+, the sandbox uses the same
+ripgrep
+binary as Claude Code. That is the bundled binary unless you set
+USE_BUILTIN_RIPGREP
+to
+0
+. Only honored from user, managed, or CLI settings.
+{ "command": "/usr/local/bin/rg", "args": ["--no-config"] }
 bwrapPath
 (Managed settings only, Linux/WSL2) Absolute path to the bubblewrap (
 bwrap
@@ -3533,6 +3559,10 @@ The sandbox binary paths
 sandbox.bwrapPath
 and
 sandbox.socatPath
+The sandbox
+ripgrep
+binary,
+sandbox.ripgrep
 forceRemoteSettingsRefresh
 env
 , which Claude Code merges per variable across the admin-controlled sources: each variable comes from the highest-priority source that defines it, so lower sources fill in variables the higher ones leave unset, or whose cached server value Claude Code is

@@ -7,8 +7,8 @@ Anthropic Trust Center
 .
 ​
 Permission-based architecture
-Claude Code uses strict read-only permissions by default. When additional actions are needed (editing files, running tests, executing commands), Claude Code requests explicit permission. Users control whether to approve actions once or allow them automatically.
-Claude Code requires approval before running Bash commands that can modify your system. A built-in set of
+In Manual mode, Claude Code starts with read-only permissions. When Claude Code needs to edit files, run tests, or execute commands, it asks you first, and you choose whether to approve the action once or allow it from then on.
+In Manual mode, Claude Code also asks before running Bash commands that can modify your system. It runs a built-in set of
 read-only commands
 such as
 ls
@@ -16,7 +16,17 @@ ls
 cat
 , and
 git status
-runs without a prompt. This approach lets users and organizations configure permissions directly.
+without asking. You and your organization configure these permissions directly.
+In
+auto mode
+, a separate classifier model reviews actions instead of you and blocks the ones it judges unsafe.
+How the classifier evaluates actions
+lists which actions Claude Code approves outright, which it sends to the classifier, and which Claude Code still asks you about. Your explicit ask and deny rules still apply, and your organization can
+turn auto mode off
+.
+Which permission mode a session starts in depends on your plan, the surface you start it from, and your settings and your organization’s; see
+Permission modes
+.
 For detailed permission configuration, see
 Permissions
 .
@@ -30,7 +40,7 @@ bash commands with filesystem and network isolation, reducing permission prompts
 /sandbox
 to define boundaries where Claude Code can work autonomously
 Working directory boundary
-: Claude Code can only write to the folder where it was started and its subfolders, and cannot modify files in parent directories without explicit permission. Reading paths outside this boundary with the Read, Grep, and Glob tools is possible after an approval prompt. Extend the boundary with
+: In Manual mode, Claude Code can only write to the folder where it was started and its subfolders, and can’t modify files in parent directories without explicit permission. In Manual mode, Claude Code also asks you before reading paths outside this boundary with the Read, Grep, and Glob tools. In auto mode it reads them without asking. Extend the boundary with
 additional directories
 to skip the prompt, or restrict the broader read access available to read-only Bash commands with
 sandbox
@@ -62,7 +72,7 @@ Prompt injection is a technique where an attacker attempts to override or manipu
 ​
 Core protections
 Permission system
-: Sensitive operations require explicit approval
+: In Manual mode, sensitive operations require explicit approval
 Context-aware analysis
 : Detects potentially harmful instructions by analyzing the full request
 Input sanitization
@@ -72,7 +82,7 @@ Network command approval
 curl
 and
 wget
-are not auto-approved by default. They prompt like any other non-read-only Bash command, so you can still approve once or add an explicit allow rule like
+are not auto-approved by default. In Manual mode they prompt like any other non-read-only Bash command, so you can still approve once or add an explicit allow rule like
 Bash(curl *)
 . To block them entirely, add them to
 permissions.deny
@@ -96,7 +106,7 @@ Privacy Policy
 ​
 Additional safeguards
 Network request approval
-: Tools that make network requests require user approval by default
+: In Manual mode, most tools that make network requests require user approval by default
 Isolated context windows
 : Web fetch uses a separate context window to avoid injecting potentially malicious prompts
 Trust verification
@@ -106,9 +116,9 @@ Note: Trust verification is disabled when running non-interactively with the
 flag
 Note: When you start Claude Code directly in your home directory, trust acceptance is held for the current session only and is not written to disk, so the prompt reappears on each launch. There is no setting to persist it. Start Claude Code from a project subdirectory instead, where trust acceptance is saved per directory
 Command injection detection
-: Suspicious bash commands require manual approval even if previously allowlisted
+: In Manual mode, suspicious bash commands require manual approval even if previously allowlisted
 Fail-closed matching
-: Unmatched commands default to requiring manual approval
+: In Manual mode, unmatched commands require approval by default
 Natural language descriptions
 : Complex bash commands include explanations for user understanding
 Secure credential storage
