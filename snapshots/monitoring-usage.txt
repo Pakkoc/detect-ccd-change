@@ -2195,7 +2195,7 @@ sessions, both the initial choice and later rule matches emit
 "user_permanent"
 . Treated as an accept.
 "user_temporary"
-: Emitted when the user chose “Yes” at a permission prompt for a one-time approval, or chose one of the ”… during this session” options on a file edit or read prompt. In the interactive CLI this is emitted only for the choice itself; later calls allowed by that session-scoped grant emit
+: Emitted when the user chose “Yes” at a permission prompt for a one-time approval, or chose an option that grants access for the rest of the session on a file edit or read prompt. In the interactive CLI this is emitted only for the choice itself; later calls allowed by that session-scoped grant emit
 "config"
 instead. In Agent SDK or non-interactive
 -p

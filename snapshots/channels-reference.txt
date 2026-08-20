@@ -1297,6 +1297,11 @@ description
 raw and cut
 input_preview
 to 200 UTF-16 units with a trailing ellipsis.
+Clients on Claude Code v2.1.234 or later relay the marker
+(value unserializable)
+in place of an
+input_preview
+field value they can’t serialize safely, such as a circular structure or an extremely large array. You still receive the field’s key, and the preview’s other fields are unchanged.
 Clients on Claude Code v2.1.234 or later also mask credentials in
 description
 and

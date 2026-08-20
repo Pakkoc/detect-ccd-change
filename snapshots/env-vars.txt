@@ -1770,6 +1770,26 @@ claudeProcessWrapper
 setting. Ignored on Windows. See
 Run Claude Code behind a corporate launcher
 for the value format, what the launcher covers, and the contract the launcher must satisfy. Requires Claude Code v2.1.208 or later
+CLAUDE_CODE_PROJECT_DIR_NAME
+Set together with
+CLAUDE_CONFIG_DIR
+to choose the
+projects/
+directory name Claude Code stores that session’s transcripts and auto memory under, in place of one derived from the working directory path. For example, starting Claude Code with
+CLAUDE_CONFIG_DIR=/srv/tenant-a CLAUDE_CODE_PROJECT_DIR_NAME=work claude
+stores them under
+/srv/tenant-a/projects/work/
+. Claude Code ignores this variable when
+CLAUDE_CONFIG_DIR
+is unset, and reads it only from the environment you start
+claude
+from, never from a
+settings file
+env
+block
+. See
+Name the project directory yourself
+. Requires Claude Code v2.1.234 or later
 CLAUDE_CODE_PROPAGATE_TRACEPARENT
 Set to
 1
@@ -2971,7 +2991,9 @@ reaches Claude as plain text
 instead of running the review.
 ​
 First session after an install or upgrade
-You can also miss a feature in this list in your first session after you install Claude Code, or after you upgrade to a version that adds the feature, even with none of these variables set. Claude Code fetches the flags during that session, so a feature that’s otherwise available to you is there in your next session. Two features behave differently in that first session:
+You can also miss a
+flag-gated feature
+in your first session after you install Claude Code, or after you upgrade to a version that adds the feature, even when none of the variables that disable flag fetching are set. Claude Code fetches the flags during that session, so a feature that’s otherwise available to you is there in your next session. Two features behave differently in that first session:
 Claude Code
 binds the session’s inbox socket
 and exports the messaging variables partway through the session, as soon as the fetch completes, so other sessions can message it before you restart.

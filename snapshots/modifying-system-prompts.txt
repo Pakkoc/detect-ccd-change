@@ -729,7 +729,7 @@ system_prompt={"type": "preset", "preset": "claude_code", "append": "..."}
 in Python. CLAUDE.md doesn’t change the system prompt itself: the SDK injects its content into the conversation as project context.
 ​
 Combine approaches
-These methods compose. A persistent output style or CLAUDE.md sets the long-lived behavior, and
+The approaches compose. A persistent output style or CLAUDE.md sets the long-lived behavior, and
 append
 layers session-specific instructions on top without touching the saved configuration.
 ​

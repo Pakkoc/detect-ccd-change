@@ -264,7 +264,7 @@ Automation mode
 : when the workflow provides a
 prompt
 input, Claude runs without waiting for a mention, subject only to the
-access checks
+checks on who can trigger runs
 . By default, results appear in the workflow run log rather than a comment. Claude can post to the issue or pull request when the prompt directs it to and it has a tool that can post, as in the
 code-review example
 .

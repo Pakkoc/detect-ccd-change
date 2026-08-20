@@ -281,7 +281,7 @@ Claude Code on the web
 for plan availability and GitHub authentication options.
 ​
 Enforce isolation across an organization
-Individual developers can opt into any approach above. What an organization can enforce, and with which tools, depends on the approach:
+Individual developers can opt into any of the sandboxing approaches on this page. What an organization can enforce, and with which tools, depends on the approach:
 Built-in Bash sandbox
 : the only approach Claude Code enforces itself. Deliver the
 sandbox
@@ -300,7 +300,7 @@ Custom containers and VMs
 : distribute Claude Code through the approved image and use your organization’s device management or software allowlisting tools to prevent installation outside it.
 ​
 See also
-These pages cover configuration and policy details for the approaches above.
+These pages cover configuration and policy details for the sandboxing approaches on this page.
 Sandboxing
 : configure the built-in sandboxed Bash tool
 Dev container

@@ -376,6 +376,11 @@ To test the hook, ask Claude to add a line with single-quoted strings to a JavaS
 When the hook succeeds, Claude Code shows nothing in the conversation. To confirm the hook ran, check that the edited file is reformatted, or see
 Debug techniques
 .
+To reformat a specific file however it changes, including when a
+Bash
+command rewrites it, use a
+FileChanged
+hook instead.
 The Bash examples on this page use
 jq
 for JSON parsing. Install it with
@@ -1388,7 +1393,9 @@ git status --porcelain
 PowerShell hook input section
 explains why matching
 Bash
-alone is not enough.
+alone is not enough. To run a hook when a specific file changes on disk, whatever wrote it, use a
+FileChanged
+hook.
 Each event type matches on a specific field:
 Event
 What the matcher filters

@@ -1183,9 +1183,9 @@ Enforce the allowlist for the Default model
 . Requires Claude Code v2.1.175 or later
 true
 env
-Environment variables applied to every session and to subprocesses Claude Code spawns from it. Set a variable to
+Environment variables Claude Code sets in every session and passes to the processes it starts, such as Bash commands and hooks. To override a shell export you can’t unset, set that variable to
 ""
-to override a shell export with an empty string, which Claude Code treats as unset for provider selection. Subprocesses still inherit the empty value.
+here; Claude Code treats the empty value as unset for provider selection, and processes it starts still inherit the empty value.
 NO_COLOR
 and
 FORCE_COLOR
@@ -1199,7 +1199,9 @@ CLAUDE_CODE_ACCOUNT_UUID
 CLAUDE_CODE_MESSAGING_SOCKET
 and
 CLAUDE_CODE_MESSAGING_TOKEN
-, which it exports itself. Ignoring the socket variable requires Claude Code v2.1.224 or later, and ignoring the token requires v2.1.228 or later
+, which it exports itself. Ignoring the socket variable requires Claude Code v2.1.224 or later, and ignoring the token requires v2.1.228 or later. Ignoring
+CLAUDE_CODE_PROJECT_DIR_NAME
+, which it reads from the launch environment only, requires v2.1.234 or later
 {"FOO": "bar"}
 fallbackModel
 Fallback model(s) to try in order when the primary model is overloaded or unavailable. Claude Code switches to the next available model in the chain for the rest of the turn and shows a notice.
@@ -4369,7 +4371,33 @@ github
 : always matches against
 github.com
 git
-: extracts hostname from the URL (supports both HTTPS and SSH formats)
+: extracts the hostname from the marketplace’s
+git URL
+, depending on the URL’s form:
+A URL with a scheme, such as
+https://
+or
+ssh://
+: the hostname in the URL.
+An SSH address without a scheme, in git’s
+user@host:path
+form, such as
+git@git.example.com:tools/plugins.git
+: the host between
+@
+and
+:
+, which is the host git connects to.
+Any other form without a scheme: no host, so no
+strictKnownMarketplaces
+hostPattern
+entry matches it. For a
+blockedMarketplaces
+hostPattern
+, Claude Code takes a host from a wider set of forms, so a blocklist entry can still match such a form. Before v2.1.234, a
+strictKnownMarketplaces
+hostPattern
+also matched some forms that git doesn’t treat as SSH addresses.
 url
 : extracts hostname from the URL
 npm

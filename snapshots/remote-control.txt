@@ -344,6 +344,14 @@ Message sessions on other machines
 covers the delivery rules and
 Control inbound messages
 covers the inbound controls. Requires Claude Code v2.1.224 or later.
+Effort level
+: when you set the
+effort level
+from a connected device, with
+/effort
+or the device’s effort control, Claude Code applies it to the session on your machine, and claude.ai/code shows the level the session is using. If you pinned a level with
+CLAUDE_CODE_EFFORT_LEVEL
+, the session keeps that level, and Claude Code refuses a different pick from the effort control. A level you pick from the effort control applies to the current session only and doesn’t change your saved default. Picking a level from the effort control requires Claude Code v2.1.234 or later on your machine.
 Reconnecting after a connection failure
 : run
 /remote-control

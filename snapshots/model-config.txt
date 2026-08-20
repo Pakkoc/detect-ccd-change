@@ -1111,6 +1111,9 @@ CLAUDE_CODE_EFFORT_LEVEL
 environment variable,
 max
 applies to the current session only.
+A level you pick from the effort control on a phone or browser connected through
+Remote Control
+applies to that session only.
 A level set with
 /effort
 in
@@ -1249,6 +1252,10 @@ ultracode
 are
 session-only
 and are not accepted here
+From a connected device
+: in a
+Remote Control
+session, pick a level from the effort control on your phone or in your browser. The level applies to the current session only. Requires Claude Code v2.1.234 or later
 Skill and subagent frontmatter
 : set
 effort
@@ -1515,9 +1522,11 @@ CLAUDE_CODE_DISABLE_1M_CONTEXT
 set.
 For a model ID Claude Code doesn’t recognize, set
 CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1
-to have Claude Code compact only after the API rejects the conversation with Anthropic’s too-long error; that recovery doesn’t run when a gateway
+to have Claude Code compact only after the API rejects the conversation with a
+too-long error Claude Code recognizes
+. Claude Code doesn’t run that recovery when a gateway
 rewrites the error
-.
+to wording Claude Code doesn’t recognize.
 ​
 Checking your current model
 You can see which model you’re currently using in two places:

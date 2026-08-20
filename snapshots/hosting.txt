@@ -476,14 +476,18 @@ Point
 CLAUDE_CONFIG_DIR
 at a per-tenant directory so tenants do not share the
 ~/.claude.json
-global config.
+global config. When each config directory serves one working directory, you can also set
+CLAUDE_CODE_PROJECT_DIR_NAME
+in
+env
+to keep the transcript paths under it short. Requires TypeScript Agent SDK v0.3.234 or later.
 Use a per-tenant working directory. Pass
 cwd
 explicitly on every
 query()
 call.
 Apply per-tenant egress rules at your proxy, such as distinct outbound IPs, credentials, or domain allowlists, so a compromised tenant cannot exfiltrate data via another tenant’s outbound policy.
-The example below applies the four SDK-level options together. Construct
+The example below applies the settings, auto memory, config directory, and working directory options together. Construct
 tenantDir
 and
 configDir

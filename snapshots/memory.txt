@@ -580,6 +580,15 @@ Each project gets its own memory directory at
 . The
 <project>
 path is derived from the git repository, so all worktrees and subdirectories within the same repo share one auto memory directory. Outside a git repo, the project root is used instead.
+If you set
+CLAUDE_CODE_PROJECT_DIR_NAME
+beside
+CLAUDE_CONFIG_DIR
+, Claude Code uses that name as the
+<project>
+directory under
+<config dir>/projects/
+instead, whichever repository you launch it in, so projects launched with that config directory share one auto memory directory. Requires Claude Code v2.1.234 or later.
 To store auto memory in a different location, set
 autoMemoryDirectory
 in your

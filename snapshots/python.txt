@@ -813,8 +813,19 @@ message
 Any
 Raw message content
 parent_tool_use_id
+str | None
+For subagent messages, the id of the spawning
+Agent
+tool-use block.
 None
-Reserved for future use
+for main-session messages and older sessions
+parent_agent_id
+str | None
+For messages from a
+nested subagent
+, the agent id of the parent subagent.
+None
+for main-session messages, top-level subagent messages, and older sessions
 ​
 Example
 from
@@ -2217,6 +2228,10 @@ include_hook_events:
 bool
 =
 False
+forward_subagent_text:
+bool
+=
+False
 fork_session:
 bool
 =
@@ -2515,6 +2530,14 @@ False
 Include hook lifecycle events in the message stream as
 HookEventMessage
 objects
+forward_subagent_text
+bool
+False
+Forward subagent text and thinking blocks in the message stream. By default only subagent
+tool_use
+and
+tool_result
+blocks are emitted
 fork_session
 bool
 False
