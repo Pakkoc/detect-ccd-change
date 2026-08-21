@@ -48,7 +48,9 @@ filtered to merged PRs in one SDK repository. The routine ports the change to a 
 Create a routine
 Create a routine from the web at
 claude.ai/code/routines
-, from the Desktop app, or from the CLI. All three surfaces write to the same cloud account, so a routine you create in one shows up in the others immediately. In the Desktop app, click
+, from the Desktop app, or from the CLI. All three surfaces write to the same cloud account, so a routine you create in one shows up in the others immediately. In the Desktop app’s
+Code
+tab, click
 Routines
 in the sidebar, then
 New routine

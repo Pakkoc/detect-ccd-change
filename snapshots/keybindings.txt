@@ -165,21 +165,19 @@ Escape
 Cancel current input
 chat:clearInput
 Ctrl+L
-Force a full screen redraw, preserving input. In
-fullscreen rendering
-, press twice within two seconds to run
-/clear
+Force a full screen redraw, preserving input and conversation
 chat:clearScreen
 Cmd+K
-In
-fullscreen rendering
-, press twice within two seconds to run
-/clear
+Force a full screen redraw, preserving input and conversation. See
+Clear the conversation
+for how Cmd+K behaves on iTerm2 and Terminal.app
 chat:killAgents
 Ctrl+X Ctrl+K
 Stop all running
 background subagents
-in this session
+in this session and turn off
+artifact auto-replies
+for the rest of it
 chat:cycleMode
 Shift+Tab*
 Cycle permission modes
@@ -261,13 +259,16 @@ confirm:toggle
 Space
 Toggle selection
 confirm:cycleMode
-Shift+Tab
-Cycle permission modes
+Shift+Tab*
+Cycle permission modes. On a file permission prompt, closes an open
+comment field
+; with no field open, selects the option that allows the action for the rest of the session, when the prompt offers that option
 confirm:toggleExplanation
 Ctrl+E
 Toggle a model-generated
 explanation of the command
 on Bash and PowerShell permission prompts
+*On Windows without VT mode (Node <24.2.0/<22.17.0, Bun <1.2.23), defaults to Meta+M.
 ​
 Permission actions
 Actions available in the
@@ -672,7 +673,7 @@ Ctrl+Shift+C / Cmd+C
 Copy the selected text to the clipboard
 selection:clear
 (unbound)
-Clear the active text selection
+Clear the active text selection. Requires v2.1.234 or later
 selection:extendLeft
 Shift+Left
 Extend the active selection one column left

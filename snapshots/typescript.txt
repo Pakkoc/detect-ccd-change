@@ -1300,9 +1300,9 @@ Settings
 undefined
 Policy-tier settings your host process supplies to the spawned session. On machines with admin-deployed managed settings, Claude Code ignores these unless the admin’s highest-priority managed source sets
 parentSettingsBehavior: 'merge'
-, and never merges them while a
+, and never merges them when an MDM or file-based source wins and configures a
 policyHelper
-is configured. Merged values pass through a restrictive-only filter;
+. Merged values pass through a restrictive-only filter;
 Restrict parent settings
 covers what the filter admits and the
 allowManaged*Only
@@ -1394,9 +1394,10 @@ for details
 promptSuggestions
 boolean
 false
-Enable prompt suggestions. Emits a
+Enable prompt suggestions. After a turn, Claude Code emits a
 prompt_suggestion
-message after each turn with a predicted next user prompt
+message carrying a predicted next user prompt. Claude Code generates no suggestion for some turns, such as while your account is close to or at its usage limit. See
+When Claude Code skips suggestions
 resume
 string
 undefined
@@ -2175,7 +2176,27 @@ fast_mode_disabled_reason
 ?:
 FastModeDisabledReason
 ;
+hooks_applied
+?:
+boolean
+;
 };
+hooks_applied
+reports whether Claude Code registered the
+hooks
+that the
+initialize
+request carried. The SDK sends that request once when the session starts and again on each
+reinitialize()
+call. The field requires Agent SDK v0.3.238 or later.
+Claude Code omits the field when the request carried no hooks. When the request carried hooks, the value depends on whether the request is the session’s first initialize and, for a repeated one, on how it reached the session:
+true
+: Claude Code registered the hooks. A session’s first initialize returns this value. So does a repeated initialize sent over the CLI’s stdin. In that case the hooks in the new request replace the hooks registered earlier.
+false
+: Claude Code ignored the hooks. A repeated initialize sent to a remote session returns this value, so a second client that joins a session can’t replace the hooks the first client registered.
+Before Agent SDK v0.3.238, the response never carried the field, and Claude Code ignored
+hooks
+on every repeated initialize.
 The response always reports
 fast_mode_state
 , and when something blocks
@@ -4241,6 +4262,20 @@ fast_mode_disabled_reason
 ?:
 FastModeDisabledReason
 ;
+effort
+?:
+"low"
+|
+"medium"
+|
+"high"
+|
+"xhigh"
+|
+"max"
+|
+null
+;
 capabilities
 ?:
 string
@@ -4262,6 +4297,14 @@ exit
 . You can send them like any other entry in
 slash_commands
 ; the field exists so a remote or mobile client can hide them from its command menus. The field is present only when non-empty, and requires Agent SDK v0.3.229 or later.
+effort
+: the
+effort level
+Claude Code sends on the session’s next request, or
+null
+when it sends none. Claude Code sets the field only on the init message it sends to
+Remote Control
+clients, and omits it from the init message your application reads. Requires Agent SDK v0.3.234 or later.
 The
 capabilities
 array names the protocol behaviors this CLI implements, so you can feature-detect instead of comparing
@@ -4958,6 +5001,12 @@ from
 :
 string
 ;
+fromMode
+?:
+"bypass"
+|
+"prompting"
+;
 name
 ?:
 string
@@ -5136,6 +5185,16 @@ is
 . The value is sender-authored;
 verifiedPeerPid
 is the verified identity.
+fromMode
+: the sending session’s permission class,
+bypass
+or
+prompting
+, declared by a host that relays a peer message between your sessions, such as the
+desktop app
+. Claude Code reads it in the receiving session when it applies the
+inbound controls
+. Requires Agent SDK v0.3.234 or later.
 senderTaskId
 : the teammate’s task ID. Absent for a cross-session peer.
 name
@@ -7590,9 +7649,7 @@ CLAUDE_CODE_ENABLE_TASKS=0
 .
 See
 Model availability
-to opt in and
-Migrate to Task tools
-to update your monitoring code.
+to opt in.
 ​
 TaskCreate
 Tool name:
@@ -8255,6 +8312,20 @@ force
 ?:
 boolean
 ;
+capabilities
+?:
+Record
+<
+string
+,
+unknown
+>;
+contract
+?:
+"latest"
+|
+string
+;
 };
 Publishes a local
 .html
@@ -8294,6 +8365,16 @@ defaults to
 lists artifacts other people shared with the user, and
 "all"
 lists both.
+capabilities
+: the runtime capabilities the published page uses, keyed by capability name, such as the
+connectors the page may call
+. The artifact service validates the declaration and rejects a publish that names a capability the account can’t use or gives one an invalid config. Pass
+{}
+to clear a stored declaration, and omit the field on a redeploy to keep it. Requires Agent SDK v0.3.235 or later.
+contract
+: the runtime version the published page runs against. Omit it to keep the artifact’s current version, pass
+"latest"
+to upgrade, or pass a specific version to pin or roll back. Requires Agent SDK v0.3.235 or later.
 The types are exported, but the tool is off by default in Agent SDK sessions. Publishing also requires every condition in the
 artifacts availability table
 , which sessions authenticated with an API key don’t meet.
@@ -9050,6 +9131,10 @@ kind
 "amended"
 |
 "cherry-picked"
+;
+branch
+?:
+string
 };
 push
 ?:
@@ -9094,6 +9179,8 @@ action
 |
 "closed"
 |
+"reopened"
+|
 "ready"
 |
 "draft"
@@ -9137,6 +9224,13 @@ backgroundEndsWithFinalResponse
 to
 true
 on such commands, and omits the field when the command survives the turn, as commands started by the main conversation or by background subagents do. The field requires Claude Code v2.1.227 or later.
+Claude Code sets
+gitOperation.commit.branch
+to the branch named in git’s commit summary line, and omits it for a commit made on a detached HEAD. The field requires Agent SDK v0.3.227 or later. Claude Code reports a
+gh pr reopen
+command as the
+reopened
+PR action, which requires Agent SDK v0.3.234 or later.
 ​
 Monitor
 Tool name:
@@ -10014,9 +10108,7 @@ CLAUDE_CODE_ENABLE_TASKS=0
 .
 See
 Model availability
-to opt in and
-Migrate to Task tools
-to update your monitoring code.
+to opt in.
 ​
 TaskCreate
 Tool name:
@@ -11319,9 +11411,23 @@ string
 Other Types
 ​
 ApiKeySource
+Where the API key for the session’s requests came from, reported as
+apiKeySource
+on the
+SDKSystemMessage
+init message.
 type
 ApiKeySource
 =
+|
+"ANTHROPIC_API_KEY"
+|
+"apiKeyHelper"
+|
+"/login managed key"
+|
+"none"
+|
 "user"
 |
 "project"
@@ -11332,13 +11438,33 @@ ApiKeySource
 |
 "oauth"
 ;
-At runtime, the
-apiKeySource
-field on the
-SDKSystemMessage
-init message can also be the string
-"none"
-when no API key is in use, for example when the session authenticates with an OAuth token. Handle values outside this union defensively.
+Claude Code reports one of four values:
+Value
+Key in use
+ANTHROPIC_API_KEY
+The key in the
+ANTHROPIC_API_KEY
+environment variable
+apiKeyHelper
+The key returned by your
+apiKeyHelper
+command
+/login managed key
+The key Claude Code stored when you logged in with a
+Claude Console account
+none
+No API key. The session authenticates another way, such as a claude.ai login, a bearer token, or a cloud provider
+Agent SDK v0.3.234 and later list these four values in the type. The type also keeps
+user
+,
+project
+,
+org
+,
+temporary
+, and
+oauth
+so older code still compiles, and Claude Code doesn’t report them.
 ​
 SdkBeta
 Available beta features that can be enabled via the
@@ -12699,11 +12825,11 @@ string
 };
 ​
 SDKTaskStartedMessage
-Emitted when a background task begins. The
+Emitted when a task begins. The
 task_type
 field is
 "local_bash"
-for background Bash commands and
+for Bash commands and
 Monitor
 watches,
 "local_agent"
@@ -12738,6 +12864,14 @@ task_type
 ?:
 string
 ;
+is_backgrounded
+?:
+boolean
+;
+spawn_depth
+?:
+number
+;
 uuid
 :
 UUID
@@ -12747,6 +12881,41 @@ session_id
 string
 ;
 };
+is_backgrounded
+and
+spawn_depth
+describe how Claude Code started the task. Both fields require Agent SDK v0.3.238 or later.
+is_backgrounded
+: Claude Code sets it on
+"local_agent"
+and
+"local_bash"
+tasks.
+true
+means the task runs in the background.
+false
+means the task runs in the foreground, and the tool call that started it stays blocked until the task finishes or moves to the background.
+spawn_depth
+: Claude Code sets it on
+"local_agent"
+tasks only. A subagent that the main thread spawned has depth
+1
+. A subagent that a depth
+1
+subagent spawned has depth
+2
+, and so on.
+A
+resumed subagent
+always reports
+is_backgrounded: true
+, because Claude Code runs every resumed subagent in the background. When a foreground task moves to the background later, Claude Code reports the new
+is_backgrounded
+value in a
+task_updated
+message rather than sending a second
+task_started
+.
 ​
 SDKTaskProgressMessage
 Emitted periodically while a subagent or background task is running. The
@@ -13162,9 +13331,11 @@ string
 };
 ​
 SDKPromptSuggestionMessage
-Emitted after each turn when
+Emitted after a turn when
 promptSuggestions
-is enabled. Contains a predicted next user prompt.
+is enabled and Claude Code generated a suggestion for that turn. Contains the predicted next user prompt. For the turns that get none, see
+When Claude Code skips suggestions
+.
 type
 SDKPromptSuggestionMessage
 =

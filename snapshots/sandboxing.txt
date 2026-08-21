@@ -321,7 +321,15 @@ is readable and the rest of the home directory stays blocked. The narrower allow
 with
 "denyRead": ["~/.env"]
 ~/.env
-stays blocked and the rest of the home directory is readable. An exact deny holds inside a wider allow, so a broad allow can’t silently re-expose a secret
+stays blocked and the rest of the home directory is readable. The deny holds inside a wider allow, so a broad allow can’t silently re-expose a secret
+"allowRead": ["~/"]
+with
+"denyRead": ["~/**/.env"]
+Every
+.env
+under the home directory stays blocked and the rest is readable. A
+wildcard deny
+holds inside a wider allow the same way an exact path does
 The example below blocks reading from the entire home directory while still allowing reads from the current project. Place it in your project’s
 .claude/settings.json
 , because the relative path

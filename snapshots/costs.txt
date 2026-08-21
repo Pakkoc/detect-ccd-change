@@ -593,6 +593,16 @@ as a new turn when this session sits idle, sending your full context each time. 
 crossSessionInbound
 to
 hold
+Goal check-ins
+: while background work keeps an active
+goal
+waiting, Claude Code
+asks Claude to check on that work
+even when the session sits idle, starting a new turn that sends your full context. To turn check-ins off, set
+CLAUDE_CODE_GOAL_CHECKIN_MINUTES
+to
+0
+. Idle check-ins require Claude Code v2.1.236 or later
 Agent teammates
 : each active
 teammate

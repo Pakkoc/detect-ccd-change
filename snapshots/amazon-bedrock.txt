@@ -343,11 +343,13 @@ When you select a primary model with
 ANTHROPIC_MODEL
 , or the
 model
-setting, background tasks use that model. Setting
+setting, background tasks use that model. When Claude Code starts the session on the model you set with
+ANTHROPIC_DEFAULT_MODEL
+, background tasks use that model too. Setting
 ANTHROPIC_DEFAULT_OPUS_MODEL
 without
 ANTHROPIC_DEFAULT_SONNET_MODEL
-counts as a selection too, because the built-in Sonnet model may not be enabled in an account that steers its own Opus.
+also counts as a selection, because the built-in Sonnet model may not be enabled in an account that steers its own Opus.
 To use Haiku for background tasks, set
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 to a model ID that is available in your account.
@@ -446,7 +448,7 @@ are skipped, since those are managed by your administrator.
 If you have not pinned a model and the current default is unavailable in your account, Claude Code falls back for the current session and shows a notice. It tries earlier versions of the default model first and, when the default is an Opus model and no Opus version is available, falls back to the default Sonnet model. The fallback is not persisted. Enable the newer model in your Amazon Bedrock account or
 pin a version
 to make the choice permanent.
-When you start the session on a specific Sonnet or Opus version, with
+When you start the session on a specific Sonnet or Opus version, for example with
 --model
 ,
 ANTHROPIC_MODEL

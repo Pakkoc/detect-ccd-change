@@ -1564,7 +1564,7 @@ Model to use for evaluation. Defaults to a fast model
 Reference scripts by path
 Use these placeholders to reference hook scripts relative to the project or plugin root, regardless of the working directory when the hook runs:
 ${CLAUDE_PROJECT_DIR}
-: the project root. Claude Code also sets this variable in the environment of
+: the project root where the session started. Claude Code also sets this variable in the environment of
 stdio MCP servers
 and plugin LSP servers.
 ${CLAUDE_PLUGIN_ROOT}
@@ -1575,6 +1575,26 @@ ${CLAUDE_PLUGIN_DATA}
 : the plugin’s
 persistent data directory
 , for dependencies and state that should survive plugin updates.
+Worktrees are different.
+If Claude enters a
+worktree
+during the session, Claude Code keeps
+${CLAUDE_PROJECT_DIR}
+where it was and passes the worktree path to your hooks a different way:
+${CLAUDE_PROJECT_DIR}
+stays put
+: it still points at the project root where the session started, so a command such as
+${CLAUDE_PROJECT_DIR}/.claude/hooks/check-style.sh
+still runs the script in the main checkout.
+cwd
+follows Claude
+: the
+cwd
+field in the hook’s
+input JSON
+is the worktree root after Claude enters a worktree, and the new directory after Claude runs
+cd
+. Read it when a hook needs to know which directory Claude is working in.
 Prefer
 exec form
 for any hook that references a path placeholder. In shell form, wrap each placeholder in double quotes.
@@ -5765,7 +5785,7 @@ and
 session_crons
 arrays described under
 Stop input
-, available in Claude Code v2.1.145 or later. Both arrays are scoped to the parent session, not the subagent.
+. Both arrays are scoped to the parent session, not the subagent.
 {
 "session_id"
 :
@@ -6117,7 +6137,7 @@ The
 background_tasks
 and
 session_crons
-arrays, available in Claude Code v2.1.145 or later, let hooks distinguish “session is done” from “session is paused waiting for background work to wake it back up”. Both arrays are present when the task registry is reachable and are empty when nothing is in flight or scheduled.
+arrays let hooks distinguish “session is done” from “session is paused waiting for background work to wake it back up”. Both arrays are present when the task registry is reachable and are empty when nothing is in flight or scheduled.
 Each entry in
 background_tasks
 describes one in-flight task and uses these fields:

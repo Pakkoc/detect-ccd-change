@@ -696,9 +696,9 @@ subagents
 skills
 , and the
 advisor
-. Does not affect the Default option unless
-enforceAvailableModels
-is also set. See
+. See
+Default model behavior
+for the Default option. See
 Restrict model selection
 ["sonnet", "haiku"]
 awaySummaryEnabled
@@ -1174,11 +1174,7 @@ allowlist to the Default model. When
 true
 in managed settings and
 availableModels
-is a non-empty array, the Default option falls back to the first allowlisted entry that is available, but only when the model Default would resolve to (the
-organization default
-when one applies, otherwise the account-type default) is not in the allowlist; an allowlisted default is kept as-is. Has no effect when
-availableModels
-is unset or empty. See
+is a non-empty array, a Default model outside the allowlist falls back to the first allowlisted entry that is available. See
 Enforce the allowlist for the Default model
 . Requires Claude Code v2.1.175 or later
 true
@@ -2358,13 +2354,13 @@ regions. An
 allowRead
 path re-opens reading inside a broader
 denyRead
-region, and an exact path in
+region. Claude Code keeps an exact or wildcard
 denyRead
-stays blocked inside a broader
+entry blocked inside a broader
 allowRead
-; see the
+, as the
 overlap table
-for examples. Arrays are merged across all settings scopes. Use this to create workspace-only read access patterns.
+shows. Arrays are merged across all settings scopes. Use this to create workspace-only read access patterns.
 ["."]
 filesystem.allowManagedReadPathsOnly
 (Managed settings only) Only
@@ -2929,6 +2925,17 @@ denyRead
 and
 allowRead
 : wildcards work on every platform. On Linux and WSL2, Claude Code expands a read entry to the concrete paths it matches, which it doesn’t do for the write lists.
+Claude Code blocks reads of the paths a wildcard
+denyRead
+entry such as
+~/**/.env
+matches, even inside a broader
+allowRead
+entry. When the wildcard matches a directory, Claude Code blocks reads of its contents as well. Before v2.1.236 on macOS, Claude Code re-opened the paths a wildcard
+denyRead
+entry matched wherever a broader
+allowRead
+entry covered them. On those macOS versions, Claude Code also left a matched directory’s contents readable.
 This syntax differs from
 Read and Edit permission rules
 , which use
@@ -3381,9 +3388,13 @@ undefined and applies nothing:
 :
 "Always cite the internal style guide."
 }
-When the helper emits
+Claude Code reads
+policyHelper
+only from the source that wins
+precedence within the managed tier
+, so a helper configured in MDM or a managed settings file does not run while server-managed settings deliver a non-empty configuration. When the helper runs and emits
 managedSettings
-, that object becomes the only managed settings source for the run: Claude Code ignores remote, MDM, and file-based sources, reads the
+, that object becomes the only managed settings source for the run: Claude Code ignores the MDM and file-based sources, reads the
 cross-source keys
 from the helper’s output alone, and never merges
 parent settings
@@ -3536,9 +3547,9 @@ availableModels
 allowlist stays in force unless the host supplies its own.
 ​
 Precedence within the managed tier
-A
+Apart from the cross-source keys listed after the ranking, Claude Code uses the first of these sources that delivers a non-empty configuration and ignores the rest rather than merging them. When that winning source is an MDM policy or managed settings file that configures a
 policyHelper
-can replace every source in this list; that section says when. Otherwise, apart from the cross-source keys listed after the ranking, Claude Code uses the first of these sources that delivers a non-empty configuration and ignores the rest rather than merging them:
+, the helper’s output then replaces it; that section says how. Claude Code checks the sources in this order:
 Remote settings, delivered from claude.ai as
 server-managed settings
 or by a

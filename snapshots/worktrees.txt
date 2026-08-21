@@ -88,6 +88,26 @@ permission rule
 or choosing “don’t ask again” doesn’t suppress this prompt; only
 bypassPermissions
 mode skips it. Before v2.1.206, Claude could enter any existing worktree path without asking.
+Hook paths don’t follow the worktree.
+After Claude enters a worktree, Claude Code keeps
+${CLAUDE_PROJECT_DIR}
+in your
+hooks
+where it was and passes the worktree path to them a different way:
+${CLAUDE_PROJECT_DIR}
+stays put
+: it still points at the project root where the session started, so a hook command such as
+${CLAUDE_PROJECT_DIR}/.claude/hooks/check-style.sh
+still runs the script in the main checkout.
+cwd
+follows Claude
+: the
+cwd
+field in the hook’s
+input JSON
+is the worktree root, and it moves again when Claude runs
+cd
+. Read it when a hook needs the worktree path.
 ​
 Clean up worktrees
 When you exit an interactive worktree session, Claude checks the worktree for work that removal would delete: changed or untracked files, and new commits.

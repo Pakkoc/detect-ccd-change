@@ -7,7 +7,6 @@ How this fits with other security tools
 .
 ​
 Prerequisites
-Claude Code CLI version 2.1.144 or later
 Python 3.7 or later on your
 PATH
 . The agentic commit review needs Python 3.10 or later, as do all model-backed reviews when Claude Code uses a third-party provider such as Amazon Bedrock or Google Cloud’s Agent Platform. The plugin prefers the versioned interpreters

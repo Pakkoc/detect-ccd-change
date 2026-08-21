@@ -1135,7 +1135,7 @@ Managed settings include
 forceLoginMethod
 or
 forceLoginOrgUUID
-, which on Claude Code v2.1.146 and later cannot coexist with
+, which cannot coexist with
 ANTHROPIC_API_KEY
 ,
 ANTHROPIC_AUTH_TOKEN

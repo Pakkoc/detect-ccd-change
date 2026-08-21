@@ -2524,9 +2524,11 @@ or
 ./my-plugin
 is your plugin directory, to check
 plugin.json
-, skill/agent/command frontmatter, and
+,
 hooks/hooks.json
-for syntax and schema errors
+, and the frontmatter of the skills, agents, and commands in the plugin’s default directories for syntax and schema errors. See
+Validate a plugin or a directory without a manifest
+for what a run covers
 Skills not appearing
 Wrong directory structure
 Ensure

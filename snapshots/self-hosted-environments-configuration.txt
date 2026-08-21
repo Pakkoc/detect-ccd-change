@@ -369,10 +369,7 @@ completed
 failed
 : a child crash or a setup failure after spawn.
 interrupted
-: an idle release, startup timeout, server deassign, drain, watchdog kill, or the
-released=false
-backstop
-.
+: an idle release, startup timeout, server deassign, drain, or watchdog kill.
 abandoned
 : reserved for sessions another runner claimed; the hook doesn’t currently fire in that case.
 The
@@ -472,6 +469,20 @@ origin
 with an operator-supplied URL and pass
 -c credential.helper=
 plus your own helper, so repo-local config the session wrote can’t redirect the credentialed push.
+​
+Hook timing when the runner releases a session
+A released session can resume on another runner. On a runner on v2.1.236 or later, what the session was doing at release decides whether it can resume before this hook finishes:
+Idle after a turn, or timed out at startup
+: the runner stops the child and runs this hook to completion. Only then does it release the session. A user message sent while the hook runs can’t resume the session on another runner before the hook finishes.
+Waiting for the user to answer a prompt, such as a permission prompt
+: the runner releases the session first, then runs this hook. A user message sent while the hook runs can resume the session on another runner before the hook finishes.
+A release at the
+--retire-at
+time follows the same two paths. During a
+SIGTERM
+drain, the runner holds the session lease until the hook finishes; see
+Shutdown timing
+. Before v2.1.236, the runner released the session first and then ran this hook on both paths.
 ​
 command
 Runs once per session after checkout, in place of the built-in child spawn. The hook receives the same environment as a

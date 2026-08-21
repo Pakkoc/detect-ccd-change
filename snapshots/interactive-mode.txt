@@ -28,7 +28,9 @@ Interrupts a running operation. If nothing is running, the first press clears th
 Ctrl+X Ctrl+K
 Stop all running
 background subagents
-in this session. Press twice within 3 seconds to confirm
+in this session, and turn off
+artifact auto-replies
+for the rest of it. Press twice within 3 seconds to confirm
 Subagent control
 Ctrl+D
 Exit Claude Code session
@@ -50,15 +52,7 @@ to prepend Claude’s previous reply as
 -commented context above your prompt; Claude Code strips the comment block when you save
 Ctrl+L
 Redraw screen
-Forces a full terminal redraw, keeping input and conversation history. Use this to recover if the display becomes garbled or partially blank. In
-fullscreen rendering
-, if you press
-Ctrl+L
-once, Claude Code redraws the screen and also shows a hint that pressing it again runs
-/clear
-. If you press it twice within two seconds, Claude Code runs
-/clear
-and starts a new conversation
+Forces a full terminal redraw, keeping input and conversation history. Use this to recover if the display becomes garbled or partially blank
 Ctrl+O
 Toggle transcript viewer
 Shows detailed tool usage and execution, with a timestamp and the model used on each assistant message. Also expands MCP calls, which collapse to a single line like “Called slack 3 times” by default
@@ -103,6 +97,14 @@ to resume
 Left/Right arrows
 Cycle through dialog tabs
 Navigate between tabs in permission dialogs and menus
+Tab
+Accept an autocomplete suggestion, or add a comment to a permission answer
+While autocomplete suggestions are showing in the prompt input, accepts the selected suggestion. On most permission prompts, with
+Yes
+or
+No
+focused, opens a comment field on that option, and pressing it again closes the field. See
+add a comment when you answer a permission prompt
 Up/Down arrows
 or
 Ctrl+P
@@ -117,9 +119,13 @@ Esc
 Interrupt Claude, or close a dialog
 Stop the current response or tool call mid-turn so you can redirect. Claude keeps the work done so far. If you have
 messages queued
-, Claude Code sends them next. When a dialog such as a permission prompt is open,
+, Claude Code sends them next. When a dialog is open,
 Esc
-closes the dialog rather than interrupting Claude
+closes the dialog. On a permission prompt,
+Esc
+declines the action, the same as
+No
+without a comment
 Esc
 +
 Esc
@@ -154,7 +160,9 @@ auto
 default
 . See
 permission modes
-.
+. On a file permission prompt, the same key closes an open
+comment field
+. With no field open, it selects the option that allows the action for the rest of the session, when the prompt offers that option
 Option+P
 (macOS) or
 Alt+P
@@ -917,6 +925,12 @@ The prompt cache is cold, to avoid unnecessary cost
 After the first turn of a conversation, in some sessions
 The previous response ended in an error
 While you’re in plan mode
+Your account is close to or at its usage limit. To keep suggestions on until you reach the limit, set
+CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
+to
+true
+. Before v2.1.238, Claude Code skipped them near the limit even with the variable set to
+true
 In an
 agent team
 , in teammates’ sessions by default. The lead’s session shows suggestions

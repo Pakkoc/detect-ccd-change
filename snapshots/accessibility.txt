@@ -7,7 +7,9 @@ prefersReducedMotion
 theme
 from the
 Accessibility settings
-table.
+table. Screen reader mode adapts the terminal interface only, so you don’t need it in the VS Code extension’s chat panel. On Claude Code v2.1.236 or later, the extension
+announces conversation activity to your screen reader
+there without any setting.
 Screen reader mode requires Claude Code v2.1.181 or later. Earlier versions reject the
 --ax-screen-reader
 flag with

@@ -606,9 +606,9 @@ WebFetch
 domain rules and sandbox network rules. Without the opt-in, those sessions run without the egress restriction, and nothing warns you. The gateway still rejects inference requests for models the policy doesn’t grant.
 Machines where developers sign in through
 /login
-don’t need it; every Claude Code invocation fetches its policy from the gateway directly. Fleets that configure a
+don’t need it; every Claude Code invocation fetches its policy from the gateway directly. Machines where an MDM or file-based source wins and configures a
 policyHelper
-can’t use it, because the helper’s output replaces every other managed source and parent settings are never merged while a helper is configured.
+can’t use it, because Claude Code never merges parent settings into the helper’s output.
 ​
 Set the opt-in
 Deploy the key, mirror it to the source that wins on each machine, then verify.
@@ -781,9 +781,9 @@ still blocks parent-supplied allow rules and
 additionalDirectories
 . The hooks and MCP server locks, and
 allowManagedPermissionRulesOnly
-’s effect on the developer’s own rules, need the winning source. On
+’s effect on the developer’s own rules, need the winning source. When an MDM or file-based source wins and configures a
 policyHelper
-fleets, the locks are read from the helper’s output alone.
+, Claude Code reads the locks from the helper’s output alone.
 Each lock makes Claude Code ignore the developer’s own entries for that setting, so include your organization’s allowlists next to the locks. Locking network domains with an empty managed domain list blocks all sandboxed outbound traffic, and locking MCP servers with no managed or parent-supplied
 allowedMcpServers
 loads every server that

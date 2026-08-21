@@ -99,18 +99,35 @@ Harden your deployment
 SELF_HOSTED_RUNNER_DEBUG_TOKEN_DIR
 unset
 Write live tokens to disk for inspection. Debug only; don’t use in production.
+--defer-shutdown-max-min <n>
+SELF_HOSTED_RUNNER_DEFER_SHUTDOWN_MAX_MS
+0
+On the first
+SIGTERM
+or
+SIGINT
+, keep serving the sessions already attached instead of draining them, then release whatever is still attached N minutes later and exit. Raise your host’s stop timeout before you set this. See
+Defer the drain past the first signal
+.
+0
+disables. Requires Claude Code v2.1.238 or later.
 --drain-grace-sec <n>
 SELF_HOSTED_RUNNER_DRAIN_GRACE_MS
 0
-Controls when the runner exits after its active sessions finish:
+Until the runner receives a shutdown signal or reaches its retire time, controls when the runner exits after its active sessions finish:
 0
 exits immediately without polling for more, and a positive value keeps the runner alive and re-polling the locked account’s queue for that many seconds first, at the cost of the per-session container isolation described in the
 hardening section
+. After a first signal you deferred with
+--defer-shutdown-max-min
+, the runner exits as soon as it holds no sessions, whatever you set here.
 --drain-wait-sec <n>
 SELF_HOSTED_RUNNER_DRAIN_WAIT_MS
 0
-On
+Once the drain starts, which is on
 SIGTERM
+unless you set
+--defer-shutdown-max-min
 , wait up to N seconds for each session’s in-flight turn and background tasks to finish before terminating the child. During this wait, the runner counts a background task that has just finished as still running until the follow-up turn that reads its result starts, for at most the
 SELF_HOSTED_RUNNER_BG_RESULT_GRACE_MS
 window.
@@ -203,6 +220,30 @@ Budget for the
 post-session
 hook
 on every session end, including runner shutdown
+--proxy-authorization-command <command>
+SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_COMMAND
+unset
+Shell command the runner runs for every connection to your egress proxy, using its trimmed stdout as the
+Proxy-Authorization
+header value. Requires
+HTTPS_PROXY
+or
+HTTP_PROXY
+, and can’t be combined with
+--proxy-authorization-file
+. See
+Authenticate to an egress proxy
+. Requires Claude Code v2.1.238 or later.
+--proxy-authorization-file <path>
+SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_FILE
+unset
+File the runner reads for every connection to your egress proxy, using its trimmed contents as the
+Proxy-Authorization
+header value. Use this flag for a token another process rotates in place. Carries the same requirements as
+--proxy-authorization-command
+, and can’t be combined with it. See
+Authenticate to an egress proxy
+. Requires Claude Code v2.1.238 or later.
 --push-outcome-on-release
 SELF_HOSTED_RUNNER_PUSH_OUTCOME_ON_RELEASE
 off
@@ -225,9 +266,11 @@ Release a session slot after N minutes of inactivity once a turn finishes or the
 --kill-session-after-min
 as the hard backstop. After a session’s background task finishes, the runner considers the session busy until the follow-up turn that reads the result starts, for at most the
 SELF_HOSTED_RUNNER_BG_RESULT_GRACE_MS
-window. A release that leaves the runner with no active sessions starts the same exit path as a normal drain, governed by
+window. Until the runner receives a shutdown signal or reaches its retire time, a release that leaves the runner with no active sessions starts the same exit path as a normal drain, governed by
 --drain-grace-sec
-.
+. After a first signal you deferred with
+--defer-shutdown-max-min
+, the runner exits as soon as a release leaves it holding no sessions.
 0
 disables.
 --retire-at <epoch-seconds>
@@ -1069,13 +1112,11 @@ failed
 sessions_failed_total
 .
 interrupted
-: the runner terminated the child for an operational reason that’s neither a session success nor a runner fault, such as a drain, for example a Kubernetes rolling restart sending
-SIGTERM
-, the max-lifetime watchdog
+: the runner terminated the child for an operational reason that’s neither a session success nor a runner fault, such as a drain or the max-lifetime watchdog
 --kill-session-after-min
-, or the
-released=false
-backstop: the runner terminates the child after the control plane declines three consecutive idle-release requests, each because a user message was still waiting to be processed. Increments
+. A Kubernetes rolling restart sending
+SIGTERM
+is one example of a drain. Increments
 sessions_interrupted_total
 .
 The

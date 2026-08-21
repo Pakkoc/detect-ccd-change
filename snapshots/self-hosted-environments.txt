@@ -137,11 +137,12 @@ A runner with free capacity claims the session and holds a lease on it.
 The runner clones the repository into its working directory and spawns a child Claude Code process.
 The child streams events back over HTTPS while the runner keeps polling; each poll refreshes the lease and doubles as the heartbeat.
 If the runner stops polling for about 60 seconds, the server requeues the session for another runner.
+The runner gives each poll request 10 seconds. When a request times out or is lost, the runner retries after a second or two instead of waiting for the next scheduled poll. Each further request that times out or is lost doubles the gap before the next retry, up to 20 seconds, and the runner shortens the gap whenever the lease is close to expiring.
 ​
 Runner lifecycle
 The first session a runner picks up locks the runner to the account of the user who started that session, and the runner runs up to
 --capacity
-concurrent sessions for that account. While the runner has active sessions, the runner keeps claiming the locked account’s queued work. What happens once they finish depends on
+concurrent sessions for that account. While the runner has active sessions and hasn’t received a shutdown signal or reached its retire time, the runner keeps claiming the locked account’s queued work. What happens once they finish depends on
 --drain-grace-sec
 :
 At the default of
@@ -150,11 +151,15 @@ At the default of
 At a positive value
 : the runner keeps polling the locked account’s queue for that many seconds before exiting.
 This lifecycle isolates each user’s checked-out code without requiring the runner to delete disk state between users.
-A kill that delivers
+How your infrastructure stops a runner decides whether you need
+--retire-at
+. A kill that delivers
 SIGTERM
 needs no flag: the runner drains as
 Shutdown timing
-describes. If your infrastructure instead destroys hosts at a known wall-clock time without a signal, or with a grace period too short to drain, such as a sandbox lifetime cap or spot-instance reclamation, pass
+describes, or keeps serving the sessions it already holds when you set
+--defer-shutdown-max-min
+. If your infrastructure instead destroys hosts at a known wall-clock time without a signal, or with a grace period too short to drain, such as a sandbox lifetime cap or spot-instance reclamation, pass
 --retire-at <epoch-seconds>
 set to a few minutes before that time. At the retire time:
 The runner stops taking new work.
@@ -214,6 +219,11 @@ NO_PROXY
 ; set them in each process’s environment. The variables cover control-plane calls, the orchestrator’s
 SCM connector
 WebSocket, and the built-in clone for HTTPS remotes, and sessions inherit them from the runner. Session streaming uses server-sent events over HTTPS, so a proxy in the path must not buffer responses.
+If your proxy also requires a
+Proxy-Authorization
+header, the runner can add it to each connection it opens to the proxy; see
+Authenticate to an egress proxy
+.
 ​
 What stays on your infrastructure
 Repository checkouts, build artifacts, secrets, and any files a session creates or modifies stay on the machines you provision. The conversation itself, including prompts, responses, and tool results, goes to

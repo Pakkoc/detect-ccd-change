@@ -7371,9 +7371,7 @@ CLAUDE_CODE_ENABLE_TASKS=0
 .
 See
 Model availability
-to opt in and
-Migrate to Task tools
-to update your monitoring code.
+to opt in.
 Input:
 {
 "todos"

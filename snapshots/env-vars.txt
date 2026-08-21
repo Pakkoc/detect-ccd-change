@@ -113,7 +113,9 @@ Settings precedence
 for how they combine when more than one sets the same variable.
 ​
 Precedence
-Some behaviors have both an environment variable and a dedicated settings key. If you set both, the environment variable takes precedence. For example,
+Some behaviors have both an environment variable and a dedicated settings key. If you set both, the environment variable takes precedence, except for
+ANTHROPIC_DEFAULT_MODEL
+. For example,
 ANTHROPIC_MODEL
 overrides the
 model
@@ -121,7 +123,7 @@ setting, and
 CLAUDE_CODE_AUTO_CONNECT_IDE
 overrides
 autoConnectIde
-. Claude Code uses the settings key only when the environment variable is unset.
+.
 When the same variable is set in both your shell and a settings file
 env
 block, the settings file value applies. Claude Code writes each
@@ -367,6 +369,9 @@ the pinned Haiku model supports, for example
 effort,thinking
 . See
 Model configuration
+ANTHROPIC_DEFAULT_MODEL
+Model that new sessions start on by default. Requires Claude Code v2.1.236 or later. See
+Set a default model for new sessions
 ANTHROPIC_DEFAULT_OPUS_MODEL
 Model ID that the
 opus
@@ -704,6 +709,30 @@ Set to
 to stop Claude Code from opening the browser automatically when a new
 artifact
 is published. Republishing an existing artifact does not open the browser regardless of this setting
+CLAUDE_CODE_ARTIFACT_COMMENTS
+Set to
+1
+to let Claude read and reply to
+comments on an artifact
+when
+feature-flag fetching
+is off. Set to
+0
+to turn comment reading and replying off even when fetching is on. Has no effect when
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+has
+turned artifacts off
+. Requires Claude Code v2.1.221 or later
+CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT
+Set to
+1
+to let Claude
+reply on its own to comments sent to it
+when
+feature-flag fetching
+is off, or
+0
+to turn that off even when fetching is on. Needs comment reading on as well. Requires Claude Code v2.1.228 or later
 CLAUDE_CODE_ATTRIBUTION_HEADER
 Set to
 0
@@ -778,6 +807,27 @@ cloud sessions
 , read
 CLAUDE_CODE_REMOTE_SESSION_ID
 instead
+CLAUDE_CODE_BS_AS_CTRL_BACKSPACE
+Set to
+0
+to make Claude Code read the
+0x08
+byte, also written
+^H
+, as plain Backspace, or
+1
+to read it as Ctrl+Backspace. Either value replaces the platform default. By default, Claude Code reads it as Ctrl+Backspace on Windows, except when
+TERM_PROGRAM
+is
+mintty
+or
+TERM
+is
+cygwin
+, and as plain Backspace on macOS and Linux. Set
+0
+in a Windows terminal where
+Backspace deletes a whole word
 CLAUDE_CODE_CERT_STORE
 Comma-separated list of CA certificate sources for TLS connections.
 bundled
@@ -1341,11 +1391,17 @@ default moved from Opus 4.6 to Opus 4.7
 CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
 Set to
 false
-to disable prompt suggestions (the “Prompt suggestions” toggle in
-/config
-). These are the grayed-out predictions that appear in your prompt input. Takes precedence over the
+to turn off prompt suggestions, the grayed-out predictions that appear in your prompt input. Takes precedence over the
 promptSuggestionEnabled
-setting. See
+setting, which is what the
+Prompt suggestions
+toggle in
+/config
+writes. Claude Code also
+pauses suggestions while your account is close to or at its usage limit
+. Set to
+true
+to keep them on until you reach the limit. Requires Claude Code v2.1.238 or later. See
 Prompt suggestions
 CLAUDE_CODE_ENABLE_TASKS
 Selects which task-tracking tools Claude Code provides in
@@ -1364,8 +1420,6 @@ to get the legacy
 TodoWrite
 tool instead. See
 Task list
-and
-Migrate to Task tools
 CLAUDE_CODE_ENABLE_TELEMETRY
 Set to
 1
@@ -1640,9 +1694,7 @@ Set to
 1
 to enable
 fullscreen rendering
-, a research preview that reduces flicker and keeps memory flat in long conversations. Equivalent to the
-tui
-setting; you can also switch with
+, a research preview that reduces flicker and keeps memory flat in long conversations. You can also switch with
 /tui fullscreen
 CLAUDE_CODE_OAUTH_REFRESH_TOKEN
 OAuth refresh token for Claude.ai authentication. When set,
@@ -2748,12 +2800,36 @@ alwaysLoad: true
 MCP_TIMEOUT
 , which bounds an individual server’s connect attempt
 MCP_DISCOVERY_CACHE
-Set to
+Turns the
+MCP discovery cache
+on or off. With the cache on, a remote HTTP or SSE server you’ve used before can show the
+cached
+status
+, and Claude Code connects it on its first tool call instead of at startup. The cache is off by default unless a gradual rollout has enabled it for your account. Set to
+1
+to turn it on, or
 0
-to turn off the cross-process MCP discovery cache, so every server connects at startup instead of showing the
-connects on first use
-cached status
-and connecting on its first tool call. The cached status requires Claude Code v2.1.221 or later
+to keep it off even when the rollout has enabled it. Before v2.1.238, the cache was on by default. The
+cached
+status requires Claude Code v2.1.221 or later
+MCP_DISCOVERY_CACHE_MAX_STALE_S
+Maximum age, in seconds, of a
+discovery-cache
+entry (default: 14400, or 4 hours). At a start where the entry is older than that, Claude Code discards it and connects the server at startup, as it does with the cache off. Claude Code caps the value at 7 days. Before v2.1.238, the default was 86400, or 24 hours, and Claude Code didn’t cap the value
+MCP_DISCOVERY_CACHE_STRIKES
+At a start where a
+discovery-cache
+entry is older than
+MCP_DISCOVERY_CACHE_TTL_S
+, Claude Code refreshes it in the background. This variable sets how many refreshes in a row can fail before Claude Code discards the entry and connects the server at the next start instead (default: 1). Raise it if your network connection drops occasionally, so that one failed refresh doesn’t discard the entry. Requires Claude Code v2.1.238 or later
+MCP_DISCOVERY_CACHE_TTL_S
+Seconds for which Claude Code uses a
+discovery-cache
+entry without refreshing it (default: 900). At a start where the entry is older than that, Claude Code still uses it but refreshes it in the background. Once the entry is older than
+MCP_DISCOVERY_CACHE_MAX_STALE_S
+, Claude Code discards it instead. Claude Code caps the value at
+MCP_DISCOVERY_CACHE_MAX_STALE_S
+, which is 4 hours by default. Before v2.1.238, Claude Code didn’t cap the value
 MCP_OAUTH_CALLBACK_PORT
 Fixed port for the OAuth redirect callback, as an alternative to
 --callback-port
@@ -2979,6 +3055,16 @@ maintenance prompt
 ; Claude Code shows the usage message instead when you run
 /loop
 with no prompt
+Read or reply to
+comments on an artifact
+, unless you set
+CLAUDE_CODE_ARTIFACT_COMMENTS=1
+; for Claude to reply to sent comments on its own, also set
+CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT=1
+. Neither override helps under
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+, which
+turns artifacts off entirely
 Have Claude Code refresh the
 PR review status badge
 less often while you’re idle; Claude Code refreshes it every 60 seconds instead

@@ -25,9 +25,9 @@ Use a model alias to select model settings without remembering exact version num
 Model alias
 Behavior
 default
-Special value that clears any model override and reverts to the recommended model for your account type, or to the
-organization default model
-when an admin has set one. Not itself a model alias
+Special value that clears any model override and reverts to the
+runtime default for your account
+. Not itself a model alias
 best
 Uses Fable 5 where your organization has access to it, otherwise the latest Opus model
 fable
@@ -154,7 +154,8 @@ During session
 /model <alias|name>
 to switch immediately, or run
 /model
-with no argument to open the picker. The picker asks for confirmation when the conversation has prior output, since the next response re-reads the full history without cached context
+with no argument to open the picker. See
+when Claude Code asks you to confirm the switch
 At startup
 : launch with
 claude --model <alias|name>
@@ -165,6 +166,9 @@ Settings
 : configure permanently in your settings file using the
 model
 field
+Default for new sessions
+: set
+ANTHROPIC_DEFAULT_MODEL=<alias|name>
 As of v2.1.153,
 /model
 saves your choice as the default for new sessions by writing the
@@ -232,6 +236,8 @@ ANTHROPIC_MODEL
 still takes precedence over the restored model. As of v2.1.195, so does an
 ANTHROPIC_DEFAULT_OPUS_MODEL
 family variable.
+ANTHROPIC_DEFAULT_MODEL
+can too, under the conditions listed in its section.
 When the active model at startup comes from project or managed settings rather than your own selection, the startup header shows which settings file set it. Run
 /model
 to override; the project or managed setting reapplies on the next launch. On platforms that embed Claude Code and set
@@ -314,6 +320,57 @@ Example settings file:
 "opus"
 }
 ​
+Set a default model for new sessions
+Set
+ANTHROPIC_DEFAULT_MODEL=<alias|name>
+to choose the model your sessions start on by default. Requires Claude Code v2.1.236 or later.
+Claude Code starts a new session on the variable’s model only when none of these selects a model:
+The
+--model
+flag
+ANTHROPIC_MODEL
+A
+model
+value in any settings file, including the choice you save with
+/model
+An
+organization default model
+A choice you save with
+/model
+takes precedence over the variable on later launches too. With
+ANTHROPIC_MODEL
+set instead, Claude Code returns to that variable’s model on the next launch, whatever you saved with
+/model
+.
+Claude Code also resolves the Default option to the variable’s model, unless an organization default model applies. When the Default option resolves to the variable’s model, the Default row in the
+/model
+picker shows the label Set by ANTHROPIC_DEFAULT_MODEL.
+Claude Code ignores the variable in these cases, and the Default option resolves as if you hadn’t set it:
+You set it to
+default
+,
+inherit
+,
+opusplan
+, or
+haiku
+enforceAvailableModels
+is on
+availableModels
+or
+organization model restrictions
+exclude the model
+The model isn’t available to your account
+When a new session would start on the variable’s model, a session you resume with
+claude --resume
+,
+--continue
+, or the
+/resume
+picker starts on it too. Claude Code doesn’t restore the model saved in that session’s transcript. Otherwise Claude Code doesn’t use the variable when you
+resume a session
+.
+​
 Restrict model selection
 Enterprise administrators can use
 availableModels
@@ -345,7 +402,9 @@ flag, the
 ANTHROPIC_MODEL
 environment variable, the
 model
-setting, and the model restored when
+setting,
+ANTHROPIC_DEFAULT_MODEL
+, and the model restored when
 resuming a session
 Alias resolution
 : the
@@ -417,6 +476,8 @@ ANTHROPIC_MODEL
 model
 setting
 : Claude Code replaces the value at startup with a warning naming both the requested and substituted models, and the session starts on the default model
+ANTHROPIC_DEFAULT_MODEL
+: Claude Code ignores the variable
 Subagent or teammate override
 : Claude Code falls back to the
 subagent’s inherited model
@@ -519,15 +580,13 @@ Desktop managed settings
 The model pickers on claude.ai and in the Desktop app hide or grey out models excluded by your organization’s allowlist. The picker state is a convenience for users; enforcement happens in the session.
 ​
 Default model behavior
-The Default option in the model picker is not affected by
+On its own,
 availableModels
-unless
-enforceAvailableModels
-is also set. On its own,
-availableModels
-leaves Default available, resolving to the system’s
+leaves the Default option on the system’s
 runtime default
-for the account. If that default is a model you intend to restrict, set
+for the account until you also set
+enforceAvailableModels
+. If that default is a model you intend to restrict, set
 enforceAvailableModels
 as well.
 An empty
@@ -569,9 +628,9 @@ keyword in
 fallback model chains
 , and the fallback used when an excluded selection is dropped.
 enforceAvailableModels
-has no effect when
+remaps the Default option only when
 availableModels
-is unset or empty: with
+is non-empty. With
 availableModels: []
 , the Default model for the account type remains usable, so the setting cannot lock users out of every model. When
 availableModels
@@ -610,7 +669,7 @@ ANTHROPIC_DEFAULT_OPUS_MODEL
 ANTHROPIC_DEFAULT_HAIKU_MODEL
 /
 ANTHROPIC_DEFAULT_FABLE_MODEL
-: control what the Default option and the
+: control what the
 sonnet
 ,
 opus
@@ -618,7 +677,9 @@ opus
 haiku
 , and
 fable
-aliases resolve to
+aliases resolve to, and which version the
+account-type default
+uses
 This example starts users on Sonnet 4.5, limits the picker to Sonnet and Haiku, and ensures Default resolves to a model on the allowlist rather than the tier default:
 {
 "model"
@@ -646,10 +707,10 @@ Without
 enforceAvailableModels
 or the
 env
-block, a user who selects Default in the picker would get the latest release for their tier, bypassing the version pin in
+block, a user who selects Default in the picker gets the
+runtime default
+rather than the version pinned in
 model
-and
-availableModels
 . The two settings cover different scopes:
 enforceAvailableModels
 makes Default obey the allowlist, while the
@@ -749,13 +810,11 @@ availableModels
 instead.
 ​
 Organization default model
-Organization admins on Claude Enterprise plans can set a default model for Claude Code members from the claude.ai admin console, for the whole organization or per custom role. When one is set, the Default option resolves to that model instead of the
-account-type default
-. Requires Claude Code v2.1.196 or later.
+Organization admins on Claude Enterprise plans can set a default model for Claude Code members from the claude.ai admin console, for the whole organization or per custom role. When one is set, the Default option resolves to that model. Requires Claude Code v2.1.196 or later.
 The Default row in the
 /model
 picker shows the organization default’s name with the label Org default. The label reads Org default whether the admin set the default for the whole organization or for your role. A role default covers members of that custom role and takes precedence over the organization-wide default; when several of your roles set different defaults, the most capable model applies.
-The organization default is a starting point, not a restriction, and any other model selection takes precedence over it:
+The organization default is a starting point, not a restriction. These selections take precedence over it:
 the
 --model
 flag and the
@@ -797,9 +856,9 @@ model
 key from your user settings once, so the new default applies. It changes nothing else in the file, and a model you save with
 /model
 after that launch is kept.
-The organization default passes through the same restriction checks as any other Default model before it is adopted:
+The organization default passes through these restriction checks before it is adopted:
 availableModels
-on its own never constrains the Default option, so an organization default outside the allowlist still applies. When
+on its own doesn’t apply to the organization default, so an organization default outside the allowlist still applies. When
 enforceAvailableModels
 is also set, an organization default outside the allowlist is remapped to the first allowlist entry, like any other Default
 an organization default that
@@ -807,7 +866,8 @@ organization model restrictions
 deny for your account is replaced by the newest allowed model in its family, or a lower-cost family when every version of it is restricted
 an organization default that isn’t available to your account at all, such as Fable 5 under
 zero data retention
-, is skipped, and the Default option resolves to the account-type default
+, is skipped, and the Default option resolves as it would
+without an organization default
 As of v2.1.199, when the organization default is a different model family from your account type’s usual default, the
 /model
 picker keeps a separate row for that usual family, so you can still switch to it for a session. In v2.1.196 through v2.1.198 that row is missing from the picker.
@@ -867,6 +927,10 @@ organization default model
 ,
 default
 resolves to that model instead of the account-type default above. Requires Claude Code v2.1.196 or later.
+default
+can also resolve to the model you set with
+ANTHROPIC_DEFAULT_MODEL
+, under the conditions listed in its section.
 When managed settings
 enforce the allowlist for the Default model
 and the account-type default is not in
@@ -874,7 +938,7 @@ availableModels
 ,
 default
 resolves to the enforced Default instead of the account-type default above. When both apply, the organization default replaces the account-type default first and enforcement then applies to it: an allowlisted organization default is kept, while one outside the list resolves to the enforced Default.
-Fable 5 is not the default model on any account type. Sessions use Fable 5 only after you choose it, with
+Fable 5 is not the default model on any account type. Sessions use Fable 5 only after you choose it, for example with
 /model fable
 , a
 model
@@ -1588,7 +1652,9 @@ Merge behavior
 .
 ​
 Environment variables
-Use the following environment variables to control the model names that the aliases map to. Each value must be a full model name, or the equivalent identifier for your API provider.
+Use the following environment variables to control the model names that the aliases map to. Each value must be a full model name, or the equivalent identifier for your API provider. To choose the model your sessions start on, set
+ANTHROPIC_DEFAULT_MODEL
+, which this table omits.
 Environment variable
 Description
 ANTHROPIC_DEFAULT_FABLE_MODEL
@@ -1655,7 +1721,7 @@ sonnet
 , and
 haiku
 that resolve to a built-in default model ID for each provider. That default can lag the newest Anthropic release, and the model it points to may not yet be enabled in a user’s account. When the default is unavailable, Amazon Bedrock and Google Cloud’s Agent Platform users see a notice and the session falls back to an earlier version of the default model, or to the default Sonnet model when the default is an Opus model and no Opus version is available. Microsoft Foundry users see errors instead, because Microsoft Foundry has no equivalent startup check.
-On Amazon Bedrock and Google Cloud’s Agent Platform, a user who starts the session on a specific Sonnet or Opus version, with
+On Amazon Bedrock and Google Cloud’s Agent Platform, a user who starts the session on a specific Sonnet or Opus version, for example with
 --model
 ,
 ANTHROPIC_MODEL

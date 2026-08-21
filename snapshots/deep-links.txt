@@ -30,15 +30,9 @@ You read the prompt, edit it if you want, and press Enter to send it.
 The link itself can be hosted anywhere, but the session always opens locally on the computer where you clicked. See
 Registration and supported platforms
 for which terminal emulator opens on each operating system.
-The platform that displays the link must allow custom URL schemes. GitHub-rendered Markdown allows
-http
-and
-https
-but strips schemes like
-claude-cli://
-in READMEs, issues, pull requests, and wikis. Only the link text shows, with no link behind it and the URL hidden. See
-Troubleshooting
-for a workaround.
+The platform that displays the link must allow custom URL schemes. For what GitHub does with them and the workaround, see
+The link renders as plain text instead of being clickable
+.
 ​
 What a launched session shows
 A deep link never executes anything on its own. The link only chooses a directory and fills the prompt box. If you click a link from a page you do not trust, the prompt is still inert: nothing reaches the model until you read what was filled in and press Enter.

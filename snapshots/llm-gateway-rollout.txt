@@ -413,7 +413,7 @@ Do not include
 forceLoginMethod
 or
 forceLoginOrgUUID
-in managed settings alongside a gateway credential. On Claude Code v2.1.146 and later, either key, with any value, blocks
+in managed settings alongside a gateway credential. Either key, with any value, blocks
 ANTHROPIC_API_KEY
 ,
 ANTHROPIC_AUTH_TOKEN

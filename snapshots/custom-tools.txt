@@ -2697,12 +2697,6 @@ Connect MCP servers
 To control which tools run automatically versus requiring approval, see
 Configure permissions
 .
-​
-Related documentation
-TypeScript SDK Reference
-Python SDK Reference
-MCP Documentation
-SDK Overview
 Was this page helpful?
 Yes
 No

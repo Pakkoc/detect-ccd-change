@@ -230,7 +230,7 @@ ANTHROPIC_API_KEY
 ANTHROPIC_AUTH_TOKEN
 , or
 apiKeyHelper
-: blocked at startup, since organization membership can’t be verified for an environment credential. Before v2.1.146, the pin applied only to the login flow and didn’t block API-key credentials
+: blocked at startup, since organization membership can’t be verified for an environment credential
 Cloud provider sessions such as Amazon Bedrock
 : not blocked, because they authenticate against your cloud provider. Restrict those through your cloud IAM policies
 Anthropic profile or federation credentials

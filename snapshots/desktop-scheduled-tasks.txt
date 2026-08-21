@@ -65,7 +65,10 @@ parallel sessions
 work.
 ​
 Create a scheduled task
-Click
+In the
+Code
+tab
+, click
 Routines
 in the sidebar, then click
 New routine
@@ -139,7 +142,9 @@ requiresUserInteraction
 prompt on every call and don’t offer an always-allow option. Runs that call these tools stall each time.
 ​
 Manage scheduled tasks
-Click a task in the
+In the
+Code
+tab, click a task in the
 Routines
 list to open its detail page. From here you can:
 Run now

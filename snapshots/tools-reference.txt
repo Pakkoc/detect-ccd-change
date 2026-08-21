@@ -233,7 +233,11 @@ covers which sessions Claude can reach and each case’s requirements. A receive
 summary
 input, typically 5-10 words, that Claude Code shows as a one-line preview. When Claude omits it on a
 plain-text message
-, Claude Code uses the first line of the message as the summary. Claude Code truncates a summary longer than 200 characters with an ellipsis
+, Claude Code uses the first line of the message as the summary. Claude Code truncates a summary longer than 200 characters with an ellipsis. With the
+notify_when_idle
+input, Claude can ask one of your other sessions on this machine to
+send one notice when it next goes idle or exits
+. Requires Claude Code v2.1.236 or later in both sessions
 No
 SendUserFile
 Sends files from the session to you with an optional caption, so a generated report, diagram, screenshot, or built artifact reaches your device instead of only being mentioned in the transcript. As of v2.1.196, the optional

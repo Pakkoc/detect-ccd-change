@@ -15,7 +15,9 @@ Approach
 Next turn starts when
 Stops when
 /goal
-The previous turn finishes
+The previous turn finishes, or an
+idle check-in
+comes due while background work keeps the goal waiting
 A model confirms the condition is met or judges it impossible, or a turn fails on
 an error you have to fix
 , or you run
@@ -189,9 +191,16 @@ After any other failure, including transient errors such as rate limits and over
 ​
 Background work defers evaluation
 If a subagent or a background shell command is still running when a turn ends, Claude Code skips the evaluation for that turn. It evaluates at the end of the next turn that finishes with no background work running. When the background work finishes, Claude Code delivers the result to Claude as a new turn, so you don’t have to prompt.
-When a turn ends and background work has kept the goal waiting for 30 minutes or more, Claude Code asks Claude to check on that work. Claude Code lists the running tasks and asks Claude to read their output, keep waiting if they’re progressing, and fix or stop any that are stuck. After each further 30 minutes of waiting, Claude Code asks again at the next turn end. To change the interval, set
+Once background work has kept the goal waiting for 30 minutes, a check-in is due. In the check-in, Claude Code lists the running tasks and asks Claude to read their output, keep waiting if they’re progressing, and fix or stop any that are stuck. After each check-in, the 30 minutes start again. Claude Code delivers a due check-in, the first one included, in one of two ways:
+When a turn ends
+: Claude Code delivers the check-in at the end of the next turn that finishes with the work still running. In a non-interactive session, such as one started with
+-p
+, this is the only way Claude Code delivers check-ins.
+While the session is idle
+: in an interactive session, Claude Code also starts a turn on its own to deliver the check-in instead of waiting for your next prompt. After the first check-in, Claude Code waits twice as long before each later idle check-in, up to four times the interval: with the default, 1 hour after the first check-in, then every 2 hours. If the background work has stopped without reporting a result, Claude Code asks Claude to continue toward the goal. Idle check-ins require Claude Code v2.1.236 or later.
+To change the intervals, set
 CLAUDE_CODE_GOAL_CHECKIN_MINUTES
-; set it to
+. Claude Code uses your value in place of the 30-minute interval and scales the idle intervals with it. Set it to
 0
 to turn check-ins off. Check-ins require Claude Code v2.1.234 or later.
 ​
