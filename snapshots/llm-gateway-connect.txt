@@ -1014,7 +1014,9 @@ API returned an empty or malformed response (HTTP 200)
 The gateway or an intermediate proxy returned a non-API response, often an HTML error or login page
 Test with the
 curl request above
-; fix the gateway route that returns non-JSON
+; fix the gateway route that answers with something other than a Claude API response.
+The error reference
+explains the detail the message reports
 400
 errors naming
 context_management
@@ -1053,14 +1055,14 @@ errors stating a context or token limit in the gateway’s own words, such as
 ContextWindowExceededError
 or
 prompt token count of N exceeds the limit of M
-The gateway enforces a smaller context than the model’s native window and rewrites the upstream error, so the automatic compact-and-retry, which matches Anthropic’s
-prompt is too long
-wording, doesn’t fire
+The gateway enforces a smaller context than the model’s native window and rewrites the upstream error, so Claude Code doesn’t recognize it as a
+too-long error
+and doesn’t compact and retry automatically
 Run
 /compact
 to recover the session. To prevent it, set
 CLAUDE_CODE_AUTO_COMPACT_WINDOW
-to the gateway’s limit; the value is clamped to at least 100,000 tokens and at most the model’s context window, so a gateway limit below 100,000 can’t be matched and
+to the gateway’s limit; Claude Code clamps the value to at least 100,000 tokens and at most the model’s context window, so you can’t match a gateway limit below 100,000, and
 /compact
 remains the recovery there. Also set
 CLAUDE_CODE_MAX_OUTPUT_TOKENS

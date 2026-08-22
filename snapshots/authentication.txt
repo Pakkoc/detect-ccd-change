@@ -174,9 +174,9 @@ claude setup-token
 gateway
 sign-in for organizations that route through a cloud gateway. On Claude Code v2.1.212 or later, every path applies
 forceLoginMethod
-; before v2.1.212, only terminal logins applied either key. In the interactive
+; before v2.1.212, only terminal logins applied either key. On the terminal’s interactive login screen, reached by
 /login
-flow, Claude Code pre-selects a
+or first-run onboarding, Claude Code pre-selects a
 claudeai
 or
 console

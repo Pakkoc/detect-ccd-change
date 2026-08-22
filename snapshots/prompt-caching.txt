@@ -62,16 +62,41 @@ ANTHROPIC_BASE_URL
 or
 LLM gateway
 : the cache lives wherever your requests are forwarded, and whether caching works depends on the gateway
-System context that Claude Code appends mid-conversation, such as file-change notices, is cached on Amazon Bedrock and its
+Claude Code also appends system context mid-conversation, such as file-change notices. Whether that block is cached depends on how your requests reach the provider.
+At the provider’s own endpoint, Amazon Bedrock and its
 Mantle endpoint
-, Google Cloud’s Agent Platform, and Microsoft Foundry the same way it is on the Claude API. Before v2.1.211, these providers billed that appended system context as uncached input tokens on every request.
-When your requests pass through an
+, Google Cloud’s Agent Platform, and Microsoft Foundry cache the block the same way the Claude API does. For Bedrock, Mantle, and Agent Platform, that means their base-URL variables are unset. For Foundry, it means
+ANTHROPIC_FOUNDRY_BASE_URL
+is unset or points at your resource’s
+services.ai.azure.com
+host, the standard
+Microsoft Foundry setup
+. Before v2.1.211, these providers billed the block as uncached input tokens on every request.
+Claude Code doesn’t mark the block for caching, so it shows up as uncached input on every request, in any of these setups:
+ANTHROPIC_BEDROCK_BASE_URL
+,
+ANTHROPIC_VERTEX_BASE_URL
+, or
+ANTHROPIC_BEDROCK_MANTLE_BASE_URL
+set to any value, even the provider’s own endpoint
+ANTHROPIC_FOUNDRY_BASE_URL
+pointing at a host outside
+services.ai.azure.com
+, such as a gateway
+ANTHROPIC_AWS_BASE_URL
+set to any value on
+Claude Platform on AWS
+, including a custom-region endpoint
+An
 LLM gateway
 or a custom
 ANTHROPIC_BASE_URL
-, Claude Code marks that appended system context for caching the same way, and whether the cache takes effect depends on the gateway. If the gateway rejects the
-cache breakpoint
-on that block, Claude Code retries the request without it and leaves that block uncached for the rest of the conversation.
+A
+Claude apps gateway
+session
+Claude Code keeps the conversation’s own
+cache breakpoints
+in place, so a gateway that forwards them still caches your conversation. Before v2.1.237, Claude Code marked the block for caching through gateways too, and a gateway that silently removed the marker left the entire conversation billed as uncached input on every turn.
 For what each provider stores and processes, see
 data usage
 . Wherever the cache lives, entries expire after a period of inactivity, and
@@ -233,11 +258,13 @@ or
 WebFetch
 as a
 deny rule
-removes that tool from Claude’s context entirely. Built-in tool definitions load into the system prompt layer, so adding or removing one of these rules mid-session invalidates the cache. Claude Code applies the change on the next request, even one in the middle of a turn, whether you add the rule through
+removes that tool from Claude’s context entirely. Claude Code loads built-in tool definitions into the system prompt layer, so adding or removing one of these rules mid-session invalidates the cache. Claude Code applies the change on the next request, whether you add the rule through
 /permissions
 or by
 editing a settings file directly
-.
+. That includes a rule you add through
+/permissions
+in the middle of a turn.
 Only a deny rule that matches in the tool-name position has this effect: a bare tool name, the equivalent
 Bash(*)
 form, or a

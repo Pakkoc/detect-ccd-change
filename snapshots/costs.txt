@@ -339,7 +339,7 @@ subagent configuration
 Reduce MCP server overhead
 MCP tool definitions are
 deferred by default
-, so only tool names enter context until Claude uses a specific tool. Run
+, so only tool names and server instructions enter context until Claude uses a specific tool. Run
 /context
 to see what’s consuming space.
 Prefer CLI tools when available

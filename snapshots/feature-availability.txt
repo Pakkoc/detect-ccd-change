@@ -168,9 +168,9 @@ Advisor
 ✗
 ✗
 Cross-session messaging
-✓ (macOS and Linux)
+✓
 6
-✓ (macOS and Linux)
+✓
 6
 ✗
 ✗
@@ -271,7 +271,7 @@ Dashboard and API only.
 Contribution metrics
 requires a claude.ai Team or Enterprise organization.
 6
-Requires Claude Code v2.1.224 or later. WSL 2 counts as Linux; native Windows isn’t supported. With API key authentication, same-machine messaging only. Claude can find your
+Requires Claude Code v2.1.224 or later on macOS and Linux, including Linux inside WSL 2. On native Windows, requires Claude Code v2.1.234 or later. With API key authentication, same-machine messaging only. Claude can find your
 Claude Code on the web
 sessions and your sessions on other machines only from a session that is connected to
 Remote Control

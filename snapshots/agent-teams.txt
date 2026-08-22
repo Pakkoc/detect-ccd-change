@@ -8,7 +8,7 @@ around session resumption, task coordination, and shutdown behavior.
 Agent teams let you coordinate multiple Claude Code instances working together. One session acts as the team lead, coordinating work, assigning tasks, and synthesizing results. Teammates work independently, each in its own context window, and communicate directly with each other.
 Unlike
 subagents
-, which run within a single session and can only report back to the main agent, you can also interact with individual teammates directly without going through the lead.
+, which run within a single session, you can also interact with individual teammates directly without going through the lead.
 This page describes agent teams as of v2.1.178. With
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 set, spawning a teammate no longer needs a setup step, and cleanup happens automatically when the session exits. Before v2.1.178, you asked Claude to create and name a team first, and Claude used the
@@ -47,17 +47,18 @@ are more effective.
 Compare with subagents
 Both agent teams and
 subagents
-let you parallelize work, but they operate differently. Choose based on whether your workers need to communicate with each other. For separate sessions that pass messages to each other without a team, see
+let you parallelize work, but they operate differently. For separate sessions that pass messages to each other without a team, see
 cross-session messaging
 .
-Subagents only report results back to the main agent and never talk to each other. In agent teams, teammates share a task list, claim work, and communicate directly with each other.
+Subagents report results back to the main agent. In agent teams, teammates share a task list, claim work, and communicate directly with each other.
 Subagents
 Agent teams
 Context
 Own context window; results return to the caller
 Own context window; fully independent
 Communication
-Report results back to the main agent only
+Return a result to the caller. Subagents that Claude named when it spawned them can also
+message each other
 Teammates message each other directly
 Coordination
 Main agent manages all work
@@ -632,10 +633,6 @@ Manual parallel sessions
 :
 Git worktrees
 let you run multiple Claude Code sessions yourself without automated team coordination
-Compare approaches
-: see the
-subagent vs agent team
-comparison for a side-by-side breakdown
 Was this page helpful?
 Yes
 No

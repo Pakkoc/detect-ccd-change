@@ -643,7 +643,9 @@ Ctrl+R
 .
 The automatic name is a short label written by a
 Haiku-class model
-. A name the session gets later also appears on its row, including the name Claude derives when you
+. A name the session gets later also appears on its row, including the
+generated title
+the session gets when you
 accept a plan
 in that session.
 Paste an image into the prompt to include a screenshot or diagram with the task.
@@ -1466,10 +1468,11 @@ When set
 sessionId
 is the full session UUID, usable with
 claude --resume
-. An interactive session you never named carries a default
+. An interactive session’s
 name
-built from its working directory’s name plus a two-character suffix, such as
-my-app-3f
+is its
+default display name
+until you name the session or accept a plan in it
 ​
 How background sessions are hosted
 Claude Code treats every session listed in agent view as a background session, whether or not you’re currently attached to it. By contrast, a session started by running

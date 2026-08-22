@@ -357,8 +357,8 @@ Create and distribute a plugin marketplace
 : build the marketplace that hosts your plugins
 Recommend your plugin from your CLI
 : prompt users from your own CLI instead of from Claude Code’s session signals
-Settings
-: full reference for
+Settings reference
+:
 pluginSuggestionMarketplaces
 and
 extraKnownMarketplaces

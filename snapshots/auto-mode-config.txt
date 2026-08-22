@@ -370,9 +370,11 @@ to print the built-in rules, copy them into your settings file, then review each
 Route all shell commands through the classifier
 By default, narrow Bash and PowerShell allow rules such as
 Bash(npm test)
-carry over into auto mode and resolve before the classifier runs. Auto mode suspends only the broad rules that grant arbitrary code execution, such as
+stay in effect in auto mode, and Claude Code resolves them before the classifier runs. Claude Code suspends only the broad rules that grant arbitrary code execution, such as
 Bash(*)
-or wildcarded interpreters. This means a narrow rule can still let a destructive argument through without the classifier seeing it, for example a script path or flag the rule’s prefix didn’t anticipate.
+or wildcarded interpreters, together with every rule that names
+Monitor
+, because Monitor commands run through the shell. This means a narrow rule can still let a destructive argument through without the classifier seeing it, for example a script path or flag the rule’s prefix didn’t anticipate.
 Set
 autoMode.classifyAllShell
 to
@@ -535,10 +537,9 @@ autoMode
 configuration across your organization
 Permissions
 : allow, ask, and deny rules that apply before the classifier runs
-Settings
-: the full settings reference, including the
+Settings reference
+: every settings key, including
 autoMode
-key
 Was this page helpful?
 Yes
 No

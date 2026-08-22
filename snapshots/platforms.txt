@@ -37,11 +37,13 @@ Dispatch
 to Desktop on Pro and Max
 The CLI is the most complete surface for terminal-native work: scripting and the Agent SDK are CLI-only. Third-party providers also work in
 VS Code
-. Enterprise
+and in
+JetBrains
+, which runs the CLI in your IDE’s terminal. Enterprise
 Desktop
 deployments support Google Cloud’s Agent Platform, and Desktop supports
 gateway providers
-; for Amazon Bedrock or Microsoft Foundry, use the CLI or VS Code, or
+; for Amazon Bedrock or Microsoft Foundry, use the CLI or an IDE extension, or
 Claude Desktop on 3P
 , which runs the Code tab on those providers. Desktop and the IDE extensions trade some CLI-only features for visual review and tighter editor integration. The web runs in the cloud, so tasks keep going after you disconnect. Mobile is a thin client into those same cloud sessions or into a local session via Remote Control, and can send tasks to Desktop with Dispatch.
 You can mix surfaces on the same project. Configuration, project memory, and MCP servers are shared across the local surfaces.

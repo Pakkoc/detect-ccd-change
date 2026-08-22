@@ -955,11 +955,16 @@ permission rules as Bash
 allow
 and
 deny
-patterns you have set for Bash apply here too. The
-WebSocket source
-has its own approval prompt, which the classifier decides in
+patterns you have set for Bash apply here too. While
 auto mode
-.
+is active, Claude Code sets aside allow rules that name
+Monitor
+itself, along with the other
+broad allow rules it drops
+, so the classifier reviews Monitor commands the same way it reviews Bash commands.
+The
+WebSocket source
+has its own approval prompt, which the classifier also decides in auto mode.
 The tool is not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. It is also not available when
 DISABLE_TELEMETRY
 or
@@ -1052,7 +1057,11 @@ The PowerShell tool lets Claude run PowerShell commands natively. On Windows, th
 Windows without Git Bash
 : the tool is enabled automatically.
 Windows with Git Bash installed
-: the tool is rolling out progressively.
+: the tool is on by default for claude.ai and Console accounts; set
+CLAUDE_CODE_USE_POWERSHELL_TOOL=1
+to enable it in Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry sessions, or
+0
+to turn it off.
 Linux, macOS, and WSL
 : the tool is opt-in.
 Your
@@ -1084,7 +1093,7 @@ settings.json
 }
 On Windows, set the variable to
 0
-to opt out of the rollout. On Linux, macOS, and WSL, the tool requires PowerShell 7 or later: install
+to turn the tool off. On Linux, macOS, and WSL, the tool requires PowerShell 7 or later: install
 pwsh
 and ensure it is on your
 PATH

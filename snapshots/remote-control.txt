@@ -49,13 +49,20 @@ exits with an error, while
 claude --remote-control
 still starts an interactive session and shows a Remote Control failure notification shortly after launch.
 API endpoint
-: not available on Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. As of v2.1.196, Remote Control is also disabled when
+: not available in any of these configurations:
+You use Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
+You point
 ANTHROPIC_BASE_URL
-points at a host other than
+at a host other than
 api.anthropic.com
 , such as an
 LLM gateway
-or proxy. Unset the variable to use Remote Control.
+or proxy. Unset the variable to use Remote Control. Before v2.1.196, Claude Code allowed Remote Control with a custom
+ANTHROPIC_BASE_URL
+.
+You sign in through an enterprise
+Claude apps gateway
+.
 Feature-flag evaluation
 :
 DISABLE_TELEMETRY
@@ -283,7 +290,7 @@ or the Claude app
 and find the session by name in the session list. In the Claude mobile app, tap
 Code
 in the navigation to reach the session list. Remote Control sessions show a computer icon with a green status dot when online.
-When you connect, the device shows any subagents and workflows the session already has running in the background.
+When you connect, the device shows any subagents and workflows the session already has running in the background. Stop one of them from the device, and Claude Code stops that task on your machine.
 The remote session title is chosen in this order:
 The name you passed to
 --name
@@ -344,6 +351,20 @@ Message sessions on other machines
 covers the delivery rules and
 Control inbound messages
 covers the inbound controls. Requires Claude Code v2.1.224 or later.
+Prompts you send mid-turn
+: when you send a prompt from a connected device before the current turn ends, Claude Code queues it and keeps it in the device’s transcript after that turn finishes.
+Model
+: when you pick a
+model
+from a connected device, Claude Code runs the session on that model. The terminal’s
+/model
+picker,
+/status
+, and
+/config
+show that model. A pick from the device’s model control lasts for the current session only.
+/model <name>
+sent from the device also sets your default for new sessions, the same as typing it in the terminal.
 Effort level
 : when you set the
 effort level
@@ -582,11 +603,17 @@ Local process must keep running
 claude
 process, the session goes offline until you
 bring it back
-. To keep a session running on a remote machine after you disconnect from SSH, start it inside
+. Unless Claude is in the middle of a task, claude.ai and the Claude app show the session as offline within seconds after the process exits. To keep a session running on a remote machine after you disconnect from SSH, start it inside
 tmux
 or
 screen
 .
+Crashed sessions in server mode
+: if a session served by
+claude remote-control
+crashes, send it a message from a connected device. Claude Code serves it again. You don’t have to restart the server.
+HTTP 403 refusals on a connected session
+: once an interactive session is connected, Claude Code keeps retrying for up to three minutes when something between your machine and Anthropic’s servers answers with HTTP 403, as can happen after a VPN or network change. If the refusals last longer, Claude Code disconnects, and the reason names what refused: a network edge, or a proxy, VPN, or firewall on your own network.
 Extended network outage
 : if your machine is awake but can’t reach the network, what you do next depends on the mode:
 Server mode
@@ -606,9 +633,11 @@ to reconnect. Claude Code shows this message only when the session’s presence 
 Forwarded dialogs expire
 : Claude Code keeps permission prompts and
 AskUserQuestion
-questions open until you answer them. When Claude Code forwards another kind of dialog to the remote session, such as the model-choice prompt shown after a safety refusal, it waits five minutes by default, then closes the dialog and continues with the dialog’s no-action default. Set
+questions open until you answer them. When Claude Code forwards another kind of dialog to the remote session, such as the model-choice prompt shown after a safety refusal, it waits five minutes by default, then closes the dialog and continues with the dialog’s no-action default. The mid-session
+Fable 5 usage-credits consent prompt
+follows the same deadline but isn’t forwarded: Claude Code shows it only in the terminal where the session runs, and if nobody has answered there by the deadline, it ends the turn without sending the request. Your model selection is unchanged, and Claude Code asks again on your next message. Set
 dialogExpiry
-to adjust or disable the deadline. Requires Claude Code v2.1.224 or later. The approval dialog for a held cross-session message uses the same deadline.
+to adjust or disable the deadline. Requires Claude Code v2.1.224 or later. Claude Code applies the same deadline to the approval dialog for a held cross-session message.
 The held-message expiry rules
 cover the cases where Claude Code keeps the dialog open past it.
 Some commands are local-only

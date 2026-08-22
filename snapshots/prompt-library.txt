@@ -15,7 +15,9 @@ Describe the outcome, not the steps.
 Say what you want and let Claude find the files. The prompt below works without naming a single file path.
 add rate limiting to the public API and make sure existing tests still pass
 Give it a way to check its own work.
-Ask for run, test, compare, or verify in the same prompt so Claude iterates instead of stopping after one attempt.
+Ask for run, test, compare, or verify in the same prompt so Claude iterates instead of stopping after one attempt. To check the finished change against the running app, run
+/verify
+.
 write the migration, run it against the dev database, and confirm the schema matches
 Point at a reference.
 Name an existing file, test, or pattern to match so the new code is consistent with what you already have.

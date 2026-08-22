@@ -3102,7 +3102,15 @@ skip_reason
 managed settings
 set
 cleanupPeriodDays
-, the managed value pins the retention period and the sweep runs even when a settings file in a lower-priority scope is broken or invalid; a managed settings file that itself can’t be read or parsed still pauses the sweep. The deletion counter attributes are present only when
+, the managed value pins the retention period and the sweep runs even when a settings file in a lower-priority scope is broken or invalid. When
+managed-settings.json
+itself can’t be read or parsed, Claude Code still pauses the sweep unless the
+managed source it selects
+supplies
+cleanupPeriodDays
+from elsewhere, such as server-managed settings or a
+managed-settings.d/
+drop-in beside the broken file. The deletion counter attributes are present only when
 result
 is
 "complete"

@@ -370,8 +370,8 @@ Customize keyboard shortcuts
 : rebind
 voice:pushToTalk
 and other CLI keyboard actions
-Configure settings
-: full reference for
+Settings reference
+: the
 voice
 ,
 language

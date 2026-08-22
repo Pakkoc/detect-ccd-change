@@ -285,7 +285,7 @@ You can also start the install from the command line:
 install
 commit-commands@claude-code-plugins
 See
-Configuration scopes
+Settings files
 to learn more about scopes.
 4
 Use your new plugin
@@ -759,7 +759,8 @@ Select
 Enable auto-update
 or
 Disable auto-update
-Official Anthropic marketplaces have auto-update enabled by default. Third-party and local development marketplaces have auto-update disabled by default.
+claude-plugins-official
+and most other official Anthropic marketplaces have auto-update enabled by default. Third-party and local development marketplaces have auto-update disabled by default.
 Administrators can also set
 "autoUpdate": true
 on each

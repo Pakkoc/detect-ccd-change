@@ -23,11 +23,12 @@ MCP
 connects Claude to external services and tools
 Subagents
 run their own loops in isolated context, returning summaries
-Agent teams
-coordinate multiple independent sessions with peer-to-peer messaging, plus a shared task list for
-agents that have the Task tools
+Dynamic workflows
+run many subagents from a script Claude writes, returning one result
+Cross-session messaging
+lets Claude pass a message from one of your sessions to another
 Hooks
-run your script, HTTP request, prompt, or subagent when Claude Code reaches a lifecycle event
+run your script, HTTP request, MCP tool call, prompt, or subagent when Claude Code reaches a lifecycle event
 Plugins
 and
 marketplaces
@@ -56,10 +57,14 @@ Subagent
 Isolated execution context that returns summarized results
 Context isolation, parallel tasks, specialized workers
 Research task that reads many files but returns only key findings
-Agent teams
-Coordinate multiple independent Claude Code sessions
-Parallel research, new feature development, debugging with competing hypotheses
-Spawn reviewers to check security, performance, and tests simultaneously
+Dynamic workflow
+Script Claude writes that runs many subagents in the background
+Work that outgrows a handful of subagents, or findings you want cross-checked
+Audit a whole codebase, with a second set of agents verifying each finding
+Cross-session messaging
+Claude delivers a message from one of your sessions to another
+Sessions you run yourself that need each other’s findings mid-task
+One session warns another that a change it made breaks what the other is building on
 Code intelligence
 Language-server navigation and diagnostics
 Typed languages, large codebases where grep is slow or imprecise
@@ -69,7 +74,7 @@ Connect to external services
 External data or actions
 Query your database, post to Slack, control a browser
 Hook
-Script, HTTP request, prompt, or subagent triggered by events
+Script, HTTP request, MCP tool call, prompt, or subagent triggered by events
 Automation that must run on every matching event
 Run ESLint after every file edit
 Artifact
@@ -121,7 +126,7 @@ on the blog. Here’s how to tell them apart.
 Skill vs Subagent
 CLAUDE.md vs Skill
 CLAUDE.md vs Rules vs Skills
-Subagent vs Agent team
+Subagent vs Dynamic workflow
 MCP vs Skill
 Hook vs Skill
 Skills and subagents solve different problems:
@@ -218,41 +223,27 @@ Use skills
 for content Claude only needs sometimes, like API documentation or a deployment checklist you trigger with
 /<name>
 .
-Both parallelize work, but they’re architecturally different:
+Both do work outside your main conversation. With subagents, Claude decides turn by turn what runs next. In a workflow, the script decides:
 Subagents
-run inside your session and report results back to your main context
-Agent teams
-are independent Claude Code sessions that communicate with each other
-Aspect
-Subagent
-Agent team
-Context
-Own context window; results return to the caller
-Own context window; fully independent
-Communication
-Reports results back to the main agent only
-Teammates message each other directly
-Coordination
-Main agent manages all work
-Self-coordination through messages, plus a shared task list for
-agents that have the Task tools
-Best for
-Focused tasks where only the result matters
-Complex work requiring discussion and collaboration
-Token cost
-Lower: results summarized back to main context
-Higher: each teammate is a separate Claude instance
+are workers Claude spawns, each returning a summary to the conversation that spawned it
+Dynamic workflows
+are scripts Claude writes that run many subagents in the background and return one result
 Use a subagent
-when you need a quick, focused worker: research a question, verify a claim, review a file. The subagent does the work and returns a summary. Your main conversation stays clean.
-Use an agent team
-when teammates need to share findings, challenge each other, and coordinate independently. Agent teams are best for research with competing hypotheses, parallel code review, and new feature development where each teammate owns a separate piece.
-Transition point:
-If you’re running parallel subagents but hitting context limits, or if your subagents need to communicate with each other, agent teams are the natural next step. For separate sessions that pass messages to each other without a team, see
+when you need a quick, focused worker: research a question, verify a claim, review a file. The subagent does the work and returns a summary, so your main conversation stays clean. Subagents that Claude named when it spawned them can also
+message each other
+.
+Use a dynamic workflow
+when a job
+outgrows a handful of subagents
+, or when you want the findings cross-checked before you see them, such as a codebase-wide audit, a large migration, or a plan drafted from several angles. To start one,
+ask for a workflow in your prompt
+.
+To pass a finding from one of your sessions to another
+, ask the first session’s Claude to send it. Claude delivers it with
 cross-session messaging
 .
-Agent teams are experimental and disabled by default. See
-agent teams
-for setup and current limitations.
+Run agents in parallel
+compares the other ways to run more than one Claude at once, including sessions you hand off and check back on later.
 MCP connects Claude to external services. Skills extend what Claude knows, including how to use those services effectively.
 Aspect
 MCP
@@ -280,7 +271,7 @@ Aspect
 Hook
 Skill
 Runs
-A shell command, HTTP request, LLM prompt, or subagent
+A shell command, HTTP request, MCP tool call, LLM prompt, or subagent
 Instructions Claude reads and follows
 Triggered by
 Lifecycle events
@@ -422,7 +413,11 @@ Inheritance:
 Claude reads CLAUDE.md files from your working directory up to the root, and discovers nested ones in subdirectories as it accesses those files. See
 How CLAUDE.md files load
 for details.
-Keep CLAUDE.md under 200 lines. Move reference material to skills, which load on-demand.
+Keep CLAUDE.md under 200 lines. Move reference material to skills, which load on demand. To get
+trim proposals for a checked-in CLAUDE.md
+, run
+/doctor
+.
 Skills are extra capabilities in Claude’s toolkit. They can be reference material (like an API style guide) or invocable workflows you trigger with
 /<name>
 (like
@@ -435,7 +430,7 @@ like
 /batch
 , and
 /debug
-that work out of the box. You can also create your own. Claude uses skills when appropriate, or you can invoke one directly.
+that work out of the box. You can also create your own.
 When:
 Depends on the skill’s configuration. By default, descriptions load at session start and full content loads when used. For user-only skills (
 disable-model-invocation: true
@@ -462,13 +457,15 @@ for skills with side effects. This saves context and ensures only you trigger th
 When:
 Session start.
 What loads:
-Tool names from connected servers. Full JSON schemas stay deferred until Claude needs a specific tool.
+Tool names and server instructions from connected servers. Full JSON schemas stay deferred until Claude needs a specific tool.
 Context cost:
 Tool search
 is on by default, so idle MCP tools consume minimal context.
 Run
 /mcp
-to see connection status and token costs per server. Claude Code
+to see each server’s connection status. Run
+/context all
+to see how many tokens each loaded MCP tool uses. Claude Code
 reconnects to remote servers automatically
 if they drop, and you can disconnect servers you’re not actively using.
 When:
@@ -515,8 +512,10 @@ Skills
 Give Claude domain expertise and reusable workflows
 Subagents
 Offload work to isolated context
-Agent teams
-Coordinate multiple sessions working in parallel
+Dynamic workflows
+Run many subagents from one script
+Cross-session messaging
+Let Claude message your other sessions
 MCP
 Connect Claude to external services
 Hooks

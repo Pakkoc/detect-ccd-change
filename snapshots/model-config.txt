@@ -141,6 +141,19 @@ In the
 picker, you keep your current model.
 Mid-session, Claude Code continues the turn on your default model.
 After you choose to continue on Fable 5 using usage credits, Claude Code doesn’t show the prompt again.
+In a session with
+Remote Control
+connected, a
+background session
+, or an
+agent team
+teammate’s session, nobody may be at the terminal, so Claude Code holds the mid-session consent prompt for the
+dialogExpiry
+deadline, five minutes by default. If nobody has answered by the deadline, Claude Code ends the turn without sending the request and adds a notice to the transcript, which the Remote Control client also shows. Your model selection is unchanged, and Claude Code asks for consent again on your next message.
+What you can do while the prompt is waiting depends on the session:
+With Remote Control connected or in a teammate’s session, press any key at the terminal to cancel the deadline, and Claude Code waits for your answer.
+In a background session, answer before the deadline.
+If you send a new message from the remote client before anyone has typed at the terminal, Claude Code ends the turn the same way, and your new message starts the next turn. After someone types at the terminal, Claude Code keeps waiting for the answer and queues your new message behind it.
 In
 non-interactive mode
 with the
@@ -244,9 +257,9 @@ to override; the project or managed setting reapplies on the next launch. On pla
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
 , the host’s model configuration takes precedence over managed model settings, while a managed
 availableModels
-allowlist stays in force unless the host supplies its own; the key-level enumeration is under
-Settings precedence
-.
+allowlist stays in force unless the host supplies its own;
+Exceptions to managed settings precedence
+says which keys and variables the host overrides.
 When a model switch is requested through the
 Agent SDK
 setModel()
@@ -387,9 +400,9 @@ On platforms that embed Claude Code and set
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
 , the host’s model configuration takes precedence over managed model settings, while a managed
 availableModels
-allowlist stays in force unless the host supplies its own; the key-level enumeration is under
-Settings precedence
-.
+allowlist stays in force unless the host supplies its own;
+Exceptions to managed settings precedence
+says which keys and variables the host overrides.
 When
 availableModels
 is set, the allowlist applies everywhere a user can specify a model:
@@ -569,7 +582,9 @@ third-party providers
 such as Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, and
 Claude Platform on AWS
 do not receive server-managed settings, so deliver the allowlist through MDM or managed settings files there.
-Server-managed delivery also requires the session to authenticate with an organization login or a directly configured API key. Fleets that generate keys only through an
+Server-managed delivery also requires the session to authenticate with an
+eligible login or key
+. Fleets that generate keys only through an
 apiKeyHelper
 script should deliver the allowlist through MDM or managed settings files.
 The Desktop Code tab also hosts
@@ -1199,7 +1214,9 @@ ultracode
 xhigh
 to the model and additionally has Claude orchestrate
 dynamic workflows
-for substantive tasks. It applies to the current session only.
+for substantive tasks. For where it can be set persistently, see the
+ultracode
+setting.
 You can turn on ultracode through any of the following:
 /effort
 : run
@@ -1212,11 +1229,13 @@ claude --effort ultracode
 , which starts the session at
 xhigh
 effort with ultracode on
---settings
-or an Agent SDK control request
-: pass
+ultracode
+setting
+: set
 "ultracode": true
-. An
+in a settings file, with
+--settings
+, or in an Agent SDK control request. An
 applyFlagSettings()
 request also accepts
 effortLevel: "ultracode"
@@ -1269,7 +1288,7 @@ A Claude Code setting that plans a
 dynamic workflow
 for each substantive task with
 xhigh
-per-message reasoning. Session-only
+per-message reasoning
 The effort scale is calibrated per model, so the same level name does not represent the same underlying value across models.
 ​
 Use ultrathink for one-off deep reasoning
@@ -1311,11 +1330,11 @@ high
 xhigh
 in your settings file.
 max
-and
+isn’t accepted here, and
 ultracode
-are
-session-only
-and are not accepted here
+has its own
+ultracode
+key
 From a connected device
 : in a
 Remote Control
@@ -1900,9 +1919,9 @@ On platforms that embed Claude Code and set
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
 , the host’s model configuration takes precedence over managed model settings, while a managed
 availableModels
-allowlist stays in force unless the host supplies its own; the key-level enumeration is under
-Settings precedence
-.
+allowlist stays in force unless the host supplies its own;
+Exceptions to managed settings precedence
+says which keys and variables the host overrides.
 The family-level environment variables above configure one model ID per family alias. If you need to map several versions within the same family to distinct provider IDs, use the
 modelOverrides
 setting instead.

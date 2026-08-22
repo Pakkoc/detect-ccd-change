@@ -33,7 +33,7 @@ Every session
 Every session (first 200 lines or 25KB)
 Use for
 Coding standards, workflows, project architecture
-Build commands, debugging insights, preferences Claude discovers
+Your preferences, corrections you give Claude, project context Claude can’t derive from the code
 Use CLAUDE.md files when you want to guide Claude’s behavior. Auto memory lets Claude learn from your corrections without manual effort.
 Subagents can also maintain their own auto memory. See
 subagent configuration
@@ -91,7 +91,7 @@ Personal project-specific preferences; add to
 .gitignore
 Your sandbox URLs, preferred test data
 Just you (current project)
-CLAUDE.md and CLAUDE.local.md files in the directory hierarchy above the working directory are loaded in full at launch. Files in subdirectories load on demand when Claude reads files in those directories. See
+CLAUDE.md and CLAUDE.local.md files in the directory hierarchy above the working directory are loaded at launch. Files in subdirectories load on demand when Claude reads files in those directories. See
 How CLAUDE.md files load
 for the full resolution order.
 For large projects, you can break instructions into topic-specific files using
@@ -182,14 +182,18 @@ only exists in the worktree where you created it. To share personal instructions
 # Individual Preferences
 - @~/.claude/my-project-instructions.md
 An import in a project-level memory file is external when its path resolves outside your working directory, like the home directory import above. The first time Claude Code encounters external imports in a project, it shows an approval dialog listing the files. If you decline, the imports stay disabled and the dialog doesn’t appear again.
-The dialog protects you from files other people commit to a shared project. Imports in user-scope memory files, such as
+Claude Code shows the dialog to protect you from files other people commit to a shared project. User-scope memory files, such as
 ~/.claude/CLAUDE.md
 and
 ~/.claude/rules/
-, are files you wrote yourself, so they load without the dialog and carry the same trust as the rest of your personal configuration.
-For a more structured approach to organizing instructions, see
-.claude/rules/
-.
+, are files you wrote yourself. Except in
+Cowork
+sessions on your desktop, Claude Code loads their imports without the dialog and trusts them like the rest of your personal configuration.
+In Cowork sessions on your desktop, Claude Code skips any import in a user-scope file that resolves to a path outside the session’s working directory and loads the rest of the file. In those sessions it also skips a
+~/.claude/CLAUDE.md
+that is itself a symlink or hard link, and a symlinked
+~/.claude/rules/
+directory or rule file that points outside the working directory.
 ​
 AGENTS.md
 Claude Code reads
@@ -553,7 +557,19 @@ settings layer
 Managed policy CLAUDE.md files cannot be excluded. This ensures organization-wide instructions always apply regardless of individual settings.
 ​
 Auto memory
-Auto memory lets Claude accumulate knowledge across sessions without you writing anything. Claude saves notes for itself as it works: build commands, debugging insights, architecture notes, code style preferences, and workflow habits. Claude doesn’t save something every session. It decides what’s worth remembering based on whether the information would be useful in a future conversation.
+Auto memory lets Claude accumulate knowledge across sessions without you writing anything. As it works, Claude saves four kinds of notes for itself. Claude records the kind as a
+type
+field in the memory file’s frontmatter:
+user
+: your role, expertise, and working preferences
+feedback
+: corrections you give Claude and approaches you confirm
+project
+: ongoing work, deadlines, and decisions that Claude can’t derive from the code or git history
+reference
+: where to find information outside the project, such as an issue tracker or dashboard
+Claude skips anything it can derive from the codebase, such as architecture, file paths, or debugging fixes. It also skips anything your CLAUDE.md files already say.
+Claude doesn’t save something every session. It decides what’s worth remembering based on whether the information would be useful in a future conversation.
 ​
 Enable or disable auto memory
 Auto memory is on by default. To toggle it, open
@@ -614,12 +630,12 @@ workspace trust rule as hooks in settings files
 .
 The directory contains a
 MEMORY.md
-entrypoint and optional topic files:
+index and one topic file per memory:
 ~/.claude/projects/<project>/memory/
-├── MEMORY.md          # Concise index, loaded into every session
-├── debugging.md       # Detailed notes on debugging patterns
-├── api-conventions.md # API design decisions
-└── ...                # Any other topic files Claude creates
+├── MEMORY.md           # Index, one line per memory, loaded into every session
+├── user_role.md        # One memory
+├── feedback_testing.md # One memory
+└── ...                 # Any other topic files Claude creates
 MEMORY.md
 acts as an index of the memory directory. Claude reads and writes files in this directory throughout your session, using
 MEMORY.md
@@ -647,12 +663,12 @@ error telling Claude to rewrite the index
 The check measures only the content that loads: YAML frontmatter and block-level HTML comments are stripped before the index is loaded, so they don’t count toward the limits. Before v2.1.211, Claude Code measured the raw file, and frontmatter or comments could trigger the error even when the loaded content fit.
 This limit applies only to
 MEMORY.md
-. CLAUDE.md files are loaded in full regardless of length, though shorter files produce better adherence.
-Topic files like
-debugging.md
+. Claude Code loads a CLAUDE.md file of up to 4 MiB in full and skips a larger file. Shorter files produce better adherence.
+Claude Code doesn’t load topic files such as
+user_role.md
 or
-patterns.md
-are not loaded at startup. Claude reads them on demand using its standard file tools when it needs the information.
+feedback_testing.md
+at startup. Claude reads them on demand using its standard file tools when it needs the information.
 The main conversation’s auto memory isn’t loaded into
 subagents
 ; the exception is a
@@ -723,7 +739,7 @@ Run
 and select the auto memory folder to browse what Claude has saved. Everything is plain markdown you can read, edit, or delete.
 ​
 My CLAUDE.md is too large
-Files over 200 lines consume more context and may reduce adherence. Use
+Files over 200 lines consume more context and may reduce adherence. Claude Code skips a file over 4 MiB. Use
 path-scoped rules
 to load instructions only when Claude works with matching files, or trim content that isn’t needed in every session. Splitting into
 @path
@@ -740,7 +756,7 @@ Project-root CLAUDE.md survives compaction: after
 , Claude re-reads it from disk and re-injects it into the session. Nested CLAUDE.md files in subdirectories and rules with
 paths:
 frontmatter
-are not re-injected automatically; they reload the next time Claude reads a file in that subdirectory or a file matching the rule’s patterns.
+reload as Claude reads files they apply to.
 If an instruction disappeared after compaction, it was given only in conversation, lives in a nested CLAUDE.md that hasn’t reloaded yet, or is a path-scoped rule that hasn’t matched a file since. Add conversation-only instructions to CLAUDE.md to make them persist. See
 What survives compaction
 for the full breakdown.

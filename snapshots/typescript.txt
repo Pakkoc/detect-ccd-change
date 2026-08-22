@@ -1097,7 +1097,12 @@ Controller for cancelling operations
 additionalDirectories
 string[]
 []
-Additional directories Claude can access
+Additional directories Claude can access. The SDK passes each entry to Claude Code as
+--add-dir
+, so with the
+project
+setting source Claude Code also
+loads the directory’s skills, commands, and subagents
 agent
 string
 undefined
@@ -1300,9 +1305,9 @@ Settings
 undefined
 Policy-tier settings your host process supplies to the spawned session. On machines with admin-deployed managed settings, Claude Code ignores these unless the admin’s highest-priority managed source sets
 parentSettingsBehavior: 'merge'
-, and never merges them when an MDM or file-based source wins and configures a
+, and never merges them while a
 policyHelper
-. Merged values pass through a restrictive-only filter;
+supplies managed settings. Merged values pass through a restrictive-only filter;
 Restrict parent settings
 covers what the filter admits and the
 allowManaged*Only
@@ -6640,6 +6645,16 @@ hookEventName
 "PostToolUse"
 ;
 additionalContext
+?:
+string
+;
+/**
+* Short note about this tool call's result for the auto mode
+* permission classifier. Capped at 2000 characters, shared across
+* all hooks that respond to the same call; honored on synchronous
+* hook responses only. Don't copy untrusted tool output into it.
+*/
+classifierContext
 ?:
 string
 ;
@@ -13513,9 +13528,12 @@ Filesystem-specific sandbox configuration for read/write restrictions
 ignoreViolations
 Record<string, string[]>
 undefined
-Map of violation categories to patterns to ignore (e.g.,
-{ file: ['/tmp/*'], network: ['localhost'] }
-)
+Map of command substrings, or
+*
+for every command, to substrings of the violation text to ignore, such as
+{ "*": ['/etc/hosts'] }
+; see
+sandbox.ignoreViolations
 enableWeakerNestedSandbox
 boolean
 false

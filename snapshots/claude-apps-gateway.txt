@@ -606,9 +606,9 @@ WebFetch
 domain rules and sandbox network rules. Without the opt-in, those sessions run without the egress restriction, and nothing warns you. The gateway still rejects inference requests for models the policy doesn’t grant.
 Machines where developers sign in through
 /login
-don’t need it; every Claude Code invocation fetches its policy from the gateway directly. Machines where an MDM or file-based source wins and configures a
+don’t need it; every Claude Code invocation fetches its policy from the gateway directly. Fleets whose
 policyHelper
-can’t use it, because Claude Code never merges parent settings into the helper’s output.
+supplies managed settings can’t use it: parent settings are never merged then, because the helper’s output replaces the other managed sources.
 ​
 Set the opt-in
 Deploy the key, mirror it to the source that wins on each machine, then verify.
@@ -639,7 +639,7 @@ field naming the active source.
 resolveSettings()
 doesn’t execute a configured
 policyHelper
-, so on helper fleets its answer doesn’t reflect the live session.
+, so its result doesn’t reflect the live session on machines where a helper supplies the managed settings.
 ​
 Restrict parent settings
 Once you deploy
@@ -781,9 +781,9 @@ still blocks parent-supplied allow rules and
 additionalDirectories
 . The hooks and MCP server locks, and
 allowManagedPermissionRulesOnly
-’s effect on the developer’s own rules, need the winning source. When an MDM or file-based source wins and configures a
+’s effect on the developer’s own rules, need the winning source. On
 policyHelper
-, Claude Code reads the locks from the helper’s output alone.
+fleets, the locks are read from the helper’s output alone.
 Each lock makes Claude Code ignore the developer’s own entries for that setting, so include your organization’s allowlists next to the locks. Locking network domains with an empty managed domain list blocks all sandboxed outbound traffic, and locking MCP servers with no managed or parent-supplied
 allowedMcpServers
 loads every server that
@@ -942,10 +942,17 @@ Spend limits
 Server-side web search
 Not available
 The CLI can’t see which upstream provider the gateway routes to, so it can’t verify web search support and disables WebSearch on gateway sessions
+Remote Control
+Not available
+The CLI shows
+an error naming the gateway
 Standard prompt caching
 Available
+The gateway forwards
 cache_control
-breakpoints are forwarded to every upstream
+breakpoints to every upstream. On gateway sessions, the CLI doesn’t mark the
+system context it appends mid-conversation
+for caching, so that block shows up as uncached input.
 1-hour cache TTL
 Not available
 The CLI omits the extended-cache-ttl beta on gateway sessions, because not every upstream the gateway can route to supports the 1-hour TTL, so prompt caching through the gateway uses the 5-minute TTL; see the beta-header note above

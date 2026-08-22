@@ -2467,7 +2467,12 @@ Path to settings file
 add_dirs
 list[str | Path]
 []
-Additional directories Claude can access
+Additional directories Claude can access. The SDK passes each entry to Claude Code as
+--add-dir
+, so with the
+project
+setting source Claude Code also
+loads the directory’s skills, commands, and subagents
 env
 dict[str, str]
 {}

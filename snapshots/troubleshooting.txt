@@ -77,7 +77,9 @@ to write two files to
 <session-id>.heapsnapshot
 and a memory breakdown named
 <session-id>-diagnostics.json
-. The command doesn’t appear in the command menu; type it in full. On Linux without a Desktop folder, the files are written to your home directory.
+. Claude Code
+hides the command from the command menu
+; type it in full. On Linux without a Desktop folder, the files are written to your home directory.
 The
 .heapsnapshot
 file contains every string in the process, including your full conversation and credentials. Don’t attach it to a public issue or share it.

@@ -4620,14 +4620,15 @@ statusLine
 the status line is disabled. Remove the setting, or set it to
 false
 in the file that sets it, to re-enable. See
-Hook configuration
+disableAllHooks
 .
 If your organization sets
 allowManagedHooksOnly
 in managed settings, your custom status line disappears without warning: you can only get a status line from a
 statusLine
 value in those managed settings. See
-Hook configuration
+what runs under
+allowManagedHooksOnly
 for the full behavior, and ask your administrator whether this setting applies to you.
 Run
 claude --debug

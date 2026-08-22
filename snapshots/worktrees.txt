@@ -210,7 +210,7 @@ variable, or a
 cd
 into the main checkout before running git.
 Command shape
-: Claude Code blocks a Bash or Monitor command it can’t verify stays inside the worktree. The block applies even when the command runs no git at all. Claude Code refuses shell constructs it can’t statically trace, such as brace expansion and heredocs with unquoted delimiters. It tells Claude to break the command into plain, separate commands. You can’t turn this check off.
+: Claude Code blocks a Bash or Monitor command it can’t verify stays inside the worktree, even when the command runs no git at all. Claude Code refuses shell constructs it can’t trace without running them, such as brace expansion and heredocs with unquoted delimiters. Claude Code tells Claude how to rewrite the refused command, such as splitting it into plain, separate commands. You can’t turn this check off.
 The checks apply to the repository you launched Claude Code from. They also cover the main checkout a linked worktree is linked from. For PowerShell commands, Claude Code applies only the working-directory check.
 Claude sees each refusal as a tool error that names the worktree and says how to proceed.
 ​
@@ -447,7 +447,9 @@ from the main checkout also load in worktrees of the same repository, so you don
 Permission approvals
 : choosing “Yes, and don’t ask again” for a Bash command in a worktree session saves the rule to the main checkout’s
 .claude/settings.local.json
-, so it applies in the main checkout and in every other worktree of the repository, and it survives the worktree’s removal. Before v2.1.211, an approval granted in a worktree was saved inside that worktree, didn’t apply elsewhere, and was lost when the worktree was removed. See
+, so it applies in the main checkout and in every other worktree of the repository, and it survives the worktree’s removal. On Windows and the other cases where Claude Code
+keeps the local file in the starting directory
+, the rule stays with that worktree. Before v2.1.211, an approval granted in a worktree was saved inside that worktree, didn’t apply elsewhere, and was lost when the worktree was removed. See
 where approvals are saved
 .
 All three apply whether you create the worktree with

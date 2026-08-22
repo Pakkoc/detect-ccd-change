@@ -272,7 +272,7 @@ build a dashboard showing products that are most frequently returned by our UK c
 Save time with shortcuts
 Type
 /
-to see all commands and skills
+to see the commands and skills available to you
 Use Tab for command completion
 Press ↑ for command history
 Press

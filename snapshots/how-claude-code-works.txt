@@ -92,7 +92,7 @@ CLAUDE.md
 A markdown file where you store project-specific instructions, conventions, and context that Claude should know every session.
 Auto memory
 .
-Learnings Claude saves automatically as you work, like project patterns and your preferences. The first 200 lines or 25KB of MEMORY.md, whichever comes first, load at the start of each session.
+Learnings Claude saves automatically as you work, like your preferences. The first 200 lines or 25KB of MEMORY.md, whichever comes first, load at the start of each session.
 Extensions you configure.
 MCP servers
 for external services,
@@ -212,9 +212,7 @@ Run
 /context
 to see what’s using space. MCP tool definitions are deferred by default and loaded on demand via
 tool search
-, so only tool names consume context until Claude uses a specific tool. Run
-/mcp
-to check per-server costs.
+, so only tool names and server instructions consume context until Claude uses a specific tool.
 ​
 Manage context with skills and subagents
 Beyond compaction, you can use other features to control what loads into context.
@@ -335,7 +333,7 @@ You don’t need to specify which files to read or what commands to run. Claude 
 ​
 What’s next
 Extend with features
-Add Skills, MCP connections, and custom commands
+Add skills and MCP connections
 Common workflows
 Step-by-step guides for typical tasks
 Was this page helpful?

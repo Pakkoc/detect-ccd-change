@@ -31,7 +31,9 @@ System-level, varies by OS
 Enterprise-enforced settings that you can’t override, apart from
 narrow exceptions
 . See
-server-managed settings
+where to save the file
+and
+which managed source Claude Code uses
 .
 CLAUDE.local.md
 Project root
@@ -266,9 +268,9 @@ Per-session debug logs, written only when you start with
 or run
 /debug
 paste-cache/
-,
-image-cache/
-Contents of large pastes and attached images
+Contents of large pastes
+image-cache/<session>/
+Attached images. On each sweep, Claude Code removes the directories of all other sessions, whatever their age.
 session-env/
 Per-session environment metadata
 tasks/
@@ -278,9 +280,9 @@ Aliases, functions, and shell options captured at startup and applied by the
 Bash tool
 to each command. Removed on clean exit. The sweep clears any left after a crash.
 backups/
-Timestamped copies of
+Earlier versions of
 ~/.claude.json
-taken before config migrations
+, copied when Claude Code rewrites the file. Claude Code keeps the five newest, plus a copy of any version it couldn’t parse.
 feedback-bundles/
 Redacted transcript archives written by
 /feedback
@@ -326,7 +328,7 @@ cleanupPeriodDays
 , Claude Code runs the sweep at the managed value in either case.
 ​
 Kept until you delete them
-The following paths are not covered by automatic cleanup and persist indefinitely.
+The retention cleanup sweep doesn’t cover the following paths. Claude Code keeps them until you delete them, apart from the two caches whose rows say that logging out deletes them.
 Path under
 ~/.claude/
 Contents
@@ -338,11 +340,15 @@ Aggregated token and cost counts shown by
 remote-settings.json
 Cached copy of
 server-managed settings
-for your organization. Only present when your organization has configured them. Refreshed on each launch.
+for your organization, or
+{}
+when your organization has configured none. Only present when the session
+fetches them
+. Claude Code checks for updates at startup and hourly during a session. Claude Code deletes it when you log out.
 cache/changelog.md
 Cached copy of the Claude Code changelog, used to show release notes after an update. Refreshed in the background.
 policy-limits.json
-Cached feature policy settings for your organization. Only present for some account types. Refreshed automatically.
+Cached feature policy settings for your organization. Only present for some account types. Refreshed automatically. Claude Code deletes it when you log out.
 Other small cache and lock files appear depending on which features you use and are safe to delete.
 ​
 Plaintext storage

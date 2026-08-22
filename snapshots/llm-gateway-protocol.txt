@@ -351,7 +351,13 @@ thinking signatures
 , and of mid-conversation system messages all recover this way. Context management and tool schema field rejections don’t retry; those
 400
 errors reach the developer.
-The retry logic matches on the upstream’s error wording, so forward error response bodies unmodified. A gateway that wraps upstream errors in its own envelope breaks the recovery path even when it preserves the status code.
+The retry logic matches on the upstream’s error wording, so forward error response bodies unmodified. A gateway that wraps upstream errors in its own envelope breaks the recovery path, even when it preserves the status code, unless the envelope’s message carries a stable
+capability_rejected:
+token.
+Claude apps gateway substitutes those tokens for cloud providers’ error wording
+, for example
+capability_rejected: prompt_too_long
+.
 ​
 Disable pre-release capabilities
 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1

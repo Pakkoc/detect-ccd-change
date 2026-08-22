@@ -395,7 +395,13 @@ This setting requires
 channelsEnabled: true
 . If a user passes a plugin to
 --channels
-that isn’t on your list, Claude Code starts normally but the channel doesn’t register, and the startup notice explains that the plugin isn’t on the organization’s approved list.
+that isn’t on your list, Claude Code starts normally but the channel doesn’t register, and the startup notice explains that the plugin isn’t on the organization’s approved list. If you set
+MCP_PROTOCOL_NEGOTIATION
+to
+auto
+on the v2 MCP client runtime, a channel can also fail to register because Claude Code
+doesn’t register a channel server that negotiates protocol revision 2026-07-28
+.
 ​
 Research preview
 Channels are a research preview feature. Availability is rolling out gradually, and the

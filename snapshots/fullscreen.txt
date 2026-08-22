@@ -51,6 +51,13 @@ Rules you passed with
 --allowed-tools
 or
 --disallowed-tools
+, and your
+--agent
+,
+--agents
+, and
+--append-system-prompt
+flags
 Claude Code declines to relaunch if the session has a restriction it can’t pass to the restarted process. Restrictions it can’t pass include:
 Launch flags such as a
 --system-prompt
@@ -78,7 +85,9 @@ CLAUDE_CODE_NO_FLICKER
 =
 1
 claude
-Either one turns fullscreen rendering on. After a
+For how the
+tui
+setting and the variable combine when both are set, see the setting’s entry. After a
 failed fullscreen start
 , Claude Code still honors the variable but not the setting. The
 /tui

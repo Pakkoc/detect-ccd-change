@@ -182,11 +182,11 @@ bin
 bash.exe"
 }
 }
-When Git for Windows is installed, the PowerShell tool is rolling out progressively as an additional option alongside Bash. Set
+When Git for Windows is installed, the PowerShell tool is available alongside Bash: on by default for claude.ai and Console accounts, and enabled with
 CLAUDE_CODE_USE_POWERSHELL_TOOL=1
-to opt in or
+in Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry sessions. Set it to
 0
-to opt out. See
+to turn the tool off. See
 PowerShell tool
 for setup and limitations.
 Option 2: WSL
@@ -425,7 +425,9 @@ requiredMaximumVersion
 instead. Updates also respect the
 requiredMaximumVersion
 ceiling. See
-available settings
+requiredMinimumVersion
+and
+requiredMaximumVersion
 .
 ​
 Disable auto-updates

@@ -1186,13 +1186,17 @@ Troubleshooting
 Network isolation
 Network access is controlled through a proxy server running outside the sandbox:
 Domain restrictions
-: no domains are pre-allowed by default. The first time a command needs a new domain, Claude Code prompts for approval, or in
+: Claude Code pre-allows no domains by default. The first time a command needs a new domain, Claude Code prompts for approval, or in
 auto mode
-sends the request to the classifier. When you’re prompted, choosing Yes allows the host for the rest of the current session, so later connections to the same host do not prompt again. Pre-allow domains with
+sends the request to the classifier. If you choose Yes when prompted, Claude Code allows the host for the rest of the current session and doesn’t prompt again for later connections to the same host. If you choose “Yes, and don’t ask again”, Claude Code saves a
+WebFetch(domain:...)
+allow rule to your
+local settings
+, so the host stays allowed in future sessions. Pre-allow domains with
 allowedDomains
-to avoid the prompt entirely.
+to avoid the prompt entirely. Claude Code also pre-allows domains from
 WebFetch
-allow rules also pre-allow domains, as described in
+allow rules, as described in
 Permission rules
 .
 Strict allowlist
@@ -1270,6 +1274,9 @@ matches it on port 443 only. Write the port as a number from 1 to 65535 with no 
 named the address
 ::1
 on port 443.
+When you choose “Yes, and don’t ask again” at the network approval prompt for an IPv6 address, Claude Code saves the
+WebFetch(domain:...)
+rule with the address bracketed, so the rule keeps matching the address in future sessions.
 An unbracketed entry with two or more colons is ambiguous:
 ::1:443
 is both a complete IPv6 address and an address followed by a port. Claude Code enforces ambiguous spellings conservatively instead of guessing which reading you meant:
@@ -1684,8 +1691,8 @@ Security
 : comprehensive security features and best practices
 Permissions
 : permission configuration and access control
-Settings
-: complete configuration reference
+Settings reference
+: every settings key
 CLI reference
 : command-line options
 Was this page helpful?

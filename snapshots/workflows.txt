@@ -213,7 +213,10 @@ To start a session with ultracode already on, launch with
 claude --effort ultracode
 . Requires Claude Code v2.1.203 or later.
 With ultracode on, Claude decides when a task warrants a workflow. A single request can turn into several workflows in a row: one to understand the code, one to make the change, and one to verify it. This applies to every task in the session, so each request uses more tokens and takes longer than at lower effort levels.
-Ultracode lasts for the current session and resets when you start a new one. Drop back with
+/effort ultracode
+lasts for the current session; to have every session start with it, set the
+ultracode
+setting. Drop back with
 /effort high
 when you return to routine work. It’s available on models that support
 xhigh

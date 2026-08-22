@@ -37,9 +37,23 @@ When you choose “Yes, and don’t ask again” and the approval saves permanen
 .claude/settings.local.json
 at the root of the git repository, resolved through
 worktrees
-to the main checkout. The rule applies to future sessions anywhere in that repository, including sessions started in subdirectories and in worktrees. A file-modification approval isn’t saved to the file: as the table shows, it lasts until the session ends. Outside a git repository, and when the repository root is your home directory, Claude Code saves the rule in the directory you started it from.
+to the main checkout. The rule applies to future sessions anywhere in that repository, including sessions started in subdirectories and in worktrees. A file-modification approval isn’t saved to the file: as the table shows, it lasts until the session ends. In some cases, such as outside a git repository or on Windows, Claude Code saves the rule in the directory you started it from;
+Where Claude Code looks for each file
+lists them.
 Before v2.1.211, Claude Code always saved the rule in the starting directory, so an approval granted in a worktree or subdirectory didn’t apply to the rest of the repository. Rules that earlier versions saved in a subdirectory or worktree still apply to sessions started there.
-Sometimes a permission prompt offers only a one-time approval, with no “don’t ask again” option and no option to allow the action for the rest of the session. Claude Code offers those options only when the prompt can show you everything they would allow, so a rule you save from a prompt covers only what its option named. Claude Code leaves the options out when the command or edit is too large to show in full, or when the option’s label can’t fit every command or path the rule would cover. Approve the action once, or add the rule yourself in
+Sometimes a permission prompt offers only a one-time approval, with no “don’t ask again” option and no option to allow the action for the rest of the session. Claude Code offers those options only when the prompt can show you everything they would allow, so a rule you save from a prompt covers only what its option named.
+When the directory you started Claude Code in is what makes the option’s label too long, Claude Code shortens it in the label, replacing your home directory with
+~
+and then the end of the path with
+…
+, and keeps the option. You still save the same rule. Claude Code leaves the options out in three cases:
+Command or edit:
+too large to show in full.
+Commands or paths the rule would cover:
+the label can’t fit them all.
+Starting directory too long, not shortened:
+it contains characters Claude Code can’t display safely, or even its start doesn’t fit.
+Approve the action once, or add the rule yourself in
 /permissions
 .
 On a Bash or PowerShell permission prompt, press
@@ -1312,9 +1326,25 @@ These exceptions apply only to directories added with the
 --add-dir
 flag or the
 /add-dir
-command. Directories listed in
+command, including directories the Agent SDK adds through the flag. Directories listed in
 permissions.additionalDirectories
 in a settings file grant file access only and don’t load any of the configuration below.
+The Agent SDK’s
+additionalDirectories
+option in TypeScript and
+add_dirs
+option in Python receive the exceptions too, even though the TypeScript option shares its name with the settings key. The SDK passes each entry to Claude Code as
+--add-dir
+, so those directories behave like flag-added directories. Skills, commands, and subagents from any flag-added directory load through the
+project
+setting source
+, so they don’t load when you exclude that source with
+--setting-sources
+on the CLI or
+settingSources
+in the SDK, and
+bare mode
+skips the commands and subagents among them.
 The following configuration types are loaded from
 --add-dir
 directories:
@@ -1364,7 +1394,9 @@ folder with no parent-directory fallback, alongside your user
 ~/.claude/settings.json
 and managed settings.
 .claude/settings.local.json
-loads from the git repository root instead, even when you start Claude Code in a subdirectory; before v2.1.211, it too loaded only from the current working directory.
+loads from the git repository root instead, even when you start Claude Code in a subdirectory, except in the cases where Claude Code
+keeps the local file in the starting directory
+, such as on Windows; before v2.1.211, it too loaded only from the current working directory.
 Agent SDK
 sessions load it from the working directory in all versions.
 To share that configuration across projects, use one of these approaches:
@@ -1442,143 +1474,17 @@ sandbox modes
 to change this behavior.
 ​
 Managed settings
-For organizations that need centralized control over Claude Code configuration, administrators can deploy managed settings that can’t be overridden by user or project settings, apart from a few
+For organizations that need centralized control, administrators deploy managed settings that user and project settings can’t override, apart from a few
 security-sensitive keys
-. These policy settings follow the same format as regular settings files and can be delivered through MDM/OS-level policies, managed settings files,
-server-managed settings
-, or a self-hosted
-Claude apps gateway
-. See
-settings files
-for delivery mechanisms and file locations.
-​
-Managed-only settings
-The following settings are only read from managed settings. Placing them in user or project settings files has no effect.
-Setting
-Description
-allowAllClaudeAiMcps
-When
-true
-, the claude.ai connectors Claude Code fetches itself load alongside a deployed
-managed-mcp.json
-instead of being suppressed by its exclusive control. Connectors delivered to cloud sessions stay suppressed. See
-Managed MCP configuration
-allowedChannelPlugins
-Allowlist of channel plugins that may push messages. Replaces the default Anthropic allowlist when set. Requires
-channelsEnabled: true
-. See
-Restrict which channel plugins can run
-allowManagedHooksOnly
-When
-true
-, restricts which hooks run; see
-Hook configuration
-for the full effect list
-allowManagedMcpServersOnly
-When
-true
-, only
-allowedMcpServers
-from managed settings are respected.
-deniedMcpServers
-still merges from all sources. See
-Managed MCP configuration
+.
+Deploy managed settings
+covers the delivery mechanisms, precedence within the managed tier, and the
+keys only managed settings can set
+, such as
 allowManagedPermissionRulesOnly
-When
-true
-, prevents user and project settings from defining
-allow
-,
-ask
-, or
-deny
-permission rules. Only rules in managed settings apply. Doesn’t affect the MCP server allowlist; for that, set
-allowManagedMcpServersOnly
-blockedMarketplaces
-Blocklist of marketplace sources. Blocked sources are checked before downloading, so they never touch the filesystem. See
-managed marketplace restrictions
-channelsEnabled
-Allow
-channels
-for the organization. See
-enterprise controls
-for the default on each plan
-disableCommandPluginSources
-When
-true
-, blocks
-command
-plugin sources
-entirely, so the marketplace-declared command never runs. When unset, follows
-allowManagedHooksOnly
-. Requires Claude Code v2.1.229 or later
-disableSideloadFlags
-Reject the
---plugin-dir
-,
---plugin-url
-,
---agents
-, and
---mcp-config
-CLI flags at startup. Without this, users can bypass
-strictKnownMarketplaces
-for a single run by passing these flags. See
-disableSideloadFlags
-. Requires Claude Code v2.1.193 or later
-forceRemoteSettingsRefresh
-When
-true
-, blocks CLI startup until remote managed settings are freshly fetched and exits if the fetch fails. See
-fail-closed enforcement
-pluginTrustMessage
-Custom message appended to the plugin trust warning shown before installation
-sandbox.filesystem.allowManagedReadPathsOnly
-When
-true
-, only
-filesystem.allowRead
-paths from managed settings are respected.
-denyRead
-still merges from all sources
-sandbox.network.allowManagedDomainsOnly
-When
-true
-, only
-allowedDomains
-and
-WebFetch(domain:...)
-allow rules from managed settings are respected. Non-allowed domains are blocked automatically without prompting the user. Denied domains still merge from all sources
-strictKnownMarketplaces
-Controls which plugin marketplace sources users can add and install plugins from. See
-managed marketplace restrictions
-strictPluginOnlyCustomization
-Block skills, agents, hooks, and MCP servers from user and project sources, so they can only come from plugins or managed settings.
-true
-locks all four surfaces; an array such as
-["skills", "hooks"]
-locks only the named ones. See
-strictPluginOnlyCustomization
-wslInheritsWindowsSettings
-When
-true
-in the Windows HKLM registry key or
-C:\Program Files\ClaudeCode\managed-settings.json
-, WSL reads managed settings from the Windows policy chain in addition to
-/etc/claude-code
-. See
-Settings files
+, which limits permission rules to the managed source.
 disableBypassPermissionsMode
 is typically placed in managed settings to enforce organizational policy, but it works from any scope. A user can set it in their own settings to lock themselves out of bypass mode.
-On Team and Enterprise plans, an Owner enables or disables
-Remote Control
-and
-web sessions
-organization-wide in
-Claude Code admin settings
-. Remote Control can additionally be disabled per device with the
-disableRemoteControl
-setting. Web sessions have no per-device managed settings key.
 ​
 Settings precedence
 Permission rules follow the same
@@ -1763,7 +1669,7 @@ without project settings, so Claude Code reads neither the project’s settings 
 .mcp.json
 Start with
 --bare
-so Claude Code reads no hooks, skills, plugins, or
+so Claude Code reads no hooks, skills, custom commands, subagents, plugins, or
 .mcp.json
 servers from the project. The project’s
 env
@@ -1791,8 +1697,8 @@ repository
 includes starter settings configurations for common deployment scenarios. Use these as starting points and adjust them to fit your needs.
 ​
 See also
-Settings
-: complete configuration reference including the permission settings table
+Settings reference
+: every settings key, including the permission keys
 Configure auto mode
 : tell the auto mode classifier which infrastructure your organization trusts
 Sandboxing

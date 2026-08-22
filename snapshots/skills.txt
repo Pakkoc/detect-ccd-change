@@ -843,9 +843,11 @@ powershell
 powershell
 runs inline shell commands via PowerShell when the
 PowerShell tool
-is enabled: it’s on by default on Windows without Git Bash, and
+is enabled: it’s on by default on Windows without Git Bash, on by default with Git Bash for claude.ai and Console accounts, and needs
 CLAUDE_CODE_USE_POWERSHELL_TOOL=1
-enables it elsewhere.
+in Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry sessions and on macOS, Linux, and WSL. Set it to
+0
+to turn the tool off.
 metadata
 No
 Free-form YAML map for your own key-value data, such as entitlement or catalog fields, read by your own tooling from

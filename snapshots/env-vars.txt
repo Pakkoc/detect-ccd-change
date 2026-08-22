@@ -113,16 +113,16 @@ Settings precedence
 for how they combine when more than one sets the same variable.
 ​
 Precedence
-Some behaviors have both an environment variable and a dedicated settings key. If you set both, the environment variable takes precedence, except for
-ANTHROPIC_DEFAULT_MODEL
-. For example,
+Some behaviors have both an environment variable and a dedicated settings key, and which one Claude Code reads first differs per key. For
 ANTHROPIC_MODEL
-overrides the
-model
-setting, and
+and
 CLAUDE_CODE_AUTO_CONNECT_IDE
-overrides
+, Claude Code reads the variable first and uses the
+model
+or
 autoConnectIde
+setting only when the variable is unset. For the pair you’re setting, check the variable’s row below and the key’s entry on the
+settings reference
 .
 When the same variable is set in both your shell and a settings file
 env
@@ -1672,9 +1672,9 @@ inbox socket
 CLAUDE_CODE_MESSAGING_SOCKET
 . A script posting to the socket can send
 {"type":"auth","token":"<token>"}
-as its first line to prove it belongs to the session. The
+as its first line to prove it belongs to the session. On native Windows, Claude Code requires this line and closes any connection that doesn’t open with a valid one. The
 own-child rules
-say when Claude Code consults it. Each session exports its own token, never one inherited from a parent session. Settings
+say when Claude Code consults the token. Each session exports its own token, never one inherited from a parent session. Settings
 env
 blocks can’t set it. Requires Claude Code v2.1.228 or later
 CLAUDE_CODE_NATIVE_CURSOR
@@ -1694,7 +1694,9 @@ Set to
 1
 to enable
 fullscreen rendering
-, a research preview that reduces flicker and keeps memory flat in long conversations. You can also switch with
+, a research preview that reduces flicker and keeps memory flat in long conversations. Overrides the
+tui
+setting; you can also switch with
 /tui fullscreen
 CLAUDE_CODE_OAUTH_REFRESH_TOKEN
 OAuth refresh token for Claude.ai authentication. When set,
@@ -1868,7 +1870,13 @@ fallbackModel
 modelOverrides
 in
 managed settings
-, whichever managed source delivers them, so the host’s model configuration takes precedence over an out-of-date managed model pin; an
+, whichever managed source delivers them, so the host’s model configuration takes precedence over an out-of-date managed model pin. Claude Code also ignores model-selection variables such as
+ANTHROPIC_MODEL
+and the
+ANTHROPIC_DEFAULT_*_MODEL
+family in a managed
+env
+block; an
 availableModels
 allowlist in managed settings still applies unless the host supplies its own. Claude Code also skips the automatic telemetry opt-out it otherwise applies on third-party providers such as Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry, so telemetry follows the standard
 DISABLE_TELEMETRY
@@ -2036,7 +2044,9 @@ Set to
 1
 to run with a minimal system prompt and only the Bash, file read, and file edit tools. MCP tools from
 --mcp-config
-are still available. Disables auto-discovery of hooks, skills, plugins, MCP servers, auto memory, and CLAUDE.md. OAuth tokens and keychain credentials are not read, so Anthropic authentication must come from
+are still available. Disables auto-discovery of hooks, skills, custom commands, subagents, plugins, MCP servers, auto memory, and CLAUDE.md. Skills in a directory you pass with
+--add-dir
+still load. OAuth tokens and keychain credentials are not read, so Anthropic authentication must come from
 ANTHROPIC_API_KEY
 or an
 apiKeyHelper
@@ -2266,7 +2276,9 @@ or SDK host, and for the approval dialog for a
 held cross-session message
 , before Claude Code cancels them; permission prompts and
 AskUserQuestion
-questions use their own flows and aren’t governed by it.
+questions use their own flows and aren’t governed by it. Also bounds the mid-session
+Fable 5 usage-credits consent prompt
+in a session that may be running unattended.
 Control inbound messages
 and
 non-interactive sessions
@@ -2294,11 +2306,11 @@ to discover custom commands, subagents, and output styles using Node.js file API
 CLAUDE_CODE_USE_POWERSHELL_TOOL
 Controls the PowerShell tool. On Windows without Git Bash, the tool is enabled automatically; set to
 0
-to disable it. On Windows with Git Bash installed, the tool is rolling out progressively: set to
+to disable it. On Windows with Git Bash installed, the tool is on by default for claude.ai and Console accounts; set to
 1
-to opt in or
+to enable it in Amazon Bedrock, Google Cloud’s Agent Platform, and Microsoft Foundry sessions, or
 0
-to opt out. On Linux, macOS, and WSL, set to
+to turn it off. On Linux, macOS, and WSL, set to
 1
 to enable it, which requires
 pwsh
@@ -2835,16 +2847,28 @@ Fixed port for the OAuth redirect callback, as an alternative to
 --callback-port
 when adding an MCP server with
 pre-configured credentials
+MCP_PROTOCOL_NEGOTIATION
+On the
+v2 MCP client runtime
+only, whether Claude Code probes servers for MCP protocol revision 2026-07-28. Set
+auto
+to probe HTTP, claude.ai connector, and stdio servers; a server that doesn’t answer the probe connects on the earlier protocol instead, as SSE and WebSocket servers always do. Set
+legacy
+to skip the probe for every server. Without the variable, Claude Code probes HTTP and claude.ai connector servers on Claude Code v2.1.232 or later, with the exceptions the
+MCP client runtimes
+section lists. Any other value is ignored with a warning in the debug log. Requires Claude Code v2.1.221 or later
 MCP_REMOTE_SERVER_CONNECTION_BATCH_SIZE
 Maximum number of remote MCP servers (HTTP/SSE) to connect in parallel during startup (default: 20)
 MCP_SDK_GENERATION
-Pin which MCP client runtime this process uses, the implementation behind
-MCP server connections
-, while Claude Code migrates from its v1 runtime to v2. Set
+Pin which
+MCP client runtime
+this process connects to MCP servers with:
 v1
-to stay on the current runtime or
+, built on MCP TypeScript SDK 1.x, or
 v2
-to opt in early. Without the variable, a gradual rollout decides, and defaults to v1. On Claude Code v2.1.221 or later, the v2 runtime checks the issuer an MCP OAuth server returns in its authorization response and fails the sign-in with an error that begins
+, built on
+MCP TypeScript SDK 2.0
+. Without the variable, Claude Code uses v2 on Claude Code v2.1.232 or later, except where that section says it uses v1. On Claude Code v2.1.221 or later, the v2 runtime checks the issuer an MCP OAuth server returns in its authorization response and fails the sign-in with an error that begins
 Issuer mismatch in authorization response
 when it doesn’t match. The v1 runtime doesn’t run this check. If you set an unrecognized value, Claude Code ignores it and writes a warning to the debug log. Claude Code reads the value once per process. Requires Claude Code v2.1.218 or later
 MCP_SERVER_CONNECTION_BATCH_SIZE
@@ -3068,6 +3092,16 @@ turns artifacts off entirely
 Have Claude Code refresh the
 PR review status badge
 less often while you’re idle; Claude Code refreshes it every 60 seconds instead
+Get the
+v2 MCP client runtime
+and its protocol probe without setting
+MCP_SDK_GENERATION
+and
+MCP_PROTOCOL_NEGOTIATION
+; Claude Code uses the v1 runtime unless you set
+MCP_SDK_GENERATION=v2
+, and skips the probe unless you set
+MCP_PROTOCOL_NEGOTIATION=auto
 With fetching off, you can still type
 /code-review
 yourself, but

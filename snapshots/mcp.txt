@@ -751,6 +751,59 @@ disabledMcpjsonServers
 .mcp.json
 file.
 ​
+MCP client runtimes
+Claude Code connects to MCP servers through one of two client runtimes. The v1 runtime is built on MCP TypeScript SDK 1.x. The v2 runtime is the same code on
+MCP TypeScript SDK 2.0
+, which adds MCP protocol revision 2026-07-28. The rest of this page applies to both runtimes, except where a section names the v2 runtime.
+On Claude Code v2.1.232 or later, Claude Code uses the v2 runtime. It picks a runtime each time you start it and keeps it until you exit. It uses v1 when you run it:
+On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, unless a host platform that embeds Claude Code sets
+CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
+Signed in through a
+Claude apps gateway
+With
+feature-flag fetching off
+On v2, Claude Code also:
+Asks HTTP and claude.ai connector servers whether they support the newer revision, and uses it with those that do. It asks stdio servers only if you set
+MCP_PROTOCOL_NEGOTIATION
+to
+auto
+, and connects to every other server as v1 does.
+Receives
+list_changed
+notifications from servers on the newer revision over a
+stream it holds open
+.
+Doesn’t register a
+channel
+server that connects on the newer revision, because that revision can’t carry channel messages.
+Fails an
+MCP OAuth sign-in
+whose authorization response names an unexpected issuer.
+Anthropic can keep a specific server on the earlier protocol, or off that stream, with a feature flag Claude Code fetches. In a
+Claude Code on the web
+session, Claude Code asks its MCP connectors only if you set
+MCP_PROTOCOL_NEGOTIATION
+to
+auto
+.
+To pick the runtime yourself, set
+MCP_SDK_GENERATION
+to
+v1
+or
+v2
+. To decide whether Claude Code asks, set
+MCP_PROTOCOL_NEGOTIATION
+to
+auto
+or
+legacy
+. Where Claude Code uses v1 by default, pinning
+v2
+doesn’t make it ask, so set
+auto
+too.
+​
 Dynamic tool updates
 Claude Code supports MCP
 list_changed
@@ -758,6 +811,20 @@ notifications, allowing MCP servers to dynamically update their available tools,
 list_changed
 notification, Claude Code automatically refreshes the available capabilities from that server.
 If a refresh request fails, Claude Code keeps the server’s previously discovered tools, prompts, and resources until a later refresh succeeds. Before v2.1.214, a transient error during the refresh replaced the server’s tools, prompts, and resources with an empty list.
+​
+Notification streams on the v2 runtime
+On the
+v2 runtime
+, Claude Code receives
+list_changed
+notifications from a server on the newer protocol revision over a stream it holds open. When the stream closes, Claude Code reopens it, with two limits:
+The stream closes again within 10 seconds
+: Claude Code reopens it up to three times, then stops for that connection.
+The stream stays open longer than 10 seconds, then closes
+, as streams to serverless hosts commonly do: after five reopens in an hour, Claude Code waits about six hours before the next one.
+Until the stream reopens, you keep the server’s last fetched tools, prompts, and resources. To pick up its changes sooner, reconnect the server from
+/mcp
+.
 ​
 Automatic reconnection
 If an HTTP or SSE server disconnects mid-session, Claude Code automatically reconnects with exponential backoff: up to five attempts, starting at a one-second delay and doubling each time. The server appears as pending in
@@ -793,6 +860,15 @@ Channels
 to use an officially supported channel, or
 Channels reference
 to build your own.
+On the
+v2 runtime
+, if you set
+MCP_PROTOCOL_NEGOTIATION
+to
+auto
+and a channel server negotiates MCP protocol revision 2026-07-28, it can’t deliver channel messages, so Claude Code doesn’t register it as a channel. Leaving the variable unset, or setting it to
+legacy
+, keeps stdio servers on the earlier handshake.
 Tips:
 Use the
 -s
@@ -2618,7 +2694,7 @@ Execute MCP prompts
 Discover available prompts
 Type
 /
-to see all available commands, including those from MCP servers. MCP prompts appear with the format
+to see the commands available to you, including those from MCP servers. MCP prompts appear with the format
 /mcp__servername__promptname
 .
 2

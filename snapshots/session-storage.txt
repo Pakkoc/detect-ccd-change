@@ -292,7 +292,15 @@ option
 resume
 and
 continue
-lookups, by that name instead. Requires Agent SDK v0.3.234 or later.
+lookups, by that name instead. Because standalone helpers such as
+listSessions
+and
+deleteSession
+take no
+env
+and read the process environment, set
+CLAUDE_CONFIG_DIR
+and the same name in the host process environment too. Requires Agent SDK v0.3.234 or later.
 Treat
 subpath
 as an opaque key suffix; it follows the on-disk layout, for example

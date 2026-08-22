@@ -49,7 +49,10 @@ anthropic-version
 feature pass-through table
 maps each to the feature that breaks without it
 Return upstream errors unmodified
-: Claude Code’s automatic recovery matches on error wording, so wrapping errors in the gateway’s own envelope breaks it
+: Claude Code’s automatic recovery matches on error wording, so wrapping errors in the gateway’s own envelope breaks it, unless the envelope’s message carries one of the
+capability_rejected:
+tokens a
+Claude apps gateway substitutes for cloud providers’ error wording
 Exempt the path from request-body WAF inspection
 : Claude Code prompts carry source code and XML-style tags that match cross-site-scripting body rules; a WAF in front of the gateway returns
 403
@@ -630,8 +633,10 @@ Connect Claude Code to an LLM gateway
 : the developer-facing setup steps, with per-surface configuration and a troubleshooting table you can hand to developers
 Gateway protocol reference
 : the wire contract for gateway operators, covering endpoints, headers to forward, and the feature pass-through table
-Settings files and precedence
-: how managed, project, and user settings combine, and where the managed file goes on each platform
+Which value Claude Code uses
+: how managed, project, and user settings combine
+Delivery mechanisms
+: where the managed file goes on each platform
 Set up Claude Code for your organization
 : the wider rollout this gateway is one part of, including policy enforcement, usage visibility, and data handling
 Was this page helpful?

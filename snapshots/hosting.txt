@@ -476,11 +476,13 @@ Point
 CLAUDE_CONFIG_DIR
 at a per-tenant directory so tenants do not share the
 ~/.claude.json
-global config. When each config directory serves one working directory, you can also set
+global config. When each config directory serves one working directory and you don’t share a
+SessionStore
+across tenants, you can also set
 CLAUDE_CODE_PROJECT_DIR_NAME
 in
 env
-to keep the transcript paths under it short. Requires TypeScript Agent SDK v0.3.234 or later.
+to keep the transcript paths under it short. Requires TypeScript Agent SDK v0.3.234 or later, or Python Agent SDK v0.2.140 or later.
 Use a per-tenant working directory. Pass
 cwd
 explicitly on every

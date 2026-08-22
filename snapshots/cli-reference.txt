@@ -387,7 +387,9 @@ axScreenReader
 setting. Requires Claude Code v2.1.181 or later
 claude --ax-screen-reader
 --bare
-Minimal mode: skip auto-discovery of hooks, skills, plugins, MCP servers, auto memory, and CLAUDE.md so scripted calls start faster. Claude has access to Bash, file read, and file edit tools. Sets
+Minimal mode: skip auto-discovery of hooks, skills, custom commands, subagents, plugins, MCP servers, auto memory, and CLAUDE.md so scripted calls start faster. Skills in a directory you pass with
+--add-dir
+still load. Claude has access to Bash, file read, and file edit tools. Sets
 CLAUDE_CODE_SIMPLE
 . See
 bare mode
@@ -441,7 +443,18 @@ claude --cloud "Fix the login bug"
 --continue
 ,
 -c
-Load the most recent conversation in the current directory. Includes sessions that added this directory with
+Load the most recent conversation in the current directory, skipping
+background sessions, sessions created with
+claude -p
+or the Agent SDK, and sessions whose first prompt was
+/loop
+.
+claude -p --continue
+includes
+-p
+, SDK, and
+/loop
+sessions. Includes sessions that added this directory with
 /add-dir
 claude --continue
 --dangerously-load-development-channels

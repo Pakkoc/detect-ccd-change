@@ -205,9 +205,15 @@ Ctrl+W
 Delete previous word
 Stores deleted text for pasting. On macOS,
 Option+Delete
-also deletes the previous word, and on Windows,
+deletes the previous word, and on Windows,
 Ctrl+Backspace
-does
+does. To make
+Ctrl+W
+delete back to the previous whitespace instead,
+set
+keybindingFlavor
+to
+"readline"
 Ctrl+Y
 Paste deleted text
 Paste text deleted with
@@ -239,6 +245,40 @@ or
 Ctrl+Shift+-
 Undo last input edit
 Restores the previous input text and cursor position
+​
+Make Ctrl+W delete back to whitespace
+By default,
+Ctrl+W
+deletes the previous word, stopping at punctuation such as
+/
+. Set
+keybindingFlavor
+to
+"readline"
+to make
+Ctrl+W
+delete back to the previous whitespace instead, as Bash does. The default value is
+"classic"
+. Requires Claude Code v2.1.238 or later.
+Add the setting to
+~/.claude/settings.json
+:
+{
+"keybindingFlavor"
+:
+"readline"
+}
+To confirm, type
+fix the bug in src/utils/foo.ts
+in the prompt and press
+Ctrl+W
+. Claude Code removes
+src/utils/foo.ts
+. Under
+"classic"
+it removes only
+foo.ts
+.
 ​
 Theme and display
 Shortcut
@@ -371,17 +411,19 @@ Rebindable
 Commands
 Type
 /
-in Claude Code to see all available commands, or type
+in Claude Code to see the commands available to you, or type
 /
 followed by any letters to filter. The
 /
-menu shows everything you can invoke: built-in commands, bundled and user-authored
+menu lists built-in commands, bundled and user-authored
 skills
 , and commands contributed by
 plugins
 and
 MCP servers
-. Not all built-in commands are visible to every user since some depend on your platform or plan.
+. Not all built-in commands are visible to every user since some depend on your platform or plan, and
+a few available commands are hidden from the menu by design
+and run when you type their full name.
 In
 fullscreen rendering
 , the
@@ -397,6 +439,13 @@ Vim editor mode
 Enable vim-style editing via
 /config
 → Editor mode.
+Claude Code keeps your vim mode and cursor position when you toggle the
+transcript viewer
+with
+Ctrl+O
+or open and close a panel such as
+/config
+. If you leave the prompt in NORMAL mode, it’s still in NORMAL mode when you return, with the cursor where you left it.
 ​
 Mode switching
 Command
@@ -1238,8 +1287,10 @@ No tool access
 Single response
 : there are no follow-up turns in the overlay. To continue the thread, ask another
 /btw
-question. To continue with full tool access, fork this question and answer into their own session with
+question. To continue with full tool access in a local session, press
 f
+to fork this question and answer into a
+background subagent
 .
 Low cost
 : while the conversation’s
@@ -1279,8 +1330,10 @@ returns toward the current one. Requires Claude Code v2.1.187 or later
 c
 Copy the answer to your clipboard as raw Markdown. Use this instead of mouse selection, which captures the hard-wrapped terminal rendering rather than the source text
 f
-Fork into a new session. The fork inherits the parent conversation plus this question and answer as real transcript turns, so you can continue with full tool access. The original session is preserved under
-/resume
+Start a
+forked subagent
+that inherits the parent conversation plus this question and answer, so it can continue with full tool access. You stay in the current session and find the fork in the
+panel below your prompt
 . Available in local sessions only
 x
 Clear the list of earlier
@@ -1289,7 +1342,7 @@ exchanges shown above the current answer
 /btw
 is the inverse of a
 subagent
-: it sees your full conversation but has no tools, while a subagent has full tools but starts with an empty context. Use
+: it sees your full conversation but has no tools. Use
 /btw
 to ask about what Claude already knows from this session; use a subagent to go find out something new.
 ​
@@ -1307,6 +1360,11 @@ Task tool availability
 Press
 Ctrl+T
 to toggle the task list view. The display shows up to five tasks at a time. When Claude hasn’t created any checklist items yet, the toggle has no visible effect because there’s nothing to display
+If you leave the list expanded, Claude Code restores the expanded view the next time you launch into a session that still has tasks, such as with
+--resume
+or
+--continue
+. When the task list is empty, Claude Code starts it collapsed
 To see all tasks or clear them, ask Claude directly: “show me all tasks” or “clear all tasks”
 Tasks persist across context compactions, helping Claude stay organized on larger projects
 To share a task list across sessions, set
@@ -1320,9 +1378,11 @@ Session recap
 When you return to the terminal after stepping away, Claude Code shows a one-line recap of what happened in the session so far. The recap generates in the background once at least three minutes have passed since the last completed turn and the terminal is unfocused, so it’s ready when you switch back. Recaps only appear once the session has at least three turns, and never twice in a row.
 Run
 /recap
-to generate a summary on demand. To turn automatic recaps off, open
+to generate a summary on demand. Claude Code caps both automatic recaps and
+/recap
+output at 400 characters. To turn automatic recaps off, open
 /config
-and disable
+and turn off
 Session recap
 .
 Session recap is on by default for every plan and provider. The recap is always skipped in non-interactive mode.

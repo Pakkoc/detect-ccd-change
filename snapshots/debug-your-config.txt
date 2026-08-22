@@ -63,8 +63,8 @@ claude doctor
 prints read-only installation and settings diagnostics without starting a session.
 Run
 /status
-to see which settings sources are active, including whether managed settings are in effect. To understand which scope wins for a given key, see
-How scopes interact
+to see which settings sources are active, including whether managed settings are in effect. To understand which scope Claude Code uses for a given key, see
+Settings precedence
 .
 ​
 Check MCP servers
@@ -125,7 +125,11 @@ reports the validation failure, and no hook from that file appears in
 /hooks
 . In
 managed settings
-, only the invalid entry is stripped and the file’s other hooks still apply.
+, Claude Code drops the whole
+hooks
+key from the file that contains the array, so none of that file’s hooks apply. The file’s other settings still apply, and
+claude doctor
+lists the dropped key.
 Edits to
 settings.json
 take effect in the running session after a brief file-stability delay. You don’t need to restart. If
@@ -393,7 +397,9 @@ For full reference on each configuration surface, see the dedicated page:
 directory reference
 : every config file location and what reads it
 Settings
-: precedence order and the full key list
+: which file to use and which value Claude Code uses; the
+settings reference
+has the full key list
 Hooks reference
 : event names, payloads, and
 --debug
