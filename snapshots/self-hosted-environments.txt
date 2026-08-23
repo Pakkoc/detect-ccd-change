@@ -46,7 +46,7 @@ Availability and limitations
 Check these before planning a rollout:
 Plans
 : public beta for Team and Enterprise organizations. Self-hosted environments are off by default; an
-Owner or admin
+Owner
 turns on
 Allow self-hosted environments
 on the

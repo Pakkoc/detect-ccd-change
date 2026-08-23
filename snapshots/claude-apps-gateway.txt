@@ -574,14 +574,15 @@ managed.policies[].cli
 block, which only reaches clients that are already connected.
 ​
 Deliver policy to Claude Desktop sessions
-Claude Desktop runs embedded Claude Code sessions and passes policy to each one it launches. It builds that policy from the configuration the gateway serves it at
+Claude Desktop runs its Cowork and Code tabs, plus the Chat tab when you enable it, on embedded Claude Code sessions and sends their model requests through the gateway. It passes policy to each of those sessions, built from the configuration the gateway serves it at
 /user/bootstrap
 : the model allowlist, disabled tools, and egress allowlist derived from the matched policy’s
 cli
 block, plus the
 desktop
 overlay
-. Other
+.
+Other
 cli
 keys, such as hooks,
 env
@@ -589,7 +590,7 @@ env
 Bash(npm *)
 , reach only clients that sign in through
 /login
-. Claude Desktop is pointed at the gateway through its own managed configuration and signs in with its own flow, separate from the
+. Claude Desktop reads the gateway URL from its own managed configuration and signs in with its own flow, separate from the
 forceLoginMethod
 and
 forceLoginGatewayUrl
@@ -829,6 +830,16 @@ key.
 Claude Desktop overlay
 covers both halves. Requires Claude Code v2.1.203 or later on the gateway server.
 Claude Desktop signs the developer in through the gateway’s identity provider with the same browser SSO step, then fetches its configuration from the gateway instead of from Anthropic. Model access and policy follow the same per-group rules as the CLI. A developer who uses both the CLI and Claude Desktop signs in to each separately; the gateway session isn’t shared between them.
+Once connected, Claude Desktop sends model requests from every enabled tab through the gateway. It shows the Cowork and Code tabs by default. To turn on the Chat tab as well, set
+chatTabEnabled
+to
+true
+in Claude Desktop’s
+managed configuration
+, or in the policy’s
+desktop
+block
+on a gateway running Claude Code v2.1.227 or later.
 ​
 CI pipelines and remote machines
 There is no service-token flow for unattended pipelines. Gateway sign-in always runs the browser device flow, so a CI job with no developer to approve the sign-in can’t authenticate; configure those against your provider directly.
@@ -926,6 +937,8 @@ once a policy
 opts in with a
 desktop
 key
+, and Claude Desktop sends model requests from its Cowork and Code tabs, and from the Chat tab when you enable it, through the gateway. To turn on the Chat tab, see
+Connect Claude Desktop
 . Requires Claude Code v2.1.203 or later on the gateway server.
 Telemetry fan-out (OTLP/HTTP)
 Available

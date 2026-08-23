@@ -143,6 +143,8 @@ claude.ai rejected the session token
 /
 session token rejected
 Authentication
+Issuer mismatch in authorization response (RFC 9207)
+Authentication
 AWS credentials expired or invalid
 Authentication
 AWS authentication failed
@@ -284,6 +286,10 @@ Command-line errors
 Error: --json-schema is not a valid JSON Schema
 Command-line errors
 Error: Settings file exceeds the 2MiB limit
+Command-line errors
+The current directory no longer exists (it was deleted or moved)
+/
+Can't read the current directory
 Command-line errors
 Error: Workspace not trusted
 when starting Remote Control
@@ -519,7 +525,11 @@ and
 529
 capacity errors indefinitely instead of failing after
 CLAUDE_CODE_MAX_RETRIES
-attempts. As of v2.1.199 it also raises the default retry count for other transient errors, such as server errors, timeouts, and dropped connections, to 300, roughly three hours of backoff, and removes the cap of 15 on
+attempts. Claude Code fails at once on a
+429
+that reports a spend limit or exhausted usage credits, even one from a
+gateway spend cap
+that resets on a schedule. Before v2.1.239, the watchdog retried these indefinitely. On v2.1.199 or later it also raises the default retry count for other transient errors, such as server errors, timeouts, and dropped connections, to 300, roughly three hours of backoff, and removes the cap of 15 on
 CLAUDE_CODE_MAX_RETRIES
 if you set that variable explicitly.
 API_TIMEOUT_MS
@@ -1627,6 +1637,40 @@ your claude.ai session token was rejected
 /mcp reconnect <server>
 form reports a successful reconnect even though the token is still rejected.
 Before v2.1.222, Claude Code marked the connector as needing authentication instead, which pointed you at the connector’s authorization flow even though completing it didn’t resolve the state.
+​
+Issuer mismatch in authorization response
+During an
+MCP OAuth sign-in
+, the authorization server redirected back to Claude Code with an
+iss
+parameter that doesn’t name the issuer that Claude Code expected from the server’s OAuth metadata. A wrong issuer at this step is how an authorization server mix-up attack looks, so Claude Code fails the sign-in instead of exchanging the authorization code. Claude Code shows the error in the
+/mcp
+server menu after the browser sign-in:
+Issuer mismatch in authorization response (RFC 9207): expected "https://auth.example.com", received "https://other.example.com"
+expected
+is the issuer from the server’s OAuth metadata, and
+received
+is the
+iss
+value the redirect carried. A sign-in whose redirect carries no
+iss
+parameter passes the check, unless the server’s metadata sets
+authorization_response_iss_parameter_supported
+, in which case Claude Code fails the sign-in.
+What to do:
+Try the sign-in again from
+/mcp
+If the error repeats, report it to the server operator. The fix is server-side: the authorization server must return the same issuer in the
+iss
+parameter that it advertises in its metadata
+To connect while the server is being fixed, start Claude Code with
+MCP_SDK_GENERATION=v1
+, whose
+runtime
+doesn’t run this check. This removes a protection against mix-up attacks, so prefer the server-side fix
+Before v2.1.232, Claude Code used the v2 runtime only in a gradual rollout or when you set
+MCP_SDK_GENERATION=v2
+.
 ​
 AWS credentials expired or invalid
 This message requires Claude Code v2.1.198 or later and only appears when
@@ -2824,6 +2868,27 @@ Point
 at a regular JSON settings file under 2 MiB. See
 Settings
 for the format.
+​
+The current directory no longer exists
+You started
+claude
+from a directory that was deleted or moved after your shell entered it, for example a worktree or temp directory another shell removed. Claude Code can’t read its working directory, so it exits with code 1 before starting the session, in interactive and
+non-interactive
+mode alike. Before v2.1.239, Claude Code crashed with minified bundle source and a raw
+ENOENT ... uv_cwd
+stack on stderr instead of this message.
+The current directory no longer exists (it was deleted or moved). Start Claude Code from an existing directory.
+When Claude Code can’t read the working directory for a different reason, such as a permissions change, the message names the error code instead:
+Can't read the current directory (EACCES). Start Claude Code from a different directory.
+What to do:
+Change to a directory that exists, such as your home or project directory, then run
+claude
+again
+If the directory was recreated at the same path, your shell still holds the deleted one. Run
+cd "$PWD"
+or leave and re-enter the directory, then run
+claude
+again
 ​
 Workspace not trusted when starting Remote Control
 You started

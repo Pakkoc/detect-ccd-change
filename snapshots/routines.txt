@@ -60,7 +60,11 @@ Cloud
 Local
 instead creates a
 Desktop scheduled task
-, which runs on your machine rather than in the cloud.
+, which runs on your machine rather than in the cloud. If
+Routines
+is missing from the Desktop sidebar, routines aren’t available to your account; see
+“Routines are disabled by your organization’s policy”
+.
 The creation form sets up the routine’s prompt, repositories, environment, connectors, and triggers.
 Routines run autonomously as full Claude Code cloud sessions: there is no permission-mode picker and no approval prompts during a run. The session can run shell commands, use
 skills

@@ -567,10 +567,8 @@ Cloud sessions, on
 Claude Code on the web
 or in the Desktop app, run on Anthropic-managed VMs by default: settings deployed to your device do not reach them, so deliver the allowlist through server-managed settings. Sessions your organization routes to a
 self-hosted environment
-run on your own compute and fall back to the managed settings file in the runner image when your organization delivers no server-managed settings; when both exist, the server-managed payload takes precedence, with the per-key
-env
-merge exception described in
-settings precedence
+run on your own compute and fall back to the managed settings file in the runner image when your organization delivers no server-managed settings; when both exist, the server-managed payload takes precedence, apart from the
+keys Claude Code reads from every admin source
 . A mid-session model switch in a cloud session is rejected when the requested model is excluded by the allowlist. Server-side rejection at session creation applies to
 organization model restrictions
 , not the

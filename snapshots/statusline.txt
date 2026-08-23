@@ -251,9 +251,9 @@ to your script:
 Your status line appears at the bottom of the interface. Settings reload automatically, but changes won’t appear until your next interaction with Claude Code.
 ​
 How status lines work
-Claude Code runs your script and pipes
+Claude Code runs your script with
 JSON session data
-to it via stdin. Your script reads the JSON, extracts what it needs, and prints text to stdout. Claude Code displays whatever your script prints.
+on stdin and displays whatever the script prints to stdout.
 When it updates
 Your script runs once when a session starts, including when you resume one. After that, it runs again when:
 A new assistant message arrives

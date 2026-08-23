@@ -618,13 +618,13 @@ header.
 ​
 Mint the admin token
 $ADMIN_TOKEN
-is a claude.ai OAuth access token for an account that holds an Owner or admin role, minted the same way as
+is a claude.ai OAuth access token for an account that holds an Owner role, minted the same way as
 Authenticate from CI
 :
 Mint it
 : run
 claude auth login
-with an account that holds an Owner or admin role, then read the current access token from the OS keychain on macOS or
+with an account that holds an Owner role, then read the current access token from the OS keychain on macOS or
 ~/.claude/.credentials.json
 on Linux and Windows.
 Read it fresh each run
@@ -691,7 +691,7 @@ $create
 "
 )
 Until an
-Owner or admin turns on
+Owner turns on
 Allow self-hosted environments
 for the organization, the call fails with a
 403

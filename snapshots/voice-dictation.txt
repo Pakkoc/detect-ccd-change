@@ -9,12 +9,6 @@ Requirements
 Voice dictation streams your recorded audio to Anthropic’s servers for transcription. Audio is not processed locally. It needs all of the following:
 A Claude.ai account
 : the speech-to-text service is only available when you authenticate with one, and is not available when Claude Code is configured to use an Anthropic API key directly, Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry.
-An organization without HIPAA compliance enabled
-:
-/voice
-shows
-Voice mode is disabled by your organization's policy
-when this restriction applies.
 A local microphone
 : voice dictation does not work in remote environments such as
 Claude Code on the web
@@ -269,9 +263,7 @@ Voice mode requires a Claude.ai account
 /login
 to sign in with a Claude.ai account.
 Voice mode is disabled by your organization's policy
-: your organization’s compliance configuration disables voice dictation, as described in
-Requirements
-. Contact your organization administrator to confirm whether voice dictation is available for your organization.
+: an administrator policy for your organization turns off voice dictation. Contact your organization administrator to confirm whether voice dictation is available for your organization.
 Microphone access is denied
 : grant microphone permission to your terminal in system settings. On macOS, go to System Settings → Privacy & Security → Microphone and enable your terminal app, then run
 /voice

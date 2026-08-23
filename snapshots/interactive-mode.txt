@@ -11,6 +11,8 @@ Alt+B
 ,
 Alt+F
 ,
+Alt+D
+,
 Alt+Y
 ,
 Alt+P
@@ -220,8 +222,12 @@ Paste text deleted with
 Ctrl+K
 ,
 Ctrl+U
-, or
+,
 Ctrl+W
+, or, under
+keybindingFlavor: "readline"
+,
+Alt+D
 Alt+Y
 (after
 Ctrl+Y
@@ -237,7 +243,20 @@ Option as Meta
 on macOS
 Alt+F
 Move cursor forward one word
-Word navigation. Requires
+Moves to the start of the next word, or to the end of the current word when
+keybindingFlavor
+is
+"readline"
+. Requires
+Option as Meta
+on macOS
+Alt+D
+Delete next word
+Deletes through the space after the word, or to the end of the word when
+keybindingFlavor
+is
+"readline"
+. Requires
 Option as Meta
 on macOS
 Ctrl+_
@@ -246,20 +265,37 @@ Ctrl+Shift+-
 Undo last input edit
 Restores the previous input text and cursor position
 ​
-Make Ctrl+W delete back to whitespace
-By default,
-Ctrl+W
-deletes the previous word, stopping at punctuation such as
-/
-. Set
+Make editing keys follow readline conventions
+Set
 keybindingFlavor
 to
 "readline"
-to make
-Ctrl+W
-delete back to the previous whitespace instead, as Bash does. The default value is
+to make the prompt’s editing keys follow GNU readline conventions, as in Bash. The default value is
 "classic"
-. Requires Claude Code v2.1.238 or later.
+. Requires Claude Code v2.1.238 or later. Under
+"readline"
+:
+Ctrl+W
+deletes back to the previous whitespace.
+A word is a run of letters and digits, so punctuation such as
+_
+,
+.
+, and
+/
+separates words.
+Alt+F
+and
+Alt+D
+stop at the end of the current word, and
+Ctrl+Y
+can paste back text that
+Alt+D
+deleted. Before v2.1.239, Claude Code applied
+"readline"
+only to
+Ctrl+W
+.
 Add the setting to
 ~/.claude/settings.json
 :
@@ -278,6 +314,11 @@ src/utils/foo.ts
 "classic"
 it removes only
 foo.ts
+.
+This setting is separate from the
+keybindings configuration file
+: the word-editing commands aren’t actions there, so you can’t remap them in
+keybindings.json
 .
 ​
 Theme and display

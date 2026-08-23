@@ -160,7 +160,9 @@ excludes the user, project, and local files.
 Cloud sessions
 : a session in an Anthropic-hosted environment doesn’t read a device’s MDM profile or file, so policy for it has to come from server-managed settings. A session in a
 self-hosted environment
-reads the managed settings file in its runner image only when server-managed settings deliver no keys.
+reads the managed settings file in its runner image only when server-managed settings deliver no keys, apart from the
+keys Claude Code reads from every admin source
+.
 Running sessions
 : a session picks up most changes on the schedule in the table without a restart. Claude Code reads
 forceRemoteSettingsRefresh
@@ -613,7 +615,11 @@ Reject the
 --agents
 , and
 --mcp-config
-flags at startup. Requires Claude Code v2.1.193 or later
+flags at startup. In cloud sessions, Claude Code drops the MCP servers the server delivered through
+--mcp-config
+, other than in-process
+type: "sdk"
+entries, and starts the session. Requires Claude Code v2.1.193 or later
 forceRemoteSettingsRefresh
 When
 true
@@ -652,8 +658,10 @@ locks all four, an array names which
 wslInheritsWindowsSettings
 When set in the HKLM registry or a file under
 C:\Program Files\ClaudeCode
-, have WSL read the Windows policy chain in addition to
+, have WSL read the Windows policy chain, and read
 /etc/claude-code
+only when no managed settings file or drop-in under that directory delivers a policy key other than
+wslInheritsWindowsSettings
 ; the entry gives the order
 On Team and Enterprise plans, an Owner enables or disables
 Remote Control

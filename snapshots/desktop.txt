@@ -802,12 +802,15 @@ marketplaces
 including the official Anthropic marketplace. Select
 Manage plugins
 to enable, disable, or uninstall plugins.
-Plugins can be scoped to your user account, a specific project, or local-only. If your organization manages plugins centrally, those plugins are available in desktop sessions the same way they are in the CLI. The plugin browser is not available in cloud sessions, and plugins you install from the desktop app aren’t available for cloud sessions; to use a plugin in a cloud session, declare it in the repository’s
+You can scope plugins to your user account, a specific project, or local-only. If your organization manages plugins centrally, those plugins are available in desktop sessions the same way they are in the CLI.
+The plugin browser is not available in cloud sessions, and plugins you install from the desktop app aren’t available for cloud sessions. To use a plugin in a cloud session, either declare it in the repository’s
 .claude/settings.json
 under
 enabledPlugins
-so it
-installs at session start
+so Claude Code
+installs it at session start
+, or enable it for your claude.ai account so Claude Code loads it as a
+synced plugin
 . Plugins aren’t available in WSL sessions. For the full plugin reference including creating your own plugins, see
 plugins
 .
@@ -1492,6 +1495,8 @@ server-managed settings
 self-hosted environment
 fall back to the managed settings file in the runner image when server-managed settings deliver no keys, per
 settings precedence
+, apart from the
+keys Claude Code reads from every admin source
 .
 SSH sessions
 : the session reads the managed settings file from the remote host. Desktop itself reads

@@ -827,9 +827,11 @@ reach a cloud session; a
 managed-settings.json
 file or MDM profile on your device doesn’t. A
 self-hosted environment
-reads the managed settings file in its runner image only when server-managed settings deliver no keys; see
+reads the managed settings file in its runner image only when server-managed settings deliver no keys, apart from the
+keys Claude Code reads from every admin source
+; see
 settings precedence
-on that page.
+.
 /config
 : on the web, opens the Claude Code section of your claude.ai settings instead of changing a value. To change a setting for a cloud session, set an
 environment variable

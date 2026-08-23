@@ -271,6 +271,12 @@ paste-cache/
 Contents of large pastes
 image-cache/<session>/
 Attached images. On each sweep, Claude Code removes the directories of all other sessions, whatever their age.
+uploads/<session>/
+Files you attach from the web or mobile app, and photos you attach from the mobile app, when messaging a
+Remote Control
+session. An attachment to a
+cloud session
+is saved in that session’s own cloud environment instead, not on your machine.
 session-env/
 Per-session environment metadata
 tasks/
@@ -450,6 +456,10 @@ Up-arrow prompt recall
 ~/.claude/paste-cache/
 Pasted text in recalled prompts; see
 paste large content
+~/.claude/uploads/
+Attachments that past
+Remote Control
+sessions refer to by path
 ~/.claude/file-history/
 Checkpoint restore for past sessions
 ~/.claude/stats-cache.json

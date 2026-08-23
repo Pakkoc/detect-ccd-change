@@ -130,7 +130,9 @@ Claude apps gateway
 opens directly on the
 Cloud gateway
 screen for you to sign in with corporate SSO
-Once logged in, your credentials are stored and you won’t need to log in again.
+Once logged in, your credentials are stored and you won’t need to log in again. Learn more in
+Credential Management
+.
 ​
 Step 3: Start your first session
 Open your terminal in any project directory and start Claude Code:
@@ -145,9 +147,6 @@ You’ll see the Claude Code prompt with the version, current model, and working
 for available commands or
 /resume
 to continue a previous conversation.
-After logging in (Step 2), your credentials are stored on your system. Learn more in
-Credential Management
-.
 ​
 Step 4: Ask your first question
 Let’s start with understanding your codebase. Try one of these commands:

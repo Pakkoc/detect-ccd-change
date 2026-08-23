@@ -31,7 +31,7 @@ shared environments
 only.
 ​
 The Default environment
-Onboarding sets up the
+If you don’t have an environment yet, onboarding sets up the
 Default
 environment for you, whether you connect through
 the web
@@ -57,9 +57,9 @@ Default
 available, every session runs in it. When you have more than one environment, sessions choose one per surface:
 On the web, the Desktop app, and the mobile app, sessions use the environment shown in the
 selector
-. An admin-set
+. An
 organization default
-fills the selection when you haven’t picked one.
+set by an Owner fills the selection when you haven’t picked one.
 From the CLI, sessions use your
 /remote-env
 pick
@@ -87,7 +87,7 @@ claude.ai/code
 web onboarding
 . Environments you create are personal to your account;
 shared environments
-created by your admins appear in the same selector. See
+created by an Owner appear in the same selector. See
 Installed tools
 for what’s available without any configuration.
 1
@@ -163,10 +163,12 @@ routine
 , can’t start new sessions in it; point it at another environment.
 ​
 Organization-shared environments
-Owners and admins on Team and Enterprise plans can create cloud environments that are shared with every member of the organization; the same roles manage everything else on the
+On Team and Enterprise plans, an Owner can create cloud environments that are shared with every member of the organization. The same role manages everything else on the
 Cloud environments
 admin page, including
 self-hosted environments
+; the Admin role can’t open the page. The full list of roles that can open it is the one for
+managing server-managed settings
 . Shared environments appear in each member’s environment selector alongside their personal ones, so a team can standardize on one configuration instead of each member recreating it.
 Create, edit, and archive shared environments from the
 Cloud environments
@@ -180,7 +182,7 @@ in
 .env
 format, and a
 setup script
-. Owners and admins choose the organization’s
+. Owners choose the organization’s
 default environment
 separately, at
 claude.ai/admin-settings/claude-code
@@ -387,6 +389,8 @@ is enforced in cloud sessions. Settings deployed to your device through MDM or m
 self-hosted environment
 , sessions read the managed settings file in the runner image only when server-managed settings deliver no keys, per
 settings precedence
+, apart from the
+keys Claude Code reads from every admin source
 Your user
 ~/.claude/CLAUDE.md
 No
@@ -409,7 +413,8 @@ lives in
 ~/.claude/settings.json
 . Declare them in the repo’s
 .claude/settings.json
-instead
+instead, or enable them for your claude.ai account so Claude Code loads them as
+synced plugins
 MCP servers you added with
 claude mcp add
 at the default local scope or the user scope
@@ -450,11 +455,11 @@ Node.js
 Ruby
 3.1, 3.2, 3.3 with gem, bundler, rbenv
 PHP
-8.4 with Composer
+8.3 with Composer
 Java
 OpenJDK 21 with Maven and Gradle
 Go
-latest stable with module support
+Go with module support
 Rust
 rustc and cargo
 C/C++
@@ -464,14 +469,16 @@ docker, dockerd, docker compose
 Databases
 PostgreSQL 16, Redis 7.0
 Utilities
-git, jq, yq, ripgrep, tmux, vim, nano
+git, gh, jq, yq, ripgrep, tmux, vim, nano
 ¹ Bun is installed but has known
 proxy compatibility issues
 for package fetching.
-For exact versions, ask Claude to run
+To get the versions of most of the tools in this table, ask Claude to run
 check-tools
 in a cloud session. It’s a shell command installed on the session VM, not a slash command; you ask Claude because
 Claude runs all VM commands for you
+. For a tool it doesn’t report, such as Ruby, PHP, bun, PostgreSQL, or Redis, ask Claude to run the tool’s own version command, for example
+psql --version
 .
 Node.js versions are installed at
 /opt/node20
@@ -509,10 +516,10 @@ environment settings
 , or leave both unset and let the
 GitHub proxy
 authenticate for you:
-If you set a token, it passes through to the container unchanged, so your scripts, and GitHub’s
+If you set a token, it passes through to the container unchanged, so your scripts and GitHub’s
 gh
 CLI
-if you install it, use it directly.
+use it directly.
 If you set neither and the
 GitHub proxy
 is handling authentication for your session, both variables read as the placeholder string
@@ -529,35 +536,13 @@ echo $GH_TOKEN
 GitHub’s
 gh
 CLI
-isn’t pre-installed. If you need a
+is pre-installed. If you need a
 gh
 command the built-in tools don’t cover, like
 gh release
 or
 gh workflow run
-, install and authenticate it yourself:
-1
-Install gh in your setup script
-Add
-apt update && apt install -y gh
-to your
-setup script
-.
-2
-Provide a token if the proxy is not handling authentication
-If
-echo $GH_TOKEN
-prints
-proxy-injected
-, the
-GitHub proxy
-authenticates
-gh
-for you and this step is unnecessary. Otherwise, add a
-GH_TOKEN
-environment variable to your
-environment settings
-with a GitHub personal access token; like any environment variable, it’s readable by anyone who uses the environment, so scope the token narrowly.
+, ask Claude to run it.
 gh
 reads
 GH_TOKEN
@@ -651,9 +636,8 @@ and most language package managers work.
 To add a setup script, open the environment settings dialog and enter your script in the
 Setup script
 field.
-This example installs GitHub’s
-gh
-CLI
+This example installs
+ShellCheck
 , which isn’t pre-installed.
 #!/bin/bash
 apt
@@ -662,7 +646,7 @@ update
 apt
 install
 -y
-gh
+shellcheck
 ​
 Script requirements
 A setup script has three constraints to write around:
@@ -717,6 +701,10 @@ SessionStart hooks
 Where you configure them
 The environment dialog at
 claude.ai/code
+, or the
+Cloud environments
+admin page for
+shared environments
 A
 settings file
 such as your repo’s

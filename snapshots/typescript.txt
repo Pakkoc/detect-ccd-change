@@ -1599,7 +1599,7 @@ window, so worst-case wall time is roughly
 API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)
 plus backoff. For unattended runs that need to wait through longer outages, set
 CLAUDE_CODE_RETRY_WATCHDOG=1
-: it retries capacity errors indefinitely, and as of Claude Code v2.1.199 raises the default for other transient errors to
+: it retries transient capacity errors indefinitely and, on Claude Code v2.1.199 or later, raises the default for other transient errors to
 300
 and removes the cap on this variable.
 CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
@@ -8360,11 +8360,11 @@ names the published page in the browser tab and gallery when the HTML file has n
 <title>
 tag.
 url
-targets an existing artifact to update in place instead of minting a new one, and
+targets an existing artifact to update in place instead of minting a new one.
 force
-is a last-resort overwrite that discards another session’s published version; on a 409 conflict the normal fix is to re-read, merge, and publish again rather than pass
+is a last-resort overwrite that discards a newer version another session published. On a conflict, the failed publish returns the newer content; Claude merges its changes onto that content, or re-reads the artifact, and publishes again. Pass
 force
-.
+only when the user explicitly asks to discard that version.
 Pass
 "list"
 to enumerate the user’s published artifacts; only
@@ -9889,9 +9889,23 @@ ver
 ?:
 string
 ;
+seeded
+?:
+false
+;
 };
 };
 Returns the fetched content with HTTP status and metadata.
+artifactRead
+is present only when Claude fetched an artifact the session can publish to, and it always carries that artifact’s
+slug
+.
+seeded
+is
+false
+on a read that didn’t deliver the page’s full source, and that entry carries no
+ver
+. The field requires Agent SDK v0.3.239 or later.
 ​
 WebSearch
 Tool name:
@@ -13086,6 +13100,13 @@ task_notification
 events, so the next membership change corrects any event you missed.
 Ordering relative to those per-task events is unspecified, so don’t correlate the two streams.
 Nothing is emitted at startup. Reset to an empty set whenever the session’s CLI process starts or restarts and let the next membership change repopulate it.
+When you send a repeated
+initialize
+control request to a running session, such as with
+reinitialize()
+after a transport gap, Claude Code follows the response with a snapshot of the current live set, even when it is empty. A reconnecting host therefore learns what is running without waiting for the next membership change. Before Agent SDK v0.3.239, Claude Code sent no snapshot after a repeated
+initialize
+.
 Requires Claude Code v2.1.203 or later.
 type
 SDKBackgroundTasksChangedMessage

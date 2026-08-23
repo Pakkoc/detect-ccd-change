@@ -27,7 +27,7 @@ Organization and roles
 The claude.ai side needs:
 Allow self-hosted environments
 turned on by an
-Owner or admin
+Owner
 on the
 Cloud environments
 admin page
@@ -94,7 +94,7 @@ Claude Code includes a guided setup: an interactive Claude Code session that wal
 ./runner-setup/CHEAT-SHEET.md
 . Run it on a machine where you’ve signed in with
 claude auth login
-using an account that holds an Owner or admin role; it isn’t available with API keys or third-party model providers. On hosts where an interactive session isn’t possible, use the manual steps below instead. Confirm the
+using an account that holds an Owner role; it isn’t available with API keys or third-party model providers. On hosts where an interactive session isn’t possible, use the manual steps below instead. Confirm the
 version check
 passed first: on versions older than 2.1.224, this command starts an ordinary Claude session with the words as the prompt instead of the guided setup. To start the guided setup, run the setup subcommand and follow the prompts:
 claude

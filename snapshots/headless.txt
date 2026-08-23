@@ -89,15 +89,15 @@ Skills from additional directories
 covers what does and doesn’t load.
 Without
 --bare
-, Claude Code runs the hooks in a project’s
+, a
+-p
+session runs the hooks in a project’s
 .claude/settings.json
-even in a folder you’ve never trusted, because a
--p
-session shows no workspace trust dialog. It also connects the servers in the project’s
+and connects the servers in its
 .mcp.json
-, because a
+, even in a folder you’ve never trusted. A
 -p
-session can’t show the per-server approval prompt either.
+session shows no workspace trust dialog and no per-server approval prompt.
 What runs before you trust a folder
 covers each kind of repository content under
 -p

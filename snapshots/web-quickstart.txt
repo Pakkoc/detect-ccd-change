@@ -104,11 +104,11 @@ create an empty repository on GitHub
 first.
 3
 Confirm your Default environment
-When you finish connecting GitHub, onboarding creates a
+If you don’t have an environment yet, onboarding creates a
 cloud environment
 named
 Default
-for you; if onboarding shows an environment form instead, keep its defaults to create the same
+for you when you finish connecting GitHub; if onboarding shows an environment form instead, keep its defaults to create the same
 Default
 environment. The environment controls what network access Claude has during sessions and what runs when a new session is created.
 Default

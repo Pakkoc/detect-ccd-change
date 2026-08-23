@@ -62,7 +62,7 @@ Dispatch is organization-wide
 : any member of your Anthropic organization can dispatch a session to any of its environments, and there’s no per-environment access control on dispatch. Treat every runner host as reachable for code execution by every org member, and place data or credentials on a runner host only if every org member is allowed to read them.
 --lock-to-account
 bounds which account’s sessions a given host executes, but dispatch into the environment itself stays organization-wide. To make self-hosted environments the only picker option, an
-Owner or admin
+Owner
 can hide Anthropic-hosted environments for the whole organization from the
 Cloud environments
 page
@@ -147,9 +147,9 @@ claude.ai
 . At session runtime, only when sessions install plugins from the official Anthropic marketplace.
 storage.googleapis.com
 443
-At session runtime, for marketplace plugin catalog fetches and Artifact publishing when the Artifact tool is enabled; Artifact publishing falls back to
-api.anthropic.com
-when this host is blocked.
+At session runtime, for the plugin install counts and metadata shown in
+/plugin
+.
 code.claude.com
 and
 claude.com

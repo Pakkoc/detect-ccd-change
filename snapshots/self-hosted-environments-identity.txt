@@ -1,5 +1,5 @@
 Self-hosted environments are in public beta on Team and Enterprise plans; an
-Owner or admin
+Owner
 enables them by turning on
 Allow self-hosted environments
 on the

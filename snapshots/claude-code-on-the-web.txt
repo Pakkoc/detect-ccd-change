@@ -29,7 +29,7 @@ Limitations
 Cloud environments
 Every cloud session runs in a
 cloud environment
-, the saved configuration that controls network access, environment variables, and setup scripts. When you onboard, Claude Code sets up a
+, the saved configuration that controls network access, environment variables, and setup scripts. If you don’t have an environment yet when you onboard, Claude Code sets up a
 Default
 environment with
 Trusted

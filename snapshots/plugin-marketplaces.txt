@@ -349,13 +349,9 @@ string
 Marketplace manifest version
 metadata.pluginRoot
 string
-Base directory prepended to relative plugin source paths (for example,
-"./plugins"
-lets you write
-"source": "formatter"
-instead of
-"source": "./plugins/formatter"
-)
+Directory that Claude Code resolves bare plugin source names under. See
+Relative paths
+. Requires Claude Code v2.1.239 or later.
 allowCrossMarketplaceDependenciesOn
 array
 Other marketplaces that plugins in this marketplace may depend on. Dependencies from a marketplace not listed here are blocked at install. See
@@ -549,7 +545,10 @@ string
 none
 Local directory within the marketplace repo. Must start with
 ./
-. Resolved relative to the marketplace root, not the
+, unless you write a
+bare name under
+metadata.pluginRoot
+. Claude Code resolves the path relative to the marketplace root, not the
 .claude-plugin/
 directory
 github
@@ -693,6 +692,33 @@ lives at
 . Don’t use
 ../
 to reference paths outside the marketplace root.
+A bare name is a single directory name with no
+/
+, such as
+"formatter"
+. To write bare names instead of
+./
+paths, set
+metadata.pluginRoot
+to the directory they resolve under. With
+"pluginRoot": "./plugins"
+, Claude Code resolves
+"source": "formatter"
+to
+./plugins/formatter
+. Requires Claude Code v2.1.239 or later.
+metadata.pluginRoot
+must itself be a relative path inside the marketplace. Claude Code ignores it for a source that already starts with
+./
+. A source that contains a
+/
+, such as
+team-a/formatter
+, isn’t a bare name and still needs the
+./
+prefix, even when
+metadata.pluginRoot
+is set.
 Claude Code resolves relative paths against a local copy of the marketplace, so they work when users add your marketplace from a git source or a local directory. If users add your marketplace via a direct URL to the
 marketplace.json
 file, relative paths won’t resolve, because Claude Code downloads only that file. For URL-based distribution, use any other

@@ -530,6 +530,7 @@ claude --resume <session-id>
 finds a session stored under either name.
 ​
 See also
+These pages cover related session and parallelism mechanics:
 Worktrees
 : run isolated parallel sessions on separate branches
 Checkpointing

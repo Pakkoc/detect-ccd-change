@@ -311,11 +311,11 @@ above for restrictions and the
 model
 key in managed settings for a default.
 Claude Code on the web
-has its own admin surface: on the Cloud environments page in admin settings, owners and admins create
+has its own admin surface: on the Cloud environments page in admin settings, Owners create
 organization-shared environments
 that set the
 network access level
-, environment variables, and setup script for members’ cloud sessions. Owners and admins choose the organization’s default environment separately, at
+, environment variables, and setup script for members’ cloud sessions. Owners choose the organization’s default environment separately, at
 claude.ai/admin-settings/claude-code
 .
 Permission rules and sandboxing cover different layers. Denying WebFetch blocks Claude’s fetch tool, but if Bash is allowed,

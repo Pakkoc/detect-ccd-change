@@ -400,13 +400,8 @@ setting
 downloads.claude.ai
 Plugin executable downloads; native installer, native auto-updater, and update version checks
 storage.googleapis.com
-Install counts and plugin metadata shown in
+Plugin install counts and metadata shown in
 /plugin
-. Signed
-artifact
-uploads try this host first; publishing falls back to
-api.anthropic.com
-when it is blocked
 storage.googleapis.com
 Native installer and native auto-updater on versions prior to 2.1.116
 registry.npmjs.org

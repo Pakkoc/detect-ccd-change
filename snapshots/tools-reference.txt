@@ -137,9 +137,9 @@ No
 ListAgents
 Lists the agents Claude can message with
 SendMessage
-, apart from
+: subagents in the session,
 agent team
-teammates, which Claude reaches through the team’s roster: subagents in the session, your other local Claude Code sessions, and, while this session is connected to
+teammates, your other local Claude Code sessions, and, while this session is connected to
 Remote Control
 , your
 Claude Code on the web
@@ -149,6 +149,7 @@ command. See
 cross-session messaging
 . Requires Claude Code v2.1.224 or later, and appears only in sessions where
 cross-session messaging is enabled
+. Teammate rows and the first line showing this session’s own name require v2.1.239 or later
 No
 ListMcpResourcesTool
 Lists resources exposed by connected

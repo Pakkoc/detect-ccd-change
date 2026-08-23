@@ -27,7 +27,7 @@ Best for
 Security model
 Server-managed settings
 Organizations without MDM, or users on unmanaged devices
-Settings delivered from Anthropic’s servers at authentication time
+Settings that Claude Code fetches from Anthropic’s servers at startup and refreshes hourly during the session
 Endpoint-managed settings
 Organizations with MDM or endpoint management
 Settings deployed to devices via MDM configuration profiles, registry policies, or managed settings files
@@ -173,7 +173,11 @@ file can’t be distributed through server-managed settings. Deliver the
 allowedMcpServers
 and
 deniedMcpServers
-policy keys there instead.
+policy keys there instead. Claude Code reads a
+managed-mcp.json
+deployed at its
+system path
+separately from the managed settings tier, so the file still applies when server-managed settings are in effect.
 Settings restricted to OS-level policy sources, such as
 policyHelper
 and
@@ -372,7 +376,9 @@ Enforce fail-closed startup
 By default, if the remote settings fetch fails at startup, the CLI continues with the settings cached from the last successful fetch, or without server-managed settings on a machine that has never fetched them. For environments where either window is unacceptable, set
 forceRemoteSettingsRefresh: true
 in your managed settings.
-When this setting is active, the CLI blocks at startup until remote settings are freshly fetched. If the fetch fails, the CLI exits rather than proceeding without the policy. This setting self-perpetuates: once delivered from the server, it is also cached locally so that subsequent startups enforce the same behavior even before the first successful fetch of a new session.
+When this setting is active in a session that fetches server-managed settings, the CLI blocks at startup until remote settings are freshly fetched. If the fetch fails, the CLI exits rather than proceeding without the policy. This setting self-perpetuates: once delivered from the server, it is also cached locally so that subsequent startups enforce the same behavior even before the first successful fetch of a new session. A session that
+doesn’t fetch server-managed settings
+starts without waiting.
 To enable this, add the key to your managed settings configuration:
 {
 "forceRemoteSettingsRefresh"

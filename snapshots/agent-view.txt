@@ -22,7 +22,7 @@ claude
 shows. Accept to save trust for the workspace and continue. If you decline, Claude Code exits without opening agent view.
 Agent view opens with an input at the bottom and a table that fills in as sessions start. Press
 Esc
-at any time to return to your shell; if you opened agent view by backgrounding a session with
+to return to your shell; if you opened agent view by backgrounding a session with
 ←
 ,
 Esc
@@ -626,7 +626,11 @@ Close the peek panel, clear the input, or exit. When you opened agent view by ba
 ←
 , the final
 Esc
-returns to that conversation instead of exiting
+returns to that conversation instead of exiting. With
+vim editor mode
+on, pressing
+Esc
+in the input switches from INSERT to NORMAL mode and keeps your text, as in the main prompt
 Ctrl+C
 Clear the input; press twice to exit
 ?
@@ -1873,6 +1877,21 @@ unknown option
 error. The table below lists when each flag and behavior was added.
 Version
 Change
+v2.1.239
+With
+vim editor mode
+on, pressing
+Esc
+in agent view’s input switches from INSERT to NORMAL mode and keeps your text, matching the main prompt; in NORMAL mode with text still in the input, pressing
+Esc
+clears it, and pressing
+Esc
+on an empty input exits, as the
+Esc
+shortcut
+describes. Before this release,
+Esc
+cleared the input.
 v2.1.233
 For a session linked to a GitLab merge request, Claude Code writes the row’s label in GitLab’s
 !1234

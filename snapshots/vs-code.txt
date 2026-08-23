@@ -731,7 +731,9 @@ MCP documentation
 for available servers.
 ​
 Work with git
-Claude Code integrates with git to help with version control workflows directly in VS Code. Ask Claude to commit changes, create pull requests, or work across branches.
+Claude Code integrates with git to help with version control workflows directly in VS Code. Ask Claude to commit changes, create pull requests, or work across branches. To start Claude in an isolated worktree with its own files and branch, see
+Run parallel sessions with worktrees
+.
 ​
 Create commits and pull requests
 Claude can stage changes, write commit messages, and create pull requests based on your work:
@@ -739,19 +741,6 @@ commit my changes with a descriptive message
 create a pr for this feature
 summarize the changes I've made to the auth module
 When creating pull requests, Claude generates descriptions based on the actual code changes and can add context about testing or implementation decisions.
-​
-Use git worktrees for parallel tasks
-Use the
---worktree
-(
--w
-) flag to start Claude in an isolated worktree with its own files and branch:
-claude
---worktree
-feature-auth
-Each worktree maintains independent file state while sharing git history. This prevents Claude instances from interfering with each other when working on different tasks. For more details, see
-Run parallel sessions with Git worktrees
-.
 ​
 Use third-party providers
 By default, Claude Code connects directly to Anthropic’s API. If your organization uses Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry to access Claude, configure the extension to use your provider instead:

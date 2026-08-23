@@ -87,9 +87,16 @@ Code
 , and pick the session from the list. See
 connect from another device
 for each option.
-Attachments you add in the Claude app reach the local session too. Claude sees attached photos directly as part of your message. Claude Code downloads other files to your machine and passes them to Claude as
+When you add an attachment in the Claude app, it reaches the local session too:
+Photos
+: Claude sees attached photos directly as part of your message. Claude Code also saves each photo under
+~/.claude/uploads/
+and tells Claude the saved file path, so Claude can copy the image into files it creates.
+Other files
+: Claude Code downloads them to your machine and passes them to Claude as
 @
-file references. For requirements, invocation modes, and troubleshooting, see the
+file references.
+For requirements, invocation modes, and troubleshooting, see the
 Remote Control overview
 .
 ​

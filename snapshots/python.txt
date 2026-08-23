@@ -2705,7 +2705,7 @@ window, so worst-case wall time is roughly
 API_TIMEOUT_MS × (CLAUDE_CODE_MAX_RETRIES + 1)
 plus backoff. For unattended runs that need to wait through longer outages, set
 CLAUDE_CODE_RETRY_WATCHDOG=1
-: it retries capacity errors indefinitely, and as of Claude Code v2.1.199 raises the default for other transient errors to
+: it retries transient capacity errors indefinitely and, on Claude Code v2.1.199 or later, raises the default for other transient errors to
 300
 and removes the cap on this variable.
 CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS

@@ -1,9 +1,11 @@
 Fullscreen rendering is a
 research preview
-. If you first used Claude Code on or after May 6, 2026, Claude Code renders fullscreen by default; run
-/tui default
-to switch back. If you started earlier, you keep the classic renderer; run
+. Whether you
+start in fullscreen or in the classic renderer
+depends on your setup. Run
 /tui fullscreen
+or
+/tui default
 to switch in your current conversation. Behavior may change based on feedback.
 Fullscreen rendering is an alternative rendering path for the Claude Code CLI that eliminates flicker, keeps memory usage flat in long conversations, and adds mouse support. It draws the interface on the terminal’s alternate screen buffer, like
 vim
@@ -71,13 +73,6 @@ added for this session only
 In that case Claude Code prints
 Cannot switch renderers in this session
 with the reasons. It doesn’t switch or save anything.
-If you first used Claude Code before May 6, 2026 and haven’t saved a
-tui
-setting, Claude Code may open a dialog at startup offering the switch. If you accept, Claude Code relaunches the same way
-/tui fullscreen
-does, carrying the same session state, and saves the setting once the relaunched session has
-started successfully
-.
 You can also set the
 CLAUDE_CODE_NO_FLICKER
 environment variable before starting Claude Code:
@@ -94,6 +89,65 @@ failed fullscreen start
 command clears
 CLAUDE_CODE_NO_FLICKER
 from the relaunched process so the setting it writes takes effect.
+​
+Fullscreen by default
+Attached
+background sessions
+render fullscreen, and other sessions in
+screen reader mode
+use the classic renderer. Otherwise, Claude Code starts you in the renderer from the first row of this table that matches your setup:
+Your situation
+Renderer you start in
+You set
+CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1
+or
+CLAUDE_CODE_NO_FLICKER=0
+Classic
+You set
+CLAUDE_CODE_NO_FLICKER=1
+Fullscreen
+Claude Code
+turned fullscreen off after a failed fullscreen start
+on this machine
+Classic
+You’re in iTerm2’s
+tmux -CC
+integration mode
+, or you’re connected over SSH to Claude Code running on Windows
+Classic
+You saved a
+tui
+setting
+The renderer the setting names
+Your session doesn’t
+fetch feature flags from Anthropic
+, and Claude Code has stopped offering the startup dialog on this machine
+Classic
+Your session doesn’t fetch feature flags from Anthropic, and this machine’s first Claude Code launch ran v2.1.239 or later
+Fullscreen
+Your session fetches feature flags from Anthropic, and you first used Claude Code on or after May 6, 2026
+Fullscreen
+Anything else
+Classic
+Sessions that don’t fetch feature flags include those through
+Amazon Bedrock
+,
+Google Cloud’s Agent Platform
+, or
+Microsoft Foundry
+, and those with telemetry turned off.
+If you start in the classic renderer and haven’t saved a
+tui
+setting, Claude Code may open a dialog at startup offering the switch:
+If you accept, Claude Code relaunches the same way
+/tui fullscreen
+does, carrying the same session state, and saves the setting once the relaunched session has
+started successfully
+.
+If you choose
+Not now
+, Claude Code doesn’t offer again on this machine.
+Claude Code stops offering after it has shown the dialog on three launches, answered or not.
 ​
 What changes
 Fullscreen rendering changes how the CLI draws to your terminal. The input box stays fixed at the bottom of the screen instead of moving as output streams in. If the input doesn’t move while Claude is working, fullscreen rendering is active. Only visible messages are kept in the render tree, so memory stays constant regardless of conversation length.
@@ -612,7 +666,7 @@ Sessions that count: only sessions that started in fullscreen rendering because 
 tui
 setting says so, because you accepted the
 startup dialog
-, or because your account renders fullscreen by default
+, or because Claude Code starts you in fullscreen by default
 CLAUDE_CODE_NO_FLICKER=1
 : if you set it, Claude Code renders that session fullscreen even after a failed start, and doesn’t count it
 Count reset: Claude Code counts failed starts per Claude Code version, and a successful fullscreen start resets the count

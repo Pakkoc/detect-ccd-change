@@ -1,5 +1,5 @@
 Self-hosted environments are in public beta on Team and Enterprise plans; an
-Owner or admin
+Owner
 enables them by turning on
 Allow self-hosted environments
 on the
@@ -617,7 +617,7 @@ One order ID means at most one created workload. If the runner never registers, 
 .
 Use the exit-code contract.
 Exit 0 means submitted. Exit 1 means retryable failure; the session backs off and is re-offered. Exit 2 or higher means non-retryable; the session is blocked from spawning again until an
-Owner or admin
+Owner
 selects
 Retry
 on it in the environment’s
@@ -1013,9 +1013,13 @@ layers on top as project settings. Sessions also read
 managed-settings.json
 from the standard system path in your runner image, but the managed tier uses one source at a time, and
 server-managed settings
-are checked first: if your organization delivers any server-managed keys, sessions ignore the runner image’s managed file, except that
+are checked first: if your organization delivers any server-managed keys, sessions ignore the runner image’s managed file except for its cross-source keys. Claude Code still reads the
 env
-blocks merge per key across managed sources. See
+block and the other
+keys it reads from every admin source
+from that file, such as the sandbox locks, the sandbox binary paths, and
+forceRemoteSettingsRefresh
+. See
 settings precedence
 .
 When Anthropic’s control plane supplies a session with

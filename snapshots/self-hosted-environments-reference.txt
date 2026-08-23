@@ -1,5 +1,5 @@
 Self-hosted environments are in public beta on Team and Enterprise plans; an
-Owner or admin
+Owner
 enables them by turning on
 Allow self-hosted environments
 on the
@@ -701,7 +701,7 @@ Spawn requests claimable right now
 claude_code_self_hosted_orchestrator_queue_backing_off_sessions
 Spawn requests in retry backoff after a retryable hook failure
 claude_code_self_hosted_orchestrator_queue_circuit_broken_sessions
-Spawn requests blocked until an Owner or admin retries them from the environment’s
+Spawn requests blocked until an Owner retries them from the environment’s
 Activity
 tab; alert if above zero
 claude_code_self_hosted_orchestrator_pool_pending_sessions
