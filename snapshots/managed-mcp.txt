@@ -265,9 +265,9 @@ file.
 Restrict the allowlist to managed settings only
 shows the configuration. Without
 allowManagedMcpServersOnly
-, allowlists from every settings source merge, including a user’s own
+, allowlists from every settings scope merge, including a user’s own
 ~/.claude/settings.json
-, so a user can broaden what your allowlist permits. Denylists merge from every source regardless.
+, so a user can broaden what your allowlist permits. Denylists merge from every scope regardless.
 allowManagedMcpServersOnly
 is separate from
 allowManagedPermissionRulesOnly
@@ -356,11 +356,13 @@ Before loading a server, including one from
 managed-mcp.json
 , Claude Code runs three checks in order:
 Merge the lists.
-Allowlist and denylist entries from every settings source combine into one allowlist and one denylist. When
+Allowlist and denylist entries from every settings scope combine into one allowlist and one denylist, with the managed scope’s lists read from the one
+managed source Claude Code selects
+. When
 allowManagedMcpServersOnly
 is
 true
-, only the managed allowlist is kept; the denylist always merges from every source.
+, only the managed allowlist is kept; the denylist always merges from every scope.
 Check the denylist.
 A server that matches any denylist entry, by URL, command, or name, is blocked. Nothing overrides a denylist match.
 Check the allowlist.
@@ -728,7 +730,7 @@ When
 allowManagedMcpServersOnly
 is
 true
-, allowlists from user, project, and local settings are ignored. The denylist still merges from all sources, so users can always block servers for themselves.
+, allowlists from user, project, and local settings are ignored. The denylist still merges from every settings scope, so users can always block servers for themselves.
 ​
 How restrictions appear to users
 For what users see at startup when
@@ -785,10 +787,11 @@ MDM, GPO, fleet management, or any process with administrator privileges. Cannot
 allowedMcpServers
 Allowlist of permitted servers
 Any
-settings file
-; entries from every source merge unless
+settings scope
+; Claude Code merges the lists from every scope unless
 allowManagedMcpServersOnly
-is set
+is set, and takes the managed scope’s list from the one
+managed source it selects
 For enforcement, a
 managed settings source
 : server-managed settings,
@@ -796,7 +799,7 @@ managed-settings.json
 , MDM profile, or registry
 deniedMcpServers
 Denylist of blocked servers
-Any settings file; entries from every source merge
+Any settings scope; Claude Code merges the lists from every scope and takes the managed scope’s list from the one managed source it selects
 Same as
 allowedMcpServers
 allowManagedMcpServersOnly

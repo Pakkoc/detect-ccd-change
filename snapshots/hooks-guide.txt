@@ -315,6 +315,24 @@ agent_completed
 A background session finishes or fails. Fires only while
 agent view
 is open
+quota_auto_resume_fired
+Claude Code continues your task after a claude.ai usage limit paused it: at the reset, or sooner when something you do in Claude Code during the wait, such as adding usage credits, upgrading your plan, or switching models, makes usage available again, with the
+model-setting exception
+quota_auto_resume_stale
+A claude.ai usage limit reset while your computer slept for more than about 30 minutes. Claude Code waits for you to press
+Enter
+instead of continuing. After a shorter sleep it continues and fires
+quota_auto_resume_fired
+instead
+quota_auto_resume_disabled
+Claude Code ends its wait for a claude.ai usage limit without continuing your task:
+autoContinueAtUsageLimit
+turned off or the reset moved more than 24 hours away during a wait Claude Code started on its own, the continued task kept hitting the limit, or the continuation was blocked before it reached the model. Doesn’t fire when you press
+Esc
+or
+Ctrl+C
+, or pick
+Don’t continue automatically
 Claude Code times
 permission_prompt
 differently in a terminal and in Claude Desktop, the VS Code extension, and other hosts that answer permission requests through the Agent SDK. See
@@ -325,6 +343,13 @@ agent_needs_input
 and
 agent_completed
 matchers require Claude Code v2.1.198 or later.
+The
+quota_auto_resume_fired
+,
+quota_auto_resume_stale
+, and
+quota_auto_resume_disabled
+matchers require Claude Code v2.1.234 or later.
 Type
 /hooks
 and select
@@ -1461,6 +1486,12 @@ elicitation_response
 agent_needs_input
 ,
 agent_completed
+,
+quota_auto_resume_fired
+,
+quota_auto_resume_stale
+,
+quota_auto_resume_disabled
 SubagentStart
 agent type
 general-purpose
@@ -1844,7 +1875,9 @@ in your settings file. Claude Code reads the value left after
 settings precedence
 applies, so a project’s settings file can override yours. Hooks configured in managed settings still run unless
 disableAllHooks
-is also set there.
+is also set there. For the full reach of each level, see
+disableAllHooks
+.
 If you edit settings files directly while Claude Code is running, the file watcher normally picks up hook changes automatically.
 ​
 Prompt-based hooks

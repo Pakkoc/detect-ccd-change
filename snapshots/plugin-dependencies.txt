@@ -1,7 +1,12 @@
 A plugin can depend on other plugins by listing them in
 plugin.json
 or in its marketplace entry. By default, a dependency tracks the latest available version, so an upstream release can change the dependency under your plugin without warning. Version constraints let you hold a dependency at a tested version range until you choose to move.
-When you install a plugin that declares dependencies, Claude Code resolves and installs them automatically. If a dependency later goes missing,
+When you install a plugin that declares dependencies, Claude Code resolves and installs them automatically, apart from a dependency whose marketplace entry has a
+command
+source
+or a
+headersHelper
+, which you install yourself first. If a dependency later goes missing,
 /reload-plugins
 and the background plugin auto-update reinstall it, provided its marketplace is already in your configured marketplaces. Re-running
 claude plugin install
@@ -331,10 +336,15 @@ source, Claude Code checks the version in the dependency’s
 plugin.json
 and ignores the content-hash suffix; a dependency whose
 plugin.json
-sets no version satisfies no constraint, so set one before you constrain it. Claude Code never installs a dependency with a
+sets no version satisfies no constraint, so set one before you constrain it.
+Claude Code never installs a dependency with a
 command
 source itself, so users
 install it first
+. Claude Code never runs the
+headersHelper
+on a dependency’s marketplace entry either, so users
+install that plugin first
 .
 ​
 How constraints interact

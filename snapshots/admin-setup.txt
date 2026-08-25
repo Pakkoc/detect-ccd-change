@@ -135,8 +135,10 @@ and
 permissions.deny
 merge entries from all sources, so developers can extend managed lists but not remove from them. For
 fallbackModel
-and
+,
 availableModels
+, and
+modelPicker
 , the managed value replaces lower layers rather than merging.
 ​
 WSL sessions in Claude Code Desktop

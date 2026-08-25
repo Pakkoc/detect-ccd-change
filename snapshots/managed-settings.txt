@@ -269,6 +269,8 @@ fallbackModel
 : the later chain replaces the earlier one whole
 extraKnownMarketplaces
 : a later entry with the same name replaces the earlier one whole
+modelPicker
+: the later lineup replaces the earlier one whole
 ​
 Which managed source Claude Code uses
 When your organization delivers more than one managed source, Claude Code uses the first of these sources that delivers at least one policy key and ignores the rest rather than merging them, apart from the few cross-source keys covered in
@@ -603,9 +605,14 @@ true
 , blocks
 command
 plugin sources
-entirely, so the marketplace-declared command never runs. When unset, follows
+entirely, so the marketplace-declared command never runs. Also blocks marketplace
+headersHelper
+commands
+, except for a marketplace that managed settings themselves declare. When unset, follows
 allowManagedHooksOnly
-. Requires Claude Code v2.1.229 or later
+. Requires Claude Code v2.1.229 or later, and the
+headersHelper
+block requires v2.1.238 or later
 disableSideloadFlags
 Reject the
 --plugin-dir

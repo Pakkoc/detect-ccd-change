@@ -825,7 +825,7 @@ For messages from a
 nested subagent
 , the agent id of the parent subagent.
 None
-for main-session messages, top-level subagent messages, and older sessions
+for main-session messages, top-level subagent messages, and older sessions. Requires Python Agent SDK 0.2.140 or later
 ​
 Example
 from
@@ -2542,7 +2542,7 @@ Forward subagent text and thinking blocks in the message stream. By default only
 tool_use
 and
 tool_result
-blocks are emitted
+blocks are emitted. Requires Python Agent SDK 0.2.140 or later
 fork_session
 bool
 False
@@ -2556,13 +2556,13 @@ When resuming, load the conversation only up to and including the message with t
 resume
 , and usually
 fork_session
-, to branch from an earlier point
+, to branch from an earlier point. Requires Python Agent SDK 0.2.137 or later
 resume_drops_turn
 str | None
 None
 UUID of the user prompt whose turn a
 resume_session_at
-truncation discards. When set, the CLI refuses the resume if the discarded range holds entries not attributable to that turn. Requires Claude Code v2.1.223 or later; the bundled CLI satisfies this
+truncation discards. When set, the CLI refuses the resume if the discarded range holds entries not attributable to that turn. Requires Python Agent SDK 0.2.137 or later and Claude Code v2.1.223 or later; the CLI bundled with those SDK versions satisfies the Claude Code requirement
 agents
 dict[str, AgentDefinition] | None
 None
@@ -2597,7 +2597,7 @@ Skills available to the session. Pass
 "all"
 to enable every discovered skill, or a list of skill names. Pass exact names only. The SDK rejects malformed and wildcard-form names with a
 ValueError
-before starting the Claude Code process. When set, the SDK adds the Skill tool to
+before starting the Claude Code process; this check requires Python Agent SDK 0.2.129 or later. When set, the SDK adds the Skill tool to
 allowed_tools
 automatically. If you also pass
 tools
@@ -4126,7 +4126,7 @@ origin
 MessageOrigin | None
 Provenance of this message, populated on injected turns such as task notifications and peer messages.
 None
-when the CLI didn’t attribute it
+when the CLI didn’t attribute it. Requires Python Agent SDK 0.2.137 or later
 ​
 AssistantMessage
 Assistant response message with content blocks.
@@ -4437,7 +4437,7 @@ is
 None
 or
 {"kind": "human"}
-, from the result of an injected turn such as a background-task notification.
+, from the result of an injected turn such as a background-task notification. Requires Python Agent SDK 0.2.137 or later.
 The
 usage
 dict covers the main agent loop only and excludes subagent and other nested or auxiliary model calls. In
@@ -4732,7 +4732,7 @@ Emitted when the conversation is replaced without ending the connection, such as
 Track costs in streaming input mode
 for how a reset affects the running totals on later
 ResultMessage
-objects.
+objects. Requires Python Agent SDK 0.2.137 or later.
 @dataclass
 class
 ConversationResetMessage

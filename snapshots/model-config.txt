@@ -513,7 +513,9 @@ Claude Code hides excluded models from the
 /model
 picker. A full model ID in the list that has no built-in picker row, such as an older version that the list pins, appears in the
 /model
-picker as its own labeled row. Before v2.1.199, such an ID was selectable only by typing
+picker as its own labeled row, unless Claude Code replaces the built-in options with a
+modelPicker
+lineup. Before v2.1.199, such an ID was selectable only by typing
 /model <id>
 .
 Model changes that Claude Code makes on your behalf are checked the same way:
@@ -999,7 +1001,9 @@ advisor tool
 .
 ​
 Fallback model chains
-When the primary model is overloaded, unavailable, or returns another non-retryable server error, Claude Code can switch to a fallback model instead of failing the request. Authentication, billing, rate-limit, request-size, and transport errors never trigger a switch; those follow their normal retry and error handling.
+When the primary model is overloaded, unavailable, or returns another non-retryable server error, Claude Code can switch to a fallback model instead of failing the request. Authentication, billing, rate-limit, request-size, and transport errors, and a
+denial by your organization’s policy check
+, never trigger a switch; those follow their normal retry and error handling.
 Configure one or more fallback models and Claude Code tries them in order, showing a notice when it switches. The switch lasts for the current turn only, so your next message tries the primary model first again. Claude Code caps chains at three models after duplicate removal and ignores extra entries.
 Set a chain for one session with the
 --fallback-model
@@ -1630,6 +1634,9 @@ CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
 is set, so this variable is needed only when discovery is disabled or does not return the model you want. See
 gateway model discovery
 .
+To list several models instead, in your own order and under labels you choose, set
+modelPicker
+. Its entry says which rows the picker keeps when that lineup replaces the built-in one.
 This example sets all three variables to make a gateway-routed Opus deployment selectable. Claude Code reads environment variables at startup, so run the exports before launching
 claude
 , or restart an existing session to pick them up:
@@ -1645,15 +1652,14 @@ export
 ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION
 =
 "Custom deployment routed through the internal LLM gateway"
-The custom entry appears at the bottom of the
-/model
-picker.
 ANTHROPIC_CUSTOM_MODEL_OPTION_NAME
 and
 ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION
 are optional. If you omit the name, Claude Code uses the model ID; if you omit the description, Claude Code uses
 Custom model (<model-id>)
-.
+. Claude Code lists the custom entry after the built-in entries, and any
+modelPicker
+rows you append come after it.
 Claude Code skips validation for the model ID set in
 ANTHROPIC_CUSTOM_MODEL_OPTION
 , so you can use any string your API endpoint accepts.
@@ -2032,7 +2038,9 @@ DISABLE_PROMPT_CACHING_FABLE
 Set to
 1
 to disable prompt caching for Fable models only
-To change the cache TTL or learn what triggers a cache miss, see
+To choose the cache TTL for the main conversation and for subagents separately, see
+choose the TTL yourself
+. For what triggers a cache miss, see
 How Claude Code uses prompt caching
 .
 Was this page helpful?

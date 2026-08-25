@@ -596,7 +596,11 @@ X-Tenant: example"
 Add gateway models to the model picker
 With model discovery enabled, Claude Code queries the gateway for its model list at startup and adds those names to the
 /model
-picker alongside the built-in entries.
+picker alongside the built-in entries. If you or your administrator set
+replaceBuiltInOptions
+in a
+modelPicker
+lineup, Claude Code hides the discovered names too. It keeps a row for the model the session is already using.
 Enable it if your gateway serves model names that aren’t in Claude Code’s built-in list and you want to select them from the picker. If the built-in models are what you use, you don’t need discovery; your administrator may also have already enabled it through managed settings.
 To enable it, set
 CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
@@ -1070,12 +1074,16 @@ below the gateway model’s output limit
 Models missing from the
 /model
 picker
-Gateway model names aren’t in Claude Code’s built-in list
+Gateway model names aren’t in Claude Code’s built-in list, or Claude Code is showing a
+modelPicker
+lineup that replaces the built-in options
 Enable
 gateway model discovery
 or add names with the
 model configuration
-variables
+variables. If Claude Code shows a replacing
+modelPicker
+lineup, add the gateway models to it, or ask your administrator to add them when managed settings supply it
 /fast
 reports
 Fast mode unavailable due to network connectivity issues

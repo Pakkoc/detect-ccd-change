@@ -497,15 +497,11 @@ settings
 A mode you pick in the mode selector is remembered per folder and takes precedence over
 defaultMode
 for that folder. Plan is the exception: picking it applies to the current session only.
-This example sets Plan mode as the default for new local sessions:
-{
-"permissions"
-: {
-"defaultMode"
-:
-"plan"
-}
-}
+For where
+defaultMode
+goes in a settings file, see the example under
+Start in a different permission mode
+.
 Use the mode dropdown next to the prompt box on
 claude.ai/code
 or in the mobile app. Permission prompts appear in claude.ai for approval. Which modes appear depends on where the session runs:
@@ -672,23 +668,19 @@ based on the plan, unless you’ve already named the session.
 Set plan mode as the default
 To make plan mode the default for a project’s terminal sessions, set
 defaultMode
+to
+plan
 in
 .claude/settings.json
-. Conversations the
+, placed as the example under
+Start in a different permission mode
+shows. Conversations the
 VS Code extension
 starts don’t read project settings for the starting permission mode. There, set
 claudeCode.initialPermissionMode
 to
 plan
-in your VS Code user settings instead. This example sets the project default:
-{
-"permissions"
-: {
-"defaultMode"
-:
-"plan"
-}
-}
+in your VS Code user settings instead.
 ​
 Eliminate permission prompts with auto mode
 Auto mode lets Claude execute without routine permission prompts. A separate classifier model reviews actions before they run, blocking anything that escalates beyond your request, targets unrecognized infrastructure, or appears driven by hostile content Claude read. Explicit
@@ -751,7 +743,7 @@ and a terminal session starts in Manual mode with no error, the setting is likel
 .claude/settings.json
 or
 .claude/settings.local.json
-. In Claude Code v2.1.142 and later,
+.
 auto
 doesn’t take effect from those files. Move it to
 ~/.claude/settings.json

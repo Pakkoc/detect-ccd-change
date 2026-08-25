@@ -291,7 +291,8 @@ bin/
 Plugin root
 Executables added to the Bash tool’s
 PATH
-while the plugin is enabled
+while the plugin is enabled. You can’t include this directory in a plugin you
+distribute through claude.ai organization settings
 settings.json
 Plugin root
 Default

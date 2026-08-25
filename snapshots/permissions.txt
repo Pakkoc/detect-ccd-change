@@ -1110,9 +1110,10 @@ a.b.example.com
 example.com
 itself
 WebFetch(domain:*)
-matches every domain and is equivalent to a bare
+matches every domain. It isn’t the same as a bare
 WebFetch
-rule
+rule; see
+Allow or deny every fetch
 In any position other than a leading
 *.
 or a bare
@@ -1132,6 +1133,62 @@ example.evil.com
 would have to become
 evil.com
 and cross a dot. This keeps a trailing wildcard from matching domains an attacker could register.
+Wildcards in
+WebFetch
+rules require Claude Code v2.1.172 or later to match fetches.
+​
+Allow or deny every fetch
+A bare
+WebFetch
+rule is the tool name with no
+domain:
+part, such as
+"deny": ["WebFetch"]
+. Both it and
+WebFetch(domain:*)
+cover every URL, but Claude Code applies them differently, and only the
+domain:
+form also adds its domain to the sandbox’s
+allowed or denied domain list
+. That section lists the wildcard forms the sandbox honors and the version that added bare
+*
+.
+Each row shows what a rule does in the
+allow
+list and in the
+deny
+list:
+Rule
+In
+allow
+In
+deny
+WebFetch
+Claude fetches without prompting you. Doesn’t change which hosts sandboxed commands can reach.
+Claude Code removes the
+WebFetch
+tool, so Claude can’t fetch at all. Doesn’t change which hosts sandboxed commands can reach.
+WebFetch(domain:*)
+Claude fetches without prompting you, and sandboxed commands can reach any host.
+Claude Code keeps the tool and refuses each fetch, and sandboxed commands can’t reach any host.
+To let Claude fetch freely while keeping the sandbox allowlist as it is, use the bare form. This
+settings.json
+does that:
+{
+"permissions"
+: {
+"allow"
+: [
+"WebFetch"
+]
+}
+}
+When you ask Claude to fetch a page, it fetches without a prompt. When you ask it to run a
+sandboxed
+curl
+against a host outside the sandbox allowlist, Claude Code still prompts you for that host, or in
+auto mode
+sends the request to the classifier, because the bare rule didn’t add the host to the allowlist.
 ​
 MCP
 MCP rules use the server name as configured in Claude Code, optionally followed by the name of a tool from that server.
@@ -1433,7 +1490,9 @@ Sandbox restrictions prevent Bash commands from reaching resources outside defin
 Filesystem restrictions in the sandbox combine the
 sandbox.filesystem
 settings with Read and Edit deny rules; both are merged into the final sandbox boundary
-Network restrictions combine WebFetch permission rules with the sandbox’s
+Network restrictions combine
+WebFetch(domain:...)
+permission rules with the sandbox’s
 allowedDomains
 and
 deniedDomains

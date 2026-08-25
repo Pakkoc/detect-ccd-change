@@ -387,9 +387,13 @@ form also works in non-interactive mode (
 -p
 ) and from the Claude mobile app via
 Remote Control
-. Run
+. The
+key=value
+form can’t turn on a setting that needs your confirmation in the panel, such as
+autoContinueAtUsageLimit
+, though it can turn one off. Run
 /config --help
-to list every settable key with its options. Alias:
+to list the keys it accepts. Alias:
 /settings
 /context [all]
 Visualize current context usage as a colored grid. Shows optimization suggestions for context-heavy tools, memory bloat, and capacity warnings. When the conversation exceeds the context window, the output includes a
@@ -731,6 +735,14 @@ CLI
 View and update your privacy settings. Only available for Pro and Max plan subscribers
 /radio
 Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available. Not available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS
+/rate-limit-options
+Show ways to keep working when a claude.ai usage limit blocks a request: wait and
+continue automatically when the limit resets
+, add
+usage credits
+, or upgrade your plan. Claude Code can also open this menu on its own when you hit a limit at your own terminal. See
+Turn automatic continue off
+. Requires a claude.ai subscription. Doesn’t appear in the command menu; type it in full. The wait-and-continue rows require Claude Code v2.1.234 or later
 /recap
 Generate a one-line summary of the current session on demand. See
 Session recap
@@ -969,9 +981,9 @@ usage credits
 /upgrade
 Open the upgrade page in your browser to switch to a higher plan tier. When the browser fails to open, the command shows a sign-in prompt without printing the URL
 /usage
-Show session cost, plan usage limits, and activity stats. On a Pro, Max, Team, or Enterprise plan, includes a breakdown of usage by skill, subagent, plugin, and MCP server. See the
-cost tracking guide
-for details.
+Show session cost, plan usage limits, and activity stats. On a Pro, Max, Team, or Enterprise plan, includes a
+breakdown of what counts against your plan limits
+.
 /cost
 and
 /stats

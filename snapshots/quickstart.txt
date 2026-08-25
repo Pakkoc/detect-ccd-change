@@ -219,7 +219,7 @@ claude
 Start interactive mode
 claude
 claude "task"
-Run a one-time task
+Start interactive mode with an initial prompt
 claude "fix the build error"
 claude -p "query"
 Run one-off query, then exit

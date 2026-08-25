@@ -64,6 +64,10 @@ Server errors
 You've hit your session limit
 /
 You've hit your weekly limit
+/
+You've hit your Opus limit
+/
+You've hit your Sonnet limit
 Usage limits
 Usage credits required for 1M context
 Usage limits
@@ -480,6 +484,13 @@ Amazon Bedrock streaming response with an unexpected content-type
 A non-streaming retry of a failed streaming request that gets a success status but
 no Claude API message in the body
 . Claude Code ends the turn with that error.
+A request that your organization’s policy check denied, which surfaces as an
+API Error:
+line carrying the denial message. Your organization’s administrators set up the check with
+Inference hooks
+, a Claude Enterprise feature, and the message ends with the instructions they configured, or by default tells you to contact them. Claude Code doesn’t re-send the denied request to the same model or to a
+fallback model
+, because the denial is about the request’s content rather than the model. Before v2.1.239, Claude Code could re-send a denied request, without streaming or on a configured fallback model, before showing you the denial.
 ​
 What you see while Claude Code retries or waits
 While retrying, the spinner shows a
@@ -794,20 +805,33 @@ Subscription plans include a rolling usage allowance. When it runs out you see o
 You've hit your session limit · resets 3:45pm
 You've hit your weekly limit · resets Mon 12:00am
 You've hit your Opus limit · resets 3:45pm
-Claude Code blocks further requests until the reset time shown in the message. The session and weekly limits are shared across all models, so switching models doesn’t restore access. The Opus limit applies only to Opus requests, so switching to another model with
+You've hit your Sonnet limit · resets 3:45pm
+Claude Code blocks further requests until the reset time shown in the message. The session and weekly limits are shared across all models, so switching models doesn’t restore access. The Opus and Sonnet limits each apply only to requests to that model family, so switching to a model outside the family with
 /model
 keeps you working.
+In an interactive session signed in with a claude.ai subscription, Claude Code can also wait in the open session and continue the interrupted task shortly after the reset. While it waits, a line at the bottom of the session reads
+Usage limit reached · continuing automatically at 3:45pm · esc to cancel
+. Press
+Esc
+at an empty prompt to cancel the wait. See
+Wait for a usage limit to reset
+for what you see, how to start or cancel a wait, and how to turn automatic continue off. Before v2.1.234, Claude Code didn’t offer this wait.
 Usage counts against the session and weekly allowances at the same time. A single burst of heavy activity, such as a large workflow fanout, can exhaust the weekly allowance before the session window resets.
 What to do:
 Wait for the reset time shown in the error
 In the Code tab of the
 Desktop app
-, the session-limit card shows an
+, the session-limit card offers an
 Auto-continue when limits reset
-checkbox. The weekly-limit card doesn’t offer it. When it’s checked, the Desktop app retries the interrupted turn after the reset and shows the retry time on the card. Uncheck it to turn this off for your account.
-For the Opus limit, run
+checkbox. The weekly-limit card doesn’t. When it’s checked, the Desktop app retries the interrupted turn after the reset and shows the retry time on the card. The Desktop checkbox and the CLI’s
+Continue automatically at usage limit
+setting in
+/config
+are separate, so turn each off on its own.
+For the Opus or Sonnet limit, run
 /model
-and switch to another model to keep working
+and switch to a model outside that family to keep working. Each model has its own prompt cache, so the next request re-reads the whole conversation with no cache hits; see
+Switching models
 Run
 /usage
 to see your plan limits and when they reset
@@ -1963,7 +1987,7 @@ Streaming errors behind a gateway or proxy
 SSL certificate errors
 A proxy or security appliance on your network is intercepting TLS traffic with its own certificate, and Claude Code does not trust it.
 Unable to connect to API: SSL certificate verification failed. Check your proxy or corporate SSL certificates
-Unable to connect to API: Self-signed certificate detected
+Unable to connect to API: Self-signed certificate detected. Check your proxy or corporate SSL certificates
 As of v2.1.199, a certificate validation failure isn’t retried, so this error appears on the first attempt instead of after the full
 retry budget
 . Earlier versions spent a few minutes retrying before showing it. Transient TLS conditions, such as a handshake timeout, still retry.

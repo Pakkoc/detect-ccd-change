@@ -55,7 +55,13 @@ Cmd+Shift+P
 Ctrl+Shift+P
 (Windows/Linux), type “Claude Code”, and select an option like “Open in New Tab”
 Status Bar
-: click
+: if you’ve set
+preferredLocation
+to
+sidebar
+, or opened Claude with
+Claude Code: Open in Side Bar
+, click
 ✱ Claude Code
 in the bottom-right corner of the window. This works even when no file is open.
 You can drag the Claude panel to reposition it anywhere in VS Code. See
@@ -143,7 +149,7 @@ new interactive sessions connect to Remote Control automatically
 . Requires Claude Code v2.1.203 or later.
 The Settings section also includes
 Focus view
-, which hides tool calls, tool results, and thinking behind expandable rows, leaving your prompts and Claude’s responses. Claude’s latest to-do list stays visible, and so does the text a pending question from Claude is asking about. Toggle it there, with
+, which hides tool calls, tool results, and thinking behind expandable rows, leaving your prompts and Claude’s responses. Claude’s latest to-do list stays visible, and so does the text a pending question from Claude is asking about; this requires Claude Code v2.1.225 or later. Toggle it there, with
 Ctrl+Option+F
 (Mac) /
 Ctrl+Alt+F
@@ -376,7 +382,7 @@ Ctrl+Esc
 Toggle focus between editor and Claude
 Open in Side Bar
 -
-Open Claude in the left sidebar
+Open Claude in the sidebar
 Open in Terminal
 -
 Open Claude in terminal mode
@@ -416,7 +422,7 @@ Ctrl+Option+F
 (Mac) /
 Ctrl+Alt+F
 (Windows/Linux)
-Hide or show tool activity in the conversation. Works while a Claude panel or sidebar is visible
+Hide or show tool activity in the conversation. Works while a Claude panel or sidebar is visible. Requires Claude Code v2.1.221 or later
 Show Logs
 -
 View extension debug logs
@@ -552,7 +558,7 @@ false
 Hide the onboarding checklist (graduation cap icon)
 focusView
 false
-Hide tool calls, tool results, and thinking behind expandable rows, leaving your prompts and Claude’s responses. Claude’s latest to-do list stays visible. You can also toggle Focus view from the command menu. Requires Claude Code v2.1.221 or later
+Hide tool calls, tool results, and thinking behind expandable rows, leaving your prompts and Claude’s responses. Claude’s latest to-do list stays visible; this requires Claude Code v2.1.225 or later. You can also toggle Focus view from the command menu. Requires Claude Code v2.1.221 or later
 respectGitIgnore
 true
 Exclude .gitignore patterns from file searches
@@ -689,7 +695,7 @@ name
 is the terminal’s title. This lets Claude see command output, error messages, or logs without copy-pasting.
 ​
 Monitor background processes
-When Claude runs long-running commands, the extension shows progress in the status bar. However, visibility for background tasks is limited compared to the CLI. For better visibility, have Claude output the command so you can run it in VS Code’s integrated terminal.
+Visibility for background tasks in the extension is limited compared to the CLI. For better visibility, have Claude output the command so you can run it in VS Code’s integrated terminal.
 ​
 Connect to external tools with MCP
 MCP (Model Context Protocol) servers give Claude access to external tools, databases, and APIs.
@@ -873,7 +879,13 @@ Disable conflicting extensions
 : Temporarily disable other AI extensions (Cline, Continue, etc.)
 Check workspace trust
 : The extension doesn’t work in Restricted Mode
-Alternatively, click ”✱ Claude Code” in the
+Alternatively, if you’ve set
+preferredLocation
+to
+sidebar
+, or opened Claude with
+Claude Code: Open in Side Bar
+, click ”✱ Claude Code” in the
 Status Bar
 (bottom-right corner). This works even without a file open. You can also use the
 Command Palette

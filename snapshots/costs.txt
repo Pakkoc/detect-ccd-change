@@ -43,6 +43,11 @@ Attribution
 : recent usage attributed to skills, subagents, plugins, and individual MCP servers, each shown as a percentage of the total. An MCP server’s share counts only the requests that consumed one of its tool results. Before v2.1.222, after one call to an MCP server, Claude Code attributed every subsequent request to that server, overstating its share.
 Behavior flags
 : behaviors such as long context or cache misses, flagged when one accounts for 10% or more of recent usage.
+Loops
+: a row for each of the heaviest
+/loop
+or other scheduled tasks
+that ran recently, ordered by total tokens, with a count of the rest. Claude Code reports how often each task fires, how many times it ran, its total and per-run tokens, and when it last ran. Claude Code keys a row by the task’s prompt, so a loop you stop and re-create stays one row. Requires Claude Code v2.1.242 or later.
 Press
 d
 or
@@ -50,7 +55,7 @@ w
 to switch between the last 24 hours and the last 7 days. The figures are approximate and computed from local session history on this machine, so usage from other devices or claude.ai is not included.
 In the
 VS Code extension
-, the same breakdown appears in the Account & usage dialog with a Day and Week toggle. Requires Claude Code v2.1.174 or later.
+, the attribution shares and behavior flags appear in the Account & usage dialog with a Day and Week toggle, without the Loops rows. Requires Claude Code v2.1.174 or later.
 ​
 When the usage request fails
 When the request for your plan limits fails, most often because the usage endpoint is rate limited,
@@ -252,14 +257,26 @@ tracks spend by key
 When a developer asks about a limit
 Developers usually bring limit questions to their admin, so it helps to know which ceiling they hit. The four situations mean different things:
 “You’ve hit your session limit” or “You’ve hit your weekly limit”
-: a seat-based usage window on a subscription plan. These windows are shared across all models, so switching models with
+: a seat-based usage window on a subscription plan, shared across all models, so the developer can’t restore access by switching models with
 /model
-doesn’t restore access, though it does keep the developer working after the model-specific “You’ve hit your Opus limit” message. The message shows when the window resets, and the developer can run
-/usage-credits
-to request usage beyond the allowance if you have
-usage credits
-turned on. See
+. The message shows when the window resets. After the model-specific “You’ve hit your Opus limit” or “You’ve hit your Sonnet limit” message, switching to a model outside that family with
+/model
+does keep the developer working. See
 usage limit errors
+. What the developer can do in the meantime:
+Run
+/usage-credits
+to request usage beyond the allowance, if you have
+usage credits
+turned on.
+On Claude Code v2.1.234 or later,
+wait and continue the interrupted task automatically after the reset
+; that section lists when Claude Code starts the wait on its own and when the developer picks it from
+/rate-limit-options
+. To control for your fleet whether Claude Code starts that wait on its own, set
+autoContinueAtUsageLimit
+in
+managed settings
 .
 A spend limit message from a
 Claude apps gateway
@@ -577,8 +594,8 @@ Cache misses
 cache lifetime
 misses the cache and reprocesses your full context. The lifetime is an hour on a subscription and drops to five minutes once you’re drawing on
 usage credits
-; on an API key or cloud provider, it’s five minutes by default. You can keep the one-hour lifetime while drawing on usage credits by setting
-ENABLE_PROMPT_CACHING_1H=1
+; on an API key or cloud provider, it’s five minutes by default. To keep the one-hour lifetime while drawing on usage credits,
+choose the TTL yourself
 . On Pro and Max plans, when you resume a large session after a long break, Claude Code
 offers to resume from a summary
 so later requests don’t carry the full history

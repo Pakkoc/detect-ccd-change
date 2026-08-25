@@ -1195,7 +1195,7 @@ local settings
 , so the host stays allowed in future sessions. Pre-allow domains with
 allowedDomains
 to avoid the prompt entirely. Claude Code also pre-allows domains from
-WebFetch
+WebFetch(domain:...)
 allow rules, as described in
 Permission rules
 .
@@ -1247,6 +1247,19 @@ Custom proxy support
 : advanced users can implement custom rules on outgoing traffic
 Comprehensive coverage
 : restrictions apply to all scripts, programs, and subprocesses spawned by commands
+In a
+WebFetch(domain:...)
+rule, the sandbox honors two wildcard forms: a leading
+*.
+, such as
+*.example.com
+, and a bare
+*
+. The bare
+*
+form requires Claude Code v2.1.186 or later. A wildcard in any other position, such as
+WebFetch(domain:example.*)
+, still matches fetches but has no effect on sandboxed commands.
 The built-in proxy enforces the allowlist based on the requested hostname and, by default, does not terminate or inspect TLS traffic. The experimental
 network.tlsTerminate
 setting, available in Claude Code v2.1.199 and later, makes the built-in proxy terminate TLS itself, which
@@ -1350,7 +1363,7 @@ and
 Edit
 deny rules
 Block access to specific files or directories
-WebFetch
+WebFetch(domain:...)
 allow and deny rules
 Control domain access
 Sandbox
@@ -1361,9 +1374,7 @@ deniedDomains
 Blocks specific domains even when a broader
 allowedDomains
 wildcard would otherwise permit them
-Paths from both
-sandbox.filesystem
-settings and permission rules are merged together into the final sandbox configuration.
+Paths and domains from both sandbox settings and permission rules are merged into the final sandbox configuration.
 The
 claude-code repository’s examples directory
 includes starter settings configurations for common deployment scenarios, including sandbox-specific examples. Use these as starting points and adjust them to fit your needs.

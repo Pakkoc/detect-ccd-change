@@ -515,7 +515,13 @@ Cloud sessions on
 Claude Code on the web
 don’t read your local
 ~/.claude/settings.json
-; hooks there come from the repo and from your organization’s server-managed settings. See
+; hooks there come from the repo and from your organization’s server-managed settings. In a
+self-hosted environment
+, Claude Code also runs the hooks the operator seeded from the runner host’s
+~/.claude/
+, and it runs the hooks in the runner image’s managed settings file when neither
+server-managed settings nor an MDM-delivered Claude Code policy
+supplies the managed tier. See
 what carries over from your setup
 for which files reach a cloud session.
 For details on settings file resolution, see
@@ -555,6 +561,14 @@ enabledPlugins
 disableCommandPluginSources
 is explicitly set to
 false
+Claude Code also blocks marketplace
+headersHelper
+commands
+unless
+disableCommandPluginSources
+is explicitly set to
+false
+, except for a marketplace that managed settings themselves declare
 See
 what runs under
 allowManagedHooksOnly
@@ -721,6 +735,12 @@ elicitation_response
 agent_needs_input
 ,
 agent_completed
+,
+quota_auto_resume_fired
+,
+quota_auto_resume_stale
+,
+quota_auto_resume_disabled
 SubagentStart
 agent type
 general-purpose
@@ -1806,7 +1826,9 @@ setting respects the managed settings hierarchy. If an administrator has configu
 disableAllHooks
 set in user, project, or local settings can’t disable those managed hooks. Only
 disableAllHooks
-set at the managed settings level can disable managed hooks.
+set at the managed settings level can disable managed hooks. For the full reach of each level, see
+disableAllHooks
+.
 Direct edits to hooks in settings files are normally picked up automatically by the file watcher.
 ​
 Hook input and output
@@ -5580,11 +5602,36 @@ agent_completed
 A background session finishes or fails. Fires only while
 agent view
 is open in a terminal
+quota_auto_resume_fired
+Claude Code continues your task after a claude.ai usage limit paused it: at the reset, or sooner when something you do in Claude Code during the wait, such as adding usage credits, upgrading your plan, or switching models, makes usage available again, with the
+model-setting exception
+quota_auto_resume_stale
+A claude.ai usage limit reset while your computer slept for more than about 30 minutes. Claude Code waits for you to press
+Enter
+instead of continuing. After a shorter sleep it continues and fires
+quota_auto_resume_fired
+instead
+quota_auto_resume_disabled
+Claude Code ends its wait for a claude.ai usage limit without continuing your task:
+autoContinueAtUsageLimit
+turned off or the reset moved more than 24 hours away during a wait Claude Code started on its own, the continued task kept hitting the limit, or the continuation was blocked before it reached the model. Doesn’t fire when you press
+Esc
+or
+Ctrl+C
+, or pick
+Don’t continue automatically
 The
 agent_needs_input
 and
 agent_completed
 types require Claude Code v2.1.198 or later.
+The
+quota_auto_resume_fired
+,
+quota_auto_resume_stale
+, and
+quota_auto_resume_disabled
+types require Claude Code v2.1.234 or later.
 The
 permission_prompt
 ,
@@ -5601,7 +5648,11 @@ PermissionRequest
 instead.
 Expect
 idle_prompt
-about 60 seconds after Claude finishes responding, and only if you haven’t typed since.
+about 60 seconds after Claude finishes responding, and only if you haven’t typed since. Claude Code doesn’t send
+idle_prompt
+while it waits for a claude.ai usage limit to reset. When the wait ends on its own, one of the
+quota_auto_resume_*
+types fires instead.
 Expect
 elicitation_dialog
 for an elicitation form, or

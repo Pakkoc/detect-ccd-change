@@ -390,6 +390,8 @@ ANTHROPIC_MODEL
 # export ENABLE_PROMPT_CACHING_1H=1
 The 1-hour cache TTL is billed at a higher rate than the 5-minute default. See
 cache lifetime
+. To set different TTLs for your main conversation and for the requests Claude Code makes outside it,
+choose the TTL yourself
 .
 Prompt caching may not be available in all Amazon Bedrock regions. If cache token counts stay at zero, check
 supported models, regions, and limits

@@ -154,6 +154,12 @@ JetBrains
 IDE automatically from an external terminal
 Global config settings
 Global config
+autoContinueAtUsageLimit
+Wait in the open session and
+continue the task automatically
+after a claude.ai usage limit resets
+Interface and terminal
+User or managed
 autoInstallIdeExtension
 Turn off automatic install of the
 IDE extension
@@ -609,6 +615,13 @@ Map model IDs
 to your provider’s IDs, such as Bedrock ARNs
 Model and responses
 Any file
+modelPicker
+Choose which models the
+/model
+picker
+lists, in your own order and with your own labels
+Model and responses
+User or managed
 otelHeadersHelper
 Generate rotating
 OpenTelemetry
@@ -735,6 +748,12 @@ corporate launcher
 on macOS and Linux
 Agents, sessions, and worktrees
 User or managed
+promptCacheTtl
+Choose the
+prompt cache lifetime
+for the main conversation
+Model and responses
+Any file
 promptSuggestionEnabled
 Hide the grayed-out
 prompt suggestions
@@ -1136,6 +1155,12 @@ skills
 to plugin and managed sources
 Plugins and skills
 Managed
+subagentPromptCacheTtl
+Choose the
+prompt cache lifetime
+for subagents and other requests outside the main conversation
+Model and responses
+Any file
 subagentStatusLine
 Rewrite rows in the
 subagent
@@ -1755,6 +1780,113 @@ See
 Override model IDs per version
 .
 ​
+modelPicker
+List the models the
+/model
+picker offers, in the order you write them and under labels you choose, so the picker lists the models your organization runs, after the built-in lineup or instead of it. Each row’s
+model
+is taken verbatim, so it accepts anything
+--model
+accepts: an alias such as
+opus
+, an Anthropic model ID, or a provider-format ID for Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or an LLM gateway. Requires Claude Code v2.1.242 or later.
+Scope
+:
+User or managed
+. Claude Code reads the key from managed settings,
+--settings
+, and user settings, and ignores it in project and local settings so a repository you clone can’t relabel the picker. The highest of those three that sets the key supplies the whole lineup, and Claude Code never combines lineups from two sources.
+Type
+: object with an
+options
+array of rows and an optional
+replaceBuiltInOptions
+Boolean
+Default
+: unset, so the picker shows the built-in lineup
+This example adds two Bedrock deployments after the built-in lineup, under names your team recognizes:
+managed-settings.json
+{
+"modelPicker"
+: {
+"options"
+: [
+{
+"model"
+:
+"us.anthropic.claude-opus-4-8"
+,
+"label"
+:
+"Opus (production)"
+},
+{
+"model"
+:
+"us.anthropic.claude-sonnet-4-6"
+,
+"label"
+:
+"Sonnet (production)"
+,
+"description"
+:
+"Day-to-day work"
+}
+]
+}
+}
+​
+Fields for
+modelPicker
+The key takes two fields, one for the rows themselves and one for whether they replace the built-in lineup or add to it.
+Field
+Type
+What it does
+options
+array of rows, each with a required
+model
+and an optional
+label
+and
+description
+The rows the picker shows, in this order, except that a grayed-out row moves to the bottom. Without a
+label
+, Claude Code titles the row with the built-in name for a model it knows, or the model ID otherwise, and without a
+description
+it writes a generic second line
+replaceBuiltInOptions
+Boolean, default
+false
+Set it to
+true
+to show only these rows,
+Default
+, and a row for the model the session is already using. Leave it unset to add these rows after the built-in lineup
+With
+replaceBuiltInOptions
+on, Claude Code hides every other row: the built-in lineup, the rows it adds for
+availableModels
+entries, the models
+gateway discovery
+found, and
+ANTHROPIC_CUSTOM_MODEL_OPTION
+. With it off, Claude Code skips a listed model that the built-in lineup already covers. A label changes what the picker shows, not which model Claude Code runs.
+An
+availableModels
+allowlist still applies to these rows. Before you add a listed model to the allowlist, read
+Merge behavior
+: a specific model ID narrows its family’s wildcard entry. Claude Code also checks each row against the session before it shows the picker:
+Dropped
+: a row Claude Code can’t serve, such as a retired model or a model your organization has no access to
+Grayed out
+: a row you can’t select yet, shown with the reason
+No row survives
+: Claude Code keeps the built-in lineup, filtered by the allowlist as usual
+Claude Code drops a row it can’t parse and keeps the rest. See
+Fix a broken settings file
+.
+​
 outputStyle
 Select an
 output style
@@ -1780,6 +1912,48 @@ settings.json
 :
 "Explanatory"
 }
+​
+promptCacheTtl
+Choose how long the
+prompt cache
+holds the main conversation. This key applies to your interactive,
+-p
+, and Agent SDK turns, together with the helpers Claude Code runs inline with them. The one-hour lifetime keeps the cache warm across longer breaks, and the API
+bills each cache write at a higher rate
+than at the five-minute lifetime. Requires Claude Code v2.1.242 or later.
+Scope
+:
+Any file
+Type
+: string, one of:
+"5m"
+: the cache holds for five minutes
+"1h"
+: the cache holds for an hour
+Default
+: unset, so each main-conversation request gets
+its default lifetime
+Per-session overrides
+:
+FORCE_PROMPT_CACHING_5M
+takes precedence over everything else, then
+CLAUDE_CODE_PROMPT_CACHE_TTL
+, then this key, and last
+ENABLE_PROMPT_CACHING_1H
+This example keeps the main conversation on the one-hour lifetime and leaves subagents on five minutes:
+settings.json
+{
+"promptCacheTtl"
+:
+"1h"
+,
+"subagentPromptCacheTtl"
+:
+"5m"
+}
+For what each lifetime costs, see
+Cache lifetime
+.
 ​
 showThinkingSummaries
 See summaries of Claude’s
@@ -1813,6 +1987,49 @@ lower the budget or disable thinking
 instead. This setting has no effect in non-interactive mode (
 -p
 ), the Agent SDK, or IDE extensions such as VS Code.
+​
+subagentPromptCacheTtl
+Choose how long the
+prompt cache
+holds the requests Claude Code makes outside the main conversation. This key applies to
+subagents
+,
+workflows
+, and Claude Code’s own background and helper requests, such as compaction and session titles. The one-hour lifetime keeps the cache warm across longer breaks, and the API
+bills each cache write at a higher rate
+than at the five-minute lifetime. Requires Claude Code v2.1.242 or later.
+Scope
+:
+Any file
+Type
+: string, one of:
+"5m"
+: the cache holds for five minutes
+"1h"
+: the cache holds for an hour
+Default
+: unset, so each of these requests gets
+its default lifetime
+Per-session overrides
+:
+FORCE_PROMPT_CACHING_5M
+takes precedence over everything else, then
+CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL
+, then this key, and last
+ENABLE_PROMPT_CACHING_1H
+, which asks for the one-hour lifetime on every request
+This example gives subagents and the other requests outside the main conversation the one-hour lifetime:
+settings.json
+{
+"subagentPromptCacheTtl"
+:
+"1h"
+}
+This key covers the requests
+promptCacheTtl
+doesn’t, so set both to choose a lifetime for every request Claude Code makes. For how a subagent’s cache differs from the main conversation’s, see
+Subagents and the cache
+.
 ​
 switchModelsOnFlag
 Choose what happens when a
@@ -2439,9 +2656,7 @@ bypassPermissions
 Permission modes
 .
 manual
-names the permission mode labeled Manual in the CLI and the VS Code extension; the alias requires Claude Code v2.1.200 or later. Before v2.1.142, project settings could set
-auto
-. In Claude Code on the web, Claude Code honors only
+names the permission mode labeled Manual in the CLI and the VS Code extension; the alias requires Claude Code v2.1.200 or later. In Claude Code on the web, Claude Code honors only
 acceptEdits
 ,
 plan
@@ -2928,7 +3143,7 @@ Read
 deny rules join
 denyRead
 , and
-WebFetch
+WebFetch(domain:...)
 allow and deny rules join the
 network
 domain lists. Every list merges across settings files. When you edit a list during a session, Claude Code
@@ -5152,6 +5367,41 @@ Question auto-continue timeout
 --settings
 flag set the key. Requires Claude Code v2.1.200 or later.
 ​
+autoContinueAtUsageLimit
+After a claude.ai usage limit stops your session, wait in the open session and continue the task automatically after the reset. See
+Turn automatic continue off
+. Requires Claude Code v2.1.234 or later.
+Scope
+:
+User or managed
+. Read from user settings,
+--settings
+, and managed settings only. When none of those sets the key, a project or local settings file that sets it turns the feature off rather than being ignored.
+Type
+: Boolean
+true
+: after a claude.ai usage limit stops your session, Claude Code waits in the open session and continues the task automatically after the reset
+false
+: Claude Code doesn’t start the wait on its own. You can still
+start a wait yourself
+from the usage-limit options menu
+Default
+:
+true
+settings.json
+{
+"autoContinueAtUsageLimit"
+:
+false
+}
+Appears in
+/config
+as
+Continue automatically at usage limit
+, which writes this key to user settings; Claude Code hides the row while managed settings or the
+--settings
+flag set the key.
+​
 autoScrollEnabled
 Follow new output to the bottom of the conversation in
 fullscreen rendering
@@ -6851,6 +7101,17 @@ disableCommandPluginSources
 to
 false
 explicitly
+Marketplace
+headersHelper
+commands are blocked
+: Claude Code also blocks marketplace
+headersHelper
+commands
+unless
+disableCommandPluginSources
+is explicitly set to
+false
+, except for a marketplace that managed settings themselves declare. Requires Claude Code v2.1.238 or later
 Status line and file suggestion narrow to managed settings
 : Claude Code reads
 statusLine
@@ -6892,11 +7153,14 @@ true
 }
 The reach depends on which file carries the key:
 In managed settings
-: Claude Code disables every hook, including managed ones
+: Claude Code disables every configured hook, including managed ones, and keeps running the hooks the
+Agent SDK
+registers in process
 In any other settings file
-: Claude Code disables user, project, local, and plugin hooks; managed hooks and hooks from plugins force-enabled in managed
+: Claude Code disables user, project, local, and plugin hooks; managed hooks, Agent SDK hooks, and hooks from plugins force-enabled in managed
 enabledPlugins
 keep running
+Keeping Agent SDK hooks running when managed settings set this key requires Claude Code v2.1.242 or later.
 The
 /goal
 command can’t run while hooks are disabled, and the
@@ -7516,7 +7780,16 @@ plugin source
 true
 , Claude Code never runs the command, doesn’t install or update command-sourced plugins, and stops loading the ones already installed. Set it to
 false
-to allow them explicitly. Requires Claude Code v2.1.229 or later.
+to allow them explicitly. Whenever it blocks command sources, whether you set it to
+true
+or leave it unset under
+allowManagedHooksOnly
+, it also blocks marketplace
+headersHelper
+commands
+, except for a marketplace that managed settings themselves declare. Requires Claude Code v2.1.229 or later, and the
+headersHelper
+block requires v2.1.238 or later.
 Scope
 :
 Managed
@@ -7721,9 +7994,9 @@ Three source types carry rules beyond the table:
 url
 : a URL marketplace downloads only the
 marketplace.json
-file, not plugin files, so its plugins must use a
+file, and Claude Code doesn’t fetch plugin files by relative path from that server, so its plugins must use a
 plugin source
-other than a relative path. For plugins with relative paths, use a Git-based marketplace instead. See
+other than a relative path, such as an archive URL, which can be on the same host. For plugins with relative paths, use a Git-based marketplace instead. See
 Plugins with relative paths fail in URL-based marketplaces
 .
 hostPattern
@@ -8303,7 +8576,13 @@ file, with
 url
 and optional
 headers
-for authenticated access
+and
+headersHelper
+for authenticated access.
+headersHelper
+names a command that prints headers whose values are too short-lived to list in
+headers
+, and requires Claude Code v2.1.238 or later
 file
 : a local path to a
 marketplace.json
@@ -8340,6 +8619,42 @@ repo
 or
 url
 , to skip Git LFS downloads when Claude Code clones or updates the marketplace repository. LFS pointer files remain as pointers instead of downloading their content. Use this when the repository contains large LFS objects unrelated to plugin content. Requires Claude Code v2.1.153 or later.
+For a
+url
+source, set
+headersHelper
+inside the
+source
+object when the credential in
+headers
+expires and a command has to produce a fresh one. Requires Claude Code v2.1.238 or later. For what the command must print and where Claude Code runs it, see
+Write the headersHelper command
+, and for the cases where Claude Code doesn’t run it, see
+When Claude Code skips a headersHelper command
+. Once you set
+headersHelper
+on an
+https://
+marketplace URL, Claude Code runs the command at two points, reusing one run’s output for up to 60 seconds:
+Before each fetch of that marketplace’s
+marketplace.json
+, including a later refresh. Claude Code sends the printed headers with that fetch.
+Before each plugin archive download on the marketplace URL’s origin, meaning the same scheme, host, and port. Claude Code sends the output with that download, and no other download gets the headers.
+Claude Code ignores any
+headersHelper
+set in the
+.claude/settings.json
+or
+.claude/settings.local.json
+of a directory you add with
+--add-dir
+, on a
+url
+source and on an inline plugin entry alike, and sends only the fixed
+headers
+set in that file.
+How users accept a headersHelper command
+covers the other settings files.
 Plugins listed in a
 settings
 source must reference external sources such as GitHub or npm, and the
@@ -8386,6 +8701,52 @@ settings.json
 }
 }
 }
+A plugin entry under
+source: 'settings'
+whose own
+source
+is an
+archive
+can set
+headers
+for the archive download. If the value you would put in
+headers
+is short-lived, such as a token your registry mints on request, set a
+headersHelper
+command instead. An entry may set both. Both fields require Claude Code v2.1.238 or later.
+Claude Code sends the entry’s
+headers
+, and whatever the command prints, with that plugin’s archive download and with no other download. Claude Code runs the command only when a user
+installs or updates that one plugin by itself
+. Three further rules depend on which file holds the entry:
+strict
+: unlike an entry in a marketplace’s
+marketplace.json
+, an entry in settings doesn’t need
+"strict": false
+, because a settings file carries no manifest fields to inline. See
+Strict mode
+.
+Folder trust
+: for an entry in a project’s
+.claude/settings.json
+or
+.claude/settings.local.json
+, Claude Code runs the command only after the user has also
+trusted that folder
+.
+Header filter
+: Claude Code drops
+request-routing and client-identity header names
+from an entry in a project’s
+.claude/settings.json
+or
+.claude/settings.local.json
+, because a repository can supply those files. Claude Code applies the same filter to a catalog entry and to an entry in an
+--add-dir
+directory’s settings, and no filter to an entry in your user settings, a
+--settings
+file, or managed settings.
 ​
 Marketplace key aliases
 On Claude Code v2.1.232 or later, you can write
@@ -8494,7 +8855,7 @@ still apply to the connectors this key loads. Connectors delivered to
 cloud sessions
 stay suppressed. See
 Allow claude.ai connectors alongside the managed set
-. Requires Claude Code v2.1.149 or later.
+.
 ​
 allowedMcpServers
 Allowlist the MCP servers people can use. Claude Code blocks any server that doesn’t match an entry, whichever settings file or
@@ -9206,7 +9567,7 @@ EnterWorktree
 "none"
 , background jobs edit the working copy directly. Set
 "none"
-for a repository where git worktrees are impractical. Requires Claude Code v2.1.143 or later.
+for a repository where git worktrees are impractical.
 Scope
 :
 Any file

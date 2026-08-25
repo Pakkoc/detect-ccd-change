@@ -2033,7 +2033,8 @@ Executables
 bin/
 Executables added to the Bash tool’s
 PATH
-. Files here are invokable as bare commands in any Bash tool call while the plugin is enabled
+and invokable as bare commands while the plugin is enabled. You can’t include this directory in a plugin you
+distribute through claude.ai organization settings
 Settings
 settings.json
 Default configuration applied when the plugin is enabled. Only the
@@ -2210,10 +2211,14 @@ Set a
 userConfig
 option declared in the plugin’s manifest. Repeat the flag to set multiple options
 -y, --yes
-Accept the command that a plugin with a
+Accept a command the plugin’s marketplace declares, without the confirmation prompt: the command that produces a plugin with a
 command
 source
-runs, without the confirmation prompt. Claude Code still prints the command first. Required when stdin or stdout isn’t a TTY. Has no effect inside a Claude Code session, so run the command from your own terminal
+, or the
+headersHelper
+that authenticates an archive download. Accepting a
+headersHelper
+requires Claude Code v2.1.238 or later. Claude Code still prints the command first. Required when stdin or stdout isn’t a TTY. Has no effect inside a Claude Code session, so run the command from your own terminal
 -h, --help
 Display help for command
 Scope determines which settings file the installed plugin is added to. For example,
@@ -2419,10 +2424,14 @@ local
 managed
 user
 -y, --yes
-Accept the command that a plugin with a
+Accept a command the plugin’s marketplace declares, without the confirmation prompt: the command that produces a plugin with a
 command
 source
-runs, without the confirmation prompt. Claude Code still prints the command first. Required when stdin or stdout isn’t a TTY. Has no effect inside a Claude Code session, so run the command from your own terminal
+, or the
+headersHelper
+that authenticates an archive download. Accepting a
+headersHelper
+requires Claude Code v2.1.238 or later. Claude Code still prints the command first. Required when stdin or stdout isn’t a TTY. Has no effect inside a Claude Code session, so run the command from your own terminal
 -h, --help
 Display help for command
 ​

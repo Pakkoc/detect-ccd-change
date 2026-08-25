@@ -152,8 +152,8 @@ Copy webhook URL
 , and paste the URL into the app’s webhook settings on your GHES instance. Use the same webhook secret you entered in the form.
 ​
 Network requirements
-For Anthropic-hosted sessions, your GHES instance must be reachable from Anthropic infrastructure so Claude can clone repositories and post review comments. If your GHES instance is behind a firewall, allowlist the
-Anthropic API IP addresses
+For Anthropic-hosted sessions, your GHES instance must be reachable from Anthropic infrastructure so Claude can clone repositories and post review comments. If your GHES instance is behind a firewall, allowlist Anthropic’s
+outbound IP addresses
 . Sessions in a
 self-hosted environment
 clone from inside your network instead, unless the runner opts into the
@@ -362,8 +362,8 @@ Claude Code admin settings
 On other claude.ai surfaces, a “Repository not found. If it’s private, GitHub access is required” error on a GHES marketplace usually indicates the same missing connection. Connect your GitHub Enterprise account through one of the paths above, then try again.
 ​
 GHES instance not reachable
-If reviews or Anthropic-hosted web sessions time out, your GHES instance may not be reachable from Anthropic infrastructure. Confirm your firewall allows inbound connections from the
-Anthropic API IP addresses
+If reviews or Anthropic-hosted web sessions time out, your GHES instance may not be reachable from Anthropic infrastructure. Confirm your firewall allows inbound connections from Anthropic’s
+outbound IP addresses
 . Sessions in a
 self-hosted environment
 reach GHES from inside your network, so for them check the runner’s own network path and the

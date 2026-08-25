@@ -1844,6 +1844,22 @@ block
 . See
 Name the project directory yourself
 . Requires Claude Code v2.1.234 or later
+CLAUDE_CODE_PROMPT_CACHE_TTL
+Set
+5m
+or
+1h
+, the only values Claude Code accepts, to choose the
+prompt cache TTL
+for the main conversation: your interactive,
+-p
+, and SDK turns, plus the helpers that run inline with them. Takes precedence over the
+promptCacheTtl
+setting and over
+ENABLE_PROMPT_CACHING_1H
+, and
+FORCE_PROMPT_CACHING_5M
+overrides it. The API bills 1-hour cache writes at a higher rate. Requires Claude Code v2.1.242 or later
 CLAUDE_CODE_PROPAGATE_TRACEPARENT
 Set to
 1
@@ -2148,6 +2164,22 @@ inherit
 is the same as leaving it unset; before v2.1.196,
 inherit
 was an override that forced every subagent onto the main conversation’s model
+CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL
+Set
+5m
+or
+1h
+, the only values Claude Code accepts, to choose the
+prompt cache TTL
+for requests outside the main conversation, such as
+subagents
+, workflows, and background work. Takes precedence over the
+subagentPromptCacheTtl
+setting and over
+ENABLE_PROMPT_CACHING_1H
+, and
+FORCE_PROMPT_CACHING_5M
+overrides it. The API bills 1-hour cache writes at a higher rate. Requires Claude Code v2.1.242 or later
 CLAUDE_CODE_SUBPROCESS_ENV_SCRUB
 Set to
 1
@@ -2676,9 +2708,15 @@ Google Cloud’s Agent Platform
 Microsoft Foundry
 , and
 Claude Platform on AWS
-users. Subscription users within included usage receive 1-hour TTL automatically. Subscription users drawing on
+users. Subscription users within included usage receive the 1-hour TTL automatically on the
+main conversation
+. Subscription users drawing on
 usage credits
-can set it to keep the 1-hour TTL. 1-hour cache writes are billed at a higher rate
+can set it to keep the 1-hour TTL. 1-hour cache writes are billed at a higher rate. To choose the TTL per request bucket instead, use
+CLAUDE_CODE_PROMPT_CACHE_TTL
+and
+CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL
+, which take precedence over this variable
 ENABLE_PROMPT_CACHING_1H_BEDROCK
 Deprecated. Use
 ENABLE_PROMPT_CACHING_1H
@@ -2743,7 +2781,16 @@ FORCE_PROMPT_CACHING_5M
 Set to
 1
 to force the 5-minute prompt cache TTL even when 1-hour TTL would otherwise apply. Overrides
+CLAUDE_CODE_PROMPT_CACHE_TTL
+,
+CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL
+,
 ENABLE_PROMPT_CACHING_1H
+, and the
+promptCacheTtl
+and
+subagentPromptCacheTtl
+settings
 HTTP_PROXY
 Specify HTTP proxy server for network connections
 HTTPS_PROXY
@@ -3111,6 +3158,11 @@ MCP_PROTOCOL_NEGOTIATION
 MCP_SDK_GENERATION=v2
 , and skips the probe unless you set
 MCP_PROTOCOL_NEGOTIATION=auto
+Get the
+PowerShell tool
+by default for claude.ai and Console accounts on Windows with Git Bash installed; Claude Code routes shell commands through Git Bash unless you set
+CLAUDE_CODE_USE_POWERSHELL_TOOL=1
+. On Windows without Git Bash, the tool stays on
 With fetching off, you can still type
 /code-review
 yourself, but
