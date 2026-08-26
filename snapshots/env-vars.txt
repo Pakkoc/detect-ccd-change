@@ -1008,6 +1008,18 @@ Set to
 to disable all background task functionality, including the
 run_in_background
 parameter on Bash and subagent tools, auto-backgrounding, and the Ctrl+B shortcut
+CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_DEFAULT
+Set to
+1
+to stop Claude Code from treating an
+Amazon Bedrock
+streaming response with a missing or empty
+Content-Type
+header as the binary
+application/vnd.amazon.eventstream
+format. Amazon Bedrock always sends that header, so when it’s absent, a
+proxy stripped it
+and by default Claude Code decodes the body as the binary format anyway. Set this variable only when the proxy strips the header and also re-emits the body as server-sent events; Claude Code then reads the body as server-sent events instead. Requires Claude Code v2.1.239 or later
 CLAUDE_CODE_DISABLE_BEDROCK_CONTENT_TYPE_GUARD
 Set to
 1
@@ -3098,7 +3110,12 @@ DISABLE_TELEMETRY
 DO_NOT_TRACK
 , or
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-. Each variable’s row says which values do that. With fetching off, you can’t:
+. Each variable’s row says which values do that.
+Claude Code also leaves fetching off when you connect through a
+Claude apps gateway
+. On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, Claude Code leaves fetching off unless a host platform that embeds Claude Code sets
+CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
+. With fetching off, you can’t:
 Start sessions in auto mode by default
 on Pro, Max, and Team plans; Claude Code starts your sessions in Manual instead
 Have the VS Code extension
@@ -3163,28 +3180,15 @@ PowerShell tool
 by default for claude.ai and Console accounts on Windows with Git Bash installed; Claude Code routes shell commands through Git Bash unless you set
 CLAUDE_CODE_USE_POWERSHELL_TOOL=1
 . On Windows without Git Bash, the tool stays on
-With fetching off, you can still type
-/code-review
-yourself, but
-Claude can’t start the review on its own, and a scheduled
-/code-review
-reaches Claude as plain text
-instead of running the review.
 ​
 First session after an install or upgrade
-You can also miss a
+In your first session after you install Claude Code, or upgrade to a version that adds a feature, a
 flag-gated feature
-in your first session after you install Claude Code, or after you upgrade to a version that adds the feature, even when none of the variables that disable flag fetching are set. Claude Code fetches the flags during that session, so a feature that’s otherwise available to you is there in your next session. Two features behave differently in that first session:
-Claude Code
-binds the session’s inbox socket
-and exports the messaging variables partway through the session, as soon as the fetch completes, so other sessions can message it before you restart.
-Claude Code checks the
-claude import
-flag before it starts a session, so if
-claude import
-is the first thing you run after installing, it prints
-claude import is not yet available in this build
-. Start a session, then run it again.
+can be missing, and a session can start in Manual mode on a plan that otherwise starts in auto mode. Claude Code fetches the flags during that session, so both are there in your next session. After a fresh install, a non-interactive session, such as
+claude -p
+, the Agent SDK, or the VS Code extension, can pick the flags up before it
+chooses its starting permission mode
+; an interactive terminal session doesn’t.
 ​
 See also
 Settings

@@ -615,7 +615,7 @@ Goal check-ins
 goal
 waiting, Claude Code
 asks Claude to check on that work
-even when the session sits idle, starting a new turn that sends your full context. To turn check-ins off, set
+even when the session sits idle, starting a new turn that sends your full context. Claude Code starts at most three idle check-ins per goal between your prompts. Before v2.1.246, idle check-ins were uncapped. To turn check-ins off, set
 CLAUDE_CODE_GOAL_CHECKIN_MINUTES
 to
 0

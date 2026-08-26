@@ -17,7 +17,7 @@ Stops when
 /goal
 The previous turn finishes, or an
 idle check-in
-comes due while background work keeps the goal waiting
+comes due while background work keeps the goal waiting, up to three times per goal between your prompts
 A model confirms the condition is met or judges it impossible, or a turn fails on
 an error you have to fix
 , or you run
@@ -202,7 +202,7 @@ When a turn ends
 -p
 , this is the only way Claude Code delivers check-ins.
 While the session is idle
-: in an interactive session, Claude Code also starts a turn on its own to deliver the check-in instead of waiting for your next prompt. If the background work has stopped without reporting a result, Claude Code asks Claude to continue toward the goal. Idle check-ins require Claude Code v2.1.236 or later.
+: in an interactive session, Claude Code also starts a turn on its own to deliver the check-in instead of waiting for your next prompt. If the background work has stopped without reporting a result, Claude Code asks Claude to continue toward the goal. Claude Code starts at most three idle check-ins per goal between your prompts. In the third idle check-in, Claude Code says that idle check-ins are paused until you send another prompt. Before v2.1.246, idle check-ins were uncapped. Idle check-ins require Claude Code v2.1.236 or later.
 Before v2.1.239, only idle check-ins backed off this way; a check-in delivered at a turn end recurred at the first interval.
 To change the first interval, set
 CLAUDE_CODE_GOAL_CHECKIN_MINUTES

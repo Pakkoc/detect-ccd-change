@@ -128,7 +128,7 @@ If Claude tells you it can’t read comments, check three things:
 You’re running Claude Code v2.1.221 or later.
 You’re not in your first session since you installed Claude Code or upgraded from a version before v2.1.221. In that
 first session after an install or upgrade
-, Claude can’t read comments yet; start a new session and ask again.
+, Claude might not be able to read comments yet; start a new session and ask again.
 You haven’t turned feature-flag fetching off. If you set
 DISABLE_GROWTHBOOK
 ,

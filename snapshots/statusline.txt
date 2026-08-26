@@ -248,7 +248,7 @@ to your script:
 "~/.claude/statusline.sh"
 }
 }
-Your status line appears at the bottom of the interface. Settings reload automatically, but changes won’t appear until your next interaction with Claude Code.
+Your status line appears at the bottom of the interface. Claude Code reloads settings automatically and runs your script as soon as you save the file.
 ​
 How status lines work
 Claude Code runs your script with
@@ -261,10 +261,17 @@ A new assistant message arrives
 finishes
 The permission mode changes
 Vim mode toggles
+You change the
+command
+in your
+statusLine
+settings
 A
 refreshInterval
 timer elapses, if you set one
-Claude Code debounces updates at 300ms, so rapid changes batch together and your script runs once after the changes stop. If a new update triggers while your script is still running, Claude Code cancels the in-flight script. If you edit your script, the changes appear the next time an update trigger re-runs it.
+Claude Code debounces updates at 300ms, so rapid changes batch together and your script runs once after the changes stop. A change to the
+command
+itself skips the debounce: Claude Code runs the new command right away. If a new update triggers while your script is still running, Claude Code cancels the in-flight script. If you edit your script, the changes appear the next time an update trigger re-runs it.
 The event-driven triggers can go quiet when the main session is idle, for example while a coordinator waits on background subagents. To keep time-based or externally-sourced segments current during idle periods, set
 refreshInterval
 to also re-run the command on a fixed timer.
@@ -332,9 +339,8 @@ Git worktree name when the current directory is inside a linked worktree created
 git worktree add
 . Absent in the main working tree. Populated for any git worktree, unlike
 worktree.*
-which applies only to
---worktree
-sessions
+, which is present only while the session is in a
+worktree session
 workspace.repo.host
 ,
 workspace.repo.owner
@@ -354,7 +360,8 @@ remote is configured
 cost.total_cost_usd
 Estimated session cost in USD, computed client-side. May differ from your actual bill. Resets to $0 when
 /clear
-starts a new session
+starts a new session. Before v2.1.211, the total carried over after
+/clear
 cost.total_duration_ms
 Total wall-clock time since the session started, in milliseconds
 cost.total_api_duration_ms
@@ -483,9 +490,8 @@ for any other open state, and
 draft
 for a draft. Requires Claude Code v2.1.234 or later
 worktree.name
-Name of the active worktree. Present only during
---worktree
-sessions
+Name of the active worktree. Present only while the session is in a
+worktree session
 worktree.path
 Absolute path to the worktree directory
 worktree.branch
@@ -758,9 +764,9 @@ and
 pr.kind
 may be independently absent
 worktree
-: appears only during
---worktree
-sessions. When present,
+: appears only while the session is in a
+worktree session
+. When present,
 branch
 and
 original_branch
@@ -4699,7 +4705,10 @@ Slow scripts block the status line from updating until they complete. Keep scrip
 If a new update triggers while a slow script is running, the in-flight script is cancelled
 Test your script independently with mock input before configuring it
 Notifications share the status line row
-System notifications like MCP server errors and auto-updates display on the right side of the same row as your status line. Transient notifications such as the context-low warning also cycle through this area.
+Outside
+fullscreen rendering
+, Claude Code shows notifications on the same row as your status line. In fullscreen rendering, Claude Code gives notifications a row of their own.
+System notifications like MCP server errors and auto-updates display on the right side of the row. Transient notifications such as the context-low warning also cycle through this area.
 Enabling verbose mode adds a token counter to this area
 On narrow terminals, these notifications may truncate your status line output
 Was this page helpful?

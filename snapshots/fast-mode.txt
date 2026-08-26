@@ -9,7 +9,12 @@ Claude Code treats Opus 4.7 like any other model without fast mode support: swit
 What to know:
 Use
 /fast
-to toggle on fast mode in the Claude Code CLI. Fast mode is not supported in the VS Code extension.
+to toggle on fast mode in the Claude Code CLI. The VS Code extension follows your
+fastMode
+setting
+and offers a
+Toggle fast mode
+command when the selected model supports fast mode.
 Fast mode pricing per MTok input/output is $10/$50 on Opus 5 and Opus 4.8.
 Available to Claude Code users on subscription plans (Pro/Max/Team/Enterprise) and on Claude Console. Team and Enterprise organizations need an Owner to enable it first, and Console organizations need access provisioned first, both described under
 Requirements
@@ -17,7 +22,7 @@ Requirements
 For Claude Code users on subscription plans (Pro/Max/Team/Enterprise), fast mode is available via usage credits only and not included in the subscription rate limits.
 ​
 Toggle fast mode
-Toggle fast mode in either of these ways:
+In the CLI, toggle fast mode in either of these ways:
 Type
 /fast
 and press Tab to toggle on or off
@@ -314,7 +319,7 @@ with
 system
 message with subtype
 notification
-, once per turn while you’re out of usage credits. Fast mode stays on.
+, once per turn while you’re out of usage credits. Fast mode stays on. Requires Claude Code v2.1.221 or later.
 ​
 Research preview
 Fast mode is a research preview feature. This means:

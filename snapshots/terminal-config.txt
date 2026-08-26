@@ -29,7 +29,7 @@ Not available; use Ctrl+J or
 then Enter
 For VS Code, Cursor, Devin Desktop, Alacritty, and Zed,
 /terminal-setup
-writes Shift+Enter and other keybindings into the terminal’s configuration file. On the first run you see a confirmation such as
+writes a Shift+Enter keybinding into the terminal’s configuration file. On the first run you see a confirmation such as
 Installed VSCode terminal Shift+Enter key binding
 . Existing bindings are left in place; if you see a message such as
 VSCode terminal Shift+Enter key binding already configured
@@ -48,7 +48,9 @@ for smoother scrolling in
 fullscreen mode
 . To undo the GPU acceleration change, set it back to
 "auto"
-and reload the editor window.
+and reload the editor window. Before v2.1.157,
+/terminal-setup
+left GPU acceleration unchanged.
 If you are running inside tmux, Shift+Enter also requires the
 tmux configuration below
 even when the outer terminal supports it.
@@ -305,7 +307,7 @@ overrides
 /theme
 shows the same tokens with a live preview, plus a few single-purpose accents such as onboarding screen colors that are omitted here.
 Color token reference
-The following example combines tokens from several of the groups below: the brand accent, the plan mode border, the diff backgrounds, and the fullscreen message background.
+The following example combines tokens from several of the groups below: the brand accent, the plan mode border, the diff backgrounds, and the message background.
 ~/.claude/themes/midnight.json
 {
 "name"
@@ -413,9 +415,19 @@ diffRemovedWord
 Word-level highlight within a removed line
 ​
 Fullscreen mode
-Apply only in
+Claude Code paints
+userMessageBackground
+,
+bashMessageBackgroundColor
+, and
+memoryBackgroundColor
+in both the default and fullscreen renderers. It uses
+userMessageBackgroundHover
+and
+selectionBg
+only in
 fullscreen rendering mode
-, where messages have a background fill.
+.
 Token
 Controls
 userMessageBackground

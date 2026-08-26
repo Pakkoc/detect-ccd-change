@@ -174,7 +174,9 @@ entry at the next launch, and reads
 some user-editable keys once at session start
 .
 Changes that need approval
-: a server-managed change to a setting that
+: apart from the
+updates that wait for the next launch
+, a server-managed change to a setting that
 needs approval
 , such as a hook or an
 env
@@ -560,7 +562,7 @@ sandbox.network.allowedDomains
 , is an ordinary key that any level can set, and the lock tells Claude Code to honor only the managed value.
 The table covers the permission, plugin, and delivery controls. For any key not listed here, the Scope column of the
 settings reference
-index says whether it’s managed-only; the remaining managed-only keys there include the gateway login URL, version, browser, mobile-simulator, SSH host, sandbox binary path, and CLAUDE.md controls.
+index says whether it’s managed-only; the remaining managed-only keys there include the gateway login URL, version, browser, mobile-simulator, SSH host, Desktop local-session, sandbox binary path, and CLAUDE.md controls.
 Setting
 Description
 allowAllClaudeAiMcps

@@ -1271,6 +1271,22 @@ to
 1
 to use a fixed thinking budget; Fable 5, Sonnet 5, and Opus 4.7 and later always use adaptive reasoning and have no fixed-budget mode.
 ​
+Local sessions on managed devices
+Your administrator can turn off local sessions with the
+disableDesktopLocalSessions
+managed setting
+. When they have,
+Local
+stays in the environment dropdown but is grayed out and can’t be selected, with a tooltip saying your organization turned it off, and on Windows the
+WSL
+entry, whose availability on managed devices is
+governed separately
+, is grayed out the same way. New sessions default to the first SSH connection if one is configured, and Desktop shows a message that local sessions aren’t available on this device if you try to continue an existing one. Choose an
+SSH
+or
+cloud
+environment instead, or contact your IT team.
+​
 Cloud sessions
 Cloud sessions continue in the background even if you close the app. Usage counts toward your
 subscription plan limits
@@ -1464,6 +1480,14 @@ sshHostAllowlist
 restrict
 SSH sessions
 to hosts whose resolved hostname matches one of these patterns. An empty array disables SSH sessions. Read from managed settings only.
+disableDesktopLocalSessions
+set to
+true
+to turn off
+Code sessions that run on the device
+, leaving SSH sessions to other hosts and cloud sessions available. The value must be the JSON boolean
+true
+. Read from managed settings only.
 managedMcpServers
 push MCP server configurations to all users. Available in third-party (3P) Desktop deployments only. In each entry, set a transport of
 "http"
@@ -1501,9 +1525,11 @@ keys Claude Code reads from every admin source
 SSH sessions
 : the session reads the managed settings file from the remote host. Desktop itself reads
 sshConfigs
-and
+,
 sshHostAllowlist
-from the local machine’s managed settings when creating the connection.
+, and
+disableDesktopLocalSessions
+from the local machine’s managed settings.
 permissions.disableBypassPermissionsMode
 and
 disableAutoMode

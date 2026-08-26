@@ -330,8 +330,6 @@ Auto mode
 : Sonnet 5, Opus 4.7 or later, and Fable 5 only
 /loop
 : explicit intervals only
-/code-review
-: runs when you type it; Claude doesn’t start it on its own
 Zero Data Retention
 : subject to your AWS agreement
 Alternatives:
@@ -377,8 +375,6 @@ web search
 Partial support:
 /loop
 : explicit intervals only
-/code-review
-: runs when you type it; Claude doesn’t start it on its own
 Alternatives:
 for scheduling, use
 /loop
@@ -422,8 +418,6 @@ Auto mode
 : Sonnet 5, Opus 4.7 or later, and Fable 5 only
 /loop
 : explicit intervals only
-/code-review
-: runs when you type it; Claude doesn’t start it on its own
 Zero Data Retention
 : subject to your Google Cloud agreement
 Alternatives:
@@ -473,8 +467,6 @@ Auto mode
 : Sonnet 5, Opus 4.7 or later, and Fable 5 only
 /loop
 : explicit intervals only
-/code-review
-: runs when you type it; Claude doesn’t start it on its own
 Zero Data Retention
 : subject to your Azure agreement
 Alternatives:

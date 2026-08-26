@@ -122,7 +122,7 @@ On Ubuntu or Debian, where the app is in beta, install it with apt by following 
 Linux install instructions
 After installing, launch Claude, sign in, and click the
 Code
-tab to start coding. A
+tab to start coding. The app includes Claude Code, so you don’t need to install the CLI separately. A
 paid subscription
 is required.
 Learn more about the desktop app →

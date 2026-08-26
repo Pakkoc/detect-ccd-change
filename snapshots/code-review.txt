@@ -550,26 +550,6 @@ scheduled task
 with
 /code-review
 as its prompt runs the review.
-Exceptions include the following sessions, where
-/code-review
-runs only when you type it yourself and a scheduled
-/code-review
-reaches Claude as plain text instead of running the review:
-Cloud providers
-: sessions on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, unless a host platform that embeds Claude Code sets
-CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
-Claude apps gateway
-: sessions that connect through the
-Claude apps gateway
-Privacy environment variables
-: sessions that opt out of telemetry or feature-flag fetching with
-DISABLE_TELEMETRY
-,
-DO_NOT_TRACK
-,
-CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-, or
-DISABLE_GROWTHBOOK
 A scheduled task never launches the
 cloud review
 , so schedule
@@ -594,9 +574,15 @@ such as
 "user-invocable-only"
 }
 }
-From v2.1.215 through v2.1.222, Claude never started
+Before v2.1.246, Claude started
 /code-review
-on its own in any configuration.
+on its own only where a feature flag fetched from Anthropic turned it on. In
+sessions that don’t fetch feature flags
+,
+/code-review
+ran only when you typed it, and a scheduled
+/code-review
+reached Claude as plain text.
 ​
 Escalate to ultrareview
 /code-review ultra --fix

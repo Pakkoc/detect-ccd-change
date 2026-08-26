@@ -113,7 +113,7 @@ reports a bug with session context attached.
 All commands
 The table below lists all the commands included in Claude Code. Most are built-in commands whose behavior is coded into the CLI. Two kinds of entries are marked:
 Skill
-: a bundled skill. It works like skills you write yourself: a prompt handed to Claude, which Claude can also invoke automatically when relevant.
+: a bundled skill. It works like skills you write yourself: a prompt handed to Claude.
 /verify
 runs only when you invoke it. Before v2.1.215, Claude could also run
 /verify
@@ -262,7 +262,7 @@ were aliases of
 /cd <path>
 Move this session to a new working directory, keeping the conversation and its prompt cache. Type a partial path to see matching directory suggestions; press
 Tab
-to accept one. Claude Code prompts you to
+to accept one. The suggestions require Claude Code v2.1.206 or later. Claude Code prompts you to
 trust the workspace
 if you haven’t worked in it before, and
 --resume
@@ -312,7 +312,7 @@ instead. Resume the previous conversation with
 /resume
 , or, in the same Claude Code process, restore it from
 the rewind menu’s previous-session entry
-. Aliases:
+. The rewind entry requires Claude Code v2.1.191 or later. Aliases:
 /reset
 ,
 /new
@@ -705,7 +705,11 @@ Share a free week of Claude Code with friends. Only visible if your account is e
 /permissions
 Manage allow, ask, and deny rules for tool permissions. Opens an interactive dialog where you can view rules by scope, add or remove rules, manage working directories, and review
 recent auto mode denials
-. When you run it while Claude is responding, Claude Code opens the dialog immediately and applies your changes starting with Claude’s next tool call in the same turn. Before v2.1.234, Claude Code queued the command until the turn finished. Alias:
+. You can also view and edit
+auto mode classifier rules
+from the dialog’s
+Auto mode
+tab. When you run it while Claude is responding, Claude Code opens the dialog immediately and applies your changes starting with Claude’s next tool call in the same turn. Before v2.1.234, Claude Code queued the command until the turn finished. Alias:
 /allowed-tools
 /plan [description]
 Enter plan mode directly from the prompt. Pass an optional description to enter plan mode and immediately start with that task, for example
@@ -886,9 +890,6 @@ to
 cycle a skill’s visibility to Claude and the
 /
 menu
-, then
-Enter
-to save
 /stats
 Alias for
 /usage
@@ -1042,7 +1043,7 @@ highlights
 /clear
 through its alias. Press
 Enter
-to run the highlighted suggestion.
+to run the highlighted suggestion. These highlighting rules require Claude Code v2.1.236 or later.
 After a typo
 : Claude Code highlights nothing. The close matches stay listed, and you can pick one with
 Tab
@@ -1050,6 +1051,8 @@ or the arrow keys, but
 Enter
 submits your text as typed and reports
 Unknown command
+. Before v2.1.236, Claude Code ran the closest match when you pressed
+Enter
 .
 Commands that aren’t available to you
 : Claude Code leaves them out of the menu. When nothing matches, Claude Code shows

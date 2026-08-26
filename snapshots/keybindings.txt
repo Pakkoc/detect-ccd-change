@@ -635,10 +635,10 @@ Action
 Default
 Description
 scroll:lineUp
-(unbound)
+wheelup
 Scroll up one line. Mouse wheel scrolling triggers this action
 scroll:lineDown
-(unbound)
+wheeldown
 Scroll down one line. Mouse wheel scrolling triggers this action
 scroll:pageUp
 PageUp
@@ -737,19 +737,16 @@ meta+p          Option + P on macOS, Alt + P elsewhere
 ctrl+shift+c    Multiple modifiers
 ​
 Uppercase letters
-A standalone uppercase letter implies Shift. For example,
+Claude Code parses key names case-insensitively, so
 K
-is equivalent to
-shift+k
-. This is useful for vim-style bindings where uppercase and lowercase keys have different meanings.
-Uppercase letters with modifiers (e.g.,
-ctrl+K
-) are treated as stylistic and do
-not
-imply Shift:
+is the same binding as
+k
+and
 ctrl+K
 is the same as
 ctrl+k
+. To bind Shift and a letter, write
+shift+k
 .
 ​
 Chords
@@ -781,6 +778,10 @@ backspace
 ,
 delete
 - Delete keys
+wheelup
+,
+wheeldown
+- Mouse wheel scroll events
 ​
 Unbind default shortcuts
 Set an action to
@@ -909,8 +910,9 @@ Validation
 Claude Code validates your keybindings and shows warnings for:
 Parse errors (invalid JSON or structure)
 Invalid context names
+Invalid action values, such as an action that isn’t a string or
+null
 Reserved shortcut conflicts
-Terminal multiplexer conflicts
 Duplicate bindings in the same context
 Claude Code reports warnings when the file loads and writes each one to the debug log. Start Claude Code with
 --debug

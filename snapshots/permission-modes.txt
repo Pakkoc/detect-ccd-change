@@ -219,8 +219,11 @@ to
 "disable"
 default
 Feature-flag fetching
-is off, or this is your
-first session after you install Claude Code or upgrade to a version that adds this default
+is off
+default
+Your
+first session after you install Claude Code or upgrade
+to a version that adds this default, unless a non-interactive session picks the flags up in time
 default
 claude -p
 or the
@@ -237,9 +240,9 @@ VS Code extension
 auto
 An Enterprise plan or a Claude Console API key
 default
-In those same two cases, feature-flag fetching off or the first session after an install or upgrade, the VS Code extension ignores every settings file when choosing the starting permission mode and uses
-default
-.
+When feature-flag fetching is off, or in a
+first session after an install or upgrade
+where the flags haven’t arrived yet, the VS Code extension ignores every settings file when choosing the starting permission mode.
 When the flag, a settings file, or the built-in default selects
 auto
 but auto mode isn’t available to the session, Claude Code starts the session in Manual instead. Auto mode is unavailable when a settings file
