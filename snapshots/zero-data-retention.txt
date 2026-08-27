@@ -56,6 +56,8 @@ Requires server-side storage of conversation history.
 Cloud sessions
 from the Desktop app
 Requires persistent session data that includes prompts and completions.
+Claude Tag
+Retains channel memory and session transcripts.
 Artifacts
 Requires storing published page content on Anthropic-operated infrastructure.
 Feedback submission (

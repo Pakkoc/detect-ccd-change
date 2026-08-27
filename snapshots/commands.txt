@@ -223,7 +223,7 @@ background subagent
 per unit in an isolated
 git worktree
 . Each subagent implements its unit, runs tests, and opens a pull request. Requires a git repository. Example:
-/batch migrate src/ from Solid to React
+/batch migrate src/ from JavaScript to TypeScript
 /branch [name]
 Create a branch of the current conversation at this point, so you can try a different direction without losing the conversation as it stands. Switches you into the branch and preserves the original, which you can return to with
 /resume
@@ -528,7 +528,13 @@ Toggle fast mode
 /feedback [report]
 Send product feedback about Claude Code. Opens the same dialog as
 /bug
-, with the same consent step, sending rules, and mid-turn behavior
+, with the same consent step, sending rules, and mid-turn behavior. In sessions with
+Claude-drafted feedback
+,
+/feedback
+with no argument opens the drafts queue instead, where you review, edit, send, or discard the drafts Claude queued; the queue includes an option to write a new report in the dialog. With an argument, and for
+/bug
+always, the dialog opens directly
 /fewer-permission-prompts
 Skill
 .
@@ -882,14 +888,25 @@ is equivalent to
 /skills
 List available
 skills
-. Type to filter the list by name. Press
+. Type to filter the list by name, description, or source. Press
 t
-to sort by token count. Press
+to sort by token count,
 Space
+or
+Enter
 to
 cycle a skill’s visibility to Claude and the
 /
 menu
+, and
+Esc
+to save and close. You can’t cycle plugin skills, skills whose frontmatter sets
+disable-model-invocation: true
+, or skills with a
+skillOverrides
+entry in managed settings or the
+--settings
+flag
 /stats
 Alias for
 /usage

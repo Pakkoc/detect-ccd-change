@@ -33,13 +33,26 @@ only.
 The Default environment
 If you don’t have an environment yet, onboarding sets up the
 Default
-environment for you, whether you connect through
-the web
-or a CLI flow such as
+environment. How depends on where you onboard:
+CLI flows such as
 /web-setup
-; if web onboarding shows an environment form instead of creating the environment, keep the form’s defaults to get the same
+: create
 Default
-environment.
+for you
+Web onboarding on Pro and Max
+: creates
+Default
+for you
+Web onboarding on Team and Enterprise
+: shows a
+Create your first cloud environment
+form unless an Owner has turned on
+Quick web setup
+; keep the form’s defaults and click
+Create & finish
+to get the same
+Default
+environment
 Default
 carries no configuration of its own:
 Trusted

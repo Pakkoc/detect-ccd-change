@@ -978,11 +978,15 @@ becomes
 /my-plugin:fancy
 . The bare
 /fancy
-also invokes the skill unless another command already uses that name. Before v2.1.216, the frontmatter name replaced the whole command name, so the menu showed
-/fancy
-without the plugin prefix and
+also invokes the skill unless another command already uses that name. If the
+name
+you write already starts with the plugin’s own prefix, Claude Code doesn’t add the prefix again on v2.1.246 or later. For example,
+name: my-plugin:fancy
+still becomes
 /my-plugin:fancy
-didn’t autocomplete.
+. From v2.1.216 through v2.1.245, Claude Code doubled the prefix when the
+name
+already carried it.
 In
 non-interactive sessions
 , Claude Code doesn’t reserve the names
@@ -1367,12 +1371,12 @@ name
 migrate-component
 description
 :
-Migrate a component from one framework to another
+Migrate a component from one language to another
 ---
 Migrate the $ARGUMENTS[0] component from $ARGUMENTS[1] to $ARGUMENTS[2].
 Preserve all existing behavior and tests.
 Running
-/migrate-component SearchBar React Vue
+/migrate-component SearchBar JavaScript TypeScript
 replaces
 $ARGUMENTS[0]
 with
@@ -1380,11 +1384,11 @@ SearchBar
 ,
 $ARGUMENTS[1]
 with
-React
+JavaScript
 , and
 $ARGUMENTS[2]
 with
-Vue
+TypeScript
 . The same skill using the
 $N
 shorthand:
@@ -1394,7 +1398,7 @@ name
 migrate-component
 description
 :
-Migrate a component from one framework to another
+Migrate a component from one language to another
 ---
 Migrate the $0 component from $1 to $2.
 Preserve all existing behavior and tests.

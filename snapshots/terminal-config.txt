@@ -51,6 +51,18 @@ fullscreen mode
 and reload the editor window. Before v2.1.157,
 /terminal-setup
 left GPU acceleration unchanged.
+In Zed,
+/terminal-setup
+updates your
+keymap.json
+in place:
+If the keymap already has bindings and none of them is a Terminal
+shift-enter
+, Claude Code first backs it up to a copy in the same directory, such as
+keymap.json.1a2b3c4d.bak
+, then merges the Shift+Enter binding into your keymap, keeping your other keybindings and comments
+If Claude Code can’t read or parse the keymap, can’t back it up, or can’t verify the merged result, it
+leaves the file unchanged and prints the keybinding block to add yourself
 If you are running inside tmux, Shift+Enter also requires the
 tmux configuration below
 even when the outer terminal supports it.

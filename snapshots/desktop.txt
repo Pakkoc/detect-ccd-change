@@ -1584,6 +1584,16 @@ platform.claude.com
 *.livepreview.claude.app
 *.claudeusercontent.com
 *.claudemcpcontent.com
+If your organization has
+IP allowlisting
+enabled for Claude, route
+bridge.claudeusercontent.com
+through the same proxy egress as
+claude.ai
+and
+api.anthropic.com
+. If you can’t route it that way, add the egress address your proxy uses for that host to your organization’s IP allowlist, but only when that address is dedicated to your organization: a shared proxy egress range also admits the proxy vendor’s other customers.
+Anthropic checks connections to that host against your organization’s IP allowlist using the address they arrive from. If your proxy sends traffic for it out through an address that isn’t on that allowlist, Claude in Chrome and other features that connect through the bridge stop working while the rest of the app keeps working.
 An
 artifact
 that loads a typeface from

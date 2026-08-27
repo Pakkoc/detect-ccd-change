@@ -619,7 +619,7 @@ claude
 -p
 "Migrate
 $file
-from React to Vue. Return OK or FAIL."
+from Python 2 to Python 3. Return OK or FAIL."
 \
 --allowedTools
 "Edit,Bash(git commit *)"

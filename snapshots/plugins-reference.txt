@@ -2434,6 +2434,9 @@ headersHelper
 requires Claude Code v2.1.238 or later. Claude Code still prints the command first. Required when stdin or stdout isn’t a TTY. Has no effect inside a Claude Code session, so run the command from your own terminal
 -h, --help
 Display help for command
+Claude Code resolves a bare plugin name against your installed plugins. When installed plugins from different marketplaces share the name, Claude Code refuses the update and lists the qualified
+plugin-name@marketplace-name
+commands to run instead. Before v2.1.246, Claude Code accepted only the qualified form and rejected a bare name as not found.
 ​
 plugin list
 List installed plugins with their version, source marketplace, and enable status.
@@ -2648,7 +2651,9 @@ Invalid JSON syntax: Unexpected token } in JSON at position 142
 Plugin <name> has an invalid manifest file at .claude-plugin/plugin.json. Validation errors: name: Invalid input: expected string, received undefined
 : a required field is missing
 Plugin <name> has a corrupt manifest file at .claude-plugin/plugin.json. JSON parse error: ...
-: JSON syntax error
+: JSON syntax error. Before v2.1.246, Claude Code also produced this error for a
+plugin.json
+saved as UTF-8 with a leading byte-order mark (BOM), even when the JSON was otherwise valid.
 Plugin loading errors
 :
 Warning: No commands found in plugin my-plugin custom directory: ./cmds. Expected .md files or SKILL.md in subdirectories.

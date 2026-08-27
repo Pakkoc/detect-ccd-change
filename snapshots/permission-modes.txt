@@ -1007,7 +1007,9 @@ non-interactive
 -p
 run without a
 --permission-prompt-tool
-has no prompt to fall back to. When repeated blocks reach a threshold, the action doesn’t run and Claude keeps working, in the main conversation and in its subagents alike. The same applies when a safety check separate from auto mode refuses the classifier’s request. Claude Code doesn’t stop the run in either case.
+has no prompt to fall back to. When repeated blocks reach a threshold, the action doesn’t run and Claude keeps working. The same applies when
+a safety check separate from auto mode refuses the classifier’s request
+. Claude Code doesn’t stop the run in either case.
 A mode switch during a check
 : if you switch permission modes while a classifier check is pending, Claude Code discards a verdict the new mode wouldn’t have requested rather than applying it: you’re prompted for approval instead, or the action is auto-denied in
 dontAsk

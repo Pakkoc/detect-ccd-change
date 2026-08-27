@@ -322,7 +322,7 @@ To remove it from your user scope:
 /plugin uninstall security-guidance@claude-plugins-official
 If the plugin was enabled through a project’s
 .claude/settings.json
-, disabling it from
+, uninstalling it from
 /plugin
 writes an override to your
 .claude/settings.local.json

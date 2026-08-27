@@ -24,6 +24,9 @@ Killed
 during install on Linux, or
 Installation was killed before it could finish (exit code 137)
 Free memory or add swap space
+Raw mode is not supported
+during install
+Rerun the installer
 TLS connect error
 or
 SSL/TLS secure channel
@@ -1017,6 +1020,50 @@ Give Docker more memory
 if using Docker Desktop. Build containers share the memory allocated to the Docker Desktop virtual machine, so open
 Settings > Resources
 in Docker Desktop, raise the memory limit, and rerun the build.
+​
+Raw mode is not supported
+during install
+When your organization’s
+server-managed settings
+include changes that need
+security approval
+, Claude Code versions before 2.1.246 try to show the approval dialog during
+claude install
+. The dialog needs a terminal on stdin. When the installer runs
+claude install
+from a pipe, as
+curl -fsSL https://claude.ai/install.sh | bash
+does, stdin is the pipe rather than a terminal, so the install fails with an error containing
+Raw mode is not supported
+.
+Claude Code v2.1.246 and later don’t show the dialog during
+claude install
+or
+claude update
+. The command runs with the settings you last approved, and Claude Code shows the dialog in your next interactive session. If your organization’s startup configuration
+waits for the settings fetch
+, such as when it sets
+forceRemoteSettingsRefresh
+, the dialog still appears during these commands, and an install run from a pipe still fails.
+In every other configuration, rerunning the installer gets past this error, because the script runs the latest release’s
+install
+command even when you ask it to install an older version. Rerun the command for your platform:
+macOS/Linux
+Windows PowerShell
+curl
+-fsSL
+https://claude.ai/install.sh
+|
+bash
+irm https:
+//
+claude.ai
+/
+install.ps1
+|
+iex
+claude --version
+prints the version the rerun installed.
 ​
 claude update
 or

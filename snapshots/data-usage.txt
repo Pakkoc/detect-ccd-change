@@ -27,6 +27,11 @@ command, we may use your feedback to improve our products and services. Transcri
 and
 /share
 , which report through the same path, are retained for 5 years.
+With
+Claude-drafted feedback
+, Claude can also draft a feedback report and queue it on your machine for you to review. Claude Code sends nothing until you choose to send the draft, and a sent draft goes through the same submission path and retention as other
+/feedback
+reports.
 ​
 Session quality surveys
 When you see the “How is Claude doing this session?” prompt in Claude Code, responding to this survey, including selecting “Dismiss”, records only your rating. We do not collect or store any conversation transcripts, inputs, outputs, or other session data as part of the rating prompt itself. Unlike thumbs up/down feedback or
@@ -189,7 +194,9 @@ command, a copy of your conversation history including code is sent to Anthropic
 /bug
 and
 /share
-commands submit through the same path. Before submitting, you choose how much history to include: the current session only, which is the default, or also other sessions from the same project over the last 24 hours or 7 days. The data is encrypted in transit via TLS and stored in Google Cloud Storage, which encrypts stored data at rest by default. Optionally, a GitHub issue is created in the public repository. To opt out, set the
+commands submit through the same path. Before submitting a report from the feedback dialog, you choose how much history to include: the current session only, which is the default, or also other sessions from the same project over the last 24 hours or 7 days. Claude Code submits
+Claude-drafted feedback
+through the same path, including the transcript when you chose to include it on the draft’s review screen. The data is encrypted in transit via TLS and stored in Google Cloud Storage, which encrypts stored data at rest by default. Optionally, a GitHub issue is created in the public repository. To opt out, set the
 DISABLE_FEEDBACK_COMMAND
 environment variable to
 1

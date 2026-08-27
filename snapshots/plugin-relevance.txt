@@ -44,15 +44,22 @@ notification appears before the first turn. This surface requires Claude Code v2
 /plugin
 Discover tab
 : the plugin is pinned to the top of the Discover list with an annotation such as “suggested for this directory” or “suggested for stripe commands”. This surface requires Claude Code v2.1.154 or later.
-The spinner tip and the session-start notification are part of the spinner-tips system. Both are disabled when the user or project sets
+The spinner tip and the session-start notification are part of the spinner-tips system. Claude Code disables both when
 spinnerTipsEnabled
-to
+resolves to
 false
-, or when a custom
-spinnerTipsOverride
-is configured with
+across your settings files, or when
 excludeDefault
-. The Discover-tab pin is independent of tip settings.
+resolves to
+true
+across the
+spinnerTipsOverride
+keys in user,
+--settings
+, and managed settings and those keys configure at least one tip or a
+tipsFile
+.
+The Discover-tab pin is independent of tip settings.
 Claude Code never installs a plugin automatically. The user always confirms.
 ​
 Add relevance to a plugin entry

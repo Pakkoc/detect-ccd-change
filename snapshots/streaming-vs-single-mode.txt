@@ -523,7 +523,7 @@ def
 single_message_example
 ():
 # Simple one-shot query using query() function
-# query() raises after an error result, such as error_max_turns
+# query() raises ResultError after an error result, such as error_max_turns
 try
 :
 async
@@ -560,7 +560,6 @@ message.subtype
 :
 print
 (message.result)
-# The SDK raises a plain Exception for error results, so match Exception here
 except
 Exception
 as

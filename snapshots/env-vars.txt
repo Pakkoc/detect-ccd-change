@@ -1195,7 +1195,9 @@ Set to any non-empty value, such as
 1
 , to disable nonessential network traffic: auto-updates, telemetry, error reporting, the
 /feedback
-command, release notes,
+command,
+Claude-drafted feedback
+, release notes,
 gateway model discovery
 refreshes, and availability checks such as the
 fast mode
@@ -1995,6 +1997,20 @@ to slow accelerated trackpad and wheel scrolling in terminals that already ampli
 to match
 vim
 if your terminal sends one wheel event per notch without amplification. Ignored in the JetBrains IDE terminal, where Claude Code uses its own scroll handling
+CLAUDE_CODE_SEND_FEEDBACK
+Set to
+0
+to turn off
+Claude-drafted feedback
+for a session. Set to
+1
+to turn it on where your account already has access; the variable can’t grant access itself, and the other switches that turn feedback off, such as
+DISABLE_FEEDBACK_COMMAND
+and the
+feedbackDrafts
+setting’s
+off
+value, still apply
 CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS
 Override the time budget in milliseconds for
 SessionEnd
@@ -2580,7 +2596,9 @@ Set to
 1
 to disable the
 /feedback
-command. Also disables
+command and
+Claude-drafted feedback
+. Also disables
 /bug
 and
 /share
@@ -3180,6 +3198,9 @@ PowerShell tool
 by default for claude.ai and Console accounts on Windows with Git Bash installed; Claude Code routes shell commands through Git Bash unless you set
 CLAUDE_CODE_USE_POWERSHELL_TOOL=1
 . On Windows without Git Bash, the tool stays on
+Get
+Claude-drafted feedback
+, which Claude Code turns on through a fetched flag
 ​
 First session after an install or upgrade
 In your first session after you install Claude Code, or upgrade to a version that adds a feature, a
