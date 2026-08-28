@@ -40,7 +40,7 @@ You, in every project on this machine
 Personal preferences: theme, editor mode, default model, your own permission rules
 Shared project
 .claude/settings.json
-Everyone who starts Claude Code in the folder that contains it. In a git repository, commit it so teammates get it
+Everyone working in the folder that contains it. In a git repository, commit it so teammates get it
 Team permissions, hooks, plugins, and the environment variables the project needs
 Project local
 .claude/settings.local.json
@@ -63,7 +63,7 @@ folder in your home directory, and a bare
 .claude
 is the
 .claude
-folder inside the project you start Claude Code in.
+folder inside your project.
 ​
 Compare the scope of each settings file
 Suppose you have three projects on your machine,
@@ -198,26 +198,39 @@ When your local settings file needs trust
 .
 ​
 Where Claude Code keeps the local file in a git repository
-When Claude asks permission to run a Bash command and you choose “Yes, and don’t ask again”, Claude Code saves that approval as an allow rule in
+When Claude asks permission to run a Bash command and you choose “Yes, and don’t ask again”, Claude Code saves that approval as an
+allow
+rule in
 .claude/settings.local.json
-. If you started Claude Code in a subdirectory or a
+. If you start Claude Code in a subdirectory of a git repository, it reads and writes that file at the repository root and applies the approval across the whole repository. In a
 worktree
-of a git repository, it reads and writes that file at the repository root, so the approval applies across the whole repository. The shared
+, it uses the file at the main checkout’s root.
+Two rules qualify the root location:
+When the file stays with
 .claude/settings.json
-doesn’t move: Claude Code reads it only from the folder you start in, so start at the repository root to pick up a committed file there. Two details follow from the root location:
-When the file stays in the starting directory instead
+instead
 : outside a git repository, when the repository root is your home directory, on Windows, or when the repository root or its
 .git
 or
 .claude
 entry isn’t owned by your user.
-Paths in the file still resolve from where you started
+Paths in the file don’t anchor at the repository root
 : a permission rule that starts with
 /
-or a relative sandbox path keeps covering the directory you started Claude Code in, not the repository root.
+or a relative sandbox path
+anchors at the session’s primary working directory
+instead.
 Before v2.1.211, Claude Code kept the file in the starting directory. It still reads a file an earlier version left there alongside the root file; where both set the same key, the root’s value applies, and permission rules from both files apply. The Agent SDK’s
 resolveSettings()
 helper always reads the file from the starting directory.
+Claude Code reads the shared
+.claude/settings.json
+from the session’s
+primary working directory
+, so to use a file committed at the repository root, start Claude Code there. After you
+move the session with
+/cd
+, Claude Code reads both project files from the new directory instead, placing the local file by the same rules. Reading them from the directory you moved to requires Claude Code v2.1.246 or later.
 ​
 Check what your organization enforces
 If your organization manages Claude Code, some settings are decided for you and nothing you put in your own files changes them. To see which, run
@@ -240,6 +253,13 @@ An embedding host such as Claude Desktop, through the SDK
 managedSettings
 option; see
 Control policy from an embedding host
+In a
+Cowork
+session that runs on your machine in the Claude Desktop app, Claude Code doesn’t fetch server-managed settings from the claude.ai admin console, and it reads policy deployed to your device unless your organization’s Claude Desktop configuration sets
+requireCoworkFullVmSandbox
+.
+Where and when a policy applies
+covers Cowork and cloud sessions.
 If you’re the administrator,
 Set up Claude Code for your organization
 walks through choosing what to enforce, and
@@ -558,11 +578,11 @@ holds one ordered list of rows plus a replace flag, so Claude Code never merges 
 --settings
 , and user settings that defines it, and ignores the key in project and local settings. Requires Claude Code v2.1.242 or later.
 availableModels
-: when the
-highest-precedence managed source
-defines it, Claude Code applies that list as-is and ignores entries you add in user, project, or local settings, unless an app that embeds Claude Code supplies its own model list; see
+: when the managed settings Claude Code applies define it, Claude Code applies that list as-is and ignores entries you add in user, project, or local settings, unless an app that embeds Claude Code supplies its own model list; see
 Exceptions to managed settings precedence
-. Across non-managed scopes Claude Code merges the arrays as usual.
+. Across managed sources the list never merges either;
+how Claude Code combines managed sources
+says which source’s list applies. Across non-managed scopes Claude Code merges the arrays as usual.
 ​
 Precedence examples
 While Claude works, Claude Code shows a one-line tip under the spinner, such as “Use /config to change your default permission mode (including Plan Mode)”. Suppose you want those tips off, so you set
@@ -660,7 +680,7 @@ delivery table
 , so restart the session first. If
 /status
 then names a different source than the one your administrator changed, a higher-priority source applies;
-Which managed source Claude Code uses
+How Claude Code combines managed sources
 gives the order.
 ​
 A committed key doesn’t reach teammates
@@ -731,6 +751,16 @@ true
 from any scope
 Honored even when a managed source sets
 false
+enableArtifact
+false
+from any scope, and
+disableArtifact: true
+from any scope
+Honored even when a managed source sets
+true
+; nothing turns the
+Artifact tool
+back on. Requires Claude Code v2.1.242 or later
 isolatePeerMachines
 true
 from any scope
@@ -835,11 +865,9 @@ reach a cloud session; a
 managed-settings.json
 file or MDM profile on your device doesn’t. A
 self-hosted environment
-reads the managed settings file in its runner image only when server-managed settings deliver no keys, apart from the
-keys Claude Code reads from every admin source
-; see
-settings precedence
-.
+also reads the managed settings file in its runner image.
+How Claude Code combines managed sources
+says when that file applies.
 /config
 : on the web, opens the Claude Code section of your claude.ai settings instead of changing a value. To change a setting for a cloud session, set an
 environment variable
@@ -870,5 +898,3 @@ CLAUDE.md
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -14,7 +14,7 @@ claude
 binary instead.
 If your package manager doesn’t apply npm’s
 libc
-field, as Yarn 1.x doesn’t, you get both the glibc and musl platform packages on Linux, roughly doubling the install size. The SDK still launches the correct variant. To reclaim the space in a container image, delete the platform package that doesn’t match the libc where your app runs; for a glibc runtime on x64, that’s
+field, as Yarn 1.x doesn’t, you get both the glibc and musl platform packages on Linux, roughly doubling the install size. On Agent SDK v0.2.141 or later, the SDK still launches the correct variant. To reclaim the space in a container image, delete the platform package that doesn’t match the libc where your app runs; for a glibc runtime on x64, that’s
 rm -rf node_modules/@anthropic-ai/claude-agent-sdk-linux-x64-musl
 . On a development machine the deletion is temporary, since Yarn reinstalls the package on the next dependency change.
 ​
@@ -1469,7 +1469,7 @@ string[] | 'all'
 undefined
 Skills available to the session. Pass
 'all'
-to enable every discovered skill, or a list of skill names. Pass exact names only. The SDK rejects malformed and wildcard-form names with an error before starting the Claude Code process. When set, the SDK adds the Skill tool to
+to enable every discovered skill, or a list of skill names. Pass exact names only. On Agent SDK v0.3.221 or later, the SDK rejects malformed and wildcard-form names with an error before starting the Claude Code process. When set, the SDK adds the Skill tool to
 allowedTools
 automatically. If you also pass
 tools
@@ -1702,19 +1702,37 @@ applyFlagSettings
 (
 settings
 :
-{ [
+{
+[
 K
 in
 keyof
 Settings
 ]
 ?:
+K
+extends
+'effortLevel'
+?
+'low'
+|
+'medium'
+|
+'high'
+|
+'xhigh'
+|
+'max'
+|
+null
+:
 Settings
 [
 K
 ]
 |
 null
+;
 })
 :
 Promise
@@ -1796,6 +1814,13 @@ Promise
 SDKControlReadFileResponse
 |
 null
+>;
+reloadSkills
+()
+:
+Promise
+<
+SDKControlReloadSkillsResponse
 >;
 accountInfo
 ()
@@ -1951,6 +1976,10 @@ SDKControlReadFileResponse
 , or
 null
 on permission denial, a missing file, or a transport error. Requires TypeScript SDK v0.2.121 or later
+reloadSkills()
+Reloads skills from disk, so skills you add or edit mid-session become available to the running session. Resolves with an
+SDKControlReloadSkillsResponse
+listing the skills available after the reload. Requires Agent SDK v0.3.163 or later
 accountInfo()
 Returns account information
 reconnectMcpServer(serverName)
@@ -1958,7 +1987,9 @@ Reconnect an MCP server by name
 toggleMcpServer(serverName, enabled)
 Enable or disable an MCP server by name
 setMcpServers(servers)
-Dynamically replace the set of MCP servers for this session. Returns which servers were added and removed, and any errors. The call keeps plugin-provided servers it doesn’t name; naming one replaces it. The promise resolves after newly added stdio, HTTP, and SSE servers connect or fail, so tools from servers that connected are available on the next turn.
+Dynamically replace the set of MCP servers for this session. Resolves with an
+McpSetServersResult
+naming which servers were added and removed, and any errors
 streamInput(stream)
 Stream input messages to the query for multi-turn conversations
 stopTask(taskId)
@@ -2018,9 +2049,9 @@ name. It also accepts
 xhigh
 effort and turns on
 ultracode
-. The
-Settings
-type declares
+.
+applyFlagSettings()
+declares
 effortLevel
 without that value, so pass the equivalent
 { ultracode: true }
@@ -2256,7 +2287,7 @@ string
 [];
 };
 still_queued
-lists the UUIDs of user messages that survive the interrupt: messages still in the queue, plus any batch already dequeued for the next turn but not yet reachable by the abort. Each one runs as its own turn after the interrupt unless you cancel it first. Use the receipt to decide whether to resend anything; resending a message that is already listed produces a duplicate turn.
+lists the UUIDs of user messages that survive the interrupt: messages still in the queue, plus any messages Claude Code had already taken off the queue for the next turn before the interrupt arrived. Claude Code processes the listed messages after the interrupt unless you cancel them first, and can merge several into one turn. Use the receipt to decide whether to resend anything. Resending a message that is already listed delivers it to Claude twice.
 Interpret the list with these caveats:
 Only messages that were enqueued with a UUID appear. An empty array doesn’t mean nothing else will run.
 Only main-thread messages are listed. Messages addressed to a subagent are out of scope.
@@ -2692,6 +2723,26 @@ truncated
 is set when the file was longer than the
 maxBytes
 cap and the contents were cut at that limit.
+​
+SDKControlReloadSkillsResponse
+Return type of
+reloadSkills()
+.
+type
+SDKControlReloadSkillsResponse
+=
+{
+skills
+:
+SlashCommand
+[];
+};
+skills
+lists the skills available after the reload, in the same
+SlashCommand
+shape that
+supportedCommands()
+returns.
 ​
 AgentDefinition
 Configuration for a subagent defined programmatically.
@@ -3565,6 +3616,10 @@ context_usage
 ?:
 SDKContextUsage
 ;
+user_message_uuid
+?:
+string
+;
 };
 The
 message
@@ -3615,6 +3670,11 @@ true
 when an interrupt or abort truncated the assistant message before the stream completed: the message has no
 stop_reason
 and the content may end mid-word. The field is absent on normally completed messages. It requires Agent SDK v0.3.214 or later.
+Claude Code sets
+user_message_uuid
+on the turn’s first assistant message, under the conditions in
+user_message_uuid
+.
 timestamp
 is the ISO 8601 time when the message’s content finished generating on the process that produced it. The value comes from that machine’s clock, so use it for display only and don’t order messages by it. One API turn can produce several assistant messages that share a
 message.id
@@ -3860,6 +3920,10 @@ permission_denials
 :
 SDKPermissionDenial
 [];
+queued_turn_count
+?:
+number
+;
 structured_output
 ?:
 unknown
@@ -3969,10 +4033,18 @@ permission_denials
 :
 SDKPermissionDenial
 [];
+queued_turn_count
+?:
+number
+;
 errors
 :
 string
 [];
+user_message_uuid
+?:
+string
+;
 terminal_reason
 ?:
 TerminalReason
@@ -4008,15 +4080,15 @@ ttft_ms
 user_message_uuid
 : the
 uuid
-of the
-SDKUserMessage
-that started this turn, echoed back so you can match the result to the message you sent. Requires Claude Code v2.1.216 or later. Present on the success arm only, together with
-request_sent_wall_ms
-; absent on API-error results, subagent calls, and synthetic turns such as scheduled ones.
-request_sent_wall_ms
-: epoch milliseconds at which Claude Code dispatched the API request, for joins against server-side timestamps. Present only together with
+of the message you sent that started this turn. See
 user_message_uuid
-.
+for which results carry it.
+request_sent_wall_ms
+: epoch milliseconds at which Claude Code dispatched the API request, for joins against server-side timestamps. Present on the success arm only, together with
+user_message_uuid
+, when
+is_error
+is false.
 usage
 : main agent loop only. Excludes subagent and auxiliary model calls, and is per-turn in streaming-input sessions. Prefer
 modelUsage
@@ -4037,6 +4109,14 @@ modelUsage
 and reset at the same points. It is an estimate, not a billing statement. See
 Track cost and usage
 for accuracy caveats.
+queued_turn_count
+: the number of messages you sent with
+origin: { kind: "human" }
+that are still waiting when Claude Code produced the result. See
+queued_turn_count
+for what
+0
+and an absent field tell you.
 terminal_reason
 : why the loop ended. One of
 "completed"
@@ -4165,6 +4245,58 @@ session_id
 to continue. See
 Defer a tool call for later
 for the full round trip.
+​
+user_message_uuid
+The
+uuid
+of the
+SDKUserMessage
+that started the turn, echoed so you can match Claude Code’s reply to the message you sent. Claude Code echoes it only if you set
+uuid
+on that message. The field is optional on
+SDKUserMessage
+, and a string prompt passed to
+query()
+carries none. When you set it, Claude Code echoes it on two kinds of frame:
+The result
+: on the success arm with
+is_error
+false, together with
+request_sent_wall_ms
+, which requires Agent SDK v0.3.216 or later. On an error result that answers a message you sent, Claude Code echoes the field alone, which requires Agent SDK v0.3.246 or later.
+The turn’s first reply
+: the first
+assistant message
+, or with
+includePartialMessages
+the first
+stream event
+whose
+event.type
+isn’t
+ping
+, so you can bind the reply before the result arrives. When a turn streams nothing, Claude Code sets it on the first assistant message instead. One frame per turn carries it. Requires Agent SDK v0.3.246 or later.
+Claude Code omits the field in these cases:
+Later assistant messages and stream events of the same turn
+Subagent frames
+Synthetic turns, such as scheduled ones
+Results with no single triggering message, such as the zeroed result after a crashed worker process
+​
+queued_turn_count
+The number of messages you sent with
+origin: { kind: "human" }
+that are still waiting in the command queue when Claude Code produced the result. Requires Agent SDK v0.3.242 or later.
+What
+0
+and an absent field tell you:
+0
+: Claude Code doesn’t count messages you sent without that
+origin
+, and doesn’t count task notifications, so a turn can still follow.
+Absent
+: the final result that Claude Code emits after a crash or fatal startup error omits the field, and
+may carry zeroed totals
+.
 ​
 SDKSystemMessage
 System initialization message.
@@ -4377,7 +4509,17 @@ ttft_ms
 number
 ;
 // Time to first token in ms, present only on message_start events
+user_message_uuid
+?:
+string
+;
+// Present on at most one stream event per turn
 };
+Claude Code sets
+user_message_uuid
+on one stream event per turn, under the conditions in
+user_message_uuid
+.
 ​
 SDKCompactBoundaryMessage
 Message indicating a conversation compaction boundary.
@@ -5175,7 +5317,9 @@ with
 SendMessage
 , or a
 cross-session peer
-, another of your Claude Code sessions. A cross-session peer can run on the same machine, or on
+, another of your Claude Code sessions. Cross-session peers require Claude Code v2.1.224 or later on macOS and Linux; see
+cross-session messaging availability
+for the native Windows requirement. A cross-session peer can run on the same machine, or on
 another of your machines
 or
 Claude Code on the web
@@ -6990,7 +7134,7 @@ bypassPermissions
 acceptEdits
 , or
 auto
-, and Claude Code ignores a definition’s
+. On v2.1.223 or later, Claude Code ignores a definition’s
 permissionMode: "bypassPermissions"
 when bypass mode is disabled by
 permissions.disableBypassPermissionsMode
@@ -7303,6 +7447,26 @@ pages
 for PDF page ranges (for example,
 "1-5"
 ).
+For a PDF, Claude receives the file’s contents inside the Read call’s
+tool_result
+content. A read that returns the
+pdf
+output
+carries a summary
+text
+block followed by a
+document
+block. One that returns the
+parts
+output carries the summary
+text
+block followed by one block per extracted page: an
+image
+block, or a
+text
+block naming the page when Claude Code couldn’t render it as an image. Before Agent SDK v0.3.242, Claude Code delivered the file’s contents as a separate
+user
+message after the tool result.
 ​
 Write
 Tool name:
@@ -8028,8 +8192,6 @@ cancels the pending wakeup and ends the self-paced
 stop
 field requires Claude Code v2.1.202 or later. See the
 ScheduleWakeup row in the tools reference
-for availability; it isn’t available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, nor when you turn off
-feature-flag fetching
 .
 ​
 RemoteTrigger
@@ -9527,6 +9689,34 @@ outputDir
 string
 ;
 };
+/** Document page number of the first extracted page; labels the page images in the tool_result content. */
+firstPage
+?:
+number
+;
+/** In-process only: the page-image bytes are delivered as image blocks in the tool_result content and aren't retained on the emitted tool_use_result, so this key is absent there. */
+pages
+?:
+{
+base64
+:
+string
+;
+mediaType
+:
+"image/jpeg"
+|
+"image/png"
+|
+"image/gif"
+|
+"image/webp"
+;
+error
+?:
+string
+;
+}[];
 }
 |
 {
@@ -9645,7 +9835,25 @@ userModified
 boolean
 ;
 };
-Returns the write result with structured diff information.
+Returns the write result with structured diff information. What
+originalFile
+and
+structuredPatch
+hold depends on the write:
+For a newly created file,
+originalFile
+is null and
+structuredPatch
+is empty
+On an overwrite,
+originalFile
+carries the previous content, except when that content is larger than about 10 MB: Claude Code then skips the diff and returns
+originalFile
+null and
+structuredPatch
+empty
+structuredPatch
+is also empty when the write changed nothing or the diff timed out
 ​
 Glob
 Tool name:
@@ -12356,6 +12564,18 @@ string
 string
 >;
 };
+When you call
+setMcpServers()
+, Claude Code applies these rules:
+Servers the call doesn’t name
+: Claude Code keeps plugin-provided servers running. Requires Agent SDK v0.3.210 or later.
+Servers the call names
+: except for built-in servers the CLI started at startup, Claude Code replaces a running server only when its config differs from the one you passed.
+Built-in servers the CLI started at startup
+: if the call names one, Claude Code drops that entry and reports it in
+errors
+.
+The promise resolves after newly added stdio, HTTP, and SSE servers connect or fail, so tools from servers that connected are available on the next turn.
 ​
 RewindFilesResult
 Result of a
@@ -12435,6 +12655,12 @@ run_in_background
 Bash commands,
 Monitor
 watches, and background subagents.
+ambient
+is
+true
+for tasks Claude Code starts for its own operation;
+SDKTaskStartedMessage
+defines the field and its version requirement.
 type
 SDKTaskNotificationMessage
 =
@@ -12470,6 +12696,10 @@ string
 summary
 :
 string
+;
+ambient
+?:
+boolean
 ;
 usage
 ?:
@@ -12901,6 +13131,10 @@ spawn_depth
 ?:
 number
 ;
+ambient
+?:
+boolean
+;
 uuid
 :
 UUID
@@ -12910,6 +13144,16 @@ session_id
 string
 ;
 };
+ambient
+is
+true
+for tasks Claude Code starts for its own operation and doesn’t display as your work, such as auto-started live-update watchers. Exclude ambient tasks from activity indicators. The field requires Agent SDK v0.3.247 or later.
+ambient
+also appears on
+SDKTaskNotificationMessage
+and on
+SDKBackgroundTasksChangedMessage
+entries.
 is_backgrounded
 and
 spawn_depth
@@ -13091,7 +13335,9 @@ string
 };
 ​
 SDKBackgroundTasksChangedMessage
-Emitted whenever the set of live background tasks changes: a task starts, completes, is killed, or a foreground agent is backgrounded. The
+Emitted whenever the set of live background tasks changes: a task starts, completes, is killed, a foreground agent is backgrounded, or a task’s
+ambient
+flag changes. The
 tasks
 array is the full live set. Replace any cached set with each payload instead of pairing
 task_started
@@ -13134,6 +13380,10 @@ string
 description
 :
 string
+;
+ambient
+?:
+boolean
 ;
 }[];
 uuid
@@ -13988,5 +14238,3 @@ Common workflows
 Was this page helpful?
 Yes
 No
-⌘
-I

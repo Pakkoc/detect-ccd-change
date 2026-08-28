@@ -467,5 +467,3 @@ to poll on a timer instead of reacting to pushed events
 Was this page helpful?
 Yes
 No
-⌘
-I

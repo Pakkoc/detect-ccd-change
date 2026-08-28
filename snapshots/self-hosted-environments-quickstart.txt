@@ -206,7 +206,7 @@ Once a session is running on your environment, send it a follow-up from the
 claude
 CLI on any machine where you’re logged in with
 claude auth login
-; the command doesn’t need to run from the machine that started the session. The queue-and-exit form posts one message:
+; the command doesn’t need to run from the machine that started the session. The command posts one message:
 claude
 -p
 "your message"
@@ -223,7 +223,7 @@ or
 cse_...
 ID or the session’s claude.ai/code URL. A successful send prints
 Sent to cloud session.
-with the session ID and a view link. Accepted ID forms, JSON output, the interactive attach form, the account and policy requirements, and the error reference are on
+with the session ID and a view link. Accepted ID forms, JSON output, the account and policy requirements, and the error reference are on
 Send follow-ups from the CLI
 , since the command works the same against Anthropic-hosted sessions.
 ​
@@ -237,5 +237,3 @@ Test end to end
 Was this page helpful?
 Yes
 No
-⌘
-I

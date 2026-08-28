@@ -260,20 +260,14 @@ and
 were aliases of
 /feedback
 /cd <path>
-Move this session to a new working directory, keeping the conversation and its prompt cache. Type a partial path to see matching directory suggestions; press
+Move this session to a new working directory, keeping the conversation. Type a partial path to see matching directory suggestions; press
 Tab
-to accept one. The suggestions require Claude Code v2.1.206 or later. Claude Code prompts you to
-trust the workspace
-if you haven’t worked in it before, and
---resume
-finds the moved session
-afterward. To grant access to an extra directory without moving the session, use
-/add-dir
-. Restrict or disable
+to accept one. The suggestions require Claude Code v2.1.206 or later. For what Claude Code applies from the new directory as soon as you move, and how
 /cd
-targets with
-Cd
-permission rules
+differs from
+/add-dir
+, see
+Move the session to another directory
 . Requires Claude Code v2.1.169 or later
 /chrome
 Configure
@@ -661,12 +655,12 @@ Sign out from your Anthropic account
 /loop [interval] [prompt]
 Skill
 .
-Run a prompt repeatedly while the session stays open. Omit the interval and,
-where available
-, Claude self-paces between iterations. Omit the prompt and,
-where available
-, Claude runs an autonomous maintenance check or the prompt in
-.claude/loop.md
+Run a prompt repeatedly while the session stays open. Omit the interval and Claude
+self-paces between iterations
+. Omit the prompt and Claude runs the
+built-in maintenance prompt
+or your
+loop.md
 . Example:
 /loop 5m check if the deploy finished
 . See
@@ -767,7 +761,7 @@ to apply pending changes without restarting. Reports counts for each reloaded co
 /reload-skills
 Re-scan
 skill
-and command directories so skills added or changed on disk during the session become available without restarting. Reports how many skills are available and how many were added or removed. Added in v2.1.152
+and command directories so skills added or changed on disk during the session become available without restarting. Reports how many skills are available and how many were added or removed
 /remote-control
 Make this session available for
 Remote Control
@@ -1029,9 +1023,7 @@ Connect your GitHub account to
 Claude Code on the web
 using your local
 gh
-CLI credentials.
-/schedule
-prompts for this automatically if GitHub isn’t connected
+CLI credentials
 /workflows
 Open the
 workflow
@@ -1102,5 +1094,3 @@ CLI reference
 Was this page helpful?
 Yes
 No
-⌘
-I

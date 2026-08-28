@@ -265,5 +265,3 @@ and mention your assistive technology in the title. Include your operating syste
 Was this page helpful?
 Yes
 No
-⌘
-I

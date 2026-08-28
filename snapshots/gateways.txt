@@ -78,15 +78,19 @@ model environment variables
 availableModels
 allowlist, but the developer still picks within it.
 Other network traffic
-: Claude Code itself sends version checks and downloads directly to Anthropic, separate from the gateway path. Whether the optional client telemetry stream is also on depends on your provider; the
-telemetry defaults table
-covers each case. On a signed-in Claude apps gateway session, the gateway credential disables the Anthropic-bound analytics, and the
-telemetry destination
-depends on how the session signed in. Your network still needs egress to the
+: Claude Code itself sends version checks and downloads directly to Anthropic, separate from the gateway path. Your network still needs egress to the
 required domains
 , or set
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 to turn off the optional streams.
+Client telemetry
+: on a Claude apps gateway session, Claude Code sends no client analytics to Anthropic. It disables the Anthropic-bound analytics when the session signs in, and on machines where a managed settings file, an MDM profile, or a policy helper sets
+forceLoginMethod: "gateway"
+, it turns them off from startup, before anyone signs in. For other gateways, whether the optional client telemetry stream is on depends on your provider, and the
+telemetry defaults table
+covers each case. Where a gateway session’s telemetry goes depends on how the session signed in, and
+What’s enforced on developers
+says where each kind of session’s exports go.
 Corporate HTTP proxies
 : an
 HTTPS_PROXY
@@ -111,5 +115,3 @@ for the wider rollout decisions a gateway is one part of
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -871,5 +871,3 @@ reference, including where output styles and other configuration are stored
 Was this page helpful?
 Yes
 No
-⌘
-I

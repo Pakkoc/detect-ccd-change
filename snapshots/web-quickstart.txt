@@ -424,5 +424,3 @@ shows a QR code.
 Was this page helpful?
 Yes
 No
-⌘
-I

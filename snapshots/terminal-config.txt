@@ -598,6 +598,28 @@ Paste large content
 When you paste more than 800 characters or more than two lines into the prompt, Claude Code collapses the input to a placeholder such as
 [Pasted text #1 +120 lines]
 so the input box stays usable. The full content is still sent to Claude when you submit.
+When you delete with a word or line shortcut such as
+Ctrl+W
+or
+Ctrl+K
+, or with a vim delete through an
+f
+/
+t
+motion such as
+df]
+, and the deleted range reaches inside a placeholder, Claude Code removes the placeholder whole. You can paste the deletion back to restore it, with
+Ctrl+Y
+after
+Ctrl+W
+,
+Ctrl+U
+, or
+Ctrl+K
+, or with
+p
+in NORMAL mode
+after a vim delete.
 Claude Code keeps the collapsed content under
 ~/.claude/paste-cache/
 , so when you recall a prompt from
@@ -670,5 +692,3 @@ Troubleshooting
 Was this page helpful?
 Yes
 No
-⌘
-I

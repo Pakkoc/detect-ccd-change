@@ -1052,5 +1052,3 @@ examples/session-stores/
 Was this page helpful?
 Yes
 No
-⌘
-I

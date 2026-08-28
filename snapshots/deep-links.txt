@@ -15,7 +15,7 @@ embed one in a runbook or trigger it from the shell
 manage or disable handler registration
 on each platform.
 ​
-How it works
+How deep links work
 The
 claude-cli://
 prefix is a custom URL scheme that Claude Code registers with your operating system, similar to how
@@ -162,6 +162,7 @@ claude-cli://
 handler:
 open
 "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
+On success, a new terminal window opens with Claude Code running and the prompt pre-filled.
 Most desktop environments provide
 xdg-open
 , which passes the URL to the registered handler:
@@ -185,6 +186,7 @@ treats its first quoted argument as a window title, so pass an empty title befor
 start
 ""
 "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
+On success, a new terminal window opens with Claude Code running and the prompt pre-filled.
 ​
 Registration and supported platforms
 Claude Code registers the
@@ -294,5 +296,3 @@ Non-interactive mode
 Was this page helpful?
 Yes
 No
-⌘
-I

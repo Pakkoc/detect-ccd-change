@@ -306,7 +306,9 @@ An MCP server opens an elicitation form and you haven’t typed for about six se
 elicitation_url_dialog
 An MCP server asks you to open a browser URL and you haven’t typed for about six seconds
 elicitation_complete
-An MCP elicitation form is submitted or dismissed
+An MCP server reports that a
+URL-mode elicitation
+is complete
 elicitation_response
 An MCP elicitation response is sent back to the server
 agent_needs_input
@@ -878,6 +880,8 @@ only applies if the session was launched with bypass mode already available:
 permissions.defaultMode: "bypassPermissions"
 in settings, and not disabled by
 permissions.disableBypassPermissionsMode
+or by starting the session in
+restricted mode
 . It is never persisted as
 defaultMode
 .
@@ -1246,9 +1250,7 @@ and
 Elicitation
 , surface no message. Some events can’t be blocked: for
 SessionStart
-,
-Setup
-, and others, exit 2 shows stderr to the user and execution continues. See
+and others, exit 2 shows stderr to the user and execution continues. See
 exit code 2 behavior per event
 for the full list.
 Any other exit code
@@ -1307,11 +1309,12 @@ values are specific to
 PreToolUse
 :
 "allow"
-: skip the interactive permission prompt. Deny and ask rules, including enterprise managed deny lists, still apply, as do prompts for connector tools
+: skip the interactive permission prompt. Deny and ask rules, including enterprise managed deny lists, still apply, as do prompts for MCP tools marked
+requiresUserInteraction
+and for connector tools
 your organization set to
 ask
-and MCP tools marked
-requiresUserInteraction
+in sessions where that setting reaches Claude Code
 "deny"
 : cancel the tool call and send the reason to Claude
 "ask"
@@ -2166,12 +2169,12 @@ mode or with
 . This lets you enforce policy that users can’t bypass by changing their permission mode.
 The reverse is not true: a hook returning
 "allow"
-doesn’t bypass deny rules from settings, and it can’t suppress the prompt for connector tools
+doesn’t bypass deny rules from settings, and it can’t suppress the prompt for MCP tools marked
+requiresUserInteraction
+or for connector tools
 your organization set to
 ask
-or MCP tools marked
-requiresUserInteraction
-. Hooks can tighten restrictions but not loosen them past what permission rules allow.
+in sessions where that setting reaches Claude Code. Hooks can tighten restrictions but not loosen them past what permission rules allow.
 ​
 Hook not firing
 The hook is configured but never executes.
@@ -2344,5 +2347,3 @@ Bash command validator example
 Was this page helpful?
 Yes
 No
-⌘
-I

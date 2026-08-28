@@ -642,5 +642,3 @@ Set up Claude Code for your organization
 Was this page helpful?
 Yes
 No
-⌘
-I

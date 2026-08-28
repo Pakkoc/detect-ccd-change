@@ -117,5 +117,3 @@ Full changelog for v2.1.220–v2.1.224 →
 Was this page helpful?
 Yes
 No
-⌘
-I

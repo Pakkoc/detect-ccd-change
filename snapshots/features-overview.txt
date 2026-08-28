@@ -527,5 +527,3 @@ Host and distribute plugin collections
 Was this page helpful?
 Yes
 No
-⌘
-I

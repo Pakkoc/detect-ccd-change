@@ -21,6 +21,11 @@ with focused system prompts for specific domains
 Control costs
 by routing tasks to faster, cheaper models like Haiku
 Claude uses each subagent’s description to decide when to delegate tasks. When you create a subagent, write a clear description so Claude knows when to use it.
+Those descriptions take up context, so keep them short. When the combined descriptions of your subagents, except the built-in ones, exceed 15,000 tokens, Claude Code shows a
+warning at startup with the total token count
+. Trim the
+description
+fields of your subagents, and move detail into each subagent’s system prompt, which only loads when that subagent runs.
 ​
 Built-in subagents
 Claude Code includes built-in subagents that Claude automatically uses when appropriate. Each inherits the parent conversation’s permissions; most run with a restricted tool set.
@@ -197,7 +202,7 @@ Try it out
 Ask Claude to delegate to the new subagent:
 Use the code-improver agent to suggest improvements in this project
 Claude delegates to your new subagent, which scans the codebase and returns improvement suggestions. In the transcript, the delegation appears as a tool call row showing the subagent’s name followed by a short task description, such as
-code-improver (Suggest code improvements)
+code-improver(Suggest code improvements)
 .
 If Claude can’t find the new subagent, restart Claude Code and try again. This happens only when
 ~/.claude/agents/
@@ -416,13 +421,9 @@ settings.local.json
 , but these rules apply to the entire session, not only the plugin subagent.
 Subagent definitions from any of these scopes are also available to
 agent teams
-: when spawning a teammate, you can reference a subagent type and the teammate uses its
-tools
-and
-model
-, with the definition’s body appended to the teammate’s system prompt as additional instructions. See
+: when spawning a teammate, you can reference a subagent type, and Claude Code applies parts of that definition to the teammate. See
 agent teams
-for which frontmatter fields apply on that path.
+for which parts apply in each display mode.
 ​
 Write subagent files
 Subagent files use YAML frontmatter for configuration, followed by the system prompt in Markdown:
@@ -575,7 +576,9 @@ alias requires Claude Code v2.1.200 or later. Ignored for
 plugin subagents
 maxTurns
 No
-Maximum number of agentic turns before the subagent stops
+Maximum number of agentic turns before the subagent stops. When the subagent reaches the limit, Claude Code returns its output marked as partial, and Claude can
+resume it
+to continue. The partial marking requires Claude Code v2.1.246 or later
 skills
 No
 Skills
@@ -1158,12 +1161,12 @@ Auto mode
 dontAsk
 Auto-deny permission prompts. Explicitly allowed tools still work;
 AskUserQuestion
-, connector tools
+, MCP tools marked
+requiresUserInteraction
+, and connector tools
 your organization set to
 ask
-, and MCP tools marked
-requiresUserInteraction
-are denied even if you’ve allowed them
+in sessions where that setting reaches Claude Code are denied even if you’ve allowed them
 bypassPermissions
 Skip permission prompts
 plan
@@ -1825,6 +1828,9 @@ Agent terminated early due to an API error
 , followed by the error detail. In v2.1.199, a rate limit, overload, or server error that cut off the tool-calls-only shape returned an empty partial result containing only the cut-off note instead.
 Background
 : the subagent is marked failed, and the message Claude receives when it ends names the API error and includes the subagent’s last output, so partial work isn’t lost.
+When you configure a
+fallback model chain
+and a subagent encounters a failure the chain covers, such as its model being unavailable, Claude Code switches the subagent to the first model in the chain that accepts the request. The subagent keeps working instead of ending on the error.
 Once the underlying API error clears, ask Claude to retry the task or
 resume the subagent
 .
@@ -1869,9 +1875,11 @@ For independent investigations, spawn multiple subagents to work simultaneously:
 Research the authentication, database, and API modules in parallel using separate subagents
 Each subagent explores its area independently, then Claude synthesizes the findings. This works best when the research paths don’t depend on each other.
 When subagents complete, their results return to your main conversation. Running many subagents that each return detailed results can consume significant context.
-For tasks that need sustained parallelism or exceed your context window,
-agent teams
-give each worker its own independent context.
+For work that needs to keep running in parallel or won’t fit in one context window, run it in
+separate sessions
+and let Claude
+pass findings between them
+.
 ​
 Chain subagents
 For multi-step workflows, ask Claude to use subagents in sequence. Each subagent completes its task and returns results to Claude, which then passes relevant context to the next subagent.
@@ -2041,6 +2049,9 @@ Resumed subagents retain their full conversation history, including all previous
 When a subagent completes, Claude receives its agent ID. The built-in Explore and Plan agents are one-shot and return no agent ID, so they can’t be resumed; use
 general-purpose
 or a custom subagent when you need to continue the work.
+When a subagent stops at its
+maxTurns
+limit, Claude Code marks the returned output as partial. For subagents that return an agent ID, Claude Code also notes in the result that Claude can message the subagent to continue from where it stopped.
 Claude uses the
 SendMessage
 tool with the agent’s ID or name as the
@@ -2275,7 +2286,7 @@ These examples demonstrate effective patterns for building subagents. Use them a
 Best practices:
 Design focused subagents:
 each subagent should excel at one specific task
-Write detailed descriptions:
+Write specific descriptions:
 Claude uses the description to decide when to delegate
 Limit tool access:
 grant only necessary permissions for security and focus
@@ -2569,5 +2580,3 @@ to give subagents access to external tools and data
 Was this page helpful?
 Yes
 No
-⌘
-I

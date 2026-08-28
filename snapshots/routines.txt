@@ -62,8 +62,8 @@ instead creates a
 Desktop scheduled task
 , which runs on your machine rather than in the cloud. If
 Routines
-is missing from the Desktop sidebar, routines aren’t available to your account; see
-“Routines are disabled by your organization’s policy”
+is missing from the Desktop sidebar, routines aren’t available to your account: they need a Pro, Max, Team, or Enterprise plan with Claude Code on the web enabled, and on Team and Enterprise plans an Owner can turn them off with the Routines toggle at
+claude.ai/admin-settings/claude-code
 .
 The creation form sets up the routine’s prompt, repositories, environment, connectors, and triggers.
 Routines run autonomously as full Claude Code cloud sessions: there is no permission-mode picker and no approval prompts during a run. The session can run shell commands, use
@@ -453,9 +453,7 @@ open each run on the web
 Repositories and branch permissions
 Routines need GitHub access to clone repositories. When you create a routine from the CLI with
 /schedule
-, Claude checks whether your account has GitHub connected and prompts you to run
-/web-setup
-if it doesn’t. See
+, Claude checks whether your account has GitHub access for the repository you ran it from and, if it doesn’t, adds a setup note naming how to grant it. See
 GitHub authentication options
 for the two ways to grant access.
 Each repository you add is cloned on every run. Claude starts from the repository’s default branch unless your prompt specifies otherwise.
@@ -650,5 +648,3 @@ GitHub Actions
 Was this page helpful?
 Yes
 No
-⌘
-I

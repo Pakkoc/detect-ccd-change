@@ -528,5 +528,3 @@ Configure subagents
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -243,5 +243,3 @@ and related variables
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -3123,7 +3123,7 @@ cleanupPeriodDays
 , the managed value pins the retention period and the sweep runs even when a settings file in a lower-priority scope is broken or invalid. When
 managed-settings.json
 itself can’t be read or parsed, Claude Code still pauses the sweep unless the
-managed source it selects
+managed tier
 supplies
 cleanupPeriodDays
 from elsewhere, such as server-managed settings or a
@@ -3539,26 +3539,26 @@ Backend considerations
 Your choice of metrics, logs, and traces backends determines the types of analyses you can perform:
 ​
 For metrics
-Time series databases (for example, Prometheus)
+Time series databases
 : Rate calculations, aggregated metrics
-Columnar stores (for example, ClickHouse)
+Columnar stores
 : Complex queries, unique user analysis
-Full-featured observability platforms (for example, Honeycomb, Datadog, Grafana Cloud)
+Full-featured observability platforms
 : Advanced querying, visualization, alerting
 ​
 For events/logs
-Log aggregation systems (for example, Elasticsearch, Loki)
+Log aggregation systems
 : Full-text search, log analysis
-Columnar stores (for example, ClickHouse)
+Columnar stores
 : Structured event analysis
-Full-featured observability platforms (for example, Honeycomb, Datadog, Grafana Cloud)
+Full-featured observability platforms
 : Correlation between metrics and events
 ​
 For traces
 Choose a backend that supports distributed trace storage and span correlation:
-Distributed tracing systems (for example, Jaeger, Zipkin, Grafana Tempo)
+Distributed tracing systems
 : Span visualization, request waterfalls, latency analysis
-Full-featured observability platforms (for example, Honeycomb, Datadog, Grafana Cloud)
+Full-featured observability platforms
 : Trace search and correlation with metrics and logs
 For organizations requiring Daily/Weekly/Monthly Active User (DAU/WAU/MAU) metrics, consider backends that support efficient unique value queries.
 ​
@@ -3687,5 +3687,3 @@ Claude Code Monitoring Implementation (Amazon Bedrock)
 Was this page helpful?
 Yes
 No
-⌘
-I

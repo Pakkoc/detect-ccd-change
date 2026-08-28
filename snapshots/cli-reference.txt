@@ -432,11 +432,9 @@ on claude.ai. With a session ID (
 session_...
 or
 cse_...
-) or a claude.ai/code URL, target that existing session instead:
+) or a claude.ai/code URL, queue a message into that existing session instead, with
 -p
-queues the message into it, and no
--p
-attaches your terminal. See
+. See
 send a follow-up message
 .
 claude --cloud "Fix the login bug"
@@ -547,7 +545,7 @@ ccpool_
 . See
 --environment
 dispatch behavior
-for the interactive and non-interactive forms and the flag combinations it rejects. Requires Claude Code v2.1.224 or later
+for dispatch behavior and the flag combinations it rejects. Requires Claude Code v2.1.224 or later
 claude -p "Fix the login bug" --environment ccpool_abc123
 --exclude-dynamic-system-prompt-sections
 Move per-machine sections from the system prompt (working directory, environment info, memory paths, git-repo flag) into the first user message. Improves prompt-cache reuse across different users and machines running the same task. Only applies with the default system prompt; ignored when
@@ -684,7 +682,7 @@ claude -p --max-budget-usd 5.00 "query"
 --max-turns
 Limit the number of agentic turns (print mode only). Exits with an error when the limit is reached. No limit by default. With
 --input-format stream-json
-, a message sent while Claude is working stays queued and runs as its own turn, with its own limit, when the limit ends the current one
+, a message still queued when the limit ends a turn stays queued and starts a new turn with its own limit
 claude -p --max-turns 3 "query"
 --mcp-config
 Load MCP servers from JSON files or strings (space-separated). When you pass this flag with
@@ -851,6 +849,23 @@ Re-emit user messages from stdin back on stdout for acknowledgment. Requires
 and
 --output-format stream-json
 claude -p --input-format stream-json --output-format stream-json --verbose --replay-user-messages
+--restricted
+Start in restricted mode. Use it when an evaluation harness drives
+claude
+on a shared machine and Claude Code must not run commands or read that machine’s user and project settings. Claude Code removes the built-in tools that run commands or code, and WebFetch, unless you name them individually in
+--tools
+, not through its
+default
+preset. It also confines the built-in file tools to the
+working directories
+, loads only
+managed settings
+and
+--settings
+, and refuses
+bypassPermissions
+. Requires Claude Code v2.1.248 or later
+claude --restricted -p "query"
 --resume
 ,
 -r
@@ -1019,5 +1034,3 @@ Agent SDK documentation
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -91,5 +91,3 @@ Full changelog for v2.1.166–v2.1.176 →
 Was this page helpful?
 Yes
 No
-⌘
-I

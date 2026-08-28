@@ -336,5 +336,3 @@ Getting started with Claude in Chrome
 Was this page helpful?
 Yes
 No
-⌘
-I

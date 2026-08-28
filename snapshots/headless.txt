@@ -826,5 +826,3 @@ GitLab CI/CD
 Was this page helpful?
 Yes
 No
-⌘
-I

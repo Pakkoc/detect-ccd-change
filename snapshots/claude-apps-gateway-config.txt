@@ -1457,7 +1457,8 @@ Claude for Enterprise
 capability.
 Two propagation clocks apply:
 Policy contents
-: editing a policy and redeploying reaches connected clients on their next managed-settings poll, within an hour
+: editing a policy and redeploying reaches connected clients on their next managed-settings poll, within an hour, apart from the
+changes that apply only at the next launch
 Group membership
 : changing a user’s group membership changes which policy matches them. This takes effect on the next session re-mint, meaning the next silent refresh, bounded by
 session.ttl_hours
@@ -1850,9 +1851,9 @@ for every user.
 Precedence with other managed sources
 If a device also has an MDM-delivered policy or a local
 managed-settings.json
-, Claude Code doesn’t merge the managed sources: gateway-delivered settings rank first, so the local sources supply the policy only when the gateway delivers no policy key.
+, gateway-delivered settings rank first.
 Precedence within the managed tier
-on the managed settings page has the full ranking and the
+on the managed settings page says when the local sources apply, and has the
 keys Claude Code reads from every admin source
 regardless of which source it selected, such as the sandbox lock keys,
 forceRemoteSettingsRefresh
@@ -2364,7 +2365,7 @@ Linux and WSL
 Windows
 C:\Program Files\ClaudeCode\managed-settings.json
 , or Group Policy via the HKLM registry
-A registry policy on Windows or a managed-preferences plist on macOS replaces the
+By default, a registry policy on Windows or a managed-preferences plist on macOS replaces the
 managed-settings.json
 file rather than merging with it, apart from the
 exception keys and cross-source checks above
@@ -2403,5 +2404,3 @@ Spend limits
 Was this page helpful?
 Yes
 No
-⌘
-I

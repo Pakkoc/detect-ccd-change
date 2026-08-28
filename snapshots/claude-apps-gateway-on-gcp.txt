@@ -821,5 +821,3 @@ Claude apps gateway overview
 Was this page helpful?
 Yes
 No
-⌘
-I

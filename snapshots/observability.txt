@@ -3,7 +3,7 @@ which tools they called
 how long each model request took
 how many tokens were spent
 where failures occurred
-The Agent SDK can export this data as OpenTelemetry traces, metrics, and log events to any backend that accepts the OpenTelemetry Protocol (OTLP), such as Honeycomb, Datadog, Grafana, Langfuse, or a self-hosted collector.
+The Agent SDK can export this data as OpenTelemetry traces, metrics, and log events to any backend that accepts the OpenTelemetry Protocol (OTLP), whether a hosted observability platform or a self-hosted collector.
 This guide explains how the SDK emits telemetry, how to configure the export, and how to tag and filter the data once it reaches your backend. To read token usage and cost directly from the SDK response stream instead of exporting to a backend, see
 Track cost and usage
 .
@@ -221,8 +221,7 @@ console
 as an exporter value when running
 through the SDK. To inspect telemetry locally, point
 OTEL_EXPORTER_OTLP_ENDPOINT
-at a local collector or an all-in-one Jaeger
-container instead.
+at a local OpenTelemetry Collector instead.
 ​
 Flush telemetry from short-lived calls
 The CLI batches telemetry and exports on an interval. On a clean process exit it attempts to flush pending data, but the flush is bounded by a short timeout, so spans can still be dropped if the collector is slow to respond. If your process is killed before the CLI shuts down, anything still in the batch buffer is lost. Lowering the export intervals reduces both windows.
@@ -548,5 +547,3 @@ Monitoring
 Was this page helpful?
 Yes
 No
-⌘
-I

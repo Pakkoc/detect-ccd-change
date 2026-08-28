@@ -54,6 +54,18 @@ github.com
 and on
 GitHub Enterprise Server
 instances that an Owner has connected to Claude Code.
+For repositories on
+github.com
+, the sandbox clones with the GitHub account connected to your Claude account, so the account must be able to read the PR’s repository. Claude Code checks this before creating the cloud session, unless you’ve set
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+, and refuses the launch when
+no account is connected
+or
+the account can’t see the repository
+; the refusal names the fix. Before v2.1.248, Claude Code didn’t check this before launch.
+Run
+/web-setup
+to connect your GitHub CLI login to your Claude account.
 ​
 Post findings to the pull request
 On Claude Code v2.1.227 or later, when you review a pull request on
@@ -253,5 +265,3 @@ Manage costs effectively
 Was this page helpful?
 Yes
 No
-⌘
-I

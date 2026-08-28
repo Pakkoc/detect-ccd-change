@@ -86,8 +86,10 @@ applies to all of them. A few keys are tied to particular sources, and each entr
 Delivery controls
 :
 policyHelper
-and
+,
 wslInheritsWindowsSettings
+, and
+managedSourcesBehavior
 Gateway login keys
 :
 forceLoginGatewayUrl
@@ -100,9 +102,9 @@ can’t target a group yet
 , while a self-hosted
 Claude apps gateway
 delivers managed settings per IdP group.
-When more than one mechanism delivers a policy to the same machine, Claude Code uses one and ignores the others;
-Which managed source Claude Code uses
-gives the order.
+When more than one mechanism delivers a policy to the same machine, Claude Code by default uses one and ignores the others.
+How Claude Code combines managed sources
+gives the order and the opt-in that applies every source.
 The MDM and file rows are together called endpoint-managed settings, because the policy is stored on the developer’s device, as opposed to the server-managed row, where Claude Code fetches it.
 Pick a mechanism by how you already manage devices, using the table below.
 Mechanism
@@ -152,17 +154,34 @@ Managed MCP configuration
 Where and when a policy applies
 A deployed policy reaches the developer’s sessions as follows:
 Surfaces
-: every surface that runs Claude Code on the machine reads these sources: the terminal, the VS Code and JetBrains extensions, the desktop app, and
+: on the developer’s machine, the terminal, the VS Code and JetBrains extensions, the desktop app’s Code tab, and
 Agent SDK
-sessions, which load managed settings even when
+sessions read all of these sources. Agent SDK sessions load managed settings even when
 settingSources
 excludes the user, project, and local files.
 Cloud sessions
 : a session in an Anthropic-hosted environment doesn’t read a device’s MDM profile or file, so policy for it has to come from server-managed settings. A session in a
 self-hosted environment
-reads the managed settings file in its runner image only when server-managed settings deliver no keys, apart from the
+also reads the managed settings file in its runner image, by default only when server-managed settings deliver no policy key, apart from the
 keys Claude Code reads from every admin source
 .
+How Claude Code combines managed sources
+covers the opt-in that applies both.
+Cowork sessions
+:
+Cowork
+in the Claude Desktop app runs its sessions on Claude Code. In a Cowork session, Claude Code never fetches server-managed settings from the claude.ai admin console, even when the user signs in with a Team or Enterprise account, so which policy applies depends on where the session runs:
+On the user’s machine
+: by default, Claude Code in a Cowork session reads the MDM or OS-level policy and the managed settings file on that device, so deploy policy there.
+In a full VM sandbox
+: when your Claude Desktop managed configuration sets
+requireCoworkFullVmSandbox
+, Claude Code runs inside a virtual machine where the device’s MDM policy and managed settings file aren’t present.
+Remote Cowork sessions
+: these run on Anthropic-managed VMs, where Claude Code has no device policy to read.
+The
+surface coverage
+table compares Cowork with the other surfaces.
 Running sessions
 : a session picks up most changes on the schedule in the table without a restart. Claude Code reads
 forceRemoteSettingsRefresh
@@ -274,18 +293,29 @@ extraKnownMarketplaces
 modelPicker
 : the later lineup replaces the earlier one whole
 ​
-Which managed source Claude Code uses
-When your organization delivers more than one managed source, Claude Code uses the first of these sources that delivers at least one policy key and ignores the rest rather than merging them, apart from the few cross-source keys covered in
+How Claude Code combines managed sources
+When your organization delivers more than one managed source to the same machine, the
+managedSourcesBehavior
+key decides what Claude Code does with the others:
+"first-wins"
+, the default
+: Claude Code uses the highest-ranked source that delivers at least one policy key and ignores the rest rather than merging them, apart from the few keys in
 Keys read from every admin source
-.
-Claude Code shows no warning for the sources it skips. To see which source it used, run
+. Claude Code shows no warning for the sources it skips;
 /status
+names the source it used and the ones it skipped
 .
-Two terms recur in this section:
+"merge"
+: Claude Code applies every admin source that delivers a policy key and combines them by kind of key: on most keys the higher-ranked source’s value applies, lists union, and locks take the strictest value.
+Compose every managed source
+says where to set the key and how each kind of key combines. Requires Claude Code v2.1.242 or later.
+Both settings rank the sources the same way. Two terms recur in this section:
 Policy key
-: any settings key other than the control key
+: any settings key other than the two control keys,
 wslInheritsWindowsSettings
-. A managed settings file or MDM policy that contains only that key doesn’t count, and Claude Code moves on to the next source.
+and
+managedSourcesBehavior
+. A managed settings file or MDM policy that contains only those doesn’t count, and Claude Code moves on to the next source.
 Admin source
 : one of the first three sources below. The HKCU registry is user-writable and isn’t one.
 Claude Code checks the sources in this order, highest priority first:
@@ -311,12 +341,14 @@ wslInheritsWindowsSettings
 on and the HKCU value also sets it. Claude Code reads it only when no source above it delivers a policy key and no
 host-supplied parent settings
 supply a restrictive key
-This diagram shows the ranking, with examples of the cross-source keys Claude Code reads from the first three sources:
+This diagram shows the ranking, with examples of the cross-source keys Claude Code reads from the first three sources under either setting:
 ​
 Keys read from every admin source
-For most keys, Claude Code reads only the
+Under the default
+"first-wins"
+setting, Claude Code reads most keys only from the
 source it selected
-. A value in a lower-ranked source is ignored even when the selected source leaves that key unset.
+, and ignores a value in a lower-ranked source even when the selected source leaves that key unset.
 A few keys work differently. Claude Code reads them from every admin source, so a lower-ranked MDM policy or managed settings file can still set them when the selected source doesn’t. Claude Code leaves the user-writable HKCU registry out of that scan; when HKCU is the only source and no host supplies parent settings, HKCU applies like any selected source.
 The cross-source keys include:
 sandbox.network.allowManagedDomainsOnly
@@ -330,7 +362,9 @@ together with
 WebFetch(domain:...)
 allow rules, or
 sandbox.filesystem.allowRead
-, across every admin source. Without the lock, an unselected admin source’s allowlist is ignored like any other key from an unselected source
+, across every admin source. Without the lock, Claude Code treats the allowlist like any other key, so under
+"first-wins"
+an unselected admin source’s allowlist is ignored
 allowAllClaudeAiMcps
 The sandbox binary paths
 sandbox.bwrapPath
@@ -351,6 +385,16 @@ false
 from any admin source turns the behavior off. A
 false
 in the developer’s user or local settings turns it off too; each key can only deny
+enableArtifact
+, where a
+false
+from any admin source turns the
+Artifact tool
+off. A
+false
+in the developer’s user, project, or local settings turns it off too, and no source turns it back on; see
+which lower-level values still count
+. Requires Claude Code v2.1.242 or later
 A commit-trailer opt-out in
 attribution
 , or in the deprecated
@@ -363,6 +407,80 @@ Per-key exceptions across managed sources
 names each one. Requires Claude Code v2.1.223 or later. Before v2.1.223, Claude Code applied the selected source’s whole
 env
 block only
+​
+Compose every managed source
+To have Claude Code apply every admin source your organization delivers, set
+managedSourcesBehavior
+to
+"merge"
+in the highest-ranked source you deploy. Claude Code reads the key only from the highest-ranked source that carries either the key or a policy key, so a lower source can’t opt itself into merging with the source above it, and a machine that never receives server-managed settings needs the key in its MDM profile too. The user-writable HKCU registry never merges with another source. Requires Claude Code v2.1.242 or later.
+Under
+"merge"
+, Claude Code adds a lower source’s list entries, such as
+permissions.allow
+rules and hooks, to the policy, so turn it on only when every source ranked below your highest one is under an administrator’s control.
+This table shows how Claude Code combines each kind of key under
+"merge"
+; the
+managedSourcesBehavior
+entry
+names every key in the restriction allowlist and highest-source-only rows.
+Kind of key
+How Claude Code combines it
+Examples
+Lists
+Combines the entries from every source
+permissions.allow
+,
+hooks
+,
+sandbox.network.allowedDomains
+,
+deniedMcpServers
+Locks
+Applies the strictest value any source sets; a looser value applies only from the highest-ranked source
+allowManagedHooksOnly
+,
+permissions.disableBypassPermissionsMode
+,
+crossSessionInbound
+Restriction allowlists
+Takes the list whole from the highest-ranked source that sets it, without adding entries from lower sources
+availableModels
+,
+allowedMcpServers
+,
+strictKnownMarketplaces
+,
+allowedChannelPlugins
+, and the
+fallbackModel
+chain
+Keys read from the highest-ranked source only
+Ignores the key in every lower source, even when the highest-ranked source leaves it unset
+Credential helpers such as
+apiKeyHelper
+, login pins such as
+forceLoginOrgUUID
+,
+modelPicker
+,
+permissions.defaultMode
+env
+Merges per variable across admin sources under either setting, as
+Keys read from every admin source
+describes
+Every other key
+Takes the value from the highest-ranked source that sets it
+model
+,
+cleanupPeriodDays
+To confirm which sources combined on a machine,
+read the
+Setting sources
+line in
+/status
+; that section says what each label means.
 ​
 Compute the policy with a helper program
 A
@@ -409,18 +527,54 @@ allowManagedPermissionRulesOnly
 parent-supplied
 permission allow rules and
 additionalDirectories
-as it reads them, even when a higher-priority source leaves the key unset. The key’s effect on your own permission rules still comes only from the selected source, or from parent settings you’ve chosen to merge
-A
+as it reads them, even when a higher-priority source leaves the key unset. The key’s effect on your own permission rules comes from the managed settings Claude Code applies, or from parent settings you’ve chosen to merge
+Claude Code enforces the
 forceLoginOrgUUID
 or
 allowedMcpServers
-value in the highest-priority admin source blocks a parent-supplied one, and Claude Code enforces the admin value. A value in an admin source that isn’t the highest-priority one neither applies nor blocks the parent’s. Before v2.1.223, a value in any admin source blocked the parent’s
+value in the managed settings it applies and blocks a parent-supplied one. A value in a lower admin source that Claude Code doesn’t apply neither applies nor blocks the parent’s. The
+managedSourcesBehavior
+entry says which source supplies each key under
+"merge"
+. Before v2.1.223, a value in any admin source blocked the parent’s
 An
 availableModels
 value follows the same rule as
-forceLoginOrgUUID
-and
 allowedMcpServers
+​
+Keep Cowork folder access when only managed rules apply
+Cowork
+in the Claude Desktop app runs its sessions on Claude Code and grants each session access to its working folders, such as the folder the user connects, through allow rules it supplies when it launches the session. When your managed policy sets
+allowManagedPermissionRulesOnly
+, Claude Code keeps only the allow rules in the managed policy: it drops allow rules a host supplies as parent settings, as
+--allowedTools
+, or in a settings file, so writes to those folders lose their pre-approval. In a Cowork session that asks before edits, Cowork can’t show the prompt, and Claude reports each write as blocked because the path resolves to a protected location or a path outside the connected folder.
+To restore the writes, add allow rules for those folders to the managed source Claude Code
+selects
+on those machines: on an MDM-managed fleet, that’s the MDM policy rather than a separate managed settings file. This example uses the file form, and an MDM policy takes the same keys. It keeps
+allowManagedPermissionRulesOnly
+set and allows edits under a
+CoworkProjects
+folder in each user’s home directory; replace the path with the folders your users connect:
+managed-settings.json
+{
+"allowManagedPermissionRulesOnly"
+:
+true
+,
+"permissions"
+: {
+"allow"
+: [
+"Edit(~/CoworkProjects/**)"
+]
+}
+}
+After you deploy the policy, Claude can save files under that folder in a new Cowork session.
+Read and Edit rules
+cover the path syntax, including the
+//
+form for absolute paths.
 ​
 What a developer can change
 A developer’s own settings files,
@@ -476,6 +630,14 @@ or
 :
 managed-settings.json
 , the drop-in directory, or both
+(remote + file, merged)
+, or another list ending in
+, merged
+: your organization
+composes every managed source
+, and Claude Code merged the listed sources into the policy. A lower source can still supply
+env
+variables without appearing in the list. Requires Claude Code v2.1.242 or later
 (HKCU)
 : the user-writable registry fallback
 (parent process)
@@ -486,14 +648,21 @@ supplied restrictive settings
 : a
 policyHelper
 configured by the selected MDM or file source
-When the policy isn’t applying, the line tells you which of two problems you have:
+When Claude Code found a managed source on the machine and didn’t select it, a second line,
+Skipped sources
+, names each such source. Read it to distinguish a policy that never reached the machine from one that reached it and that a higher-priority source overrode. Requires Claude Code v2.1.242 or later.
+When the policy isn’t applying, the
+Setting sources
+line tells you which of two problems you have:
 The line is missing
-: Claude Code found no managed source that delivers a policy key. Check that the file sits at the path for the OS, that it’s valid JSON, and that it contains a key other than
-wslInheritsWindowsSettings
-.
+: Claude Code found no managed source that delivers a policy key. If you deployed a managed settings file, check that it sits at the path for the OS, that it’s valid JSON, and that it contains a
+policy key
+rather than only the control keys.
 The line names a source other than the one you deployed
-: a higher-priority source is present and Claude Code ignored yours.
-Which managed source Claude Code uses
+: a higher-priority source is present and Claude Code ignored yours, and
+Skipped sources
+lists it.
+How Claude Code combines managed sources
 gives the order.
 ​
 Find entries Claude Code dropped
@@ -542,6 +711,14 @@ true
 .
 forceLoginOrgUUID
 No organization is permitted to log in until the value is fixed.
+crossSessionInbound
+Treated as
+refuse
+, the most restrictive value, so inbound
+cross-session messages
+are refused until the value is fixed. The developer sees
+a warning
+.
 deniedMcpServers
 An individual invalid entry is stripped and the valid subset is enforced. A wholly invalid value is dropped with a warning, since denying every server would block servers the policy never named.
 sandbox.credentials
@@ -566,7 +743,7 @@ index says whether it’s managed-only; the remaining managed-only keys there in
 Setting
 Description
 allowAllClaudeAiMcps
-Load the claude.ai connectors alongside a deployed
+Load the claude.ai connectors Claude Code fetches itself alongside a deployed
 managed-mcp.json
 instead of suppressing them
 allowedChannelPlugins
@@ -634,6 +811,9 @@ When
 true
 , blocks CLI startup until remote managed settings are freshly fetched and exits if the fetch fails. See
 fail-closed enforcement
+managedSourcesBehavior
+Whether Claude Code applies only the highest-priority managed source or
+composes every one of them
 parentSettingsBehavior
 Whether host-supplied parent settings merge under the managed policy
 pluginSuggestionMarketplaces
@@ -669,8 +849,8 @@ When set in the HKLM registry or a file under
 C:\Program Files\ClaudeCode
 , have WSL read the Windows policy chain, and read
 /etc/claude-code
-only when no managed settings file or drop-in under that directory delivers a policy key other than
-wslInheritsWindowsSettings
+only when no managed settings file or drop-in under that directory delivers a
+policy key
 ; the entry gives the order
 On Team and Enterprise plans, an Owner enables or disables
 Remote Control
@@ -698,5 +878,3 @@ showing the shape of the managed keys
 Was this page helpful?
 Yes
 No
-⌘
-I

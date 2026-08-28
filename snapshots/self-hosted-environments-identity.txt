@@ -14,7 +14,7 @@ A
 self-hosted environment
 lets
 Claude Code on the web
-sessions run on infrastructure you operate instead of on Anthropic’s. Because the session runs inside your network, Claude can call your internal services directly. Those services need a way to confirm that a request really came from a Claude Code session in your environment, and to identify which user created that session.
+sessions run on infrastructure you operate instead of on Anthropic’s. Because the session runs inside your network, Claude can call your internal services directly. Those services need a way to confirm that a request really came from a Claude Code session in your environment, and to identify the user or service identity that created that session.
 Every session in a self-hosted environment receives a signed JSON Web Token (JWT) in the
 CLAUDE_CODE_SESSION_ACCESS_TOKEN
 environment variable. A session presents the token like any bearer credential; for example, a script Claude runs can call your service with
@@ -27,7 +27,9 @@ Before you write verification code, know what the token establishes and the shap
 What the token proves
 A valid token establishes some facts and deliberately not others:
 Proves
-: Anthropic issued the token for a specific session in a specific environment, and how the session was created: by a user in your organization, or with an organization service key
+: Anthropic issued the token for a specific session in a specific environment, and how the session was created: by a user in your organization, or by your organization’s service identity, which is how
+Claude Tag channel sessions
+start
 Doesn’t prove
 : which process on the runner host presents it. The token sits in an environment variable inside the session, so any code Claude runs, and any tool or MCP server the session starts, can read and present it.
 Two consequences for your services:
@@ -39,7 +41,7 @@ value shown with your environment on the
 Cloud environments
 admin page
 , to reject tokens issued to any other organization’s environment.
-Scope credentials you derive from the token to what a single coding session should be able to do, not to everything the creating user can do. See
+Scope credentials you derive from the token to what a single coding session should be able to do, not to everything the session’s creator can do. See
 Scope derived credentials
 .
 ​
@@ -132,7 +134,9 @@ is their Anthropic user ID in the prefixed form
 user:<id>
 , and
 act.email
-, when the creating surface recorded one, is their email address. Sessions created with an organization service key carry no user identity, so treat a session as user-created only when
+, when the creating surface recorded one, is their email address. Sessions your organization’s service identity creates, including Claude Tag channel sessions, carry an
+agent:
+subject instead, so treat a session as user-created only when
 act.sub
 carries the
 user:
@@ -429,7 +433,13 @@ aud
 , or
 ccr:role
 . When your wrapper’s auth decision depends on those claims, read them from the printed JSON and compare them explicitly.
-This command extracts the creator identity, preferring the SSO provider’s subject, then the email address, then the always-present Anthropic user ID:
+This command extracts the creator identity, preferring the SSO provider’s subject, then the email address, then the creator’s
+act.sub
+subject,
+user:<id>
+or
+agent:<id>
+:
 "
 $CLAUDE_RUNNER_CLAUDE_BIN
 "
@@ -471,7 +481,11 @@ account_email
 organization_uuid
 , and
 account_uuid
-claims are backward-compatibility duplicates that may be removed. Sessions created with an organization service key omit
+claims are backward-compatibility duplicates that may be removed. Sessions your organization’s service identity creates, including Claude Tag channel sessions, carry an
+agent:
+subject in
+act.sub
+and omit
 act.email
 ,
 ccr:account_id
@@ -574,9 +588,9 @@ act
 chain
 The
 act
-claim records the full delegation path from the user who created the session down to the
+claim records the full delegation path from the user or service identity that created the session down to the
 environment
-whose secret admitted the runner, and the identity that created that secret. The creating user is the outermost actor, so
+whose secret admitted the runner, and the identity that created that secret. The creator is the outermost actor, so
 act.sub
 identifies them directly.
 Path
@@ -584,7 +598,9 @@ Description
 act.sub
 The creating user’s Anthropic user ID, in the form
 user:<id>
-.
+, or
+agent:<id>
+when your organization’s service identity created the session, as it does for Claude Tag channel sessions.
 act.email
 The creating user’s email address, when one was recorded at session creation. Don’t require it; key on
 act.sub
@@ -611,13 +627,13 @@ act.act.act.act
 The identity that created the environment secret the runner registered with. The chain ends here.
 ​
 Scope derived credentials
-The session token identifies the creating user, but don’t treat it as equivalent to that user logging in directly. The token sits in an environment variable inside the session, so any code Claude runs, and any tool or MCP server the session starts, can read and present it.
+The session token identifies the user or service identity that created the session, but don’t treat it as equivalent to that creator logging in directly. The token sits in an environment variable inside the session, so any code Claude runs, and any tool or MCP server the session starts, can read and present it.
 Verification is also offline: a token that verifies against the JWKS stays valid until its
 exp
 , whatever has happened to the session since, and Anthropic doesn’t publish a revocation feed for session tokens. Bound anything you derive from the token accordingly.
 When your service exchanges the token for internal credentials, issue credentials scoped to what one coding session should reach:
 Limit capabilities
-: grant read and write access to the resources the session needs for coding tasks, not administrative capabilities the user holds elsewhere.
+: grant read and write access to the resources the session needs for coding tasks, not administrative capabilities the creator holds elsewhere.
 Limit lifetime
 : bound derived credentials to the token’s
 exp
@@ -627,7 +643,7 @@ Audit as the session
 ccr:session_id
 and
 jti
-alongside the user identity so you can trace actions back to a specific session.
+alongside the creator identity so you can trace actions back to a specific session.
 ​
 Related environment variables
 The creator identity also appears in plain environment variables on two surfaces that never verify the token:
@@ -665,5 +681,3 @@ Reference
 Was this page helpful?
 Yes
 No
-⌘
-I

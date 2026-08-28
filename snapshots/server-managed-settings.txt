@@ -35,11 +35,9 @@ If your devices are enrolled in an MDM or endpoint management solution, endpoint
 cloud sessions
 in Anthropic-hosted environments, so organizations using Claude Code on the web should configure server-managed settings as well. Sessions in a
 self-hosted environment
-read the managed settings file in the runner image, but only when server-managed settings deliver no keys, per the
+also read the managed settings file in the runner image. The
 settings precedence
-below and its
-per-key exceptions
-.
+below says when that file applies.
 ​
 Configure server-managed settings
 1
@@ -200,13 +198,11 @@ settings hierarchy
 . No other settings level can override them, including command line arguments, apart from the
 exceptions to managed settings precedence
 .
-Within the managed tier, Claude Code uses the first source that delivers at least one policy key, checking server-managed settings first and then endpoint-managed settings;
-Precedence within the managed tier
-has the full ranking and the carve-out for
-wslInheritsWindowsSettings
-. Apart from the
+Within the managed tier, Claude Code by default uses the first source that delivers at least one policy key, checking server-managed settings first and then endpoint-managed settings, apart from the
 exception keys covered next
-, sources don’t merge: if server-managed settings deliver a policy key, other endpoint-managed settings are ignored. If server-managed settings deliver nothing, endpoint-managed settings apply.
+.
+How Claude Code combines managed sources
+has the full ranking, the carve-out for the control keys, and the opt-in that applies every source.
 If the selected source is an MDM policy or managed settings file whose
 policyHelper
 supplies managed settings, the helper’s output replaces that source as the only managed configuration for the run. Claude Code doesn’t consult a
@@ -550,15 +546,11 @@ CLAUDE_CODE_OAUTH_TOKEN
 , or a directly configured API key. Keys returned by an
 apiKeyHelper
 script don’t trigger the settings fetch.
-Server-managed settings are not available when using third-party model providers:
-Amazon Bedrock
-Google Cloud’s Agent Platform
-Microsoft Foundry
-Claude Platform on AWS
-Custom API endpoints via
-ANTHROPIC_BASE_URL
-or third-party
-LLM gateways
+In a
+Cowork
+session in the Claude Desktop app, Claude Code doesn’t fetch server-managed settings from the claude.ai admin console, even when the user signs in with a Team or Enterprise account.
+Where and when a policy applies
+covers which policy reaches Cowork sessions on the user’s machine and remote Cowork sessions.
 If you export a
 CLAUDE_CODE_USE_*
 provider variable or a non-default
@@ -672,5 +664,3 @@ Security
 Was this page helpful?
 Yes
 No
-⌘
-I

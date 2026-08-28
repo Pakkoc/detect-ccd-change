@@ -169,13 +169,17 @@ Advisor
 ✗
 Cross-session messaging
 ✓
-6
-✓
-6
-✗
-✗
-✗
-✗
+5
+✓ (same machine)
+5
+✓ (same machine)
+5
+✓ (same machine)
+5
+✓ (same machine)
+5
+✓ (same machine)
+5
 Channels
 ✓
 ✓
@@ -183,18 +187,6 @@ Channels
 ✗
 ✗
 ✗
-/loop
-scheduled tasks
-✓
-✓
-See note
-3
-See note
-3
-See note
-3
-See note
-3
 GitHub Actions
 ✓
 ✓
@@ -222,7 +214,7 @@ Microsoft Foundry
 Analytics dashboard and API
 ✓ (dashboard: Team and Enterprise; API: Enterprise)
 ✓
-5
+4
 ✗
 ✗
 ✗
@@ -238,12 +230,12 @@ Zero Data Retention
 ✓ (qualified Enterprise accounts)
 ✓ (qualified accounts)
 See note
-4
+3
 ✓ (qualified accounts)
 See note
-4
+3
 See note
-4
+3
 1
 On Google Cloud’s Agent Platform, web search is available for Claude 4 models and later.
 2
@@ -255,27 +247,17 @@ which mode a session starts in
 CLAUDE_CODE_ENABLE_AUTO_MODE=1
 ; v2.1.207 removed the requirement.
 3
-Explicit intervals such as
-/loop every 2 hours
-work on every provider. On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry,
-/loop
-cannot pick its own interval or supply the default maintenance prompt, so a prompt with no interval runs every 10 minutes, and
-/loop
-with no arguments shows the usage message. See
-Scheduled tasks
-.
-4
 Subject to your agreement with the cloud provider.
-5
+4
 Dashboard and API only.
 Contribution metrics
 requires a claude.ai Team or Enterprise organization.
-6
-Requires Claude Code v2.1.224 or later on macOS and Linux, including Linux inside WSL 2. On native Windows, requires Claude Code v2.1.234 or later. With API key authentication, same-machine messaging only. Claude can find your
+5
+Requires Claude Code v2.1.224 or later on macOS and Linux, including Linux inside WSL 2. On native Windows, requires Claude Code v2.1.234 or later. With API key authentication, messaging is same-machine only. On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry, messaging is same-machine only and requires Claude Code v2.1.248 or later. Claude can find your
 Claude Code on the web
 sessions and your sessions on other machines only from a session that is connected to
 Remote Control
-. Connecting needs a claude.ai sign-in and the other
+. To connect, you need a claude.ai sign-in and the other
 Remote Control requirements
 . See
 Message sessions on other machines
@@ -308,8 +290,6 @@ fast mode
 Advisor
 ,
 Channels
-,
-cross-session messaging
 , the
 analytics dashboard
 ,
@@ -328,14 +308,15 @@ Desktop
 Claude Desktop on 3P
 Auto mode
 : Sonnet 5, Opus 4.7 or later, and Fable 5 only
-/loop
-: explicit intervals only
+Cross-session messaging
+: between your sessions on this machine only
+5
 Zero Data Retention
 : subject to your AWS agreement
 Alternatives:
 for scheduling, use
 /loop
-with an explicit interval instead of
+instead of
 /schedule
 . For cloud sessions, use
 GitHub Actions
@@ -354,8 +335,6 @@ Advisor
 ,
 Channels
 ,
-cross-session messaging
-,
 GitHub Actions
 , the
 analytics dashboard
@@ -373,12 +352,13 @@ Available where Amazon Bedrock is not:
 web search
 .
 Partial support:
-/loop
-: explicit intervals only
+Cross-session messaging
+: between your sessions on this machine only
+5
 Alternatives:
 for scheduling, use
 /loop
-with an explicit interval instead of
+instead of
 /schedule
 . For cloud sessions, use
 GitLab CI/CD
@@ -392,8 +372,6 @@ fast mode
 Advisor
 ,
 Channels
-,
-cross-session messaging
 , the
 analytics dashboard
 ,
@@ -416,14 +394,15 @@ Web search
 : Claude 4 models and later
 Auto mode
 : Sonnet 5, Opus 4.7 or later, and Fable 5 only
-/loop
-: explicit intervals only
+Cross-session messaging
+: between your sessions on this machine only
+5
 Zero Data Retention
 : subject to your Google Cloud agreement
 Alternatives:
 for scheduling, use
 /loop
-with an explicit interval instead of
+instead of
 /schedule
 . For cloud sessions, use
 GitHub Actions
@@ -439,8 +418,6 @@ fast mode
 Advisor
 ,
 Channels
-,
-cross-session messaging
 ,
 GitLab CI/CD
 , the
@@ -465,14 +442,15 @@ deployments hosted on Anthropic
 only
 Auto mode
 : Sonnet 5, Opus 4.7 or later, and Fable 5 only
-/loop
-: explicit intervals only
+Cross-session messaging
+: between your sessions on this machine only
+5
 Zero Data Retention
 : subject to your Azure agreement
 Alternatives:
 for scheduling, use
 /loop
-with an explicit interval instead of
+instead of
 /schedule
 . For cloud sessions, use
 GitHub Actions
@@ -503,7 +481,7 @@ Claude Code on the web
 ✓
 ✓
 ✓
-7
+6
 Routines
 ✓
 ✓
@@ -576,12 +554,12 @@ Zero Data Retention
 ✗
 ✗
 ✓
-8
 7
+6
 On Enterprise, requires a premium seat or a Chat + Claude Code seat. See
 Claude Code on the web
 .
-8
+7
 Not included in the standard Enterprise plan. Requires separate enablement by Anthropic for qualified accounts. See
 Zero Data Retention
 .
@@ -616,5 +594,3 @@ Platforms and integrations
 Was this page helpful?
 Yes
 No
-⌘
-I

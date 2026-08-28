@@ -90,7 +90,7 @@ By default, Claude Code trusts both its bundled Mozilla CA certificates and your
 tls.getCACertificates
 : the native installer always has it, and npm installs need Node 22.15 or later. On older Node versions, only the bundled set and
 NODE_EXTRA_CA_CERTS
-apply. Enterprise TLS-inspection proxies such as CrowdStrike Falcon and Zscaler work without additional configuration when their root certificate is installed in the OS trust store and the runtime can read it.
+apply. Enterprise TLS-inspection proxies work without additional configuration when their root certificate is installed in the OS trust store and the runtime can read it.
 CLAUDE_CODE_CERT_STORE
 accepts a comma-separated list of sources. Recognized values are
 bundled
@@ -398,7 +398,7 @@ platform.claude.com
 Anthropic Console account authentication. OAuth token exchange, refresh, and revocation also go to this host for claude.ai accounts, so both Console and claude.ai sign-ins require it
 mcp-proxy.anthropic.com
 MCP connectors from claude.ai
-, including connectors an organization administrator configures. Connector traffic routes through this proxy; connectors are enabled by default for claude.ai-authenticated users. To disable, set
+, including connectors an organization administrator configures. Connector traffic routes through this proxy; connectors are enabled by default for claude.ai-authenticated users. To stop Claude Code from fetching them, set
 ENABLE_CLAUDEAI_MCP_SERVERS=false
 or the
 disableClaudeAiConnectors
@@ -421,11 +421,15 @@ extension WebSocket bridge
 Artifact
 content reads. The CLI fetches an artifact’s files from this host when Claude opens one, and only when the Artifact tool is
 available
-for your account. To disable the tool and drop this requirement, set
+for your account. To turn the tool off and drop this requirement, set
+"enableArtifact": false
+or
 CLAUDE_CODE_DISABLE_ARTIFACT=1
-or the
+; Claude Code also honors the deprecated
 disableArtifact
-setting
+setting. See
+Disable artifacts
+for how these settings interact
 raw.githubusercontent.com
 Changelog feed for
 /release-notes
@@ -562,6 +566,15 @@ fonts.googleapis.com
 and
 fonts.gstatic.com
 . Both hosts are optional. If you block them, artifacts render in fallback typefaces. Block with a fast rejection rather than a silent drop so the font request fails immediately instead of delaying the page’s first render.
+Artifacts can also load JavaScript libraries, such as React or a charting package, from
+cdnjs.cloudflare.com
+,
+cdn.jsdelivr.net
+,
+cdn.tailwindcss.com
+, and
+code.jquery.com
+, and from no other external host. If you block those hosts, the parts of an artifact that depend on a library don’t work, and unlike a blocked font, a blocked library has no fallback. Block with a fast rejection here too, so a blocked library request fails at once rather than hanging until it times out.
 ​
 Additional resources
 Claude Code settings
@@ -570,5 +583,3 @@ Troubleshooting guide
 Was this page helpful?
 Yes
 No
-⌘
-I

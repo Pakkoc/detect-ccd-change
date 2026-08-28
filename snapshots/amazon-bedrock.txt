@@ -934,5 +934,3 @@ Claude Code Monitoring Implementation (Amazon Bedrock)
 Was this page helpful?
 Yes
 No
-⌘
-I

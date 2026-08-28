@@ -1813,5 +1813,3 @@ for the full flow.
 Was this page helpful?
 Yes
 No
-⌘
-I

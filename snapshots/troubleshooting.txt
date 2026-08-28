@@ -244,5 +244,3 @@ for the full flow, including who can reach a human agent on each plan.
 Was this page helpful?
 Yes
 No
-⌘
-I

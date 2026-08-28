@@ -80,5 +80,3 @@ Gateway protocol reference
 Was this page helpful?
 Yes
 No
-⌘
-I

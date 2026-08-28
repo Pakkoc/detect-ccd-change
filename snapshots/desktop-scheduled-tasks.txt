@@ -76,9 +76,9 @@ and choose
 Local
 . If
 Routines
-is missing from the sidebar, update the Desktop app, and check whether
-routines are turned off for your organization
-. Configure these fields:
+is missing from the sidebar, update the Desktop app;
+Create a routine
+says which plan and settings routines need. Configure these fields:
 Field
 Description
 Name
@@ -138,10 +138,7 @@ and needs to run a tool it doesn’t have permission for, the run stalls until y
 To avoid stalls, click
 Run now
 after creating a task, watch for permission prompts, and select “always allow” for each one. Future runs of that task auto-approve the same tools without prompting. You can review and revoke these approvals from the task’s detail page.
-Connector tools
-your organization set to
-ask
-and MCP tools marked
+MCP tools marked
 requiresUserInteraction
 prompt on every call and don’t offer an always-allow option. Runs that call these tools stall each time.
 ​
@@ -203,5 +200,3 @@ Use Claude Code Desktop
 Was this page helpful?
 Yes
 No
-⌘
-I

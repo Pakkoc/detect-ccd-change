@@ -482,6 +482,9 @@ claude
 ./plugin-one
 --plugin-dir
 ./plugin-two
+To test a plugin together with a plugin it depends on, see
+Test a plugin and its dependency locally
+.
 To test a plugin that is already packaged as a
 .zip
 archive and hosted at a URL, such as a CI build artifact, use
@@ -751,5 +754,3 @@ MCP
 Was this page helpful?
 Yes
 No
-⌘
-I

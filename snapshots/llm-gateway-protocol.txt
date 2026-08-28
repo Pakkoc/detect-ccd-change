@@ -536,5 +536,3 @@ Messages API
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -80,5 +80,3 @@ Full changelog for v2.1.214–v2.1.219 →
 Was this page helpful?
 Yes
 No
-⌘
-I

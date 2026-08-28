@@ -5,10 +5,12 @@ settings.json
 or environment. Without that variable, no team is set up at session start, no team directories are written, and Claude does not spawn or propose teammates. Agent teams have
 known limitations
 around session resumption, task coordination, and shutdown behavior.
-Agent teams let you coordinate multiple Claude Code instances working together. One session acts as the team lead, coordinating work, assigning tasks, and synthesizing results. Teammates work independently, each in its own context window, and communicate directly with each other.
-Unlike
-subagents
-, which run within a single session, you can also interact with individual teammates directly without going through the lead.
+Agent teams let you coordinate multiple Claude Code instances working together. One session acts as the team lead, coordinating work, assigning tasks, and synthesizing results. Teammates work independently, each in its own context window, and communicate directly with each other. You can also talk to any teammate directly without going through the lead.
+Before you set up a team, check whether a lighter option does the job.
+Subagents
+work within a single session, and with
+cross-session messaging
+Claude can pass findings between the sessions you run yourself.
 This page describes agent teams as of v2.1.178. With
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 set, spawning a teammate no longer needs a setup step, and cleanup happens automatically when the session exits. Before v2.1.178, you asked Claude to create and name a team first, and Claude used the
@@ -124,7 +126,7 @@ Up and down arrows
 Enter
 : open the selected teammate’s transcript and message it directly
 Escape
-: interrupt the selected teammate’s current turn
+: clear the selection. While you’re viewing a teammate’s transcript, Escape interrupts that teammate’s current turn
 As of v2.1.199, an idle teammate’s row stays in the panel while any teammate or subagent is still working, so you can select it to review its transcript or send it more work. Once every agent in the panel is idle, idle rows hide after 30 seconds and reappear on the teammate’s next turn; the teammate stays running and addressable while hidden. In v2.1.181 through v2.1.198, an idle row hid 30 seconds after its own turn ended, even while other teammates were still working; idle rows are not hidden on versions before v2.1.181.
 When more than three teammates are idle at once, the rows beyond the first three collapse into a single row that counts the collapsed teammates, such as
 2 idle agents
@@ -214,9 +216,18 @@ Specify teammates and models
 Claude decides the number of teammates to spawn based on your task, or you can specify exactly what you want:
 Spawn 4 teammates to refactor these modules in parallel. Use Sonnet for
 each teammate.
-When your prompt doesn’t name a model for a teammate, Claude Code runs the teammate on the lead’s current model, unless
+Claude Code picks each teammate’s model from the first of these that applies:
 CLAUDE_CODE_SUBAGENT_MODEL
-is set.
+, when it’s set to anything other than
+inherit
+.
+The model your spawn prompt names for that teammate.
+For an in-process teammate spawned from a
+subagent definition
+, the definition’s
+model
+.
+The lead’s current model.
 teammateDefaultModel
 was removed in v2.1.234; Claude Code ignores a leftover value. Name the model in your prompt or set
 CLAUDE_CODE_SUBAGENT_MODEL
@@ -237,12 +248,14 @@ Teammates inherit the lead’s
 effort level
 . In split-pane mode this applies from v2.1.186; earlier versions did not pass the lead’s session effort to split-pane teammates.
 ​
-Require plan approval for teammates
-For complex or risky tasks, you can require teammates to plan before implementing. The teammate works in read-only plan mode until the lead approves their approach:
+Have teammates plan before implementing
+For complex or risky tasks, you can have teammates plan before implementing. A teammate that Claude spawns while the lead is in
+plan mode
+works in read-only plan mode until its plan is ready. Switch the lead into plan mode first, then ask for the teammate:
 Spawn an architect teammate to refactor the authentication module.
-Require plan approval before they make any changes.
-When a teammate finishes planning, it sends a plan approval request to the lead. The lead reviews the plan and either approves it or rejects it with feedback. If rejected, the teammate stays in plan mode, revises based on the feedback, and resubmits. Once approved, the teammate exits plan mode and begins implementation.
-The lead makes approval decisions autonomously. To influence the lead’s judgment, give it criteria in your prompt, such as “only approve plans that include test coverage” or “reject plans that modify the database schema.”
+When a teammate finishes planning, it sends a plan approval request to the lead. Claude Code approves the plan in the lead’s session as soon as the request arrives, without the lead reviewing it. The teammate’s edits and commands still go through the permission prompts described in
+Permissions
+. Once approved, the teammate exits plan mode and begins implementation.
 ​
 Talk to teammates directly
 Each teammate is a full, independent Claude Code session. You can message any teammate directly to give additional instructions, ask follow-up questions, or redirect their approach.
@@ -367,17 +380,19 @@ subagent
 type from any
 subagent scope
 : project, user, plugin, or CLI-defined. This lets you define a role once, such as a security-reviewer or test-runner, and reuse it both as a delegated subagent and as an agent team teammate.
-To use a subagent definition, mention it by name when asking Claude to spawn the teammate:
+To use a subagent definition, name it when you ask Claude to spawn the teammate:
 Spawn a teammate using the security-reviewer agent type to audit the auth module.
-The teammate honors that definition’s
+Claude Code reads the subagent definition you named and applies these parts of it to the teammate. Where a part depends on the teammate’s
+display mode
+, the entry says so:
 tools
-allowlist and
-model
-, and the definition’s body is appended to the teammate’s system prompt as additional instructions rather than replacing it. For an in-process teammate, Claude Code adds
+: Claude Code limits the teammate to the tools in the definition’s
+tools
+list. For an in-process teammate, Claude Code adds
 SendMessage
-to that allowlist. In a
+to that list, and in a
 session that has the Task tools
-, Claude Code adds
+it adds
 TaskCreate
 ,
 TaskGet
@@ -385,12 +400,31 @@ TaskGet
 TaskList
 , and
 TaskUpdate
-to it too.
-The
+too.
+model
+: for an in-process teammate, Claude Code uses the definition’s
+model
+when neither
+CLAUDE_CODE_SUBAGENT_MODEL
+nor your spawn prompt names a model. A split-pane teammate doesn’t use the definition’s
+model
+. See
+how Claude Code picks a teammate’s model
+.
+Body
+: for an in-process teammate, Claude Code appends the definition’s body to its default system prompt as additional instructions. For a split-pane teammate, Claude Code uses the body in place of its default system prompt.
 skills
-and
+: Claude Code doesn’t apply the definition’s
+skills
+to a teammate in either display mode. The teammate loads skills from your project and user settings.
 mcpServers
-frontmatter fields in a subagent definition are not applied when that definition runs as a teammate. Teammates load skills and MCP servers from your project and user settings, the same as a regular session.
+: for a split-pane teammate, Claude Code applies the definition’s
+mcpServers
+under the
+rules for that field
+, which cover a session started with
+--agent
+as well. An in-process teammate ignores the field and loads MCP servers from your project and user settings.
 ​
 Permissions
 Teammates start with the lead’s permission settings. If the lead runs with
@@ -636,6 +670,10 @@ Lightweight delegation
 :
 subagents
 spawn helper agents for research or verification within your session, better for tasks that don’t need inter-agent coordination
+Messaging between your own sessions
+:
+cross-session messaging
+lets Claude pass findings between the sessions you run yourself
 Manual parallel sessions
 :
 Git worktrees
@@ -643,5 +681,3 @@ let you run multiple Claude Code sessions yourself without automated team coordi
 Was this page helpful?
 Yes
 No
-⌘
-I

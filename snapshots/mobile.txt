@@ -148,5 +148,3 @@ Claude Code in Slack
 Was this page helpful?
 Yes
 No
-⌘
-I

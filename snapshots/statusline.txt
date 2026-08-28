@@ -269,6 +269,11 @@ settings
 A
 refreshInterval
 timer elapses, if you set one
+A
+rate-limit window
+in the data your script last received reaches its
+resets_at
+time
 Claude Code debounces updates at 300ms, so rapid changes batch together and your script runs once after the changes stop. A change to the
 command
 itself skips the debounce: Claude Code runs the new command right away. If a new update triggers while your script is still running, Claude Code cancels the in-flight script. If you edit your script, the changes appear the next time an update trigger re-runs it.
@@ -776,7 +781,9 @@ rate_limits
 five_hour
 ,
 seven_day
-) may be independently absent. Use
+) may be independently absent, and Claude Code drops a window once its
+resets_at
+time passes. Use
 jq -r '.rate_limits.five_hour.used_percentage // empty'
 to handle absence gracefully.
 Fields that may be
@@ -4714,5 +4721,3 @@ On narrow terminals, these notifications may truncate your status line output
 Was this page helpful?
 Yes
 No
-⌘
-I

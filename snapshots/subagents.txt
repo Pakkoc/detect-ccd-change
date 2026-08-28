@@ -347,7 +347,9 @@ Auto-submitted as the first user turn when this agent runs as the main thread ag
 maxTurns
 number
 No
-Maximum number of agentic turns before the agent stops
+Maximum number of agentic turns before the agent stops. When the agent reaches the limit, Claude Code returns its output marked as partial, and you can
+resume the agent
+to continue. The partial marking requires Claude Code v2.1.246 or later
 background
 boolean
 No
@@ -1008,6 +1010,9 @@ result
 ​
 Resume subagents
 You can resume a subagent to continue where it left off rather than starting fresh. A resumed subagent retains its full conversation history, including all previous tool calls, results, and reasoning.
+When a subagent stops at its
+maxTurns
+limit, Claude Code marks the output in the Agent tool result as partial, so Claude knows the run is unfinished.
 When a subagent completes, the Agent tool result includes a text block containing
 agentId: <id>
 . The built-in
@@ -2109,5 +2114,3 @@ SDK overview
 Was this page helpful?
 Yes
 No
-⌘
-I

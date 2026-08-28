@@ -415,5 +415,3 @@ Discover and install plugins
 Was this page helpful?
 Yes
 No
-⌘
-I

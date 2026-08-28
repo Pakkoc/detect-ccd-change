@@ -43,5 +43,3 @@ in the deployment guide.
 Was this page helpful?
 Yes
 No
-⌘
-I

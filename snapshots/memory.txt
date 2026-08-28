@@ -775,5 +775,3 @@ Subagent memory
 Was this page helpful?
 Yes
 No
-⌘
-I

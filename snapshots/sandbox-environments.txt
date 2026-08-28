@@ -314,5 +314,3 @@ Settings
 Was this page helpful?
 Yes
 No
-⌘
-I

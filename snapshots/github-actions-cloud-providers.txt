@@ -593,5 +593,3 @@ for Foundry model and endpoint configuration
 Was this page helpful?
 Yes
 No
-⌘
-I

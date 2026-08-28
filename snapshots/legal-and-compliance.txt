@@ -78,5 +78,3 @@ Use this form to report vulnerabilities
 Was this page helpful?
 Yes
 No
-⌘
-I

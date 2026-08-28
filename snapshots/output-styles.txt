@@ -148,8 +148,10 @@ false
 ​
 How output styles work
 Output styles directly modify Claude Code’s system prompt.
-Claude Code adds each output style’s custom instructions to the end of the system prompt.
-All output styles trigger reminders for Claude to adhere to the output style instructions during the conversation.
+Claude Code adds the output style’s custom instructions to the system prompt.
+When you
+select a style other than Default
+, Claude Code also reminds Claude of the style during the conversation.
 Custom output styles leave out Claude Code’s built-in software engineering instructions, such as how to scope changes, write comments, and verify work, unless
 keep-coding-instructions
 is set to
@@ -197,5 +199,3 @@ Debug your configuration
 Was this page helpful?
 Yes
 No
-⌘
-I

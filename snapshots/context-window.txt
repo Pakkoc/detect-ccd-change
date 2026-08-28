@@ -148,5 +148,3 @@ Reduce token usage
 Was this page helpful?
 Yes
 No
-⌘
-I

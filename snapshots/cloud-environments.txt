@@ -22,13 +22,17 @@ routines
 Claude mobile app
 , and the
 Desktop app
-. Claude Tag sessions can’t run in
-self-hosted environments
-yet; the other surfaces can route to any environment.
+. Each of these surfaces can also route to a
+self-hosted environment
+.
+Availability and limitations
+covers what Claude can’t use yet when a Claude Tag session runs in one.
 Remote Control
-sessions connect the web and mobile interfaces to a session on your own machine, which uses your machine’s network and files, not a cloud environment. Claude Tag channel sessions use
+sessions connect the web and mobile interfaces to a session on your own machine, which uses your machine’s network and files, not a cloud environment. Claude Tag channel sessions use organization-level environments only, either
 shared environments
-only.
+or
+self-hosted environments
+.
 ​
 The Default environment
 If you don’t have an environment yet, onboarding sets up the
@@ -203,8 +207,10 @@ claude.ai/admin-settings/claude-code
 Values in a shared environment reach every member’s sessions in that environment. Like personal environments, shared environments have no dedicated secrets store, so don’t include secrets.
 In
 Claude Tag
-channels, Claude works as your organization’s shared identity, not as any member, so channel sessions use shared environments only. You can set the environment a channel uses in two ways:
-Set a shared environment as the organization’s
+channels, Claude works as your organization’s shared identity, not as any member, so channel sessions use organization-level environments only, either shared environments or
+self-hosted environments
+. You can set the environment a channel uses in two ways:
+Set a shared or self-hosted environment as the organization’s
 default environment
 at
 claude.ai/admin-settings/claude-code
@@ -400,10 +406,8 @@ for how
 availableModels
 is enforced in cloud sessions. Settings deployed to your device through MDM or managed settings files don’t apply, because the session runs on an Anthropic-managed VM; in a
 self-hosted environment
-, sessions read the managed settings file in the runner image only when server-managed settings deliver no keys, per
-settings precedence
-, apart from the
-keys Claude Code reads from every admin source
+, sessions also read the managed settings file in the runner image, per
+how Claude Code combines managed sources
 Your user
 ~/.claude/CLAUDE.md
 No
@@ -735,15 +739,17 @@ Cloud sessions only
 Local and cloud sessions
 If you have SessionStart hooks in your user-level
 ~/.claude/settings.json
-, don’t expect them in the cloud: user-level settings stay on your machine. In a cloud session, Claude Code runs hooks from the repository and from your organization’s
+, don’t expect them in the cloud. User-level settings stay on your machine. Which other hooks run depends on where the session runs:
+Anthropic-hosted environment
+: Claude Code runs hooks from the repository and from your organization’s
 server-managed settings
-. In a
-self-hosted environment
-, Claude Code also runs the hooks the operator seeded from the runner host’s
+.
+Self-hosted environment
+: Claude Code also runs the hooks the operator seeded from the runner host’s
 ~/.claude/
-, and it runs the hooks in the runner image’s managed settings file when neither
-server-managed settings nor an MDM-delivered Claude Code policy
-supplies the managed tier.
+, and the hooks in the runner image’s managed settings file when that file is one of the
+managed sources Claude Code applies
+.
 ​
 Install dependencies with a SessionStart hook
 To install dependencies only in cloud sessions, pair a SessionStart hook with a script that checks where it’s running.
@@ -1094,7 +1100,7 @@ Claude Code on the web
 Web quickstart
 : connect GitHub and start your first cloud session
 Claude Tag
-: sessions Claude starts from Slack run in the same Anthropic-hosted environments
+: sessions Claude starts from Slack run in the same environments
 Routines
 : scheduled runs use the same environments and network access levels
 Remote Control
@@ -1108,5 +1114,3 @@ Server-managed settings
 Was this page helpful?
 Yes
 No
-⌘
-I

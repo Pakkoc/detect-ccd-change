@@ -55,9 +55,11 @@ kvm
 group members can open. Join the group even if
 /dev/kvm
 already works for you.
-The app checks these requirements once at launch: restart it after installing packages, and log out and back in after joining the group. If your kernel has no module directory under
+The app checks these requirements once at launch: restart it after installing packages, and log out and back in after joining the group. If
+/dev/vhost-vsock
+is missing and your running kernel has no module directory under
 /lib/modules
-, which is common on ChromeOS and in container-based Linux environments, the Cowork tab reports that the kernel doesn’t include the virtualization support Cowork needs and that it can’t be added manually.
+, the Cowork tab reports that the kernel doesn’t include the virtualization support Cowork needs and that it can’t be added manually. This combination is common on ChromeOS and in container-based Linux environments.
 ​
 Install
 Install from Anthropic’s apt repository so that updates arrive through your system’s regular package updates. Open a terminal and run the commands in each step.
@@ -336,5 +338,3 @@ system requirements
 Was this page helpful?
 Yes
 No
-⌘
-I

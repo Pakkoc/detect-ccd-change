@@ -1472,5 +1472,3 @@ AWS samples for Claude apps gateway
 Was this page helpful?
 Yes
 No
-⌘
-I

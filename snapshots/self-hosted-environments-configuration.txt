@@ -564,7 +564,7 @@ The ID of the environment the new runner should join, in
 ccpool_...
 form
 CLAUDE_RUNNER_ACCOUNT_ID
-Tagged ID of the account that enqueued the session, for per-account routing, quota, or chargeback. Empty when unavailable.
+Tagged ID of the account that enqueued the session, for per-account routing, quota, or chargeback. Empty when unavailable, and always empty for Claude Tag channel sessions, which no account enqueues.
 CLAUDE_RUNNER_ACCOUNT_EMAIL
 Email of the account that enqueued the session. Empty when unavailable. Treat the email as personally identifiable information and don’t log it.
 CLAUDE_RUNNER_PRIMARY_REPO_URL
@@ -1011,13 +1011,15 @@ Repository-committed
 .claude/settings.json
 layers on top as project settings. Sessions also read
 managed-settings.json
-from the standard system path in your runner image, but the managed tier uses one source at a time, and
+from the standard system path in your runner image. Whether its keys apply alongside
 server-managed settings
-are checked first: if your organization delivers any server-managed keys, sessions ignore the runner image’s managed file except for its cross-source keys. Claude Code still reads the
+follows
+how Claude Code combines managed sources
+: by default, when your organization delivers any server-managed keys, sessions ignore the runner image’s file apart from the
+keys Claude Code reads from every admin source
+, such as the
 env
-block and the other
-keys it reads from every admin source
-from that file, such as the sandbox locks, the sandbox binary paths, and
+block, the sandbox locks, the sandbox binary paths, and
 forceRemoteSettingsRefresh
 . See
 settings precedence
@@ -1085,5 +1087,3 @@ Verify session identity
 Was this page helpful?
 Yes
 No
-⌘
-I

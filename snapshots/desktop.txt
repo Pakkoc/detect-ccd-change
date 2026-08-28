@@ -1487,7 +1487,7 @@ to turn off
 Code sessions that run on the device
 , leaving SSH sessions to other hosts and cloud sessions available. The value must be the JSON boolean
 true
-. Read from managed settings only.
+. Read from managed settings only. Requires Claude Desktop v1.37937.0 or later.
 managedMcpServers
 push MCP server configurations to all users. Available in third-party (3P) Desktop deployments only. In each entry, set a transport of
 "http"
@@ -1517,11 +1517,9 @@ Cloud sessions
 server-managed settings
 ; device-deployed files don’t reach them, because they run on Anthropic-managed VMs. Sessions routed to a
 self-hosted environment
-fall back to the managed settings file in the runner image when server-managed settings deliver no keys, per
-settings precedence
-, apart from the
-keys Claude Code reads from every admin source
-.
+also read the managed settings file in the runner image.
+How Claude Code combines managed sources
+says when that file applies.
 SSH sessions
 : the session reads the managed settings file from the remote host. Desktop itself reads
 sshConfigs
@@ -1530,6 +1528,26 @@ sshHostAllowlist
 , and
 disableDesktopLocalSessions
 from the local machine’s managed settings.
+Cowork
+sessions
+: in a Cowork session on this machine, Claude Code never fetches admin-console settings, even when the user signs in with a Team or Enterprise account, and reads policy deployed to the machine unless your Claude Desktop configuration sets
+requireCoworkFullVmSandbox
+. Remote Cowork sessions receive neither. See
+where and when a policy applies
+for which device files reach Cowork, and
+MCP permission rules
+for how
+Bash
+and
+WebFetch
+rules apply to Cowork’s tools.
+In local and SSH sessions, the desktop app delivers each user’s connected claude.ai connectors to Claude Code directly. No MCP setting or
+managed-mcp.json
+reaches those connectors, whichever settings source or file location you use. To block a connector’s tools in these sessions, use your organization’s
+connector tool controls
+.
+How connectors reach Claude Code
+shows which settings govern connectors in each kind of session.
 permissions.disableBypassPermissionsMode
 and
 disableAutoMode
@@ -1603,6 +1621,15 @@ fonts.googleapis.com
 and
 fonts.gstatic.com
 . Both hosts are optional. If you block them, artifacts render in fallback typefaces. Block with a fast rejection rather than a silent drop so the font request fails immediately instead of delaying the page’s first render.
+Artifacts can also load JavaScript libraries, such as React or a charting package, from
+cdnjs.cloudflare.com
+,
+cdn.jsdelivr.net
+,
+cdn.tailwindcss.com
+, and
+code.jquery.com
+, and from no other external host. If you block those hosts, the parts of an artifact that depend on a library don’t work, and unlike a blocked font, a blocked library has no fallback. Block with a fast rejection here too, so a blocked library request fails at once rather than hanging until it times out.
 ​
 Authentication and SSO
 Enterprise organizations can require SSO for all users. See
@@ -1967,5 +1994,3 @@ When reporting a problem, include your desktop app version, your operating syste
 Was this page helpful?
 Yes
 No
-⌘
-I

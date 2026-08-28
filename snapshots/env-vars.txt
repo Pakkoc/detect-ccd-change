@@ -128,7 +128,10 @@ When the same variable is set in both your shell and a settings file
 env
 block, the settings file value applies. Claude Code writes each
 env
-entry into the process environment at startup and again when the file changes, replacing the value inherited from the shell. A few variables are special-cased; the
+entry into the process environment, replacing the value inherited from the shell. The
+env
+setting
+says when it applies them. A few variables are special-cased; the
 env
 setting
 lists the exceptions.
@@ -711,28 +714,20 @@ artifact
 is published. Republishing an existing artifact does not open the browser regardless of this setting
 CLAUDE_CODE_ARTIFACT_COMMENTS
 Set to
-1
-to let Claude read and reply to
-comments on an artifact
-when
-feature-flag fetching
-is off. Set to
 0
-to turn comment reading and replying off even when fetching is on. Has no effect when
+to stop Claude reading and replying to
+comments on an artifact
+. Has no effect when
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 has
 turned artifacts off
 . Requires Claude Code v2.1.221 or later
 CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT
 Set to
-1
-to let Claude
-reply on its own to comments sent to it
-when
-feature-flag fetching
-is off, or
 0
-to turn that off even when fetching is on. Needs comment reading on as well. Requires Claude Code v2.1.228 or later
+to stop Claude
+replying on its own to comments sent to it
+. Requires Claude Code v2.1.228 or later
 CLAUDE_CODE_ATTRIBUTION_HEADER
 Set to
 0
@@ -979,11 +974,15 @@ agent view
 CLAUDE_CODE_DISABLE_ARTIFACT
 Set to
 1
-to disable the
+to turn off the
 Artifact
-tool, which publishes session output as a private web page on claude.ai. Equivalent to the
+tool, which publishes session output as a private web page on claude.ai. Once you set it, no settings file turns the tool back on. To turn the tool off from a settings file instead, set
+enableArtifact
+to
+false
+; the deprecated
 disableArtifact
-setting
+key also turns it off
 CLAUDE_CODE_DISABLE_ATTACHMENTS
 Set to
 1
@@ -1927,6 +1926,14 @@ Set automatically in
 cloud sessions
 to the current session’s ID. Read this to construct a link back to the session transcript. See
 Link output back to the session
+CLAUDE_CODE_RESTRICTED
+Set to
+1
+to start the session in restricted mode, the same as passing
+--restricted
+. Claude Code ignores this variable in a settings file’s
+env
+block. Requires Claude Code v2.1.248 or later
 CLAUDE_CODE_RESUME_INTERRUPTED_TURN
 Set to
 1
@@ -2313,12 +2320,24 @@ to your
 . See
 Terminal configuration
 for other tmux settings
+CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE
+On Linux and WSL, set to a comma-separated list of the kinds of processes Claude Code
+excludes from the tool memory cap
+, such as
+mcp
+or
+lsp
+. Set
+none
+to cap every kind, or
+all-new
+to cap only Bash, PowerShell, and Monitor tool commands. Claude Code keeps Bash, PowerShell, and Monitor tool commands under the cap whatever you list. Requires Claude Code v2.1.246 or later
 CLAUDE_CODE_TOOL_MEMORY_LIMIT
 On Linux and WSL, set to a size such as
 4G
 to
 cap the memory that Bash and PowerShell tool commands can use
-. Write the size in plain digits, alone for a number of bytes or with a
+, and Monitor tool commands on v2.1.246 or later. Write the size in plain digits, alone for a number of bytes or with a
 K
 ,
 M
@@ -2330,7 +2349,7 @@ suffix. Set
 0
 or
 off
-to turn the cap off. Once a tool command has turned the cap on or off, a changed value takes effect the next time you launch
+to turn the cap off. Once the first process Claude Code starts has turned the cap on or off, a changed value takes effect the next time you launch
 claude
 . Requires Claude Code v2.1.233 or later
 CLAUDE_CODE_USER_DIALOG_TIMEOUT_MS
@@ -2720,9 +2739,9 @@ leaves telemetry on, and honors it as the cross-tool convention recognized by ma
 ENABLE_CLAUDEAI_MCP_SERVERS
 Set to
 false
-to disable
+to stop Claude Code from fetching
 claude.ai MCP servers
-in Claude Code. Enabled by default for logged-in users. To disable per-project or per-org, set
+. Enabled by default for logged-in users. To disable per-project or per-org, set
 disableClaudeAiConnectors
 in settings instead
 ENABLE_PROMPT_CACHING_1H
@@ -3131,11 +3150,13 @@ CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
 . Each variable’s row says which values do that.
 Claude Code also leaves fetching off when you connect through a
 Claude apps gateway
-. On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, Claude Code leaves fetching off unless a host platform that embeds Claude Code sets
+, and on machines where a managed settings file, MDM profile, or policy helper requires gateway sign-in with
+forceLoginMethod: "gateway"
+, even before anyone signs in. On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, Claude Code leaves fetching off unless a host platform that embeds Claude Code sets
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
 . With fetching off, you can’t:
 Start sessions in auto mode by default
-on Pro, Max, and Team plans; Claude Code starts your sessions in Manual instead
+on Pro, Max, and Team plans
 Have the VS Code extension
 read settings files for the starting permission mode
 Run
@@ -3145,8 +3166,6 @@ autoMode.environment
 entries
 Use
 Remote Control
-Send or receive
-cross-session messages
 Run
 claude import
 or the
@@ -3156,30 +3175,8 @@ Create routines from the CLI with
 /schedule
 Use
 the advisor tool
-Let
-Claude choose the
-/loop
-interval
-; Claude Code runs a
-/loop
-prompt with no interval on the fixed 10-minute schedule instead
-Run
-the built-in
-/loop
-maintenance prompt
-; Claude Code shows the usage message instead when you run
-/loop
-with no prompt
 Read or reply to
 comments on an artifact
-, unless you set
-CLAUDE_CODE_ARTIFACT_COMMENTS=1
-; for Claude to reply to sent comments on its own, also set
-CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT=1
-. Neither override helps under
-CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-, which
-turns artifacts off entirely
 Have Claude Code refresh the
 PR review status badge
 less often while you’re idle; Claude Code refreshes it every 60 seconds instead
@@ -3227,5 +3224,3 @@ Monitoring
 Was this page helpful?
 Yes
 No
-⌘
-I

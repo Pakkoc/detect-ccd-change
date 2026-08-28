@@ -80,9 +80,9 @@ dynamic workflows
 . See
 how workflows compare to subagents and skills
 Do the workers need to talk to each other?
-Subagents report results back to the conversation that spawned them, and agent view sessions report only to you, though separate sessions can pass messages with
+Claude can pass findings with
 cross-session messaging
-. Teammates in an agent team message each other directly and, when they
+between sessions you run yourself, including the sessions you dispatch from agent view. Subagents report results back to the conversation that spawned them, and agent view sessions report results only to you. Teammates in an agent team message each other directly and, when they
 have the Task tools
 , share a task list.
 Do the tasks touch the same files?
@@ -133,5 +133,3 @@ Run parallel sessions with worktrees
 Was this page helpful?
 Yes
 No
-⌘
-I

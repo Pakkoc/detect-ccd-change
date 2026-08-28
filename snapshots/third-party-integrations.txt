@@ -212,5 +212,3 @@ to define what Claude Code can and cannot do in your environment.
 Was this page helpful?
 Yes
 No
-⌘
-I

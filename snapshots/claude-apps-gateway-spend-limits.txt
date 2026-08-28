@@ -396,5 +396,3 @@ Deployment guide
 Was this page helpful?
 Yes
 No
-⌘
-I

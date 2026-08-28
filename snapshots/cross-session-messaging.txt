@@ -2,7 +2,7 @@ Cross-session messaging requires Claude Code v2.1.224 or later on macOS and Linu
 Availability
 for provider requirements and how to confirm a session has it.
 Cross-session messaging lets Claude deliver a message from one of your Claude Code sessions to another. When a change in one session breaks what another is building on, Claude can warn that session before you notice. When one session settles a question another is blocked on, Claude can send the answer across.
-A message is a piece of text one Claude writes to another, never conversation history or files. To move a whole conversation or its context,
+A message is a piece of text one Claude writes to another, never the sender’s conversation history or files. To move a whole conversation or its context,
 resume the session
 instead.
 Claude uses two tools for this:
@@ -61,17 +61,39 @@ followed by the first letters of the session’s name and pick the session from 
 @api-worker
 , and tells Claude which session it names, so Claude can message that session without listing your sessions first. This prompt names the target with a mention:
 Let @api-worker know the schema migration finished
-Once you type at least one letter after the
-@
-, Claude Code suggests your other live sessions on this machine; after a bare
-@
-, session rows don’t appear. A cloud or Remote Control session appears in the suggestions only after Claude has already listed or messaged your sessions beyond this machine. You can also type the mention without the picker. When more than one live session answers to the mentioned name, Claude asks you which one you mean before sending.
+The typeahead lists your other live sessions on this machine. Two cases need more than the first letters of a name:
+A session beyond this machine
+: a cloud or Remote Control session appears in the typeahead only after Claude has listed or messaged your sessions beyond this machine, so ask Claude to list them first.
+A name with a space or other characters outside letters, digits, hyphens, and underscores
+: type it in double quotes, such as
+@"release notes"
+. When you pick the session from the typeahead, Claude Code inserts the quotes for you.
+You can also type the mention without the picker. When more than one live session answers to the mentioned name, Claude asks you which one you mean before sending.
 For what the message Claude writes looks like when it arrives, including an example of one, see
 what a message looks like
 .
 ​
 Message delivery
 The receiving Claude reads the message between tool calls during an active turn, so a running tool is never interrupted. When the receiving session is idle, Claude Code starts a new turn with the message.
+When a message that starts a new turn mentions a file as an
+@
+immediately followed by its path, Claude Code
+attaches that file
+as it exists on the receiving machine, resolving a relative path from the receiving session’s working directory. The receiving session’s
+Read
+deny rules
+apply to that file, as they do to a file you mention with
+@
+yourself. When such a message mentions an
+MCP resource
+with
+@
+, Claude Code attaches that resource from the receiving session’s MCP servers. A path written without the
+@
+stays plain text and attaches nothing.
+A message that Claude reads during an active turn arrives as plain text with nothing attached, even if it mentions files or MCP resources with
+@
+.
 Claude Code refuses a message in the following cases:
 The message is
 over the size cap
@@ -138,7 +160,7 @@ notify_when_idle
 See which sessions Claude can reach
 Claude finds a message’s target on its own, so you don’t need to run anything before asking it to send. To see for yourself which sessions Claude can reach, run the
 /list-agents
-command. The first line is this session’s own name, the one your other sessions use to message it. The rows below it are the sessions Claude can reach, each with the name it answers to:
+command. The first line, when present, is this session’s own name, the one your other sessions use to message it. The rows below it are the sessions Claude can reach:
 Subagents
 : agents running inside the current session.
 Teammates
@@ -170,6 +192,26 @@ Remote Control
 offline
 as the status of a session whose Remote Control connection has dropped.
 This session isn’t one of the rows. If Claude addresses a message to this session’s own name, Claude Code refuses it and tells Claude the target is the current session. Before v2.1.239, the listing didn’t show this session’s name, and Claude Code reported a message sent to it as an agent it couldn’t find.
+While this session is connected to
+Remote Control
+, Claude Code withholds some details of your local sessions from the
+/list-agents
+output, without changing what Claude itself sees when it looks for a session to message:
+Working directories
+: it leaves out each local session’s working directory.
+Session names
+: it leaves out any session name it can’t attribute to a person, so a row left with no name reads
+(unnamed session)
+.
+The first line
+: it leaves out the line with this session’s own name unless you typed that name at this terminal, with
+--name
+or with
+/rename
+and the name, since you launched or last resumed the session.
+When the output lists anything, it ends with a note saying details were withheld. Running
+/rename
+followed by an unused name at a session’s own keyboard gives that session a name that appears in the output.
 Claude Code reads your cloud and Remote Control session lists newest first and stops after a bounded number of pages for each. If your account has more of those sessions than fit, Claude Code doesn’t list the older ones, and Claude can’t message them by name. When this happens, Claude Code says so in the listing, and Claude sees the same note when it sends a message.
 Claude addresses a session beyond this machine by name, the same as a local session. See
 Message sessions on other machines
@@ -181,9 +223,14 @@ command or the
 flag. When you don’t set one, Claude Code names the session itself. For an interactive session, that is the name shown in
 listings of running sessions
 .
+When you rename a session, Claude Code also updates the shared record your other sessions use to look up the session’s name. If it can’t update that record, it warns you in the
+/rename
+output that other sessions may still show the old name. Run the session with
+--debug
+, and Claude Code logs the cause of the failed update.
 When you rename a session, or start or resume an interactive one, with a name another live session on this machine already uses, Claude Code leaves the name with the session that already has it and
 renames yours to a variant
-. Sessions can still share a name, for example when one of them runs an earlier version of Claude Code or the shared name is one Claude Code generated. Claude Code shows each local session’s working directory in the
+. Sessions can still share a name, for example when one of them runs an earlier version of Claude Code or the shared name is one Claude Code generated. Unless this session is connected to Remote Control, Claude Code shows each local session’s working directory in the
 /list-agents
 output, so you can tell same-named sessions apart when they run in different directories. Claude addresses the message in one of two ways, depending on how many live sessions answer to the name:
 One session answers to the name
@@ -239,12 +286,34 @@ Permission prompts still fire
 : if acting on the message requires a permission the receiving session doesn’t have, you see the same prompt you’d see for any other work.
 ​
 What a message looks like
-When the message arrives, it appears in the conversation under the sender’s session name and stays there. Claude Code queues it while Claude is mid-turn, or starts a new turn with it right away when the session is idle.
-A message is a piece of text one Claude writes to another. Claude receives it with the sender’s name and a reply address, except for a
+When a message arrives, Claude Code shows it in the conversation as a dim one-line preview, and the preview line stays in the conversation afterward. The preview carries the sender’s name and the first line of the message, cut with
+…
+when it’s long, such as
+› Message from @api-worker: Schema migration finished (ctrl+o to expand)
+. Before v2.1.247, Claude Code showed the arriving message in full instead of a preview.
+Either of these shows you the full text:
+Press
+Ctrl+O
+to open the
+transcript viewer
+and read the full text under the sender’s session name.
+In a session started with
+--verbose
+, Claude Code shows the full text instead of the preview.
+The preview shortens only what you see. Whether or not you expand it, Claude reads the full message.
+Claude receives the message with the sender’s name and a reply address, except for a
 one-way cross-machine message
-, which carries no reply address. You see the name and the text, and the receiving session gets only that text, never the sender’s conversation history or files.
-This example is a message one Claude wrote to another, as the receiving session sees it:
-Schema migration finished: the new column is tenant_id, and rebasing on main is safe now.
+, which carries no reply address. Beyond the name and reply address, the receiving Claude gets the message’s text, never the sender’s conversation history or files. An
+@
+mention in the text can still attach a file or MCP resource on the receiving side, as described under
+Message delivery
+.
+A message that a
+subagent
+wrote arrives under the sending session’s name, with the subagent identified in the message text. A reply to it reaches that session’s main conversation, not the subagent.
+This example is a message one Claude wrote to another, as its full text reads when you expand it:
+Schema migration finished
+The new column is tenant_id, and rebasing on main is safe now.
 ​
 Control inbound messages
 Set
@@ -368,9 +437,19 @@ environment variable:
 In a session that starts with messaging on, Claude Code exports the variable before any hook runs, including
 SessionStart
 .
-When a session starts before Claude Code has fetched the feature flag that turns messaging on, such as the first session after you install Claude Code or upgrade from a version without messaging, Claude Code binds the inbox and exports the variable as soon as the fetch completes. Hooks and processes that started before that point keep the variable unset, while later hooks and Bash commands see it.
 Each session exports its own socket, never one inherited from a parent session.
 On macOS and Linux, Claude Code restricts the socket to your operating-system user. On native Windows, it instead requires each connection to authenticate first with a key that only your operating-system user can read. Either way, on a shared machine another user’s sessions can’t deliver to it.
+On macOS and Linux, Claude Code also refuses to create the socket in a directory it can’t accept, for example one that another user owns, and uses a private per-user directory,
+/tmp/cc-socks-<uid>
+, instead. When it can’t accept any directory, the session runs without an inbox: Claude Code shows a notice,
+/status
+shows
+unavailable
+and the reason in its
+Peer address
+row, and the
+--debug
+log records the full refusal.
 Alongside the socket’s path, Claude Code exports a per-session token as
 CLAUDE_CODE_MESSAGING_TOKEN
 . A script posting to its own session’s socket can send
@@ -384,6 +463,7 @@ macOS and Linux, including WSL 2
 : the line is optional. Claude Code accepts a connection with or without it.
 Native Windows
 : the line is required. Claude Code closes any connection whose first line isn’t a valid auth line and delivers nothing from that connection.
+Open the connection only when the message you’re posting is ready. Claude Code closes a connection that hasn’t sent a complete line within 30 seconds, so capture a slow command’s output first and then open the connection to send it.
 The
 own-child rules
 below say when Claude Code consults the token and how it treats a message it can’t verify.
@@ -478,23 +558,26 @@ also removes messaging to subagents and agent-team teammates, since the same too
 or in the listings of other sessions on the same machine, so to confirm it, check the settings files that apply to that session rather than its status.
 ​
 Availability
-Cross-session messaging requires Claude Code v2.1.224 or later on macOS, Linux, and WSL 2, and v2.1.234 or later on native Windows. Availability also depends on your platform, provider, and configuration:
+Cross-session messaging requires Claude Code v2.1.224 or later on macOS, Linux, and WSL 2, and v2.1.234 or later on native Windows. Availability, and which sessions Claude can message, also depend on your operating system, provider, and configuration:
 Operating system
 : available on macOS, Windows, and Linux, including Linux inside WSL 2.
-Provider
-: not available on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry.
-Feature-flag evaluation
-: when any of
-CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-,
-DISABLE_TELEMETRY
-,
-DO_NOT_TRACK
-, or
-DISABLE_GROWTHBOOK
-turns off the feature-flag evaluation the feature depends on, cross-session messaging stays off. Each variable’s row says which values do that. Unset whichever applies. These variables can come from your shell, from a settings file’s
-env
-map, or from managed settings.
+Sessions on this machine
+: available on every provider, including Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry, and in sessions that run with
+feature-flag fetching
+off. On those providers, and with flag fetching off, same-machine messaging requires Claude Code v2.1.248 or later. Claude Code delivers these messages over a
+per-session socket on your machine
+, never through Anthropic servers.
+To stop a session from receiving them, set
+crossSessionInbound
+to
+refuse
+.
+Sessions beyond this machine
+: Claude finds your
+Claude Code on the web
+sessions and your sessions on other machines from a session that is connected to Remote Control, which needs a claude.ai sign-in as this session’s active authentication and the other
+Remote Control requirements
+. Claude can’t find those sessions with an API key or on Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry.
 To check a session, type
 /list-agents
 , also available as
@@ -542,7 +625,11 @@ In a session with messaging,
 /status
 also shows a
 Peer address
-row with the session’s own inbox address.
+row with the session’s own inbox address, or
+unavailable
+and the reason when Claude Code
+couldn’t set up an inbox
+.
 ​
 Limitations
 The limits here are properties of the messaging channel itself and apply wherever the feature runs. For platform and provider gaps, see
@@ -592,5 +679,3 @@ Run agents in parallel
 Was this page helpful?
 Yes
 No
-⌘
-I

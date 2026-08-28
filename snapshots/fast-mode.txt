@@ -124,7 +124,9 @@ on claude.ai, where the
 Usage credits
 section shows how much you’ve spent in usage credits this month. That figure includes fast mode but doesn’t break it out separately.
 Team and Enterprise
-: your organization pays for your fast mode usage from its usage credits. For where your organization sees that spend, see
+: your organization pays for your fast mode usage from its usage credits. To see your own usage-credits spend, run
+/usage
+. For where your organization sees that spend, see
 Claude for Teams and Enterprise
 .
 Claude Console
@@ -338,5 +340,3 @@ Status line configuration
 Was this page helpful?
 Yes
 No
-⌘
-I

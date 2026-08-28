@@ -512,5 +512,3 @@ before distributing internally.
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -77,5 +77,3 @@ Full changelog for v2.1.185–v2.1.193 →
 Was this page helpful?
 Yes
 No
-⌘
-I

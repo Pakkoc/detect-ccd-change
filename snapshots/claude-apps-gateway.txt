@@ -48,7 +48,7 @@ Settings delivery
 server-managed settings
 from the claude.ai admin console.
 Telemetry
-: each configured destination, such as Datadog, Splunk, or ClickHouse, receives
+: each configured destination receives
 OpenTelemetry Protocol (OTLP) metrics
 with token counts, model, user identity, and latency by default, with logs and traces as per-destination opt-ins.
 Upstream routing
@@ -782,7 +782,11 @@ still blocks parent-supplied allow rules and
 additionalDirectories
 . The hooks and MCP server locks, and
 allowManagedPermissionRulesOnly
-’s effect on the developer’s own rules, need the winning source. On
+’s effect on the developer’s own rules, need the winning source by default; under the
+managedSourcesBehavior
+merge opt-in in
+how Claude Code combines managed sources
+, Claude Code applies the strictest value any source sets for every lock. On
 policyHelper
 fleets, the locks are read from the helper’s output alone.
 Each lock makes Claude Code ignore the developer’s own entries for that setting, so include your organization’s allowlists next to the locks. Locking network domains with an empty managed domain list blocks all sandboxed outbound traffic, and locking MCP servers with no managed or parent-supplied
@@ -798,7 +802,11 @@ denyRead
 .
 ​
 Settings the locks don’t cover
-Four parent-supplied settings are honored even with all five locks set:
+Four parent-supplied settings pass the filter even with all five locks set. Under the default first-wins setting, the admin value that blocks the parent’s is the one in the highest-priority admin source. Under the
+managedSourcesBehavior
+merge opt-in,
+how Claude Code combines managed sources
+says which source’s value applies instead.
 forceLoginOrgUUID
 : Claude Code honors a parent-supplied value when the highest-priority admin source doesn’t set an org UUID. Gateway sign-in doesn’t check this key, so it matters only for fleets that also use first-party Anthropic logins. An org UUID in the highest-priority admin source blocks the parent’s value and is the one Claude Code enforces, so set
 forceLoginOrgUUID
@@ -893,7 +901,9 @@ apiKeyHelper
 Anthropic profiles
 , and any earlier claude.ai login are ignored while signed in, so developers don’t need to log out of claude.ai first.
 Managed settings
-: locked keys can’t be overridden locally. The CLI applies the policy at startup and on each hourly poll.
+: locked keys can’t be overridden locally. The CLI applies the policy at startup and applies changes on each hourly poll, apart from the
+changes that apply only at the next launch
+.
 Startup
 : signed-in sessions exit at startup with an error after about 10 seconds when the gateway is unreachable, rather than starting without their settings.
 Deprovisioning
@@ -1023,5 +1033,3 @@ Deploy on Google Cloud
 Was this page helpful?
 Yes
 No
-⌘
-I

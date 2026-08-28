@@ -169,11 +169,7 @@ Waits for the follow-up’s reply the same way as step 2.
 ​
 --environment
 dispatch behavior
-In a non-interactive run, with
--p
-or a piped prompt, Claude Code creates the session, prints the session ID and a link to it, and exits. From a terminal,
-claude --environment <id> "task"
-starts an attached interactive cloud session on the environment instead.
+Claude Code creates the session, prints the session ID and a link to it, and exits.
 The flag takes precedence over the
 remote.defaultEnvironmentId
 setting. It doesn’t support
@@ -732,5 +728,3 @@ $ADMIN_TOKEN
 Was this page helpful?
 Yes
 No
-⌘
-I

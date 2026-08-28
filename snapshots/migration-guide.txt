@@ -344,7 +344,7 @@ options:
 {
 settingSources:
 []
-// No filesystem settings loaded
+// Skip user, project, and local settings
 }
 });
 // Or load only specific sources:
@@ -390,7 +390,7 @@ ClaudeAgentOptions(
 setting_sources
 =
 []),
-# No filesystem settings loaded
+# Skip user, project, and local settings
 ):
 print
 (message)
@@ -446,5 +446,3 @@ MCP Integration
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -432,5 +432,3 @@ Firecracker Documentation
 Was this page helpful?
 Yes
 No
-⌘
-I

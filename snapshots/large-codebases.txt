@@ -91,9 +91,11 @@ That directory’s plus every ancestor’s
 Work is scoped to one package or subsystem
 Project settings in
 .claude/settings.json
-load only from your starting directory and are not inherited from parent directories the way CLAUDE.md files are: a
+aren’t inherited from parent directories the way CLAUDE.md files are. For which directory’s
 .claude/settings.json
-at the repository root applies only when you start from the root.
+a session reads, see
+where Claude Code looks for each file
+.
 Each section below states whether its settings file belongs at the repository root or in the subdirectory you start from, and whether it is committed or kept local.
 ​
 Layer CLAUDE.md files by directory
@@ -254,19 +256,19 @@ The deny rules can cover everyone working in the repository, only you, or every 
 Everyone working in the repository
 : commit the rules to
 .claude/settings.json
-. Like other project settings on this page, that file loads only from your starting directory, so place it at the repository root if you start Claude there, or in each package’s
+, at the repository root if you start Claude there, or in each package’s
 .claude/
-if you start from subdirectories.
+if you start from subdirectories. Like other project settings on this page, that file isn’t inherited from parent directories.
 Yourself only
 : use
 .claude/settings.local.json
 at the repository root, which loads in every CLI session inside the repository regardless of starting directory, except in the cases where Claude Code
-keeps the local file in the starting directory
+doesn’t use the repository root
 , such as on Windows. Relative patterns like the example’s
 Read(./vendor/**)
 still
-anchor at the directory you start Claude Code from
-, so if you start sessions from subdirectories, write the rules in this file as
+anchor at the session’s current working directory
+rather than the repository root, so if you start sessions from subdirectories, write the rules in this file as
 //
 -absolute paths, such as
 Read(//absolute/path/to/repo/vendor/**)
@@ -701,7 +703,7 @@ Automate actions with hooks
 to write and register the hook.
 ​
 Put it together
-The combined configuration below uses the monorepo layout. The same files work for any subdirectory in a large single tree. Project settings load only from the directory you start Claude in, so each subdirectory’s
+The combined configuration below uses the monorepo layout. The same files work for any subdirectory in a large single tree. Each subdirectory’s
 .claude/settings.json
 must be self-contained rather than layered on a root file.
 The example commits
@@ -844,5 +846,3 @@ on the Claude blog for organizational rollout patterns and ownership models that
 Was this page helpful?
 Yes
 No
-⌘
-I

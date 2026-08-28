@@ -70,7 +70,9 @@ Keep the base directory and capacity identical across runners
 --capacity <n>
 none
 1
-Maximum concurrent sessions this runner handles. All sessions belong to the same locked account. Use the same value on every runner in an environment; see
+Maximum concurrent sessions this runner handles. All sessions belong to the same locked
+owner
+. Use the same value on every runner in an environment; see
 Keep the base directory and capacity identical across runners
 .
 --configure-git
@@ -116,7 +118,7 @@ SELF_HOSTED_RUNNER_DRAIN_GRACE_MS
 0
 Until the runner receives a shutdown signal or reaches its retire time, controls when the runner exits after its active sessions finish:
 0
-exits immediately without polling for more, and a positive value keeps the runner alive and re-polling the locked account’s queue for that many seconds first, at the cost of the per-session container isolation described in the
+exits immediately without polling for more, and a positive value keeps the runner alive and re-polling the locked owner’s queue for that many seconds first, at the cost of the per-session container isolation described in the
 hardening section
 . After a first signal you deferred with
 --defer-shutdown-max-min
@@ -198,7 +200,7 @@ SELF_HOSTED_RUNNER_LOCK_TO_ACCOUNT
 unset
 Pre-lock the runner to a specific account at startup instead of locking on first session. Accepts an email address or
 user_...
-ID in the environment’s organization.
+ID in the environment’s organization. A pre-locked runner never picks up Claude Tag channel sessions, which have no account.
 --log-file <path>
 SELF_HOSTED_RUNNER_LOG_FILE
 unset
@@ -597,7 +599,11 @@ Configured
 claude_code_self_hosted_runner_active_sessions
 Sessions currently running
 claude_code_self_hosted_runner_locked_account{email}
-Present once the runner has locked to a user. The label value is the account email, and the runner always emits it once locked; if your metrics store is broadly readable, drop or hash the label at scrape time, for example with Prometheus
+Present once the runner has locked to a user and a session token carrying an
+act.email
+claim has been issued. The series is absent on a runner locked to a Claude Tag agent, whose session tokens carry no
+act.email
+. The label value is the account email; if your metrics store is broadly readable, drop or hash the label at scrape time, for example with Prometheus
 metric_relabel_configs
 .
 claude_code_self_hosted_runner_last_poll_age_seconds
@@ -629,13 +635,13 @@ desktop_app
 claude_code_cli
 , or
 unknown
-when the server didn’t send one. The Slack values
+when the server didn’t send one. Slack sessions carry either
 claude_in_slack
-and
+or
 claude-in-slack
-are reserved:
-Claude Tag
-sessions can’t route to self-hosted environments yet, so neither value appears until that support ships. Use
+depending on which Slack integration created them, so match both with a regex selector such as
+{client_platform=~"claude[-_]in[-_]slack"}
+. Use
 sum()
 for the fleet total.
 claude_code_self_hosted_runner_sessions_completed_total{client_platform}
@@ -1212,5 +1218,3 @@ Verify session identity
 Was this page helpful?
 Yes
 No
-⌘
-I

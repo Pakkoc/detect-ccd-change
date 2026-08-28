@@ -2700,5 +2700,3 @@ Configure permissions
 Was this page helpful?
 Yes
 No
-⌘
-I

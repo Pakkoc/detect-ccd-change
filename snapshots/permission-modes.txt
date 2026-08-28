@@ -85,6 +85,7 @@ ask rule
 Connector tools your organization
 set to
 ask
+, in sessions where that setting reaches Claude Code
 Tools that require user interaction: the built-in
 AskUserQuestion
 tool and MCP tools marked
@@ -109,7 +110,7 @@ and outer
 isolation boundaries
 decide what an action can reach once it runs. Each row below pairs a goal with the flags or settings that get you there and the isolation it needs, as a starting point.
 Available modes
-lists what runs without a prompt in each mode, and the per-mode section each row links carries the full behavior.
+lists what runs without a prompt in each mode.
 You want to
 Start with
 Isolation needed
@@ -139,7 +140,7 @@ claude --permission-mode plan
 None
 Claude Code blocks edits until you
 approve a plan
-Work hands-off with a classifier reviewing each action
+Work hands-off in auto mode
 claude --permission-mode auto
 , the
 built-in starting permission mode
@@ -198,13 +199,9 @@ from
 The built-in default
 Conversations the VS Code extension starts follow the extension’s own list in
 Switch permission modes
-. A session you resume keeps the permission mode it was in unless you pass
---permission-mode
-or
---dangerously-skip-permissions
-;
-what a resumed session restores
-lists the exceptions.
+. For the permission mode Claude Code starts a resumed session in, see
+permission mode on resume
+.
 The built-in
 auto
 default requires Claude Code v2.1.228 or later on macOS, Linux, and WSL, and v2.1.233 or later on native Windows. On earlier versions, the built-in default is Manual.
@@ -390,6 +387,22 @@ bypassPermissions
 on the way to
 auto
 .
+From a Bash permission prompt
+: in the Manual and
+acceptEdits
+permission modes, when
+auto mode
+is available, Claude Code adds
+Yes, and switch to auto mode
+to a Bash command’s permission prompt. Select it to approve the command and switch the session to auto mode.
+PowerShell tool
+prompts don’t offer the option. Requires Claude Code v2.1.247 or later.
+Claude Code doesn’t add the option to prompts forced by one of your
+ask
+rules
+or by a
+hook
+, because auto mode still shows you those prompts, so switching wouldn’t remove them.
 At startup
 : pass the permission mode as a flag.
 claude
@@ -1032,21 +1045,19 @@ and
 rmdir
 removals targeting a
 critical path
-in Claude Code v2.1.218 and later. Connector tools
+in Claude Code v2.1.218 and later. MCP tools marked
+requiresUserInteraction
+prompt you directly even when an allow rule matches, and so do connector tools
 your organization set to
 ask
-and MCP tools marked
-requiresUserInteraction
-prompt you directly even when an allow rule matches. Ask rules that match on a command’s content, such as
+in sessions where that setting reaches Claude Code. Ask rules that match on a command’s content, such as
 Bash(git push *)
 , fall back to a permission prompt
 Read-only actions and file edits in your working directory are auto-approved, except writes to
 protected paths
-Everything else goes to the classifier, except the org-set-to-
-ask
-connector tools and
+Everything else goes to the classifier. The connector tools and
 requiresUserInteraction
-MCP tools from step 1, which always prompt you directly, so neither an org-required approval nor a consent step is auto-approved
+MCP tools that prompt you directly in step 1 never reach the classifier, so neither an org-required approval nor a consent step is auto-approved
 If the classifier blocks, Claude receives the reason and tries an alternative. In most sessions the reason is the fixed text
 Blocked by classifier
 rather than a written explanation, in Claude Code v2.1.208 and later; see
@@ -1130,10 +1141,10 @@ ask
 rules
 rather than prompting. It also denies the built-in
 AskUserQuestion
-tool and connector tools
+tool even if your allow rules match it, and does the same to connector tools
 your organization set to
 ask
-, even if your allow rules match them. It denies MCP tools marked
+in sessions where that setting reaches Claude Code. It denies MCP tools marked
 _meta["anthropic/requiresUserInteraction"]
 the same way, because their approval card needs an answer this mode never collects; this requires Claude Code v2.1.199 or later.
 rm
@@ -1201,7 +1212,13 @@ claude
 bypassPermissions
 The
 --dangerously-skip-permissions
-flag is equivalent.
+flag is equivalent. Claude Code refuses
+bypassPermissions
+in a session you start with
+--restricted
+.
+--restricted
+requires Claude Code v2.1.248 or later.
 The first time you start an interactive session with this mode enabled, Claude Code shows a warning dialog asking you to accept responsibility for actions taken without permission checks. Claude Code saves your acceptance to user settings, so the dialog appears only once. If you decline, Claude Code exits. In
 non-interactive mode
 no dialog is shown, and a
@@ -1481,5 +1498,3 @@ flag
 Was this page helpful?
 Yes
 No
-⌘
-I

@@ -12,9 +12,6 @@ spinnerTipsEnabled
 is set to
 false
 .
-This feature requires Claude Code v2.1.152 or later. Older clients ignore the
-relevance
-field.
 This page is for marketplace operators and enterprise administrators. If you are looking to install plugins, see
 Discover and install plugins
 .
@@ -372,5 +369,3 @@ extraKnownMarketplaces
 Was this page helpful?
 Yes
 No
-⌘
-I

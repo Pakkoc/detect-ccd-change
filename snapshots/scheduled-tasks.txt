@@ -146,11 +146,11 @@ Let Claude choose the interval
 When you omit the interval, Claude chooses one dynamically instead of running on a fixed cron schedule. After each iteration it picks a delay between one minute and one hour based on what it observed: short waits while a build is finishing or a PR is active, longer waits when nothing is pending. The chosen delay and the reason for it are printed at the end of each iteration.
 The example below checks CI and review comments, with Claude waiting longer between iterations once the PR goes quiet:
 /loop check whether CI passed and address any review comments
-When you ask for a dynamic
+In a session where the
+Monitor tool is available
+, Claude may use it directly when you ask for a dynamic
 /loop
-schedule, Claude may use the
-Monitor tool
-directly. Monitor runs a background script and streams each output line back, which avoids polling altogether and is often more token-efficient and responsive than re-running a prompt on an interval.
+schedule. Monitor runs a background script and streams each output line back, which avoids polling altogether and is often more token-efficient and responsive than re-running a prompt on an interval.
 A dynamically scheduled loop appears in your
 scheduled task list
 like any other task, so you can list or cancel it the same way. The
@@ -158,15 +158,13 @@ jitter rules
 don’t apply to it, but the
 seven-day expiry
 does.
-On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry,
-/loop
-behaves differently in two ways: a prompt with no interval runs on a fixed 10-minute schedule instead of a schedule Claude chooses, and
-/loop
-with no prompt prints the usage message instead of running the maintenance prompt or reading
-loop.md
-. The same happens when you turn off
+Dynamically chosen intervals and the
+built-in maintenance prompt
+work on every provider, and with
 feature-flag fetching
-.
+turned off. On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, and Microsoft Foundry, or with fetching turned off, both require Claude Code v2.1.248 or later. In those cases, on earlier versions, a prompt with no interval runs on a fixed 10-minute schedule, and a
+/loop
+with no prompt prints the usage message.
 ​
 Run the built-in maintenance prompt
 When you omit the prompt, Claude uses a built-in maintenance prompt instead of one you supply. On each iteration it works through the following, in order:
@@ -186,13 +184,13 @@ Customize the default prompt with loop.md
 .
 ​
 Customize the default prompt with loop.md
-Where the
-built-in maintenance prompt is available
-, a
+Create a
 loop.md
-file replaces it with your own instructions. It defines a single default prompt for bare
+file to replace the
+built-in maintenance prompt
+with your own instructions. It defines a single default prompt for bare
 /loop
-, not a list of separate scheduled tasks, and is ignored whenever you supply a prompt on the command line. To schedule additional prompts alongside it, use
+, not a list of separate scheduled tasks, and Claude Code ignores it whenever you supply a prompt on the command line. To schedule additional prompts alongside it, use
 /loop <prompt>
 or
 ask Claude directly
@@ -222,6 +220,7 @@ exists in either location, the loop falls back to the built-in maintenance promp
 ​
 Stop a loop
 To stop a
+self-paced
 /loop
 while it is waiting for the next iteration, press
 Esc
@@ -238,7 +237,9 @@ tool
 with
 stop: true
 , which cancels the pending wakeup immediately. If an iteration ends without either rescheduling or stopping, Claude Code schedules one fallback wakeup about 20 minutes later and ends the loop when that iteration doesn’t reschedule either.
-Loops on a fixed interval keep running until you stop them or
+Loops on a fixed interval keep running until you
+cancel them like any other scheduled task
+or
 seven days elapse
 .
 ​
@@ -370,9 +371,11 @@ claude --continue
 restores recurring tasks that have not
 expired
 and one-shot tasks whose scheduled time has not yet passed. Background Bash and monitor tasks are never restored on resume.
-Claude Code stores the scheduled task list in the project’s
+With
+feature-flag fetching off
+, Claude Code stores a task you asked to keep across sessions in the project’s
 .claude
-directory, and scheduling a task fails with an error when that directory, or the task file inside it, is a symlink.
+directory. When that directory or the task file in it is a symlink, Claude Code returns an error instead of scheduling the task.
 For cron-driven automation that needs to run unattended:
 Routines
 : run in the cloud on a schedule, via API call, or on GitHub events
@@ -385,5 +388,3 @@ Desktop scheduled tasks
 Was this page helpful?
 Yes
 No
-⌘
-I
