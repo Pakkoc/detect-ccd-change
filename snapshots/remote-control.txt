@@ -26,7 +26,7 @@ Send images and files from your phone or browser
 @
 file references.
 Survive interruptions
-: if your laptop sleeps or your network drops, Claude Code reconnects automatically when your machine comes back online. Claude Code queues status updates from subagents and workflows while the connection is rebuilding and delivers them once it recovers.
+: if your laptop sleeps or your network drops, Claude Code reconnects automatically when your machine comes back online. While the connection is rebuilding, Claude Code queues messages, permission prompts, and status updates from subagents and workflows, and delivers them once the connection recovers.
 Unlike
 Claude Code on the web
 , which runs on cloud infrastructure, Remote Control sessions run directly on your machine and interact with your local filesystem. The web and mobile interfaces are a window into that local session.
@@ -166,6 +166,18 @@ mode this session stays in the current directory while on-demand sessions get is
 to start with none, Claude Code archives the server’s sessions when you stop it, so there’s nothing to
 resume
 .
+--permission-mode <mode>
+Set the starting
+permission mode
+for the server’s sessions, such as
+acceptEdits
+. Accepts
+manual
+as an alias for
+default
+; an unrecognized mode stops the server at startup and lists the valid modes.
+--debug-file <path>
+Write debug logs to the given file.
 --verbose
 Show detailed connection and session logs.
 --sandbox
@@ -174,6 +186,26 @@ Show detailed connection and session logs.
 Enable or disable
 sandboxing
 for filesystem and network isolation. Off by default.
+Give these flags after
+remote-control
+.
+If you pass a global
+claude
+flag before
+remote-control
+, or a wrapper script adds one, Claude Code doesn’t carry the flag over to the sessions the server creates. Claude Code lets the flag through only when dropping it is known not to change what those sessions can do, such as
+--verbose
+or
+--model
+. For any other flag, such as
+--settings
+, Claude Code
+refuses to start
+and names the flag to remove. Before v2.1.248, any option before
+remote-control
+made Claude Code reject the flags after it with an
+unknown option
+error.
 Claude Code checks Remote Control eligibility before printing help, so
 claude remote-control --help
 returns an error instead of this flag list when you aren’t signed in with an eligible account.
@@ -217,12 +249,11 @@ in the prompt box, or open the command menu with
 /
 and select it.
 /remote-control
-A banner appears above the prompt box showing connection status. Once connected, click
+While Remote Control is on, Claude Code shows a
+Remote Control
+indicator in the prompt box footer. Once the session connects, click the indicator to go directly to the session, or find it in the session list at
 claude.ai/code
-in the banner to go directly to the session, or find it in the session list at
-claude.ai/code
-. Claude Code also posts the session URL in the conversation.
-To disconnect, click the close icon on the banner or run
+. Claude Code also posts the session URL in the conversation. To disconnect, run
 /remote-control
 again.
 Unlike the CLI, the VS Code command does not accept a name argument or display a QR code. The session title is derived from your conversation history or first prompt.
@@ -353,6 +384,10 @@ Control inbound messages
 covers the inbound controls. Requires Claude Code v2.1.224 or later.
 Prompts you send mid-turn
 : when you send a prompt from a connected device before the current turn ends, Claude Code queues it and keeps it in the device’s transcript after that turn finishes.
+Diff of your changes
+: when the session’s directory is in a git repository, a connected device’s diff pane shows the diff of your uncommitted changes. The device requests the diff over the connection, and Claude Code computes it on your machine. When your working tree is clean, Claude Code instead serves your branch’s changes since it diverged from the default branch. Before v2.1.247, Claude Code reported the diff to connected devices only in sessions served by
+claude remote-control
+.
 Model
 : when you pick a
 model
@@ -478,9 +513,12 @@ or
 claude --continue
 or
 claude --resume
-; whether Claude Code reconnects, and to which session, depends on the conversation’s
+. Whether Claude Code reconnects, and to which session, depends on the conversation’s
 reconnection record
-. If you resume the conversation in a second terminal while the first one still has Remote Control on, Claude Code prints a notice in the second terminal and leaves Remote Control off there instead of taking the session away from the first. Run
+.
+If you resume the conversation in a second terminal while the first one still has Remote Control on, Claude Code prints a notice in the second terminal and leaves Remote Control off there instead of taking the session away from the first. While Remote Control stays off there, Claude in that terminal doesn’t see
+your sessions on other machines
+, and they can’t reach it. Run
 /remote-control
 in the second terminal to move Remote Control to it.
 When you resume a conversation in Claude Desktop or an IDE extension that had Remote Control on, Claude Code reattaches it to the existing claude.ai session instead of adding a new one to the session list.

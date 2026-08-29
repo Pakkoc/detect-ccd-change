@@ -1557,7 +1557,7 @@ deployment hosted on Anthropic
 Session search limit
 A session can make at most 200 WebSearch calls, counted across the main conversation and every
 subagent
-it spawns, so searches made by parallel research fan-outs count against the same limit. The limit requires Claude Code v2.1.212 or later. When Claude reaches the limit, further calls return a notice telling Claude to continue with the information it already gathered, rather than an error that would invite a retry. You don’t see the notice: a capped call appears in the conversation as a search that did nothing, and if Claude genuinely needs more searches, the notice tells it to ask you to raise the limit.
+it spawns, so searches made by parallel research fan-outs count against the same limit. The limit requires Claude Code v2.1.212 or later. When Claude reaches the limit, further calls return a notice telling Claude to continue with the information it already gathered, rather than an error that would invite a retry. You don’t see the notice: a capped call appears in the conversation as a search that did nothing, and if Claude needs more searches, the notice tells it to ask you to raise the limit.
 Set the
 CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION
 environment variable to change the cap; it accepts a positive whole number, so the cap can be raised but not turned off. Running

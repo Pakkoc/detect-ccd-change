@@ -165,7 +165,7 @@ of
 query
 ({
 prompt:
-"Optimize my React app performance and track progress with todos"
+"Create a static website with a home page, an about page, and a shared stylesheet, and track progress with todos"
 ,
 // Keeps the Task tools on models where Claude Code otherwise doesn't provide them.
 options:
@@ -363,7 +363,7 @@ in
 query(
 prompt
 =
-"Optimize my React app performance and track progress with todos"
+"Create a static website with a home page, an about page, and a shared stylesheet, and track progress with todos"
 ,
 # Keeps the Task tools on models where Claude Code otherwise doesn't provide them.
 options

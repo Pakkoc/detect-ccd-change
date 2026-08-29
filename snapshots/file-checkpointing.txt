@@ -636,9 +636,11 @@ d
 >
 The
 --rewind-files
-flag does not appear in
+flag doesn’t appear in
 claude --help
-output, but the CLI accepts it as shown.
+output, but the CLI accepts it as shown. When the rewind succeeds, the command prints
+Files rewound to state at message <checkpoint-uuid>
+and exits without sending a prompt.
 ​
 Common patterns
 These patterns show different ways to capture and use checkpoint UUIDs depending on your use case.

@@ -323,6 +323,25 @@ output_config
 Extra inputs are not permitted
 , on Amazon Bedrock and Google Cloud’s Agent Platform upstreams
 Forward the field and its headers together
+Prompt caching
+No beta pairing. Claude Code attaches
+cache_control
+markers to
+system
+blocks and to
+messages
+entries, including
+role: "system"
+entries appended mid-conversation
+No error: the conversation bills as uncached input on every turn, visible as high
+input_tokens
+with little or no cache activity in
+usage
+Forward
+cache_control
+unchanged wherever it appears, and don’t convert block-form
+system
+or message content to plain strings
 Token counting
 No beta pairing; uses the
 count_tokens
@@ -345,11 +364,13 @@ ANTHROPIC_BASE_URL
 gateway.
 ​
 Automatic retry and error forwarding
-Claude Code retries automatically after some upstream rejections and disables the rejected capability for the rest of the conversation. Rejections of the
+When the upstream rejects the
 thinking
-field, of
-thinking signatures
-, and of mid-conversation system messages all recover this way. Context management and tool schema field rejections don’t retry; those
+field, a
+thinking signature
+, a mid-conversation system message, or the
+cache_control
+marker on one of those messages, Claude Code retries the request and disables the rejected capability for the rest of the conversation. Claude Code doesn’t retry context management or tool schema field rejections; those
 400
 errors reach the developer.
 The retry logic matches on the upstream’s error wording, so forward error response bodies unmodified. A gateway that wraps upstream errors in its own envelope breaks the recovery path, even when it preserves the status code, unless the envelope’s message carries a stable
@@ -422,21 +443,31 @@ http
 to
 https
 , fails discovery silently; serve the endpoint directly at the configured base URL.
-The discovery request sends exactly one credential header:
+Claude Code sends the discovery request with both credential headers below and omits a header whose value doesn’t resolve. Sending both headers requires Claude Code v2.1.248 or later. Earlier versions send only
+Authorization
+when
 ANTHROPIC_AUTH_TOKEN
-as a bearer token, when set
-Otherwise the resolved API key, including an
+is set and only
+x-api-key
+otherwise.
+Authorization
+:
+ANTHROPIC_AUTH_TOKEN
+as a bearer token, otherwise the
 apiKeyHelper
-value, in the
+value as a bearer token. In that case Claude Code waits for the helper to return before sending the request.
 x-api-key
-header
-This differs from inference requests, which send a helper value in both headers. A gateway that authenticates
-/v1/models
-must accept
-x-api-key
-for helper deployments. Any headers from
+: the API key Claude Code resolved, such as
+ANTHROPIC_API_KEY
+. When a helper value is the only credential, this header carries it too, so the value arrives in both headers.
+Claude Code also sends any headers from
 ANTHROPIC_CUSTOM_HEADERS
-are included as well.
+.
+When neither credential header’s value resolves, Claude Code skips discovery and writes a
+[gatewayDiscovery] skipped
+line to the debug log of a
+claude --debug
+session.
 Claude Code reads
 id
 and the optional

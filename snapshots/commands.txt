@@ -273,30 +273,36 @@ Move the session to another directory
 Configure
 Claude in Chrome
 settings
-/claude-api [migrate|upgrade|managed-agents-onboard|prompt-audit]
+/claude-api [migrate|upgrade|managed-agents-onboard|prompt-audit|cost-optimize]
 Skill
 .
 Load
 Claude API
-and Managed Agents reference material for your project’s language. Also activates automatically when your code imports
+and
+Managed Agents
+reference material for your project’s language. Also activates automatically when your code imports
 anthropic
 or
 @anthropic-ai/sdk
 . Run
 migrate
-to update existing Claude API code to a newer model;
+to update existing Claude API code to a newer model. Run
 upgrade
 to move your project’s Anthropic SDK dependency across a major version, currently the Python
 anthropic
-package from 0.x to 1.x;
+package from 0.x to 1.x. Run
 managed-agents-onboard
-for a walkthrough that creates a new Managed Agent; or
+for a walkthrough that creates a new Managed Agent. Run
 prompt-audit
-to flag instructions written for older models in your prompts, skills, and tool descriptions and propose fixes as a diff. The
+to flag instructions written for older models in your prompts, skills, and tool descriptions and propose fixes as a diff. Run
+cost-optimize
+to profile where your project’s Claude API spend goes and propose savings from options such as prompt caching, trimming unneeded input and output tokens, batch processing, effort, and model choice, one change at a time. The
 prompt-audit
-subcommand requires Claude Code v2.1.221 or later, and
+subcommand requires Claude Code v2.1.221 or later,
 upgrade
-requires v2.1.236 or later
+requires v2.1.236 or later, and
+cost-optimize
+requires v2.1.247 or later
 /clear [name]
 Start a new conversation with empty context. Pass a name to label the previous conversation in the
 /resume
@@ -500,7 +506,13 @@ and
 ultracode
 are session-only; the
 ultracode
-key persists. Works in
+key persists. Run it while Claude is responding and, once you confirm the
+cache warning
+, if Claude Code shows one, Claude Code applies the new level to the next request in that turn. Before v2.1.242, Claude Code decided from a feature flag it fetched from Anthropic whether to run the command mid-turn or queue it until the turn finished, and always queued it in a session that doesn’t
+fetch feature flags
+, such as on a
+third-party provider
+. Works in
 -p
 outside the
 effort hold
@@ -514,7 +526,9 @@ Export the current conversation as plain text. With a filename, writes directly 
 /fast [on|off]
 Toggle
 fast mode
-on or off. Availability in non-interactive mode with
+on or off. Run it while Claude is responding and Claude Code toggles fast mode without waiting for the turn to end, though the running turn finishes at its original speed. Before v2.1.242, Claude Code decided from a feature flag it fetched from Anthropic whether to run the command mid-turn or queue it until the turn finished, and always queued it in a session that doesn’t
+fetch feature flags
+. Availability in non-interactive mode with
 -p
 is limited; see
 Toggle fast mode
@@ -697,7 +711,11 @@ adjust effort level
 s
 on a row to switch for the current session only. See
 when Claude Code asks you to confirm the switch
-. Once confirmed, the change applies without waiting for the current response to finish. Also available in non-interactive mode (
+. Once you confirm the switch, if Claude Code asks, Claude Code applies the change without waiting for the current response to finish. Before v2.1.242, Claude Code decided from a feature flag it fetched from Anthropic whether to run the command mid-turn or queue it until the turn finished, and always queued it in a session that doesn’t
+fetch feature flags
+, such as on a
+third-party provider
+. Also available in non-interactive mode (
 -p
 ) with a model argument instead of the picker, where it applies to the current session only and isn’t saved as your default; requires Claude Code v2.1.205 or later
 /passes
@@ -738,7 +756,7 @@ CLI
 /privacy-settings
 View and update your privacy settings. Only available for Pro and Max plan subscribers
 /radio
-Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available. Not available on Amazon Bedrock, Google Cloud’s Agent Platform, Microsoft Foundry, or Claude Platform on AWS
+Open Claude FM lo-fi radio in your browser. Prints the stream URL when no browser is available
 /rate-limit-options
 Show ways to keep working when a claude.ai usage limit blocks a request: wait and
 continue automatically when the limit resets
@@ -872,13 +890,9 @@ Skill
 .
 Review the changed code for cleanup opportunities and apply the fixes. Four review
 agents
-run in parallel, covering reuse of existing helpers, simplification, efficiency, and whether the change is at the right level of abstraction. From v2.1.154, the review doesn’t look for correctness bugs. Use
+run in parallel, covering reuse of existing helpers, simplification, efficiency, and whether the change is at the right level of abstraction. The review doesn’t look for correctness bugs. Use
 /code-review
-to find bugs. On earlier versions,
-/simplify
-is equivalent to
-/code-review --fix
-. Pass a path or PR reference to review a specific target
+to find bugs. Pass a path or PR reference to review a specific target
 /skills
 List available
 skills
@@ -1024,6 +1038,14 @@ Claude Code on the web
 using your local
 gh
 CLI credentials
+/workflow-authoring
+Skill
+.
+Load the reference for writing
+dynamic workflow
+scripts: the script API, resume behavior, quality patterns, and worked examples. Claude normally loads it on its own before writing a script; run it yourself before
+editing a saved script by hand
+. Available when dynamic workflows are enabled, and requires Claude Code v2.1.248 or later
 /workflows
 Open the
 workflow
@@ -1078,9 +1100,7 @@ Hidden commands
 , out of the menu by design. A partial name never brings a hidden command into the menu: if the partial matches nothing visible, Claude Code shows the same no-match message. Claude Code lists the command only once you’ve typed its full name, and submitting the full name runs it.
 ​
 MCP prompts
-MCP servers can expose prompts that appear as commands. These use the format
-/mcp__<server>__<prompt>
-and are dynamically discovered from connected servers. See
+MCP servers can expose prompts that appear as commands. See
 MCP prompts
 for details.
 ​

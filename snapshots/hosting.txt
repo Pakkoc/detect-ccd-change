@@ -7,9 +7,6 @@ hosting cookbook
 If you do not need infrastructure control, custom isolation, or your own data plane, consider
 Managed Agents
 instead: a hosted REST API where Anthropic runs the agent and the sandbox, so your application sends events and streams back results with no hosting infrastructure to operate.
-For security hardening beyond basic sandboxing, including network controls, credential management, and isolation options, see
-Secure Deployment
-.
 ​
 The subprocess model
 Every hosting decision on this page follows from how the SDK runs the agent. When your code calls
@@ -281,11 +278,6 @@ session_store,
 ):
 ...
 asyncio.run(main())
-See
-Session storage
-for the full
-SessionStore
-interface and reference adapters.
 ​
 Multi-agent container
 Run multiple SDK subprocesses inside one container. Best for agents that must collaborate closely, for example multi-agent simulations where the agents interact with each other in a shared environment.
@@ -610,9 +602,6 @@ env
 ):
 ...
 asyncio.run(main())
-For per-tenant network controls, see
-Secure Deployment
-.
 ​
 Known limitations
 Plan around these in your deployment design.
@@ -642,6 +631,25 @@ CLAUDE_ASYNC_AGENT_STALL_TIMEOUT_MS
 sets a stall watchdog that fires when a
 run_in_background
 subagent stops producing output; it is not a total-runtime deadline.
+​
+Troubleshoot deployment failures
+Use this section when an agent that works on your machine fails in a deployed service. Each item below names a failure and links the entry that covers it:
+CLI not found at service start
+: in Python, a container or service manager runs your application with a different
+PATH
+than your shell, so an install that works locally isn’t visible to the process. In TypeScript, the image build skipped the SDK’s optional dependencies, or
+pathToClaudeCodeExecutable
+points at a file that doesn’t exist in the image. See
+Claude Code not found
+.
+CLI present in the image but won’t launch
+: Claude Code can’t start from a binary that doesn’t match the container’s architecture or libc, or from a file that lost its execute permission in the image build. See
+Failed to start Claude Code
+.
+Claude Code process exits mid-run
+: the error your application receives depends on the SDK language and on whether the CLI reported an error result first. The entries under
+CLI process exit
+cover each message.
 ​
 Next steps
 Hosting cookbook

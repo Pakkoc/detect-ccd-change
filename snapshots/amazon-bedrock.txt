@@ -43,7 +43,7 @@ hides the command from the command menu
 Follow the wizard prompts
 Choose how you authenticate to AWS: an AWS profile detected from your
 ~/.aws
-directory, an Amazon Bedrock API key, an access key and secret, or credentials already in your environment. The wizard picks up your region, verifies which Claude models your account can invoke, and lets you pin them. It saves the result to the
+directory, an Amazon Bedrock API key, an access key and secret, or credentials already in your environment. The wizard asks for your region, verifies which Claude models your account can invoke, and lets you pin them. It saves the result to the
 env
 block of your
 user settings file
@@ -640,7 +640,7 @@ on Amazon Bedrock. Sonnet 5 always runs with the 1M window on both the Invoke AP
 Mantle endpoint
 , with no
 [1m]
-variant to select. For the other models, Claude Code automatically enables the extended context window when you select a 1M model variant.
+variant to select. For the other models on the Invoke API, Claude Code automatically enables the extended context window when you select a 1M model variant.
 The
 setup wizard
 offers a 1M context option when it pins models. To enable it for a manually pinned model instead, append

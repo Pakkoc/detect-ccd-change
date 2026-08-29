@@ -60,13 +60,15 @@ Authentication
 panel until the login completes.
 With
 awsAuthRefresh
-configured,
+configured, run
 /login
-shows a
+, select
+3rd-party platform
+, then select
 Claude Platform on AWS · refresh credentials
-option under
+under
 Using 3rd-party platforms
-. Selecting it runs the configured command and re-reads your AWS credentials without restarting Claude Code.
+. Claude Code runs the configured command and re-reads your AWS credentials without a restart. This option requires Claude Code v2.1.186 or later.
 Option B: Workspace API key
 A workspace API key is a long-lived secret, useful when you don’t want to manage federated AWS credentials. Generate one in the AWS Console under
 Claude Platform on AWS → API keys

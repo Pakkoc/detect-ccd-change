@@ -55,9 +55,16 @@ To verify a setup that exports metrics, check your backend for the
 claude_code.session.count
 metric, which Claude Code emits when a session starts. To verify a logs-only setup, submit a prompt and check for the
 claude_code.user_prompt
-event. If nothing arrives, run
+event.
+If nothing arrives, run
 claude --debug
-and check the debug log for OTel export errors.
+and check the debug log. Claude Code reports failures from the exporters you configure as
+[3P telemetry]
+errors, where 3P means third-party. Lines prefixed
+[Anthropic telemetry]
+describe
+Anthropic’s separate operational telemetry
+and don’t indicate a problem with your setup.
 For full configuration options, see the
 OpenTelemetry specification
 .
@@ -3299,7 +3306,7 @@ api_request
 event exists after the error.
 ​
 Event analysis
-The event data provides detailed insights into Claude Code interactions:
+The event data describes each Claude Code interaction in detail:
 Tool usage patterns
 : analyze tool result events to identify:
 Most frequently used tools
@@ -3533,7 +3540,9 @@ To confirm events arrive, submit a prompt in a session running under this config
 claude_code.user_prompt
 event. If nothing arrives, run
 claude --debug
-and check the debug log for OTel export errors.
+and check the debug log for
+[3P telemetry]
+export errors.
 ​
 Backend considerations
 Your choice of metrics, logs, and traces backends determines the types of analyses you can perform:

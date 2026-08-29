@@ -496,7 +496,7 @@ to install the plugin disabled until the user opts in. Takes precedence over the
 plugin.json
 . See
 Default enablement
-. Requires Claude Code v2.1.154 or later.
+.
 Component configuration fields:
 Field
 Type
@@ -1641,7 +1641,12 @@ Key things to notice:
 commands
 and
 agents
-: you can specify multiple directories or individual files. Paths are relative to the plugin root.
+: you can specify multiple directories or individual files. Paths are relative to the plugin root and must stay inside it.
+Claude Code rejects a path that resolves outside the plugin directory, such as
+./../shared.md
+, with a
+path escapes plugin directory
+error, and still loads the plugin without that component
 ${CLAUDE_PLUGIN_ROOT}
 : use this variable in hook commands and MCP server configs to reference files within the plugin’s installation directory.
 See the

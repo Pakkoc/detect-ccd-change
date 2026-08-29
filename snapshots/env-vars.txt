@@ -661,7 +661,7 @@ to render immediately. Claude Code caps the hold at
 CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR
 Return to the original working directory after each Bash or PowerShell command in the main session
 CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS
-Timeout in milliseconds for the byte-level streaming idle watchdog only; when set, it takes precedence over
+Timeout in milliseconds for the byte-level streaming idle watchdog; when set, it takes precedence over
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 for that watchdog and leaves the event-level watchdog unchanged. Claude Code clamps this variable to between 10 seconds and 30 minutes. Requires Claude Code v2.1.210 or later
 CLAUDE_CLIENT_PRESENCE_FILE
@@ -869,7 +869,8 @@ Passphrase for encrypted CLAUDE_CODE_CLIENT_KEY (optional)
 CLAUDE_CODE_CONNECT_TIMEOUT_MS
 Removed in v2.1.186 and now a no-op. Previously set a separate timeout for the connect, TLS, and response-header phase of a streaming API request. Use
 API_TIMEOUT_MS
-for the per-request timeout
+for the per-request timeout. For the response-header phase of a streaming request, see
+CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS
 CLAUDE_CODE_DEBUG_LOGS_DIR
 Override the debug log file path. Despite the name, this is a file path, not a directory. Requires debug mode to be enabled separately via
 --debug
@@ -2442,9 +2443,9 @@ or with
 /background
 . Claude Code asks you to confirm before backgrounding, then stops the tasks that would otherwise carry over. Requires Claude Code v2.1.195 or later
 CLAUDE_EFFORT
-Set automatically in Bash tool subprocesses and hook commands to the active
+Set automatically in Bash tool subprocesses and hook commands to the
 effort level
-for the turn:
+in effect when the subprocess starts:
 low
 ,
 medium
@@ -2466,7 +2467,11 @@ Set to
 1
 to force-enable the byte-level streaming idle watchdog, or set to
 0
-to force-disable it. When unset, the watchdog is enabled by default for direct Anthropic API and
+to force-disable it.
+0
+also turns off the
+first-byte deadline
+on the connections where that deadline runs. When unset, the watchdog is enabled by default for direct Anthropic API and
 Claude Platform on AWS
 connections, and for streaming responses on
 gateway
@@ -2481,7 +2486,9 @@ Set to
 1
 to enable the byte-level streaming idle watchdog on Amazon Bedrock
 vnd.amazon.eventstream
-responses. Off by default. Configure the timeout with
+responses, which also enables the
+first-byte deadline
+on Bedrock streaming requests. Off by default. Configure the timeout with
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 CLAUDE_ENABLE_STREAM_WATCHDOG
 Set to
@@ -2516,6 +2523,12 @@ myhost-graceful-unicorn
 . The
 --remote-control-session-name-prefix
 CLI flag sets the same value for a single invocation
+CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS
+Deadline in milliseconds for the first response byte of a streaming request, on the connections where the
+first-byte deadline
+runs. For how Claude Code clamps it, the extra time it adds for large request bodies, and how it picks the deadline when you leave this unset, see
+No response from API
+. Requires Claude Code v2.1.242 or later
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 Timeout in milliseconds before the event- and byte-level streaming idle watchdogs close a stalled connection. When you set this variable explicitly, the minimum is
 300000
@@ -2883,7 +2896,11 @@ third-party providers
 0
 omits the
 thinking
-parameter instead. Nonzero values are ignored on adaptive reasoning models unless
+parameter instead. With thinking turned off on the Anthropic API, Claude Code sends effort
+high
+instead of a higher level to models it knows
+don’t accept that combination
+, such as Opus 5. Nonzero values are ignored on adaptive reasoning models unless
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 is set
 MCP_CLIENT_SECRET
@@ -3139,7 +3156,8 @@ Monitoring
 for configuration details.
 ​
 Features that need feature-flag fetching
-Claude Code turns some features on through feature flags it fetches from Anthropic. You turn flag fetching off for a session by setting
+Claude Code turns some features on through feature flags it fetches from Anthropic. Claude Code skips that fetch in these sessions:
+A session where you set
 DISABLE_GROWTHBOOK
 ,
 DISABLE_TELEMETRY
@@ -3147,14 +3165,17 @@ DISABLE_TELEMETRY
 DO_NOT_TRACK
 , or
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
-. Each variable’s row says which values do that.
-Claude Code also leaves fetching off when you connect through a
-Claude apps gateway
-, and on machines where a managed settings file, MDM profile, or policy helper requires gateway sign-in with
-forceLoginMethod: "gateway"
-, even before anyone signs in. On Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, Claude Code leaves fetching off unless a host platform that embeds Claude Code sets
+; each variable’s row in the
+variables table
+says which values turn fetching off
+A session on a
+third-party provider
+, such as Amazon Bedrock, Claude Platform on AWS, Google Cloud’s Agent Platform, or Microsoft Foundry, unless a host platform that embeds Claude Code sets
 CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
-. With fetching off, you can’t:
+A
+Claude apps gateway
+session
+With fetching off, you can’t:
 Start sessions in auto mode by default
 on Pro, Max, and Team plans
 Have the VS Code extension

@@ -14,9 +14,6 @@ settingSources: []
 config are read regardless of this option. See
 What settingSources does not control
 .
-For a conceptual overview of what each feature does and when to use it, see
-Extend Claude Code
-.
 ​
 Control filesystem settings with settingSources
 The setting sources option (

@@ -322,7 +322,7 @@ Enabling
 Accept connections from all network interfaces
 makes the IDE MCP port reachable from your local network. Connections still require the auth token from the lock file, but because the transport is unencrypted
 ws://
-, both the session traffic and that token cross the network in cleartext when the setting is on. Only turn it on when loopback genuinely cannot work. For WSL2, prefer
+, both the session traffic and that token cross the network in cleartext when the setting is on. Only turn it on when loopback can’t work. For WSL2, prefer
 mirrored networking
 so the Windows loopback interface is shared with the Linux VM and the socket can stay on loopback.
 Was this page helpful?

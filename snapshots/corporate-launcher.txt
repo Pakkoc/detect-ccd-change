@@ -29,9 +29,9 @@ and background sessions start on demand.
 The terminal host and the Claude Code session inside every agent view row, including the warm standby sessions the service keeps ready.
 Sessions the service respawns after an update or a crash.
 The relaunch Claude Code performs of itself to finish installing an update, including agent view’s restart-for-update action.
-The
+The session processes that
 Remote Control
-worker processes the background service manages. Requires Claude Code v2.1.210 or later.
+starts. Requires Claude Code v2.1.210 or later.
 The split-pane teammate sessions that
 agent teams
 start in tmux or iTerm2. Teammate panes are interactive rather than background processes, but Claude Code starts them from its own binary, so the launcher covers them. Requires Claude Code v2.1.210 or later.
@@ -221,7 +221,6 @@ Reach
 exec
 within about three seconds each time the launcher runs.
 A cold background dispatch runs the launcher twice in series before the first byte of output, so do slow work such as a single sign-on exchange lazily or from a cache.
-A launcher that runs far past the budget is treated as a stalled start and restarted.
 Tolerate being invoked from inside itself.
 Claude Code applies the launcher to every nested self-spawn, so a launcher that acquires an exclusive resource must detect that it already holds it.
 Don’t write to the terminal before Claude Code starts.

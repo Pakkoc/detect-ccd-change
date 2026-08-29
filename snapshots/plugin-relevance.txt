@@ -37,10 +37,10 @@ Session-start suggestion
 cwd
 signal matches the working directory, a one-line
 plugin suggestion: <name>@<marketplace> · /plugin
-notification appears before the first turn. This surface requires Claude Code v2.1.153 or later.
+notification appears before the first turn.
 /plugin
 Discover tab
-: the plugin is pinned to the top of the Discover list with an annotation such as “suggested for this directory” or “suggested for stripe commands”. This surface requires Claude Code v2.1.154 or later.
+: the plugin is pinned to the top of the Discover list with an annotation such as “suggested for this directory” or “suggested for stripe commands”.
 The spinner tip and the session-start notification are part of the spinner-tips system. Claude Code disables both when
 spinnerTipsEnabled
 resolves to

@@ -9,10 +9,13 @@ tool). Both trigger your
 canUseTool
 callback, which pauses execution until you return a response. This is different from normal conversation turns where Claude finishes and waits for your next message.
 For clarifying questions, Claude generates the questions and options. Your role is to present them to users and return their selections. You can’t add your own questions to this flow; if you need to ask users something yourself, do that separately in your application logic.
-The callback can stay pending indefinitely. Execution remains paused until your callback returns, and the SDK only cancels the wait when the query itself is cancelled. If a user might take longer to respond than your process can reasonably stay running, return the
+The callback can stay pending indefinitely. Execution remains paused until your callback returns, and the SDK only cancels the wait when the query itself is cancelled. If a user might take longer to respond than your process can reasonably stay running, register a
+PreToolUse
+hook
+that returns the
 defer
-hook decision
-, which lets the process exit and resume later from the persisted session.
+decision
+instead of waiting in the callback, so the process can exit and resume later from the persisted session.
 This guide shows you how to detect each type of request and respond appropriately.
 ​
 Detect when Claude needs input
@@ -652,43 +655,6 @@ in Python. Before v2.1.207, Claude Code rejected an allow result that omitted
 updatedInput
 and denied the tool call with a validation error.
 When denying, provide a message explaining why. Claude sees this message and may adjust its approach.
-Python
-TypeScript
-from
-claude_agent_sdk.types
-import
-PermissionResultAllow, PermissionResultDeny
-# Allow the tool to execute
-return
-PermissionResultAllow(
-updated_input
-=
-input_data)
-# Block the tool
-return
-PermissionResultDeny(
-message
-=
-"User rejected this action"
-)
-// Allow the tool to execute
-return
-{
-behavior:
-"allow"
-,
-updatedInput:
-input
-};
-// Block the tool
-return
-{
-behavior:
-"deny"
-,
-message:
-"User rejected this action"
-};
 Beyond allowing or denying, you can modify the tool’s input or provide context that helps Claude adjust its approach:
 Approve
 : let the tool execute as Claude requested

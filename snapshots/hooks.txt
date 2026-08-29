@@ -1,11 +1,11 @@
 For a quickstart guide with examples, see
 Automate actions with hooks
 .
-Hooks are user-defined shell commands, HTTP endpoints, or LLM prompts that execute automatically at specific points in Claude Code’s lifecycle. Hooks run wherever Claude Code runs: sessions in the terminal, IDE extensions, the
+Hooks are user-defined shell commands, HTTP endpoints, MCP tool calls, LLM prompts, or subagents that execute automatically at specific points in Claude Code’s lifecycle. Claude Code fires the same hook events wherever it runs: sessions in the terminal, IDE extensions, the
 Desktop app
 , and
 Claude Code on the web
-all fire the same hook events. Use this reference to look up event schemas, configuration options, JSON input/output formats, and advanced features like async hooks, HTTP hooks, and MCP tool hooks.
+. Use this reference to look up event schemas, configuration options, JSON input/output formats, and advanced features like async hooks, HTTP hooks, and MCP tool hooks.
 ​
 Hook lifecycle
 Claude Code runs hooks at specific points during a session. When an event fires and a matcher matches, Claude Code passes JSON context about the event to your hook handler. For command hooks, input arrives on stdin. For HTTP hooks, it arrives as the POST request body. Your handler can then inspect the input, take action, and optionally return a decision.
@@ -1048,13 +1048,16 @@ type: "agent"
 Agent-based hooks
 .
 All matching hooks run in parallel. If you define the same handler in more than one settings file, it runs once. A plugin’s or skill’s copy of the same handler stays separate.
-Handlers run in the current directory with Claude Code’s environment. The
+Handlers run in the current directory with Claude Code’s environment. If the current directory no longer exists, for example a worktree or temp directory that another shell deleted mid-session, Claude Code runs command hooks from the first of these that still exists: the directory the session started in, the project root, your home directory, or the system temp directory. Claude Code records a warning naming the fallback directory in the
+debug log
+.
+The
 $CLAUDE_CODE_REMOTE
-environment variable is set to
+environment variable is
 "true"
-in remote web environments and not set in the local CLI. As of v2.1.199,
+in remote web environments and not set in the local CLI. Claude Code v2.1.199 and later sets
 $CLAUDE_CODE_BRIDGE_SESSION_ID
-is set to the
+to the
 Remote Control
 session ID while the local session has an active Remote Control connection.
 ​
@@ -1192,6 +1195,17 @@ echo $(date)
 no
 no subcommand matches
 rm *
+Bash(cat *)
+echo before $(date) after
+no
+a substitution can sit at any argument position, so the full command and
+date
+are both checked; neither matches
+cat *
+Bash(git *)
+$TOOL git push
+yes
+Claude Code can’t tell what the command name expands to, so it runs the hook
 Bash(git push *)
 echo $(date)
 yes
@@ -1199,7 +1213,7 @@ patterns that specify more than the command name run the hook anyway on
 $()
 , backticks, or
 $VAR
-The filter also fails open, running your hook regardless of pattern, when the Bash command can’t be parsed. Because the
+When Claude Code can’t determine which commands the Bash input runs, it runs your hook regardless of the pattern. Because the
 if
 filter is best-effort, use the
 permission system
@@ -1901,9 +1915,9 @@ section
 effort
 Object with a
 level
-field holding the active
+field holding the
 effort level
-for the turn:
+in effect when the hook runs:
 "low"
 ,
 "medium"
@@ -1913,7 +1927,11 @@ for the turn:
 "xhigh"
 , or
 "max"
-. If the requested model effort exceeds what the current model supports, this is the downgraded level the model actually used. Ultracode is not a distinct level and reports as
+. If you set a level the active model doesn’t support,
+level
+reports the level Claude Code ran instead;
+Adjust effort level
+says how it picks that level. Ultracode is not a distinct level and reports as
 "xhigh"
 . The object matches the
 status line
@@ -2053,10 +2071,19 @@ SessionStart
 , where Claude Code adds plain-text stdout as context that Claude can see and act on.
 Whether Claude Code reads your stdout as
 JSON output
-or as plain text depends on its first character, ignoring leading whitespace:
+or as plain text depends on how it starts and ends, ignoring surrounding whitespace:
 Starts with
 {
-: Claude Code parses it as JSON. If it isn’t valid JSON, Claude Code treats it as plain text.
+and ends with
+}
+: Claude Code parses it as JSON. When the output is two or more lines that each parse as JSON on their own, and no line is a
+JSON output
+object that sets a field, Claude Code treats the whole output as plain text. When one of those lines does set a field, the whole output is a parse failure, described below.
+Starts with
+{
+but doesn’t end with
+}
+: Claude Code treats it as plain text.
 Starts with anything else
 : Claude Code treats it as plain text, a JSON array or a quoted JSON string included.
 For events that use the standard decision model, exit 0 with a parsed object that fails schema validation is a non-blocking error: the action proceeds, and the transcript shows a
@@ -2064,6 +2091,9 @@ For events that use the standard decision model, exit 0 with a parsed object tha
 notice with the validation message. The same happens on any exit code other than 2, while
 exit 2 still blocks
 .
+For events that use the standard decision model, when Claude Code tries to parse your stdout as JSON and can’t, it reports a non-blocking error on every exit code other than 2. The transcript shows a
+<hook name> hook error
+notice with the parse message. On the events that add plain-text stdout as context, Claude Code doesn’t add the text. Before v2.1.248, Claude Code treated that stdout as plain text.
 Stderr from a hook that exits 0 goes to the debug log only, never the transcript, and Claude never sees it. To read it yourself, enable
 debug logging
 . To surface a warning to Claude from a
@@ -2165,6 +2195,9 @@ on exit 0
 : the action proceeds, and the
 <hook name> hook error
 notice carries the validation message.
+With stdout that Claude Code
+tries to parse as JSON
+and can’t, Claude Code reports the same non-blocking error as on exit 0 for events that use the standard decision model. The action proceeds, and the notice carries the parse message.
 With stdout that Claude Code
 treats as plain text
 , or with empty stdout, it’s a non-blocking error for most hook events: the action proceeds, and the transcript shows a

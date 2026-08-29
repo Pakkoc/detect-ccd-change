@@ -77,10 +77,12 @@ selector
 . An
 organization default
 set by an Owner fills the selection when you haven’t picked one.
-From the CLI, sessions use your
+From the CLI, Claude Code uses your
 /remote-env
 pick
-, or fall back to your first available cloud environment. For a
+, or falls back to the Anthropic-hosted environment when your list has one, and otherwise to the first environment in your list that isn’t a bridge environment, an entry
+Remote Control
+registers to represent your own machine rather than a cloud environment. For a
 self-hosted environment
 , passing
 --environment <environment-id>
@@ -88,9 +90,11 @@ with its
 ccpool_
 ID
 when you dispatch a session
-overrides both for that invocation. The flag rejects Anthropic-hosted
+overrides the
+/remote-env
+pick and the fallback for that invocation. Claude Code rejects Anthropic-hosted
 env_
-IDs, so use
+IDs passed to the flag, so use
 /remote-env
 to target those. The flag requires Claude Code v2.1.224 or later.
 Configure an environment when the default isn’t enough: when Claude needs to reach domains outside the
@@ -175,9 +179,11 @@ The environment disappears from the selector and from
 , so you can’t pick it for new sessions.
 No new session can start in an archived environment, on any surface. If the environment was your saved
 CLI default
-, CLI cloud sessions fall back to your first available cloud environment. Anything configured with the environment explicitly, such as a
+, Claude Code starts CLI cloud sessions in the Anthropic-hosted environment when your list has one, and otherwise in the first environment in your list that isn’t a
+Remote Control bridge environment
+. Anything configured with the environment explicitly, such as a
 routine
-, can’t start new sessions in it; point it at another environment.
+, can’t start new sessions in it. Point it at another environment.
 ​
 Organization-shared environments
 On Team and Enterprise plans, an Owner can create cloud environments that are shared with every member of the organization. The same role manages everything else on the

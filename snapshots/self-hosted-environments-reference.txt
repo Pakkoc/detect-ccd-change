@@ -75,6 +75,14 @@ owner
 . Use the same value on every runner in an environment; see
 Keep the base directory and capacity identical across runners
 .
+--client-label <label>
+SELF_HOSTED_RUNNER_CLIENT_LABEL
+the host’s hostname
+Label the runner sends when it registers. The runner also reports it as the
+client_label
+label of
+claude_code_self_hosted_runner_info
+. Requires Claude Code v2.1.248 or later.
 --configure-git
 SELF_HOSTED_RUNNER_CONFIGURE_GIT=1
 off
@@ -192,7 +200,9 @@ Lifecycle hooks
 --kill-session-after-min <n>
 SELF_HOSTED_RUNNER_MAX_LIFETIME_MS
 0
-Terminate a session child once it has lived N minutes wall-clock, as a safety limit for stuck sessions. A kill that falls mid-turn is deferred until the turn finishes, bounded by a grace window.
+Terminate a session child once it has lived N minutes wall-clock, as a safety limit for stuck sessions. The runner terminates the session’s process tree, including any commands the session left running. The runner defers a kill that falls mid-turn until the turn finishes, for at most the
+SELF_HOSTED_RUNNER_MAX_LIFETIME_GRACE_MS
+window.
 0
 disables.
 --lock-to-account <id>

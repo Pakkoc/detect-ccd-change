@@ -5,8 +5,8 @@ install
 @anthropic-ai/claude-agent-sdk
 The SDK bundles a native Claude Code binary for your platform as an optional dependency such as
 @anthropic-ai/claude-agent-sdk-darwin-arm64
-. Most installs need no separate Claude Code install. The SDK version tracks the bundled Claude Code version: SDK v0.3.191 bundles Claude Code v2.1.191, so a feature on this page that requires a Claude Code version needs the SDK release with the same patch number or later. If your package manager skips optional dependencies, the SDK throws
-Native CLI binary for <platform> not found
+. Most installs need no separate Claude Code install. The SDK version tracks the bundled Claude Code version. SDK v0.3.191 bundles Claude Code v2.1.191, so a feature on this page that requires a Claude Code version needs the SDK release with the same patch number or later. If your package manager skips optional dependencies, the SDK throws
+Native CLI binary for <platform>-<arch> not found
 ; set
 pathToClaudeCodeExecutable
 to a separately installed
@@ -26,7 +26,7 @@ require.resolve
 does not work inside the compiled executable’s
 $bunfs
 virtual filesystem, so the SDK throws
-Native CLI binary for <platform> not found
+Native CLI binary for <platform>-<arch> not found
 .
 To work around this, embed the platform binary as a file asset, extract it to a real path at startup with
 extractFromBunfs()
@@ -487,6 +487,10 @@ alwaysLoad
 ?:
 boolean
 ;
+timeout
+?:
+number
+;
 })
 :
 McpSdkServerConfigWithInstance
@@ -521,6 +525,11 @@ tool search
 alwaysLoad
 in
 tool()
+options.timeout
+number
+Timeout in milliseconds for this server’s tool calls. Claude Code applies it to this server in place of
+MCP_TOOL_TIMEOUT
+. Pass a whole number of at least 1000. Claude Code ignores other values. Requires TypeScript Agent SDK v0.3.248 or later
 ​
 listSessions()
 Discovers and lists past sessions with light metadata. Filter by project directory or list sessions across all projects.
@@ -1311,7 +1320,15 @@ supplies managed settings. Merged values pass through a restrictive-only filter;
 Restrict parent settings
 covers what the filter admits and the
 allowManaged*Only
-locks
+locks. A host that sets
+CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
+has three keys read straight from this payload instead: its
+model configuration
+on Claude Code v2.1.222 or later,
+modelPricing
+when no managed source sets it on v2.1.246 or later, and its
+ENABLE_TOOL_SEARCH
+env entry on v2.1.247 or later
 maxBudgetUsd
 number
 undefined
@@ -3002,49 +3019,13 @@ settingSources:
 // Only .claude/settings.json
 }
 });
-Loading CLAUDE.md project instructions:
-import
-{
-query
-}
-from
-"@anthropic-ai/claude-agent-sdk"
-;
-// Load project settings to include CLAUDE.md files
-const
-result
-=
-query
-({
-prompt:
-"Add a new feature following project conventions"
-,
-options:
-{
-systemPrompt:
-{
-type:
-"preset"
-,
-preset:
-"claude_code"
-// Use Claude Code's system prompt
-},
-settingSources:
-[
+To load CLAUDE.md project instructions, include
 "project"
-],
-// Loads CLAUDE.md from project directory
-allowedTools:
-[
-"Read"
-,
-"Write"
-,
-"Edit"
-]
-}
-});
+in
+settingSources
+. See
+Modify system prompts
+for how CLAUDE.md loading interacts with the system prompt options.
 ​
 Settings precedence
 When multiple sources are loaded, settings are merged with this precedence (highest to lowest):
@@ -3403,6 +3384,10 @@ type
 name
 :
 string
+;
+timeout
+?:
+number
 ;
 instance
 :
@@ -7757,7 +7742,7 @@ Path to a workflow script file on disk. Takes precedence over
 script
 and
 name
-. Every invocation persists its script and returns the path in the result, so you can edit that file and re-invoke with the same
+. Claude Code persists every invocation’s script and returns the path in the result, so you can edit that file and re-invoke with the same
 scriptPath
 to iterate
 args
@@ -7815,7 +7800,8 @@ string
 }>;
 };
 Creates and manages a structured task list for tracking progress.
-On TypeScript Agent SDK 0.3.233 and later, the following tools aren’t available on Opus 4.8, Sonnet 5, Fable 5, Mythos 5, or later versions of those families unless you opt in:
+On TypeScript Agent SDK 0.3.233 and later, the following restriction applies.
+The following tools aren’t available on Opus 4.8, Sonnet 5, Fable 5, Mythos 5, or later versions of those families unless you opt in:
 TodoWrite
 TaskCreate
 TaskGet
@@ -8167,6 +8153,10 @@ prompt
 ?:
 string
 ;
+noop
+?:
+boolean
+;
 stop
 ?:
 boolean
@@ -8180,11 +8170,15 @@ to between 60 and 3600 seconds. The
 delaySeconds
 ,
 reason
-, and
+,
 prompt
+, and
+noop
 fields are required unless
 stop
-is true. Setting
+is true.
+noop: true
+reports a wake-up where nothing changed. Setting
 stop: true
 cancels the pending wakeup and ends the self-paced
 /loop
@@ -10332,7 +10326,8 @@ string
 }>;
 };
 Returns the previous and updated task lists.
-On TypeScript Agent SDK 0.3.233 and later, the following tools aren’t available on Opus 4.8, Sonnet 5, Fable 5, Mythos 5, or later versions of those families unless you opt in:
+On TypeScript Agent SDK 0.3.233 and later, the following restriction applies.
+The following tools aren’t available on Opus 4.8, Sonnet 5, Fable 5, Mythos 5, or later versions of those families unless you opt in:
 TodoWrite
 TaskCreate
 TaskGet
@@ -12045,6 +12040,14 @@ provider
 ?:
 string
 ;
+costBasis
+?:
+'list'
+|
+'managed'
+|
+'unknown'
+;
 };
 The
 canonicalModel
@@ -12069,6 +12072,16 @@ mantle
 , or
 gateway
 .
+costBasis
+names the price table that priced the model’s latest request:
+list
+for list price,
+managed
+for a
+modelPricing
+table, or
+unknown
+when neither matched the model ID. The field requires Claude Code v2.1.246 or later.
 ​
 ConfigScope
 type
@@ -13690,6 +13703,10 @@ AbortError
 extends
 Error
 {}
+AbortError
+is the only error class in the SDK’s typed API. Other failures, such as the Claude Code process exiting or failing to launch, reject the message iteration with errors that carry no SDK class to match on.
+Troubleshooting
+keys those errors by message, with the cause and fix for each.
 ​
 Sandbox Configuration
 ​
@@ -13913,7 +13930,7 @@ error
 Unix socket security:
 The
 allowUnixSockets
-option can grant access to powerful system services. For example, allowing
+option can grant access to system services that reach outside the sandbox. For example, allowing
 /var/run/docker.sock
 effectively grants full host system access through the Docker API, bypassing sandbox isolation. Only allow Unix sockets that are strictly necessary and understand the security implications of each.
 ​
@@ -14072,21 +14089,14 @@ is enabled, the model can request to run commands outside the sandbox by setting
 dangerouslyDisableSandbox: true
 in the tool input. These requests fall back to the existing permissions system, meaning your
 canUseTool
-handler is invoked, allowing you to implement custom authorization logic. In the example below,
+handler is invoked, allowing you to implement custom authorization logic. Commands listed in
+excludedCommands
+instead bypass the sandbox automatically, with no model involvement; see
+SandboxSettings
+.
+In the example below,
 isCommandAuthorized
 stands in for an authorization check you define.
-excludedCommands
-vs
-allowUnsandboxedCommands
-:
-excludedCommands
-: A static list of commands that always bypass the sandbox automatically (e.g.,
-['docker']
-). The model has no control over this.
-allowUnsandboxedCommands
-: Lets the model decide at runtime whether to request unsandboxed execution by setting
-dangerouslyDisableSandbox: true
-in the tool input.
 import
 {
 query

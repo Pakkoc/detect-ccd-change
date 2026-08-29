@@ -182,7 +182,6 @@ field
 Default for new sessions
 : set
 ANTHROPIC_DEFAULT_MODEL=<alias|name>
-As of v2.1.153,
 /model
 saves your choice as the default for new sessions by writing the
 model
@@ -1315,7 +1314,9 @@ with no arguments to open an interactive slider,
 /effort
 followed by a level name to set it directly, or
 /effort auto
-to reset to the model default
+to reset to the model default. You can run it while Claude is working, and once you confirm the
+cache warning
+, if Claude Code shows one, Claude Code applies the new level to the next request in the turn
 In
 /model
 : use left/right arrow keys to adjust the effort slider when selecting a model
@@ -1391,7 +1392,11 @@ environment variables
 Extended thinking
 Extended thinking is the reasoning Claude emits before responding. On models that support
 adaptive reasoning
-, the effort level is the primary control for how much thinking happens; the settings below turn thinking on or off and control how it displays.
+, the effort level is the primary control for how much thinking happens; the settings below turn thinking on or off and control how it displays. With thinking turned off on the Anthropic API, Claude Code sends effort
+high
+instead of a higher level to models it knows
+don’t accept that combination
+, such as Opus 5.
 Control
 How to set it
 Toggle for the current session
@@ -1407,7 +1412,7 @@ and toggle thinking mode. Saved as
 alwaysThinkingEnabled
 in
 ~/.claude/settings.json
-Disable regardless of effort
+Disable through an environment variable
 Set
 MAX_THINKING_TOKENS=0
 , which turns thinking off on the Anthropic API except on Fable 5. On

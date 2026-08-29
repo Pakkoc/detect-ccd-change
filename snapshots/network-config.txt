@@ -62,6 +62,15 @@ http_proxy
 ,
 HTTP_PROXY
 .
+Claude Code never sends its WebSocket connections to
+localhost
+,
+::1
+, or
+127.0.0.0/8
+through the proxy, so you don’t need a loopback entry in
+NO_PROXY
+for them.
 Claude Code does not support SOCKS proxies.
 ​
 Basic authentication
@@ -310,11 +319,25 @@ without
 .
 ​
 Streaming idle watchdogs
-Claude Code runs three independent timers that abort a streaming model response when it goes quiet, so a dead connection fails and retries instead of hanging. Each timer watches a different signal:
+Claude Code runs four independent timers that abort a streaming model response when it goes quiet, so a dead connection fails and retries instead of hanging. The first-byte deadline covers the wait for response headers, before any of the response has arrived. Each of the other three watches a live response for a different signal.
 Timer
 Aborts when
 Runs on
 Default timeout
+First-byte deadline
+No response headers arrive after Claude Code sends the request
+Direct Anthropic API and
+Claude Platform on AWS
+, including through an HTTPS proxy, but not when
+ANTHROPIC_BASE_URL
+or
+ANTHROPIC_AWS_BASE_URL
+routes them through a
+gateway
+. Opt-in on Amazon Bedrock with
+CLAUDE_ENABLE_BYTE_WATCHDOG_BEDROCK=1
+; doesn’t run on Google Cloud’s Agent Platform or Microsoft Foundry
+180 seconds on the direct Anthropic API, 300 seconds elsewhere, plus one second per 32KB of request body
 Event-level watchdog
 No response events parse. On connections where the byte-level watchdog runs, arriving bytes, including keep-alive pings, also reset this watchdog, for up to about five minutes without a parsed event
 Every provider
@@ -350,12 +373,28 @@ force the corresponding watchdog on with
 or off with
 0
 , within the connections the table lists; neither variable extends a watchdog to a connection type it doesn’t cover.
+CLAUDE_ENABLE_BYTE_WATCHDOG
+set to
+0
+also turns off the first-byte deadline.
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 sets both watchdogs’ timeout. Claude Code raises values below 5 minutes to 5 minutes, and caps the value at 30 minutes for the byte-level watchdog.
 CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS
-sets the byte-level watchdog’s timeout alone, clamped to between 10 seconds and 30 minutes, and takes precedence over
+sets the byte-level watchdog’s timeout without changing the event-level watchdog’s, clamped to between 10 seconds and 30 minutes, and takes precedence over
 CLAUDE_STREAM_IDLE_TIMEOUT_MS
 for that watchdog.
+CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS
+sets the first-byte deadline directly. Leave it unset and Claude Code derives the deadline from the byte-level watchdog’s timeout or from an
+API_TIMEOUT_MS
+you set above that timeout, so
+CLAUDE_STREAM_IDLE_TIMEOUT_MS
+and
+CLAUDE_BYTE_STREAM_IDLE_TIMEOUT_MS
+change the deadline too. For the clamps, the upload allowance, and the
+API_TIMEOUT_MS
+cap, see
+No response from API
+.
 API_FORCE_IDLE_TIMEOUT
 set to
 0
@@ -371,6 +410,9 @@ non-interactive session
 , Claude Code may first prompt Claude to continue the cut-off response;
 that notice’s entry
 says when it does and when you still see the notice.
+When the first-byte deadline fires, no response has started, so there is no partial output to keep. For how Claude Code re-sends the request and when the turn ends instead, see
+No response from API
+.
 ​
 Network access requirements
 Claude Code requires access to the following URLs. Allowlist these in your proxy configuration and firewall rules, especially in containerized or restricted network environments. The first-run setup connectivity check points here when it can’t reach
@@ -433,7 +475,7 @@ for how these settings interact
 raw.githubusercontent.com
 Changelog feed for
 /release-notes
-and the release notes shown after updating
+. In interactive sessions, Claude Code also fetches it in the background at startup when its cached changelog doesn’t yet cover the running version, such as the first start after an update; non-interactive and cloud sessions never fetch it
 http-intake.logs.us5.datadoghq.com
 Operational telemetry events, sent only when the CLI uses the Anthropic API directly, never for Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry. Optional: disable with
 DISABLE_TELEMETRY

@@ -80,7 +80,7 @@ If more than one browser is connected, you choose which one Claude uses. When a 
 /chrome
 and select
 Select browser…
-. Claude keeps using your choice even when another browser connects. Browser selection requires Claude Code v2.1.154 or later.
+. Claude keeps using your choice even when another browser connects.
 For VS Code, see
 browser automation in VS Code
 .

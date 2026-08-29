@@ -39,11 +39,22 @@ Sandbox modes
 for which commands still prompt in auto-allow mode.
 3
 Run a Bash command
-Ask Claude to run a command, such as a build or a test suite. By default, commands inside the sandbox can write only to the working directory and the session temp directory. The first time a command needs a new network domain, Claude Code prompts for approval, or in
+Ask Claude to run a command, such as a build or a test suite. By default, commands inside the sandbox can write only to the working directory, any
+directories you’ve added
+with
+--add-dir
+or
+/add-dir
+, and the session temp directory. The first time a command needs a new network domain, Claude Code prompts for approval, or in
 auto mode
 sends the request to the classifier.
-Commands that cannot run sandboxed fall back to the regular permission flow. To widen or narrow these boundaries, see
+Commands that can’t run sandboxed fall back to the regular permission flow. Claude Code titles their permission prompt “Bash command (unsandboxed)” instead of “Bash command”, so you can tell which commands ran outside the sandbox. To widen or narrow what the sandbox allows, see
 Configure sandboxing
+.
+If sandboxed commands fail with
+Operation not permitted
+inside a container, see the Bubblewrap entry under
+Troubleshooting
 .
 When you select a mode in the panel, Claude Code saves it to your project’s local settings at
 .claude/settings.local.json
@@ -192,7 +203,7 @@ Regular permissions mode
 All Bash commands go through the regular permission flow, even when sandboxed. This provides more control but requires more approvals.
 ​
 The unsandboxed retry escape hatch
-Some commands can’t run inside the sandbox at all, such as tools that are incompatible with it or that need a host you haven’t allowed. When a command fails after the sandbox denied it access, Claude Code appends the violation details to the failed command’s output, so Claude sees which file path or network host the sandbox blocked. Rather than failing the task or requiring you to turn sandboxing off, Claude Code includes an escape hatch: when a command fails because of sandbox restrictions, Claude analyzes the failure and may retry the command with the
+Some commands can’t run inside the sandbox at all, such as tools that are incompatible with it or that need a host you haven’t allowed. Claude Code reports sandbox violations in the blocked command’s result, naming the path or host the sandbox denied, so Claude sees what the sandbox blocked. Rather than failing the task or requiring you to turn sandboxing off, Claude Code includes an escape hatch: Claude analyzes the violation and may retry the command with the
 dangerouslyDisableSandbox
 parameter.
 The retried command runs outside the sandbox, so it goes through the regular permission flow: in Manual mode you get a confirmation prompt; in
@@ -233,7 +244,13 @@ settings.json
 file. See
 Settings
 for the complete configuration reference.
-By default, sandboxed commands can write only to the current working directory and the session temp directory. If subprocess commands like
+By default, sandboxed commands can write only to the current working directory, any
+directories you’ve added
+with
+--add-dir
+or
+/add-dir
+, and the session temp directory. If subprocess commands like
 kubectl
 ,
 terraform
@@ -766,12 +783,12 @@ injectHosts
 or
 "2001:db8::1"
 . The proxy matches each entry against the connection’s bare destination address, ignoring ports, so a bracketed, zone-ID, or differently compressed spelling never matches and the proxy never injects the credential there.
-/doctor
+claude doctor
 flags
 injectHosts
 entries that can never match with the warning
 Sandbox credential injectHosts entries can never match their destination
-.
+. This check requires Claude Code v2.1.229 or later.
 Unlike
 deny
 , masking authorizes the proxy to send your real credential to the listed hosts, so Claude Code honors it only from settings you or your administrator control: user settings, managed settings, and the
@@ -1097,7 +1114,11 @@ How sandboxing works
 Filesystem isolation
 The sandboxed Bash tool restricts file system access to specific directories:
 Default write behavior
-: read and write access to the current working directory and its subdirectories, plus the session temp directory that
+: read and write access to the current working directory and its subdirectories, any directories you’ve added with
+--add-dir
+or
+/add-dir
+, plus the session temp directory that
 $TMPDIR
 points to
 Default read behavior
@@ -1111,7 +1132,7 @@ to block reads of these files and unset secret environment variables, or add the
 denyRead
 .
 Blocked access
-: cannot modify files outside the current working directory and session temp directory without explicit permission, including shell configuration files such as
+: cannot modify files outside the working directory, added directories, and session temp directory without explicit permission, including shell configuration files such as
 ~/.bashrc
 and system binaries in
 /bin/
@@ -1342,15 +1363,15 @@ Deny lists
 Allow lists
 : Claude Code never allows more than you wrote. It rewrites an ambiguous entry to its host-and-port reading when that reading parses cleanly, and may drop the entry entirely rather than widen the allowlist.
 Run
-/doctor
-to list the affected entries. The
+claude doctor
+in your terminal to find the affected entries: the
 Sandbox network domain entries have unreliable spellings
-warning names each one. Rewrite them in the bracketed form to clear it. The warning also names entries whose spelling is unreliable for other reasons, such as
+warning names up to three of them and counts the rest. Rewrite each one in the bracketed form to clear the warning. The warning also names entries whose spelling is unreliable for other reasons, such as
 @
 , path or query characters, or wildcards inside brackets.
 ​
 OS-level enforcement
-The sandboxed Bash tool leverages operating system security primitives:
+The sandboxed Bash tool uses operating system security primitives:
 macOS
 : uses Seatbelt for sandbox enforcement
 Linux
@@ -1635,9 +1656,13 @@ false
 excludedCommands
 .
 Bubblewrap fails to start inside a container
-: in an unprivileged container, bubblewrap cannot mount a fresh
+: in an unprivileged container, bubblewrap can’t mount a fresh
 /proc
-filesystem. Set
+filesystem, so sandboxed commands fail with a
+bwrap
+error such as
+Can't mount proc on /newroot/proc: Operation not permitted
+. Set
 enableWeakerNestedSandbox
 to
 true
@@ -1673,7 +1698,7 @@ that terminates TLS and inspects traffic, and install its CA certificate inside 
 Privilege escalation via Unix sockets
 : the
 allowUnixSockets
-configuration can inadvertently grant access to powerful system services that could lead to sandbox bypasses. For example, allowing access to
+configuration can inadvertently grant access to system services that could lead to sandbox bypasses. For example, allowing access to
 /var/run/docker.sock
 effectively grants access to the host system through the Docker socket. Consider carefully any Unix sockets that you allow through the sandbox.
 Filesystem permission escalation

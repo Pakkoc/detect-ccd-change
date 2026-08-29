@@ -1212,7 +1212,8 @@ claude
 bypassPermissions
 The
 --dangerously-skip-permissions
-flag is equivalent. Claude Code refuses
+flag is equivalent.
+Claude Code refuses
 bypassPermissions
 in a session you start with
 --restricted
@@ -1276,6 +1277,9 @@ dontAsk
 Denied
 bypassPermissions
 Allowed
+In a session started with
+--restricted
+, which requires Claude Code v2.1.248 or later, the classifier can’t approve protected-path writes.
 permissions.allow
 rules in settings files do not pre-approve protected-path writes. The safety check runs before Claude Code evaluates allow rules from settings, so an entry such as
 Edit(.claude/**)

@@ -12,8 +12,6 @@ preferred
 way to use the Claude Agent SDK. It provides full access to the agent’s capabilities and enables rich, interactive experiences.
 It allows the agent to operate as a long lived process that takes in user input, handles interruptions, surfaces permission requests, and handles session management.
 ​
-How It Works
-​
 Benefits
 In streaming input mode, you work in a persistent session with these capabilities:
 Image uploads

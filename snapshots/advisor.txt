@@ -202,9 +202,9 @@ When Claude calls the advisor, the transcript shows an
 Advising
 line with the advisor model name while the call is in progress. When the result returns, the line reports whether the advisor gave guidance:
 Reviewed
-: the line confirms that the advisor has reviewed the conversation. Press
+: the line confirms that the advisor has reviewed the conversation. When the advisor returned readable guidance, press
 Ctrl+O
-to expand it and read the advisor’s full guidance.
+to read it.
 Declined
 : the line reads
 Advisor declined to advise on this request
@@ -302,7 +302,7 @@ set
 For the entire delegated subtask
 Claude delegates, or you invoke the subagent
 /model
-For all subsequent turns
+From the next request onward
 You switch models
 ​
 See also

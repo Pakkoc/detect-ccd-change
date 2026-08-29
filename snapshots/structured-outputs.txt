@@ -691,14 +691,6 @@ error
 "
 )
 asyncio.run(main())
-Benefits:
-Full type inference (TypeScript) and type hints (Python)
-Runtime validation with
-safeParse()
-or
-model_validate()
-Better error messages
-Composable, reusable schemas
 ​
 Output format configuration
 The
@@ -1218,7 +1210,9 @@ A result can also end with subtype
 success
 but no
 structured_output
-value, for example when the run completes without the agent producing a structured output. Treat that case as a failure as well. The example below treats a result as successful only when the
+value, for example when the run completes without the agent producing a structured output. Treat that case as a failure as well. The troubleshooting entry
+structured_output is None but the result says success
+covers this case. The example below treats a result as successful only when the
 subtype
 is
 success

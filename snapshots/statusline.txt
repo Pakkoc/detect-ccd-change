@@ -274,6 +274,11 @@ rate-limit window
 in the data your script last received reaches its
 resets_at
 time
+A warm
+prompt cache
+in the data your script last received reaches its
+expires_at
+time
 Claude Code debounces updates at 300ms, so rapid changes batch together and your script runs once after the changes stop. A change to the
 command
 itself skips the debounce: Claude Code runs the new command right away. If a new update triggers while your script is still running, Claude Code cancels the in-flight script. If you edit your script, the changes appear the next time an update trigger re-runs it.
@@ -310,7 +315,7 @@ and language-level width detection cannot read the terminal size from inside the
 COLUMNS
 and
 LINES
-environment variables instead. Claude Code sets these to the current terminal dimensions before running your script. Requires Claude Code v2.1.153 or later.
+environment variables instead. Claude Code sets these to the current terminal dimensions before running your script.
 The status line runs locally and does not consume API tokens. It temporarily hides during certain UI interactions, including autocomplete suggestions, the help menu, and permission prompts.
 ​
 Available data
@@ -363,7 +368,9 @@ remote, for example
 origin
 remote is configured
 cost.total_cost_usd
-Estimated session cost in USD, computed client-side. May differ from your actual bill. Resets to $0 when
+Estimated session cost in USD, computed client-side at list price unless a
+modelPricing
+table is in effect. May differ from your actual bill. Resets to $0 when
 /clear
 starts a new session. Before v2.1.211, the total carried over after
 /clear
@@ -420,6 +427,18 @@ rate_limits.five_hour.resets_at
 ,
 rate_limits.seven_day.resets_at
 Unix epoch seconds when the 5-hour or 7-day rate limit window resets
+rate_limits.spend_limit.used_percentage
+,
+rate_limits.spend_limit.resets_at
+Behind a
+Claude apps gateway
+, the percentage used of the spend limit that applies to you, and the Unix epoch seconds when its period resets. The percentage runs from 0 to 100, or above 100 once you exceed the limit. Requires Claude Code v2.1.251 or later
+prompt_cache
+The session’s
+prompt cache
+statistics for the main conversation: hit ratio, misses, and whether the cache is warm. See
+prompt cache fields
+for every field. Absent until the main conversation’s first API response. Requires Claude Code v2.1.251 or later
 session_id
 Unique session identifier
 session_name
@@ -648,6 +667,56 @@ Your status line command receives this JSON structure via stdin:
 :
 false
 ,
+"prompt_cache"
+: {
+"warm"
+:
+true
+,
+"caching_observed"
+:
+true
+,
+"ttl"
+:
+"1h"
+,
+"expires_at"
+:
+1738429200
+,
+"requests"
+:
+14
+,
+"misses"
+:
+2
+,
+"expected_rebuilds"
+:
+1
+,
+"hit_ratio"
+:
+0.91
+,
+"cache_write_tokens"
+:
+352000
+,
+"miss_recache_tokens"
+:
+310200
+,
+"last_miss_at"
+:
+1738425230
+,
+"recache_tokens_if_cold"
+:
+45000
+},
 "fast_mode"
 :
 false
@@ -685,6 +754,16 @@ true
 "resets_at"
 :
 1738857600
+},
+"spend_limit"
+: {
+"used_percentage"
+:
+62.8
+,
+"resets_at"
+:
+1740787200
 }
 },
 "vim"
@@ -777,15 +856,20 @@ and
 original_branch
 may also be absent for hook-based worktrees
 rate_limits
-: appears only for Claude.ai subscribers (Pro/Max) after the first API response in the session. Each window (
+: appears only for Claude.ai Pro and Max subscribers, or behind a Claude apps gateway that sets a spend limit for you, and only after the first API response in the session. Each window (
 five_hour
 ,
 seven_day
+,
+spend_limit
 ) may be independently absent, and Claude Code drops a window once its
 resets_at
 time passes. Use
 jq -r '.rate_limits.five_hour.used_percentage // empty'
 to handle absence gracefully.
+prompt_cache
+: appears after the main conversation’s first API response. See
+prompt cache fields
 Fields that may be
 null
 :
@@ -862,6 +946,72 @@ null
 before the first API call in a session, and again immediately after
 /compact
 until the next API call repopulates it.
+​
+Prompt cache fields
+The
+prompt_cache
+object summarizes how the session’s main conversation is using the
+prompt cache
+. Claude Code computes it from the cache token counts in the API’s responses, so it works on every provider.
+The object appears after the main conversation’s first API response. Claude Code doesn’t count subagent requests in these statistics. Requires Claude Code v2.1.251 or later.
+The table lists each field with its meaning. Timestamps are Unix epoch seconds, the same unit as
+rate_limits.*.resets_at
+. A short status line usually shows one or two of these;
+warm
+and
+hit_ratio
+summarize the cache state most directly.
+Field
+Description
+warm
+Whether the cached prefix is still within its TTL.
+false
+when the last response reported no cache tokens, even while
+caching_observed
+is
+true
+caching_observed
+Whether any response this session reported cache tokens.
+false
+means prompt caching is off, or your provider or gateway doesn’t report it
+ttl
+Cache lifetime
+of the current cached prefix:
+"5m"
+or
+"1h"
+expires_at
+When the cached prefix leaves its TTL and goes cold, in epoch seconds.
+null
+when the last response reported no cache tokens
+requests
+API requests recorded for the main conversation this session
+misses
+Requests that re-processed content the cache already held: more than 5% and at least 2,000 tokens of what the request could have read from cache, with no compaction or tool-result clearing to explain the shortfall in cache reads
+expected_rebuilds
+Cache rebuilds that followed a compaction or a clearing of old tool results
+hit_ratio
+Cache read tokens as a fraction of all input tokens this session, from 0 to 1. The denominator counts cache reads, cache writes, and uncached input.
+null
+while those counts are all zero
+cache_write_tokens
+All tokens written to the cache this session, the first request’s initial write included
+miss_recache_tokens
+Tokens written to the cache by the requests counted as misses
+last_miss_at
+When the last miss happened, in epoch seconds.
+null
+while the session has no misses
+recache_tokens_if_cold
+Tokens the next request re-caches if the cache has gone cold by then.
+null
+right after a compaction or a clearing of old tool results, until the next request records the rewritten conversation’s size
+Claude Code shows the same statistics in the terminal, on the
+/usage
+command’s
+Prompt cache (main)
+line
+.
 ​
 Examples
 These examples show common status line patterns. To use any example:
@@ -3214,16 +3364,25 @@ model
 Rate limit usage
 Display Claude.ai subscription rate limit usage in the status line. The
 rate_limits
-object contains
+object contains a rolling
 five_hour
-(5-hour rolling window) and
+window and a weekly
 seven_day
-(weekly) windows. Each window provides
+window. Each window provides
 used_percentage
-(0-100) and
+, from 0 to 100, and
 resets_at
-(Unix epoch seconds when the window resets).
-This field is only present for Claude.ai subscribers (Pro/Max) after the first API response. Each script handles the absent field gracefully:
+, the Unix epoch seconds when the window resets.
+Behind a Claude apps gateway with spend limits,
+rate_limits
+carries
+spend_limit
+with the same two fields for the spend limit that applies to you, except that its
+used_percentage
+can go above 100 once you exceed the limit. Requires Claude Code v2.1.251 or later.
+The
+rate_limits
+object is only present for Claude.ai Pro and Max subscribers, or behind a Claude apps gateway with spend limits, and only after the first API response. Each script handles the absent field gracefully:
 Bash
 Python
 Node.js

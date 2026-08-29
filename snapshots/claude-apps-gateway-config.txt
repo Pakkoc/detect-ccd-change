@@ -1531,7 +1531,7 @@ policyHelper
 and
 wslInheritsWindowsSettings
 .
-The gateway validates each document against the CLI’s settings schema at boot, so an unrecognized top-level key or a recognized key with a malformed value fails boot with an error naming every offending key. Deliberately open parts of the schema still accept arbitrary values, because newer clients may recognize entries the gateway’s schema doesn’t. These open keys are
+The gateway validates each document against the CLI’s settings schema at boot, so an unrecognized top-level key fails boot with an error naming every offending key. Deliberately open parts of the schema still accept arbitrary values, because newer clients may recognize entries the gateway’s schema doesn’t. These open keys are
 env
 ,
 pluginConfigs

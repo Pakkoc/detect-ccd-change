@@ -618,7 +618,14 @@ Escalate to ultrareview
 /code-review ultra --fix
 runs the deeper
 ultrareview
-in the cloud, then applies its findings to your working tree when they arrive back in your session. Ultrareview uses its own scope: your current branch against the repository’s default branch, plus any uncommitted and staged changes in the working tree. Pass a branch name, such as
+in the cloud, then applies its findings to your working tree when they arrive back in your session.
+Ultrareview uses its own scope: your current branch against the repository’s default branch, plus uncommitted and staged changes in the working tree. For uncommitted changes to files named like credentials or keys, such as
+.env
+and
+*.tfvars
+files, Claude Code follows the rules for
+uploading a local repository to a cloud session
+. Pass a branch name, such as
 /code-review ultra develop
 , to compare against a different base.
 When the target is a
@@ -640,13 +647,13 @@ subcommand
 instead; by running it, you consent to the charge.
 The command was named
 /simplify
-before v2.1.147, when it applied fixes by default. From v2.1.154,
+before v2.1.147, when it applied fixes by default.
 /simplify
 runs a separate cleanup-only review that applies fixes without hunting for bugs. If you scripted
 /simplify
 for bug-finding, switch to
 /code-review --fix
-, which is unchanged.
+.
 ​
 Related resources
 Commands

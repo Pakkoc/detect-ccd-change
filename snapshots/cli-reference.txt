@@ -329,6 +329,9 @@ claude --agent my-custom-agent
 --agents
 Define custom subagents dynamically via JSON. Accepts the
 fields listed for CLI-defined subagents
+. Claude Code validates the JSON at startup and exits on an invalid value; see
+Invalid --agents configuration
+for the message and for the flags and environment variable that skip the validation. Validation requires Claude Code v2.1.242 or later
 claude --agents '{"reviewer":{"description":"Reviews code","prompt":"You are a code reviewer"}}'
 --allow-dangerously-skip-permissions
 Add
@@ -854,7 +857,7 @@ Start in restricted mode. Use it when an evaluation harness drives
 claude
 on a shared machine and Claude Code must not run commands or read that machine’s user and project settings. Claude Code removes the built-in tools that run commands or code, and WebFetch, unless you name them individually in
 --tools
-, not through its
+, not through the
 default
 preset. It also confines the built-in file tools to the
 working directories
@@ -862,8 +865,10 @@ working directories
 managed settings
 and
 --settings
-, and refuses
+, refuses
 bypassPermissions
+, and
+refuses to create cloud sessions
 . Requires Claude Code v2.1.248 or later
 claude --restricted -p "query"
 --resume

@@ -308,7 +308,7 @@ best practices
 A harness for every task
 : how the Claude Code team uses
 dynamic workflows
-to orchestrate subagents at scale
+to orchestrate many subagents at once
 Settings
 : customize Claude Code for your workflow
 Troubleshooting

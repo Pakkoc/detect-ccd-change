@@ -18,7 +18,7 @@ How the plugin fits with other security tools
 ​
 Prerequisites
 To run the plugin, you need:
-Claude Code v2.1.154 or later on a paid plan, for the
+A paid plan, for the
 dynamic workflows
 the scan uses to orchestrate its agents. On Pro, turn them on from the Dynamic workflows row in
 /config
@@ -129,6 +129,12 @@ F1
 , plus its impact, exploit scenario, severity, confidence, and recommendation
 CLAUDE-SECURITY-RESULTS.jsonl
 : the same findings in machine-readable form, one JSON object per line
+CLAUDE-SECURITY-RESULTS.sarif
+: the same findings as a
+SARIF 2.1.0
+log for GitHub code scanning and any other tool that reads the standard. The scan classifies findings under their
+CWE
+weakness categories
 CLAUDE-SECURITY-REVISION-<commit>.json
 : the revision stamp, recording which commit was scanned, at what effort, whether uncommitted changes were part of the scanned tree, and how thoroughly the run was verified, so a report is always tied to the code it describes. A scan outside version control stamps
 UNVERSIONED

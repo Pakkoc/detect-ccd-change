@@ -32,7 +32,7 @@ About 5 minutes
 You post the opening prompt; the team supplies the content.
 Optional pairing or walkthroughs
 0 to 30 minutes
-Reserve this for colleagues who are genuinely blocked, and offer the
+Reserve this for colleagues who are blocked, and offer the
 Quickstart
 link before scheduling time.
 ​
@@ -91,7 +91,7 @@ Press Shift+Tab until you see "plan"; it lays out exactly which files it
 intends to touch before changing anything.
 ​
 Be the person people ask
-Once you have shared a few examples, questions will follow. This is where the champion role has the greatest leverage, because a good answer to one person frequently unblocks several others who are watching the same channel.
+Once you have shared a few examples, questions will follow. This is where a champion helps the most, because a good answer to one person frequently unblocks several others who are watching the same channel.
 ​
 Answer with a prompt rather than an explanation
 When a colleague asks how you accomplished something, the most useful response is the prompt you actually used. They will learn more from running that prompt against their own problem than from any description you could write, and it gives them something they can act on immediately.
@@ -142,7 +142,7 @@ Security
 Data usage
 ​
 Grow the circle
-The objective is not to build a program or to own a rollout. It is to establish a small number of lightweight habits that allow momentum to continue after you have stopped actively driving it. When questions in the channel are being answered by people other than you, the role has done its job.
+The objective is to establish a small number of lightweight habits that allow momentum to continue after you have stopped actively driving it. You don’t need to build a program or own a rollout. When questions in the channel are being answered by people other than you, the role has done its job.
 ​
 Patterns that tend to work
 Pattern
@@ -209,7 +209,7 @@ You are the warm introduction rather than the onboarding program. When a colleag
 Quickstart
 and
 Common workflows
-pages. They contain short sections covering the features that are genuinely useful but difficult to discover on your own.
+pages. They contain short sections covering the features that are useful but difficult to discover on your own.
 ​
 Respond to common concerns
 Healthy skepticism is expected; engineers should be cautious about tools that touch their code. The most effective response is rarely to argue the general case. Instead, acknowledge the concern, offer a brief reframe, and propose one concrete demonstration on the person’s own code. Most concerns are resolved by a single successful experience.
@@ -217,7 +217,7 @@ Concern
 Suggested response
 Evidence to offer
 ”I am faster without it.”
-That is likely true for code the person writes routinely. Suggest trying it on the work they tend to avoid: legacy files, unfamiliar services, or test scaffolding, where the leverage is highest.
+That is likely true for code the person writes routinely. Suggest trying it on the work they tend to avoid: legacy files, unfamiliar services, or test scaffolding, where it helps the most.
 Time one tedious task both ways and compare.
 ”I do not trust AI to touch production code.”
 Agree that no change should land unread. Plan mode combined with normal diff review means nothing is applied that the engineer has not inspected, the same standard as any pull request.

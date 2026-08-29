@@ -62,41 +62,29 @@ ANTHROPIC_BASE_URL
 or
 LLM gateway
 : the cache lives wherever your requests are forwarded, and whether caching works depends on the gateway
-Claude Code also appends system context mid-conversation, such as file-change notices. Whether that block is cached depends on how your requests reach the provider.
+Claude Code also appends system context mid-conversation, such as file-change notices, and marks that block for caching on every provider and connection.
 At the provider’s own endpoint, Amazon Bedrock and its
 Mantle endpoint
-, Google Cloud’s Agent Platform, and Microsoft Foundry cache the block the same way the Claude API does. For Bedrock, Mantle, and Agent Platform, that means their base-URL variables are unset. For Foundry, it means
-ANTHROPIC_FOUNDRY_BASE_URL
-is unset or points at your resource’s
-services.ai.azure.com
-host, the standard
-Microsoft Foundry setup
-. Before v2.1.211, these providers billed the block as uncached input tokens on every request.
-Claude Code doesn’t mark the block for caching, so it shows up as uncached input on every request, in any of these setups:
-ANTHROPIC_BEDROCK_BASE_URL
-,
-ANTHROPIC_VERTEX_BASE_URL
-, or
-ANTHROPIC_BEDROCK_MANTLE_BASE_URL
-set to any value, even the provider’s own endpoint
-ANTHROPIC_FOUNDRY_BASE_URL
-pointing at a host outside
-services.ai.azure.com
-, such as a gateway
-ANTHROPIC_AWS_BASE_URL
-set to any value on
-Claude Platform on AWS
-, including a custom-region endpoint
-An
+, Google Cloud’s Agent Platform, and Microsoft Foundry cache the block the same way the Claude API does.
+When your requests pass through an
 LLM gateway
-or a custom
+, a custom
 ANTHROPIC_BASE_URL
-A
-Claude apps gateway
-session
-Claude Code keeps the conversation’s own
-cache breakpoints
-in place, so a gateway that forwards them still caches your conversation. Before v2.1.237, Claude Code marked the block for caching through gateways too, and a gateway that silently removed the marker left the entire conversation billed as uncached input on every turn.
+, or a cloud provider base-URL override such as
+ANTHROPIC_BEDROCK_BASE_URL
+, what stays cached depends on how the gateway handles the
+cache_control
+markers
+Claude Code sends:
+Forwards them unchanged
+: the block and your conversation cache the same as at the provider’s own endpoint.
+Rejects the marked request with a
+400
+error naming
+cache_control
+: Claude Code re-sends the request with the marker moved off the block and onto your last conversation message, and keeps it there for the rest of the conversation. The block bills as uncached input; your conversation stays cached.
+Removes the markers while returning success
+: your entire conversation history bills as uncached input on every turn. A gateway that converts block-form system content to a plain string drops the marker the same way.
 For what each provider stores and processes, see
 data usage
 . Wherever the cache lives, entries expire after a period of inactivity, and
@@ -143,11 +131,11 @@ switching models
 Turning on fast mode
 Enabling
 fast mode
-adds a request header that is part of the cache key, so the next request reads the entire conversation history with no cache hits. Those uncached input tokens are billed at
+adds a request header that is part of the cache key, so the first request Claude Code sends with fast mode on reads the entire conversation history with no cache hits. Claude Code sets that header once when a turn starts and keeps it for the whole turn, so when you turn fast mode on while Claude is working, the cache miss from the header happens on the first request of your next turn. Those uncached input tokens are billed at
 fast mode rates
-, which is why turning it on at the start of a session costs less than turning it on deep into a long one. Enabling fast mode from a non-Opus model also
+, which is why turning it on at the start of a session costs less than turning it on deep into a long one. If your current model doesn’t support fast mode, enabling fast mode also
 switches your model
-, which starts a fresh cache on its own.
+, and that switch starts a fresh cache on its own from the next request in the running turn.
 The cost applies once per conversation. After the first fast mode turn, Claude Code keeps sending the header and varies only the request’s speed setting, which is not part of the cache key. Turning fast mode off, the
 automatic fallback to standard speed
 after a rate limit, and turning it back on later all keep the cache. If you
@@ -447,6 +435,14 @@ FORCE_PROMPT_CACHING_5M=1
 , which forces five minutes for both buckets
 The bucket’s environment variable
 The bucket’s setting
+For a subagent’s requests, the
+cacheTtl
+value in the subagent’s
+experimental
+frontmatter field
+, which requires Claude Code v2.1.248 or later. Claude Code ignores a
+1h
+there while your Claude subscription is using usage credits
 ENABLE_PROMPT_CACHING_1H=1
 , which requests one hour for both buckets
 The
@@ -501,6 +497,15 @@ Tokens served from cache on this turn, billed at roughly 10% of the standard inp
 A high read-to-creation ratio means caching is working well. If creation stays high turn after turn, something is changing in your prefix. The
 actions that invalidate the cache
 section lists the usual causes.
+For a per-session summary, run
+/usage
+. After the main conversation’s first response, Claude Code adds a
+Prompt cache (main)
+line
+to the Session block, showing the session’s hit ratio, miss count, and whether the cache is warm right now. A status line script can read the same numbers from the
+prompt_cache
+object
+. Both require Claude Code v2.1.251 or later.
 For visibility across an organization, the OpenTelemetry exporter reports cache read and creation tokens per user and session. See
 Monitor usage
 for the metric and event attribute reference.

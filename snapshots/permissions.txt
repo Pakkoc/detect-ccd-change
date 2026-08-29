@@ -1176,6 +1176,14 @@ denied, a symlink at
 pointing to
 ~/.ssh/id_rsa
 is blocked: the target fails the allow rule and matches the deny rule.
+When a tool opens an approved file, Claude Code
+confirms the path still resolves to the location the permission check approved
+.
+Grep and Glob search the directory the
+path
+argument resolves to. Claude Code applies
+Read
+deny rules to that directory.
 ​
 WebFetch
 WebFetch rules use a

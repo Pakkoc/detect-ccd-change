@@ -666,7 +666,7 @@ Cross-session messaging
 separately lets Claude message
 your other Claude Code sessions
 , including terminal sessions.
-When Claude messages another session through this surface, Claude Code shows it there as a card labeled with the sending session’s title and a link back, so you can always tell where a message came from. If the receiving session is mid-task, Claude Code holds the message and Claude reads it once the current work finishes. Claude can’t deliver to an archived session, and tells you when a message doesn’t go through.
+When Claude messages another session through this surface, Claude Code shows it there as a card labeled with the sending session’s title and a link back, so you can always tell where a message came from. If the receiving session is mid-task, Claude Code holds the message and Claude reads it once the current work finishes. The receiving Claude can reply, and Claude Code delivers the reply back through this surface. Claude can’t deliver to an archived session, and tells you when a message doesn’t go through.
 Claude Code applies four safety behaviors across sessions:
 Before archiving any session, Claude asks you first. You see the approval card in every permission mode, including Auto and Bypass permissions.
 Through this surface, Claude can’t send cross-session messages from a session nobody is watching, such as a scheduled-task run, and can’t deliver messages into one.
@@ -1261,11 +1261,18 @@ is enabled by default, which improves performance on complex reasoning tasks but
 MAX_THINKING_TOKENS
 to
 0
-in the local environment editor to turn thinking off; this has no effect on Fable 5, which always uses extended thinking. On models with
+in the local environment editor to turn thinking off; this has no effect on Fable 5, which always uses extended thinking. With thinking turned off on the Anthropic API, Claude Code sends effort
+high
+instead of a higher level to models it knows
+don’t accept that combination
+, such as Opus 5.
+On models with
 adaptive reasoning
-, any other
+,
 MAX_THINKING_TOKENS
-value is ignored because adaptive reasoning controls thinking depth instead. On Opus 4.6 and Sonnet 4.6, set
+values other than
+0
+are ignored because adaptive reasoning controls thinking depth instead. On Opus 4.6 and Sonnet 4.6, set
 CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
 to
 1
